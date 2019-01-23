@@ -1,2 +1,3 @@
-# FilmsEvaluator
-Evaluate your films automatically based on popular movie data bases.
+# ThingAppraiser
+
+Evaluate your things (movies, games, books e.t.c.) automatically based on popular data bases with ratings.

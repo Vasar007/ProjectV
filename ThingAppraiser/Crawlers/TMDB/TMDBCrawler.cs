@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FilmsEvaluator.Crawlers
+namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler<TMDBMovie>
     {
         private const string APIKey = "";
 
-        public override string GetSearchQueryString(string filmName)
+        public override string GetSearchQueryString(string movieName)
         {
-            return $"https://api.themoviedb.org/3/search/movie?query={filmName}&api_key={APIKey}";
+            return $"https://api.themoviedb.org/3/search/movie?query={movieName}&api_key={APIKey}";
         }
 
-        public override List<TMDBMovie> GetFilmsInfo(string[] films, bool ouput = false)
+        public override List<TMDBMovie> GetData(string[] movies, bool ouput = false)
         {
             List<TMDBMovie> searchResults = new List<TMDBMovie>();
-            foreach (var film in films)
+            foreach (var movie in movies)
             {
-                var response = GetSearchResult(SendSearchQuery(film));
+                var response = GetSearchResult(SendSearchQuery(movie));
 
                 // Get first search result from response.
                 var result = response["results"][0];
                 if (ouput)
                 {
-                    Console.WriteLine(result.ToString());
+                    Console.WriteLine(result);
                 }
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
                 var searchResult = result.ToObject<TMDBMovie>();

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FilmsEvaluator.Crawlers
+namespace ThingAppraiser.Crawlers
 {
     [Serializable()]
-    public class TMDBMovie : Movie
+    public class TMDBMovie : Data.Movie
     {
         public float Popularity { get; set; }
         public bool Adult { get; set; }

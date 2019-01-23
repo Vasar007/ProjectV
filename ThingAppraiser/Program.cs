@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 
-namespace FilmsEvaluator
+namespace ThingAppraiser
 {
     class Program
     {
-        static readonly string[] Films = { "Allied", "Venom", "Sayonara no asa ni yakusoku no hana o kazaro" };
+        static readonly string[] Movies = { "Allied", "Venom", "Sayonara no asa ni yakusoku no hana o kazaro" };
 
         static void Main(string[] args)
         {
             var crawler = new Crawlers.TMDBCrawler();
-            var results = crawler.GetFilmsInfo(Films);
+            var results = crawler.GetData(Movies);
             foreach (var result in results)
             {
                 Console.WriteLine(JToken.FromObject(result));
