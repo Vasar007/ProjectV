@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Data
 {
     [Serializable()]
     public class TMDBMovie : Data.Movie

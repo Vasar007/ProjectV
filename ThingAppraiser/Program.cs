@@ -9,11 +9,28 @@ namespace ThingAppraiser
 
         static void Main(string[] args)
         {
-            var crawler = new Crawlers.TMDBCrawler();
-            var results = crawler.GetData(Movies);
+            var crawlerManager = new Crawlers.CrawlersManager();
+            crawlerManager.Add(new Crawlers.TMDBCrawler());
+
+            var results = crawlerManager.GetAllData(Movies);
             foreach (var result in results)
             {
-                Console.WriteLine(JToken.FromObject(result));
+                foreach (var entity in result)
+                {
+                    Console.WriteLine(JToken.FromObject(entity));
+                }
+            }
+            Console.ReadLine();
+
+            var appraisersManager = new Appraisers.AppraisersManager();
+            appraisersManager.Add(new Appraisers.TMDBAppraiser());
+            var ratings = appraisersManager.GetAllRatings(results);
+            foreach (var rating in ratings)
+            {
+                foreach (var (item, value) in rating)
+                {
+                    Console.WriteLine($"{item.Title} has rating {value}.");
+                }
             }
             Console.ReadLine();
         }

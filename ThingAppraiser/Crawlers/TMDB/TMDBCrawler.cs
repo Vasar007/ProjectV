@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ThingAppraiser.Crawlers
 {
-    public class TMDBCrawler : Crawler<TMDBMovie>
+    public class TMDBCrawler : Crawler
     {
         private const string APIKey = "";
 
@@ -12,9 +12,9 @@ namespace ThingAppraiser.Crawlers
             return $"https://api.themoviedb.org/3/search/movie?query={movieName}&api_key={APIKey}";
         }
 
-        public override List<TMDBMovie> GetData(string[] movies, bool ouput = false)
+        public override List<Data.DataHandler> GetData(string[] movies, bool ouput = false)
         {
-            List<TMDBMovie> searchResults = new List<TMDBMovie>();
+            var searchResults = new List<Data.DataHandler>();
             foreach (var movie in movies)
             {
                 var response = GetSearchResult(SendSearchQuery(movie));
@@ -26,7 +26,7 @@ namespace ThingAppraiser.Crawlers
                     Console.WriteLine(result);
                 }
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
-                var searchResult = result.ToObject<TMDBMovie>();
+                var searchResult = result.ToObject<Data.TMDBMovie>();
                 searchResults.Add(searchResult);
             }
             return searchResults;

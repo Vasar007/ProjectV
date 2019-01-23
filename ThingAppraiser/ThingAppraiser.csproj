@@ -65,7 +65,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appraisers\AppraisersManager.cs" />
+    <Compile Include="Appraisers\MoviesRating\MoviesAppraiser.cs" />
+    <Compile Include="Appraisers\MoviesRating\TMDBAppraiser.cs" />
     <Compile Include="Crawlers\Crawler.cs" />
+    <Compile Include="Crawlers\CrawlersManager.cs" />
     <Compile Include="Data\Movie.cs" />
     <Compile Include="Crawlers\TMDB\TMDBMovie.cs" />
     <Compile Include="Data\DataHandler.cs" />
@@ -90,8 +94,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Appraisers\MoviesRating\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

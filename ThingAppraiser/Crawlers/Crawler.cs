@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace ThingAppraiser.Crawlers
 {
-    public abstract class Crawler<T> where T : Data.DataHandler
+    public abstract class Crawler
     {
         public virtual IRestResponse SendSearchQuery(string entityName)
         {
@@ -23,6 +23,6 @@ namespace ThingAppraiser.Crawlers
 
         public abstract string GetSearchQueryString(string entityName);
 
-        public abstract List<T> GetData(string[] entities, bool ouput = false);
+        public abstract List<Data.DataHandler> GetData(string[] entities, bool ouput = false);
     }
 }
