@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ThingAppraiser.Appraisers
 {
-    public class AppraisersManager
+    public class AppraisersManager : IEnumerable
     {
-        public Dictionary<Type, List<Appraiser>> appraisers = 
+        public Dictionary<Type, List<Appraiser>> appraisers =
             new Dictionary<Type, List<Appraiser>>();
 
         public void Add(Appraiser appraiser)
         {
-            if (appraisers.ContainsKey(appraiser.type))
+            if (appraisers.ContainsKey(appraiser.TypeID))
             {
-                var list = appraisers[appraiser.type];
+                var list = appraisers[appraiser.TypeID];
                 if (!list.Contains(appraiser))
                 {
                     list.Add(appraiser);
@@ -24,14 +25,14 @@ namespace ThingAppraiser.Appraisers
                 {
                     appraiser
                 };
-                appraisers.Add(appraiser.type, list);
+                appraisers.Add(appraiser.TypeID, list);
             }
         }
 
-        public List<List<Tuple<Data.DataHandler, float>>>
+        public List<List<(Data.DataHandler, float)>>
             GetAllRatings(List<List<Data.DataHandler>> data)
         {
-            var results = new List<List<Tuple<Data.DataHandler, float>>>();
+            var results = new List<List<(Data.DataHandler, float)>>();
             foreach (var datum in data)
             {
                 if (datum.Count == 0) continue;
@@ -46,6 +47,22 @@ namespace ThingAppraiser.Appraisers
                 }
             }
             return results;
+        }
+
+        public static void PrintRatingsToConsole(List<List<(Data.DataHandler, float)>> ratings)
+        {
+            foreach (var rating in ratings)
+            {
+                foreach (var (item, value) in rating)
+                {
+                    Console.WriteLine($"{item.Title} has rating {value}.");
+                }
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return appraisers.GetEnumerator();
         }
     }
 }

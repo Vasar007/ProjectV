@@ -6,14 +6,7 @@ namespace ThingAppraiser.Crawlers
 {
     public abstract class Crawler
     {
-        public virtual IRestResponse SendSearchQuery(string entityName)
-        {
-            var client = new RestClient(GetSearchQueryString(entityName));
-            var request = new RestRequest(Method.GET);
-            request.AddParameter("undefined", "{}", ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            return response;
-        }
+        protected abstract RestClient Client { get; }
 
         public virtual JObject GetSearchResult(IRestResponse response)
         {
@@ -21,7 +14,7 @@ namespace ThingAppraiser.Crawlers
             return parsedJson;
         }
 
-        public abstract string GetSearchQueryString(string entityName);
+        public abstract IRestResponse SendSearchQuery(string entityName);
 
         public abstract List<Data.DataHandler> GetData(string[] entities, bool ouput = false);
     }

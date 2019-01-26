@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using RestSharp;
 
 namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
-        private const string APIKey = "";
+        private const string _APIKey = "";
+        private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
 
-        public override string GetSearchQueryString(string movieName)
+        protected override RestClient Client { get; } = new RestClient(_searchUrl);
+
+        public override IRestResponse SendSearchQuery(string entityName)
         {
-            return $"https://api.themoviedb.org/3/search/movie?query={movieName}&api_key={APIKey}";
+            var request = new RestRequest(Method.GET);
+            request.AddParameter("undefined", "{}", ParameterType.RequestBody);
+            request.AddParameter("api_key", _APIKey, ParameterType.QueryString);
+            request.AddParameter("query", entityName, ParameterType.QueryString);
+            request.AddParameter("page", "1", ParameterType.QueryString); // Get only first page.
+            IRestResponse response = Client.Execute(request);
+            return response;
         }
 
         public override List<Data.DataHandler> GetData(string[] movies, bool ouput = false)
@@ -18,6 +28,8 @@ namespace ThingAppraiser.Crawlers
             foreach (var movie in movies)
             {
                 var response = GetSearchResult(SendSearchQuery(movie));
+
+                if (!response["results"].HasValues) continue;
 
                 // Get first search result from response.
                 var result = response["results"][0];
