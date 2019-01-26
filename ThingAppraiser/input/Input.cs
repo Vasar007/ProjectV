@@ -17,10 +17,9 @@ namespace ThingAppraiser.input
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    // Do stuff with your line here, it will be called for each 
-                    // line of text in your file.
                     res.Add(line.Trim(new[] { '\r', '\n', ' ' }));
                 }
+                // Scanning name of product and removing special symbols.
             }
             return res.ToArray();
         }

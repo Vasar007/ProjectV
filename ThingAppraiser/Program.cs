@@ -7,17 +7,21 @@ namespace ThingAppraiser
     {
         static readonly string[] Movies = { "Allied", "Venom", "Sayonara no asa ni yakusoku no hana o kazaro" };
 
-        static void Main(string[] args)
+        // Function for choosing input type
+        private static string[] getNames(string[] args)
         {
-            
-            var crawler = new Crawlers.TMDBCrawler();
-            var results = crawler.GetData(Movies);
-
             var input = new input.Input();
             string[] names = { };
             try
             {
-                names = input.ReadLines(args[0]);
+                if(args.Length == 1)
+                {
+                    names = input.ReadLines(args[0]);
+                }
+                else
+                {
+                    names = input.ReadLines("scan_names.txt");
+                }
             }
             catch
             {
@@ -39,6 +43,16 @@ namespace ThingAppraiser
                     Console.WriteLine(names[i]);
                 }
             }
+
+            return names;
+        }
+
+        static void Main(string[] args)
+        {
+            var names = getNames(args);
+            
+            var crawler = new Crawlers.TMDBCrawler();
+            var results = crawler.GetData(names);
 
             foreach (var result in results)
             {
