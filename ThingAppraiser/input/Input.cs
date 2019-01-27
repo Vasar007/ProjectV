@@ -5,23 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace ThingAppraiser.input
+namespace ThingAppraiser.Input
 {
     public class Input
     {
-        public string[] ReadLines(string fileName)
+        public static string[] GetNamesFromFile(string fileName = "")
         {
-            List<string> res = new List<string>();
-            using (var reader = new StreamReader(fileName))
+            string[] names = { };
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                if(fileName != "")
                 {
-                    res.Add(line.Trim(new[] { '\r', '\n', ' ' }));
+                    names = FileReader.ReadNames(fileName);
                 }
-                // Scanning name of product and removing special symbols.
+                else
+                {
+                    names = FileReader.ReadNames("scan_names.txt");
+                }
             }
-            return res.ToArray();
+            catch
+            {
+                Console.WriteLine("Incorrect file name");
+            }
+            while (names.Length == 0)
+            {
+                Console.WriteLine("input other file name");
+                try
+                {
+                    names = FileReader.ReadNames(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine("Incorrect file name");
+                }
+            }
+
+            return names;
         }
     }
 }
