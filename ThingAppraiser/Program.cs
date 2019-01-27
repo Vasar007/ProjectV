@@ -9,8 +9,18 @@ namespace ThingAppraiser
 
         static void Main(string[] args)
         {
+            string[] names = { };
+            if (args.Length == 1)
+                names = Input.Input.GetNamesFromFile(args[0]);
+            else
+                names = Input.Input.GetNamesFromFile();
+
+            if (names.Length == 0)
+                names = Movies;
+            
             var crawler = new Crawlers.TMDBCrawler();
-            var results = crawler.GetData(Movies);
+            var results = crawler.GetData(names);
+
             foreach (var result in results)
             {
                 Console.WriteLine(JToken.FromObject(result));
