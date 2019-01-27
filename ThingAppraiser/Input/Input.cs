@@ -1,44 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace ThingAppraiser.Input
 {
     public class Input
     {
-        static readonly string DefaultFileName = "scan_names.txt";
+        private const string _defaultFileName = "scan_names.txt";
 
         public static string[] GetNamesFromFile(string fileName = "")
         {
             string[] names = { };
             try
             {
-                if(fileName != "")
+                if (!string.IsNullOrEmpty(fileName))
                 {
                     names = FileReader.ReadNames(fileName);
                 }
                 else
                 {
-                    names = FileReader.ReadNames(DefaultFileName);
+                    names = FileReader.ReadNames(_defaultFileName);
                 }
             }
             catch
             {
-                Console.WriteLine("Incorrect file name");
+                Console.WriteLine("Incorrect file name!");
             }
+
             while (names.Length == 0)
             {
-                Console.WriteLine("input other file name");
+                Console.WriteLine("Input other file name:");
                 try
                 {
                     names = FileReader.ReadNames(Console.ReadLine());
                 }
                 catch
                 {
-                    Console.WriteLine("Incorrect file name");
+                    Console.WriteLine("Incorrect file name!");
                 }
             }
 

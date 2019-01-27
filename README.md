@@ -12,7 +12,7 @@ Project uses further dependencies:
 - Newtonsoft.Json, version=12.0.1;
 - RestSharp, version106.6.7;
 - System.ValueTuple, version=4.5.0;
-- JonSkeet.MiscUtil" version=0.2.0;
+- JonSkeet.MiscUtil, version=0.2.0;
 - MoreLINQ, version=3.1.0.
 
 You can install dependencies using NuGet package manager.
