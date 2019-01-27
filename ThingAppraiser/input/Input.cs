@@ -9,6 +9,8 @@ namespace ThingAppraiser.Input
 {
     public class Input
     {
+        static readonly string DefaultFileName = "scan_names.txt";
+
         public static string[] GetNamesFromFile(string fileName = "")
         {
             string[] names = { };
@@ -20,7 +22,7 @@ namespace ThingAppraiser.Input
                 }
                 else
                 {
-                    names = FileReader.ReadNames("scan_names.txt");
+                    names = FileReader.ReadNames(DefaultFileName);
                 }
             }
             catch

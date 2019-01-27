@@ -14,6 +14,9 @@ namespace ThingAppraiser
                 names = Input.Input.GetNamesFromFile(args[0]);
             else
                 names = Input.Input.GetNamesFromFile();
+
+            if (names.Length == 0)
+                names = Movies;
             
             var crawler = new Crawlers.TMDBCrawler();
             var results = crawler.GetData(names);
