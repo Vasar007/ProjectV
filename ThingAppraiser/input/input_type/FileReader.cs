@@ -7,7 +7,7 @@ using System.IO;
 
 namespace ThingAppraiser.Input
 {
-    class FileReader
+    public static class FileReader
     {
         private static string[] ReadRawFile(string fileName)
         {
