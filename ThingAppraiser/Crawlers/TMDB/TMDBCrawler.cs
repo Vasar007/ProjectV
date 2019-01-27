@@ -1,23 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using RestSharp;
 
 namespace ThingAppraiser.Crawlers
 {
-    public class TMDBCrawler : Crawler<TMDBMovie>
+    public class TMDBCrawler : Crawler
     {
-        private const string APIKey = "";
+        private const string _APIKey = "";
+        private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
 
-        public override string GetSearchQueryString(string movieName)
+        protected override RestClient Client { get; } = new RestClient(_searchUrl);
+
+        public override IRestResponse SendSearchQuery(string entityName)
         {
-            return $"https://api.themoviedb.org/3/search/movie?query={movieName}&api_key={APIKey}";
+            var request = new RestRequest(Method.GET);
+            request.AddParameter("undefined", "{}", ParameterType.RequestBody);
+            request.AddParameter("api_key", _APIKey, ParameterType.QueryString);
+            request.AddParameter("query", entityName, ParameterType.QueryString);
+            request.AddParameter("page", "1", ParameterType.QueryString); // Get only first page.
+            IRestResponse response = Client.Execute(request);
+            return response;
         }
 
-        public override List<TMDBMovie> GetData(string[] movies, bool ouput = false)
+        public override List<Data.DataHandler> GetData(string[] movies, bool ouput = false)
         {
-            List<TMDBMovie> searchResults = new List<TMDBMovie>();
+            var searchResults = new List<Data.DataHandler>();
             foreach (var movie in movies)
             {
                 var response = GetSearchResult(SendSearchQuery(movie));
+
+                if (!response["results"].HasValues) continue;
 
                 // Get first search result from response.
                 var result = response["results"][0];
@@ -26,7 +38,7 @@ namespace ThingAppraiser.Crawlers
                     Console.WriteLine(result);
                 }
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
-                var searchResult = result.ToObject<TMDBMovie>();
+                var searchResult = result.ToObject<Data.TMDBMovie>();
                 searchResults.Add(searchResult);
             }
             return searchResults;
