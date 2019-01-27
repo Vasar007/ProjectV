@@ -28,8 +28,23 @@ namespace ThingAppraiser
                 "Eternal Sunshine of the Spotless Mind"
         };
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            string[] names;
+            if (args.Length == 1)
+            {
+                names = Input.Input.GetNamesFromFile(args[0]);
+            }
+            else
+            {
+                names = Input.Input.GetNamesFromFile();
+            }
+
+            if (names.Length == 0)
+            {
+                names = Movies;
+            }
+
             var crawlerManager = new Crawlers.CrawlersManager
             {
                 new Crawlers.TMDBCrawler()
@@ -38,7 +53,7 @@ namespace ThingAppraiser
             Crawlers.CrawlersManager.PrintResultsToConsole(results);
             Console.ReadLine();
 
-            var appraisersManager = new Appraisers.AppraisersManager
+
             {
                 new Appraisers.TMDBAppraiser()
             };
