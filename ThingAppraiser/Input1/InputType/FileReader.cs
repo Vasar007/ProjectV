@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace ThingAppraiser.Input
@@ -11,7 +7,7 @@ namespace ThingAppraiser.Input
     {
         private static string[] ReadRawFile(string fileName)
         {
-            List<string> res = new List<string>();
+            var res = new List<string>();
             using (var reader = new StreamReader(fileName))
             {
                 string line;
@@ -24,11 +20,10 @@ namespace ThingAppraiser.Input
             return res.ToArray();
         }
 
-
         public static string[] ReadNames(string fileName)
         {
             string[] res = { };
-            if (fileName.Split('.').Last() == "txt")
+            if (fileName.EndsWith(".txt"))
             {
                 res = ReadRawFile(fileName);
             }

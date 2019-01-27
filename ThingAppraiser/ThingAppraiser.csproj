@@ -84,8 +84,8 @@
     <Compile Include="Crawlers\TMDB\TMDBMovie.cs" />
     <Compile Include="Data\DataHandler.cs" />
     <Compile Include="Appraisers\Appraiser.cs" />
-    <Compile Include="input\Input.cs" />
-    <Compile Include="input\input_type\FileReader.cs" />
+    <Compile Include="Input1\Input.cs" />
+    <Compile Include="Input1\InputType\FileReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Crawlers\TMDB\TMDBCrawler.cs" />

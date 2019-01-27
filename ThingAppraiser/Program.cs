@@ -2,34 +2,11 @@
 
 namespace ThingAppraiser
 {
-    class Program
+    public class Program
     {
-        static readonly string[] Movies =
-        {
-                "Arrival",
-                "Saving Private Ryan",
-                "Kubo and the Two Strings",
-                "Panfilov's 28 Men",
-                "Kimi no suizo wo tabetai",
-                "Expelled from Paradise",
-                "Pawn Sacrifice",
-                "Summer Wars",
-                "The Shape of Water",
-                "Blade Runner 2049",
-                "The Gambler",
-                "Maze Runner",
-                "Pixels",
-                "Edinichka",
-                "Last Knights",
-                "Ratchet & Clank",
-                "The Mist",
-                "Se7en",
-                "Gone Girl",
-                "Eternal Sunshine of the Spotless Mind"
-        };
-
         private static void Main(string[] args)
         {
+            // Show the case when we have a movies to appraise.
             string[] names;
             if (args.Length == 1)
             {
@@ -42,18 +19,18 @@ namespace ThingAppraiser
 
             if (names.Length == 0)
             {
-                names = Movies;
+                return;
             }
 
             var crawlerManager = new Crawlers.CrawlersManager
             {
                 new Crawlers.TMDBCrawler()
             };
-            var results = crawlerManager.GetAllData(Movies);
+            var results = crawlerManager.GetAllData(names);
             Crawlers.CrawlersManager.PrintResultsToConsole(results);
             Console.ReadLine();
 
-
+            var appraisersManager = new Appraisers.AppraisersManager
             {
                 new Appraisers.TMDBAppraiser()
             };
