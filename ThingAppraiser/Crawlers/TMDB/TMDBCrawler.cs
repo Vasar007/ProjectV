@@ -20,7 +20,7 @@ namespace ThingAppraiser.Crawlers
             _APIKey = json["TMDBAPIKey"].ToString();
         }
 
-        public override IRestResponse SendSearchQuery(string entityName)
+        protected override IRestResponse SendSearchQuery(string entityName)
         {
             var request = new RestRequest(Method.GET);
             request.AddParameter("undefined", "{}", ParameterType.RequestBody);
@@ -31,10 +31,10 @@ namespace ThingAppraiser.Crawlers
             return response;
         }
 
-        public override List<Data.DataHandler> GetData(string[] movies, bool ouput = false)
+        public override List<Data.DataHandler> GetData(List<string> entities, bool ouput = false)
         {
             var searchResults = new List<Data.DataHandler>();
-            foreach (var movie in movies)
+            foreach (var movie in entities)
             {
                 var response = GetSearchResult(SendSearchQuery(movie));
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ThingAppraiser
 {
@@ -7,18 +8,21 @@ namespace ThingAppraiser
         private static void Main(string[] args)
         {
             // Show the case when we have a movies to appraise.
-            string[] names;
+            List<string> names;
+            var inputManager = new Input.InputManager(new Input.LocalFileReader());
             if (args.Length == 1)
             {
-                names = Input.Input.GetNamesFromFile(args[0]);
+                names = inputManager.GetNames(args[0]);
             }
             else
             {
-                names = Input.Input.GetNamesFromFile();
+                names = inputManager.GetNames();
             }
 
-            if (names.Length == 0)
+            if (names.Count == 0)
             {
+                Console.WriteLine("Input is empty. Closing...");
+                Console.ReadLine();
                 return;
             }
 

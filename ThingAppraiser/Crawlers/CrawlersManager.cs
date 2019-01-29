@@ -7,17 +7,17 @@ namespace ThingAppraiser.Crawlers
 {
     public class CrawlersManager : IEnumerable
     {
-        public List<Crawler> crawlers = new List<Crawler>();
+        private List<Crawler> _crawlers = new List<Crawler>();
 
         public void Add(Crawler crawler)
         {
-            crawlers.Add(crawler);
+            _crawlers.Add(crawler);
         }
 
-        public List<List<Data.DataHandler>> GetAllData(string[] entities)
+        public List<List<Data.DataHandler>> GetAllData(List<string> entities)
         {
             var results = new List<List<Data.DataHandler>>();
-            foreach (var crawler in crawlers)
+            foreach (var crawler in _crawlers)
             {
                 results.Add(crawler.GetData(entities));
             }
@@ -37,7 +37,7 @@ namespace ThingAppraiser.Crawlers
 
         public IEnumerator GetEnumerator()
         {
-            return crawlers.GetEnumerator();
+            return _crawlers.GetEnumerator();
         }
     }
 }

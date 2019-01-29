@@ -6,14 +6,14 @@ namespace ThingAppraiser.Appraisers
 {
     public class AppraisersManager : IEnumerable
     {
-        public Dictionary<Type, List<Appraiser>> appraisers =
+        private Dictionary<Type, List<Appraiser>> _appraisers =
             new Dictionary<Type, List<Appraiser>>();
 
         public void Add(Appraiser appraiser)
         {
-            if (appraisers.ContainsKey(appraiser.TypeID))
+            if (_appraisers.ContainsKey(appraiser.TypeID))
             {
-                var list = appraisers[appraiser.TypeID];
+                var list = _appraisers[appraiser.TypeID];
                 if (!list.Contains(appraiser))
                 {
                     list.Add(appraiser);
@@ -25,7 +25,7 @@ namespace ThingAppraiser.Appraisers
                 {
                     appraiser
                 };
-                appraisers.Add(appraiser.TypeID, list);
+                _appraisers.Add(appraiser.TypeID, list);
             }
         }
 
@@ -36,7 +36,7 @@ namespace ThingAppraiser.Appraisers
             foreach (var datum in data)
             {
                 if (datum.Count == 0) continue;
-                if (!appraisers.TryGetValue(datum[0].GetType(), out var values))
+                if (!_appraisers.TryGetValue(datum[0].GetType(), out var values))
                 {
                     Console.WriteLine($"Type {datum[0].GetType()} was not used!");
                     continue;
@@ -62,7 +62,7 @@ namespace ThingAppraiser.Appraisers
 
         public IEnumerator GetEnumerator()
         {
-            return appraisers.GetEnumerator();
+            return _appraisers.GetEnumerator();
         }
     }
 }

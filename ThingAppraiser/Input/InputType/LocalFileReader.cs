@@ -3,31 +3,31 @@ using System.IO;
 
 namespace ThingAppraiser.Input
 {
-    public static class LocalFileReader
+    public class LocalFileReader : Inputter
     {
-        private static string[] ReadRawFile(string fileName)
+        private List<string> ReadRawFile(string filename)
         {
-            var res = new List<string>();
-            using (var reader = new StreamReader(fileName))
+            var result = new List<string>();
+            using (var reader = new StreamReader(filename))
             {
+                // Scanning name of things and removing special symbols.
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    res.Add(line.Trim('\r', '\n', ' '));
+                    result.Add(line.Trim('\r', '\n', ' '));
                 }
-                // Scanning name of product and removing special symbols.
             }
-            return res.ToArray();
+            return result;
         }
 
-        public static string[] ReadNames(string fileName)
+        public override List<string> ReadNames(string storageName)
         {
-            string[] res = { };
-            if (fileName.EndsWith(".txt"))
+            var result = new List<string>();
+            if (storageName.EndsWith(".txt"))
             {
-                res = ReadRawFile(fileName);
+                result = ReadRawFile(storageName);
             }
-            return res;
+            return result;
         }
     }
 }
