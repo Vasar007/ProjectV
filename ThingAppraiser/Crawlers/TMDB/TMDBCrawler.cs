@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
-        private const string _APIKey = "";
+        private readonly string _APIKey;
         private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
 
         protected override RestClient Client { get; } = new RestClient(_searchUrl);
+
+        public TMDBCrawler()
+        {
+            // Load API key from credentials file.
+            var json = JObject.Parse(File.ReadAllText("credentials.json"));
+            _APIKey = json["TMDBAPIKey"].ToString();
+        }
 
         public override IRestResponse SendSearchQuery(string entityName)
         {

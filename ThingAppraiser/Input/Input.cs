@@ -13,11 +13,11 @@ namespace ThingAppraiser.Input
             {
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    names = FileReader.ReadNames(fileName);
+                    names = LocalFileReader.ReadNames(fileName);
                 }
                 else
                 {
-                    names = FileReader.ReadNames(_defaultFileName);
+                    names = LocalFileReader.ReadNames(_defaultFileName);
                 }
             }
             catch
@@ -30,7 +30,7 @@ namespace ThingAppraiser.Input
                 Console.WriteLine("Input other file name:");
                 try
                 {
-                    names = FileReader.ReadNames(Console.ReadLine());
+                    names = LocalFileReader.ReadNames(Console.ReadLine());
                 }
                 catch
                 {
