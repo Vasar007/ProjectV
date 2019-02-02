@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -8,8 +9,9 @@ namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
-        private readonly string _APIKey;
         private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
+        private const int _requestsPerTime = 30;
+        private readonly string _APIKey;
 
         protected override RestClient Client { get; } = new RestClient(_searchUrl);
 
@@ -18,6 +20,33 @@ namespace ThingAppraiser.Crawlers
             // Load API key from credentials file.
             var json = JObject.Parse(File.ReadAllText("credentials.json"));
             _APIKey = json["TMDBAPIKey"].ToString();
+        }
+
+        private void Sleep(int millisecondsTimeout = 1000)
+        {
+            Thread.Sleep(millisecondsTimeout);
+        }
+
+        private JObject GetResponse(string entityName)
+        {
+            const string goodStatusCode = "200";
+            const int limitTries = 10;
+            const int millisecondsTimeout = 1000;
+            int numberOfTries = 1;
+
+            var response = GetSearchResult(SendSearchQuery(entityName));
+            while (response["status_code"] != null &&
+                   response["status_code"].ToString() != goodStatusCode)
+            {
+                if (numberOfTries > limitTries)
+                {
+                    throw new InvalidOperationException("Couldn't get good response from TMDB.");
+                }
+                Sleep(numberOfTries * millisecondsTimeout);
+                ++numberOfTries;
+                response = GetSearchResult(SendSearchQuery(entityName));
+            }
+            return response;
         }
 
         protected override IRestResponse SendSearchQuery(string entityName)
@@ -36,10 +65,13 @@ namespace ThingAppraiser.Crawlers
             var searchResults = new List<Data.DataHandler>();
             foreach (var movie in entities)
             {
-                var response = GetSearchResult(SendSearchQuery(movie));
+                var response = GetResponse(movie);
 
-                if (!response["results"].HasValues) continue;
-
+                if (!response["results"].HasValues)
+                {
+                    Console.WriteLine($"{movie} wasn't processed.");
+                    continue;
+                }
                 // Get first search result from response.
                 var result = response["results"][0];
                 if (ouput)

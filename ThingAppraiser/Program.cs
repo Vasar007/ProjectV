@@ -16,7 +16,7 @@ namespace ThingAppraiser
             }
             else
             {
-                Console.WriteLine("Enter filename which contains the Things:");
+                Console.Write("Enter filename which contains the Things: ");
                 names = inputManager.GetNames(Console.ReadLine());
             }
 

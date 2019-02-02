@@ -28,17 +28,20 @@
         public int? PageSize { get; set; }
 
         /// <summary>
-        /// The token for continuing a previous list request on the next page. This should be set to the value of 'nextPageToken' from the previous response.
+        /// The token for continuing a previous list request on the next page. This should be set
+        /// to the value of 'nextPageToken' from the previous response.
         /// </summary> 
         public string PageToken { get; set; }
 
         /// <summary>
-        /// A query for filtering the file results. See the "Search for Files" guide for supported syntax.
+        /// A query for filtering the file results. See the "Search for Files" guide for supported
+        /// syntax.
         /// </summary>
         public string Query { get; set; }
 
         /// <summary>
-        /// A comma-separated list of spaces to query within the corpus. Supported values are 'drive', 'appDataFolder' and 'photos'.
+        /// A comma-separated list of spaces to query within the corpus. Supported values are
+        /// 'drive', 'appDataFolder' and 'photos'.
         /// </summary>
         public string Spaces { get; set; }
 

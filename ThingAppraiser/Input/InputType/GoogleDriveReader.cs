@@ -66,7 +66,7 @@ namespace ThingAppraiser.Input
                 var piShared = (request.GetType()).GetProperty(property.Name);
                 if (property.GetValue(optional, null) != null)
                 {
-                    // TODO Test that we do not add values for items that are null
+                    // TODO: test that we do not add values for items that are null.
                     piShared?.SetValue(request, property.GetValue(optional, null), null);
                 }
             }
@@ -216,6 +216,11 @@ namespace ThingAppraiser.Input
             return true;
         }
 
+        private bool HasExtention(string filename)
+        {
+            return filename.Contains(".");
+        }
+
         public override List<string> ReadNames(string storageName)
         {
             var files = ListFiles(new GoogleDriveFilesListOptionalParams()
@@ -223,16 +228,17 @@ namespace ThingAppraiser.Input
 
             var result = new List<string>();
 
-            Console.WriteLine("Files:");
-            if (files?.Count > 0)
+            if (files != null && files.Count > 0)
             {
                 foreach (var file in files)
                 {
-                    Console.WriteLine($"{file.Name} ({file.Id})");
                     if (storageName == file.Name)
                     {
-                        //ExportFile(file.Id, storageName, "text/csv");
-                        DownloadFile(file.Id, storageName);
+                        const string mimeType = "text/csv";
+                        if (HasExtention(storageName)) DownloadFile(file.Id, storageName);
+                        else ExportFile(file.Id, storageName, mimeType);
+
+                        storageName = storageName + AddExtension(mimeType);
                         result = _localFileReader.ReadNames(storageName);
                         DeleteDownloadedFile(storageName);
                         break;

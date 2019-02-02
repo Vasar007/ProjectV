@@ -5,7 +5,7 @@ namespace ThingAppraiser.Input
 {
     public class InputManager
     {
-        private const string _defaultFilename = "scan_names.txt";
+        private const string _defaultFilename = "thing_names.txt";
 
         private Inputter _inputter;
 
@@ -42,7 +42,7 @@ namespace ThingAppraiser.Input
 
             while (result.Count == 0)
             {
-                Console.WriteLine("No Things were found. Enter other storage name:");
+                Console.Write("No Things were found. Enter other storage name: ");
                 TryReadNames(ref result, Console.ReadLine());
             }
 
