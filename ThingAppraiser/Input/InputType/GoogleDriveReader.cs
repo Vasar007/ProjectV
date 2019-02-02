@@ -201,6 +201,21 @@ namespace ThingAppraiser.Input
             return listRequest.Execute().Files;
         }
 
+        private bool DeleteDownloadedFile(string filename)
+        {
+            try
+            {
+                File.Delete(filename);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Couldn't delete donwloaded file {filename}. " +
+                                  $"Error:{ex.Message}");
+                return false;
+            }
+            return true;
+        }
+
         public override List<string> ReadNames(string storageName)
         {
             var files = ListFiles(new GoogleDriveFilesListOptionalParams()
@@ -219,6 +234,7 @@ namespace ThingAppraiser.Input
                         //ExportFile(file.Id, storageName, "text/csv");
                         DownloadFile(file.Id, storageName);
                         result = _localFileReader.ReadNames(storageName);
+                        DeleteDownloadedFile(storageName);
                         break;
                     }
                 }

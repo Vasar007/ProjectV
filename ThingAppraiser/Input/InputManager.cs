@@ -22,7 +22,7 @@ namespace ThingAppraiser.Input
             }
             catch
             {
-                Console.WriteLine("Error! Cannot read file.");
+                Console.WriteLine("Error! Couldn't read file.");
                 return false;
             }
             return true;
