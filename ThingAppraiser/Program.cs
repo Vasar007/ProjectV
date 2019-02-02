@@ -9,14 +9,15 @@ namespace ThingAppraiser
         {
             // Show the case when we have a movies to appraise.
             List<string> names;
-            var inputManager = new Input.InputManager(new Input.LocalFileReader());
+            var inputManager = new Input.InputManager(new Input.GoogleDriveReader()); // LocalFileReader
             if (args.Length == 1)
             {
                 names = inputManager.GetNames(args[0]);
             }
             else
             {
-                names = inputManager.GetNames();
+                Console.WriteLine("Enter filename which contains the Things:");
+                names = inputManager.GetNames(Console.ReadLine());
             }
 
             if (names.Count == 0)

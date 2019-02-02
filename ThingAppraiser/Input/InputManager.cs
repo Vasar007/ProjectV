@@ -14,36 +14,36 @@ namespace ThingAppraiser.Input
             _inputter = inputter;
         }
 
-        public List<string> GetNames(string storageName = "")
+        private bool TryReadNames(ref List<string> result, string storageName)
         {
-            var result = new List<string>();
             try
             {
-                if (!string.IsNullOrEmpty(storageName))
-                {
-                    result = _inputter.ReadNames(storageName);
-                }
-                else
-                {
-                    result = _inputter.ReadNames(_defaultFilename);
-                }
+                result = _inputter.ReadNames(storageName);
             }
             catch
             {
-                Console.WriteLine("Incorrect storage name!");
+                Console.WriteLine("Error! Cannot read file.");
+                return false;
+            }
+            return true;
+        }
+
+        public List<string> GetNames(string storageName = "")
+        {
+            var result = new List<string>();
+            if (!string.IsNullOrEmpty(storageName))
+            {
+                TryReadNames(ref result, storageName);
+            }
+            else
+            {
+                TryReadNames(ref result, _defaultFilename);
             }
 
             while (result.Count == 0)
             {
-                Console.WriteLine("Input other storage name:");
-                try
-                {
-                    result = _inputter.ReadNames(Console.ReadLine());
-                }
-                catch
-                {
-                    Console.WriteLine("Incorrect storage name!");
-                }
+                Console.WriteLine("No Things were found. Enter other storage name:");
+                TryReadNames(ref result, Console.ReadLine());
             }
 
             return result;
