@@ -62,7 +62,7 @@ namespace ThingAppraiser.Input
             foreach (var property in optionalProperties)
             {
                 // Copy value from optional parms to the request.
-                // They should have the same names and datatypes.
+                // WARNING! They should have the same names and datatypes.
                 var piShared = (request.GetType()).GetProperty(property.Name);
                 if (property.GetValue(optional, null) != null)
                 {
@@ -101,7 +101,7 @@ namespace ThingAppraiser.Input
 
         private void SaveStream(MemoryStream stream, string saveTo)
         {
-            using (FileStream file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
+            using (var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
             {
                 stream.WriteTo(file);
             }
@@ -224,7 +224,7 @@ namespace ThingAppraiser.Input
         public override List<string> ReadNames(string storageName)
         {
             var files = ListFiles(new GoogleDriveFilesListOptionalParams()
-                                  { Query = $"name contains '{storageName}'" }).Files;
+                                  { Q = $"name contains '{storageName}'" }).Files;
 
             var result = new List<string>();
 

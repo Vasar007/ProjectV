@@ -5,7 +5,7 @@
         /// <summary>
         /// The source of files to list.
         /// </summary>
-        public string Corpus { get; set; }
+        public string Corpora { get; set; }
 
         /// <summary>
         /// A comma-separated list of sort keys. Valid keys are 'createdTime', 'folder',
@@ -37,7 +37,7 @@
         /// A query for filtering the file results. See the "Search for Files" guide for supported
         /// syntax.
         /// </summary>
-        public string Query { get; set; }
+        public string Q { get; set; }
 
         /// <summary>
         /// A comma-separated list of spaces to query within the corpus. Supported values are
