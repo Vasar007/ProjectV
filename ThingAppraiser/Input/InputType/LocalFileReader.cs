@@ -12,7 +12,7 @@ namespace ThingAppraiser.Input
         [DelimitedRecord(","), IgnoreEmptyLines(true), IgnoreFirst(1)]
         private class FileData
         {
-            [FieldTitle("Thing Name")]
+            [FieldOrder(1), FieldTitle("Thing Name")]
             public string thingName = default(string); // Default assignement to remove warning.
         }
 

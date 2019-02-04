@@ -109,35 +109,37 @@ namespace ThingAppraiser.Input
 
         private void DownloadFile(string fileId, string saveTo)
         {
-            var request = _driveService.Files.Get(fileId);
-            var stream = new MemoryStream();
-
-            // Add a handler which will be notified on progress changes.
-            // It will notify on each chunk download and when the
-            // download is completed or failed.
-            request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
+            using (var stream = new MemoryStream())
             {
-                switch (progress.Status)
+                var request = _driveService.Files.Get(fileId);
+
+                // Add a handler which will be notified on progress changes.
+                // It will notify on each chunk download and when the
+                // download is completed or failed.
+                request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
                 {
-                    case DownloadStatus.Downloading:
+                    switch (progress.Status)
                     {
-                        Console.WriteLine(progress.BytesDownloaded);
-                        break;
+                        case DownloadStatus.Downloading:
+                        {
+                            Console.WriteLine(progress.BytesDownloaded);
+                            break;
+                        }
+                        case DownloadStatus.Completed:
+                        {
+                            Console.WriteLine("Download complete.");
+                            SaveStream(stream, saveTo);
+                            break;
+                        }
+                        case DownloadStatus.Failed:
+                        {
+                            Console.WriteLine("Download failed.");
+                            break;
+                        }
                     }
-                    case DownloadStatus.Completed:
-                    {
-                        Console.WriteLine("Download complete.");
-                        SaveStream(stream, saveTo);
-                        break;
-                    }
-                    case DownloadStatus.Failed:
-                    {
-                        Console.WriteLine("Download failed.");
-                        break;
-                    }
-                }
-            };
-            request.Download(stream);
+                };
+                request.Download(stream);
+            }
         }
 
         private string AddExtension(string mimeType)
@@ -158,35 +160,37 @@ namespace ThingAppraiser.Input
         // Duplicated code because of there is not common interface for requests.
         private void ExportFile(string fileId, string saveTo, string mimeType = "text/plain")
         {
-            var request = _driveService.Files.Export(fileId, mimeType);
-            var stream = new MemoryStream();
-
-            // Add a handler which will be notified on progress changes.
-            // It will notify on each chunk download and when the
-            // download is completed or failed.
-            request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
+            using (var stream = new MemoryStream())
             {
-                switch (progress.Status)
+                var request = _driveService.Files.Export(fileId, mimeType);
+
+                // Add a handler which will be notified on progress changes.
+                // It will notify on each chunk download and when the
+                // download is completed or failed.
+                request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
                 {
-                    case DownloadStatus.Downloading:
+                    switch (progress.Status)
                     {
-                        Console.WriteLine(progress.BytesDownloaded);
-                        break;
+                        case DownloadStatus.Downloading:
+                        {
+                            Console.WriteLine(progress.BytesDownloaded);
+                            break;
+                        }
+                        case DownloadStatus.Completed:
+                        {
+                            Console.WriteLine("Download complete.");
+                            SaveStream(stream, saveTo + AddExtension(mimeType));
+                            break;
+                        }
+                        case DownloadStatus.Failed:
+                        {
+                            Console.WriteLine("Download failed.");
+                            break;
+                        }
                     }
-                    case DownloadStatus.Completed:
-                    {
-                        Console.WriteLine("Download complete.");
-                        SaveStream(stream, saveTo + AddExtension(mimeType));
-                        break;
-                    }
-                    case DownloadStatus.Failed:
-                    {
-                        Console.WriteLine("Download failed.");
-                        break;
-                    }
-                }
-            };
-            request.Download(stream);
+                };
+                request.Download(stream);
+            }
         }
 
         private IList<Google.Apis.Drive.v3.Data.File> GetFiles(int pageSize = 10,
