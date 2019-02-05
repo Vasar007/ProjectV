@@ -8,7 +8,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Google.Apis.Download;
 
-namespace ThingAppraiser.Input
+namespace ThingAppraiser.IO.Input
 {
     public class GoogleDriveReader : Inputter
     {
@@ -99,7 +99,7 @@ namespace ThingAppraiser.Input
             }
         }
 
-        private void SaveStream(MemoryStream stream, string saveTo)
+        private static void SaveStream(MemoryStream stream, string saveTo)
         {
             using (var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
             {
@@ -127,7 +127,7 @@ namespace ThingAppraiser.Input
                         }
                         case DownloadStatus.Completed:
                         {
-                            Console.WriteLine("Download complete.");
+                            Console.WriteLine("Download completed.");
                             SaveStream(stream, saveTo);
                             break;
                         }
@@ -142,7 +142,7 @@ namespace ThingAppraiser.Input
             }
         }
 
-        private string AddExtension(string mimeType)
+        private static string AddExtension(string mimeType)
         {
             switch (mimeType)
             {
@@ -205,7 +205,7 @@ namespace ThingAppraiser.Input
             return listRequest.Execute().Files;
         }
 
-        private bool DeleteDownloadedFile(string filename)
+        private static bool DeleteDownloadedFile(string filename)
         {
             try
             {
@@ -214,18 +214,18 @@ namespace ThingAppraiser.Input
             catch (Exception ex)
             {
                 Console.WriteLine($"Couldn't delete donwloaded file {filename}. " +
-                                  $"Error:{ex.Message}");
+                                  $"Error: {ex.Message}");
                 return false;
             }
             return true;
         }
 
-        private bool HasExtention(string filename)
+        private static bool HasExtention(string filename)
         {
             return filename.Contains(".");
         }
 
-        public override List<string> ReadNames(string storageName)
+        public override List<string> ReadThingNames(string storageName)
         {
             var files = ListFiles(new GoogleDriveFilesListOptionalParams()
                                   { Q = $"name contains '{storageName}'" }).Files;
@@ -243,7 +243,7 @@ namespace ThingAppraiser.Input
                         else ExportFile(file.Id, storageName, mimeType);
 
                         storageName = storageName + AddExtension(mimeType);
-                        result = _localFileReader.ReadNames(storageName);
+                        result = _localFileReader.ReadThingNames(storageName);
                         DeleteDownloadedFile(storageName);
                         break;
                     }

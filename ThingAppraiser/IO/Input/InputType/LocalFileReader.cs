@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using FileHelpers;
 using CsvHelper;
 
-namespace ThingAppraiser.Input
+namespace ThingAppraiser.IO.Input
 {
     public class LocalFileReader : Inputter
     {
-        [DelimitedRecord(","), IgnoreEmptyLines(true), IgnoreFirst(1)]
-        private class FileData
+        private static List<string> ReadFile(string filename)
         {
-            [FieldOrder(1), FieldTitle("Thing Name")]
-            public string thingName = default(string); // Default assignement to remove warning.
-        }
-
-        private List<string> ReadFile(string filename)
-        {
-            var engine = new FileHelperAsyncEngine<FileData>();
+            var engine = new FileHelperAsyncEngine<Data.InputFileData>();
 
             var result = new List<string>();
             // Read.
@@ -30,7 +22,7 @@ namespace ThingAppraiser.Input
             return result;
         }
 
-        private List<string> ReadCsvFile(string filename)
+        private static List<string> ReadCsvFile(string filename)
         {
             var result = new List<string>();
             using (var reader = new StreamReader(filename))
@@ -52,7 +44,7 @@ namespace ThingAppraiser.Input
             return result;
         }
 
-        private List<string> ReadRawFile(string filename)
+        private static List<string> ReadRawFile(string filename)
         {
             var result = new List<string>();
             using (var reader = new StreamReader(filename))
@@ -67,7 +59,7 @@ namespace ThingAppraiser.Input
             return result;
         }
 
-        public override List<string> ReadNames(string storageName)
+        public override List<string> ReadThingNames(string storageName)
         {
             var result = new List<string>();
             if (storageName.EndsWith(".csv"))

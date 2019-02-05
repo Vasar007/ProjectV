@@ -9,7 +9,7 @@ namespace ThingAppraiser
         {
             // Show the case when we have a movies to appraise.
             List<string> names;
-            var inputManager = new Input.InputManager(new Input.GoogleDriveReader()); // LocalFileReader
+            var inputManager = new IO.Input.InputManager(new IO.Input.GoogleDriveReader()); // LocalFileReader
             if (args.Length == 1)
             {
                 names = inputManager.GetNames(args[0]);
@@ -41,6 +41,17 @@ namespace ThingAppraiser
             };
             var ratings = appraisersManager.GetAllRatings(results);
             Appraisers.AppraisersManager.PrintRatingsToConsole(ratings);
+            Console.ReadLine();
+
+            var outputManager = new IO.Output.OutputManager(new IO.Output.LocalFileWriter());
+            if (outputManager.SaveResults(ratings))
+            {
+                Console.WriteLine("Ratings was saved to the file.");
+            }
+            else
+            {
+                Console.WriteLine("Ratings wasn't saved to the file.");
+            }
             Console.ReadLine();
         }
     }

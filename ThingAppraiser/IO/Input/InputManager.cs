@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ThingAppraiser.Input
+namespace ThingAppraiser.IO.Input
 {
     public class InputManager
     {
@@ -14,36 +14,36 @@ namespace ThingAppraiser.Input
             _inputter = inputter;
         }
 
-        private bool TryReadNames(ref List<string> result, string storageName)
+        private bool TryReadThingNames(ref List<string> result, string storageName)
         {
             try
             {
-                result = _inputter.ReadNames(storageName);
+                result = _inputter.ReadThingNames(storageName);
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Error! Couldn't get access to the storage.");
+                Console.WriteLine($"Couldn't get access to the storage. Error: {ex.Message}");
                 return false;
             }
             return true;
         }
 
-        public List<string> GetNames(string storageName = "")
+        public List<string> GetNames(string storageName = _defaultFilename)
         {
             var result = new List<string>();
             if (!string.IsNullOrEmpty(storageName))
             {
-                TryReadNames(ref result, storageName);
+                TryReadThingNames(ref result, storageName);
             }
             else
             {
-                TryReadNames(ref result, _defaultFilename);
+                TryReadThingNames(ref result, _defaultFilename);
             }
 
             while (result.Count == 0)
             {
                 Console.Write("No Things were found. Enter other storage name: ");
-                TryReadNames(ref result, Console.ReadLine());
+                TryReadThingNames(ref result, Console.ReadLine());
             }
 
             return result;

@@ -39,7 +39,7 @@ namespace FileHelpers
 
         public static string GetCsvHeader(this Type type)
         {
-            return String.Join(",", type.GetFieldTitles());
+            return string.Join(",", type.GetFieldTitles());
         }
 
         static bool IsFileHelpersField(this FieldInfo field)
@@ -53,10 +53,12 @@ namespace FileHelpers
         {
             // Hack cos FieldOrderAttribute.Order is internal (why?)
             var pi = typeof(FieldOrderAttribute)
-                .GetProperty("Order",
-                    BindingFlags.GetProperty |
-                    BindingFlags.Instance |
-                    BindingFlags.NonPublic);
+                .GetProperty("Order");
+                //BindingFlags.GetProperty |
+                //BindingFlags.Instance |
+                //BindingFlags.NonPublic
+
+            // Remove bit flags because they cannot find field order properly.
 
             return (int)pi.GetValue(attribute, null);
         }

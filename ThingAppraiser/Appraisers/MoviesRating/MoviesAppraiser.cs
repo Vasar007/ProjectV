@@ -7,7 +7,7 @@ namespace ThingAppraiser.Appraisers
     {
         public override Type TypeID { get { return typeof(Data.Movie); } }
 
-        public override List<(Data.DataHandler, float)> GetRatings(List<Data.DataHandler> entities)
+        public override List<Data.ResultType> GetRatings(List<Data.DataHandler> entities)
         {
             return base.GetRatings(entities);
         }

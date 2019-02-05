@@ -29,10 +29,10 @@ namespace ThingAppraiser.Appraisers
             }
         }
 
-        public List<List<(Data.DataHandler, float)>>
+        public List<List<Data.ResultType>>
             GetAllRatings(List<List<Data.DataHandler>> data)
         {
-            var results = new List<List<(Data.DataHandler, float)>>();
+            var results = new List<List<Data.ResultType>>();
             foreach (var datum in data)
             {
                 if (datum.Count == 0) continue;
@@ -49,7 +49,7 @@ namespace ThingAppraiser.Appraisers
             return results;
         }
 
-        public static void PrintRatingsToConsole(List<List<(Data.DataHandler, float)>> ratings)
+        public static void PrintRatingsToConsole(List<List<Data.ResultType>> ratings)
         {
             foreach (var rating in ratings)
             {
