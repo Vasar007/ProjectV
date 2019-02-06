@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FileHelpers;
 
 namespace ThingAppraiser.IO.Output
@@ -8,24 +9,20 @@ namespace ThingAppraiser.IO.Output
     {
         private static bool WriteFile(List<List<Data.ResultType>> results, string filename)
         {
-            var s = typeof(Data.OuputFileData).GetCsvHeader();
             var engine = new FileHelperAsyncEngine<Data.OuputFileData>
             {
                 HeaderText = typeof(Data.OuputFileData).GetCsvHeader()
             };
-            // engine.HeaderText = engine.GetFileHeader();
 
             // Write.
             using (engine.BeginWriteFile(filename))
             {
                 var converted = ConvertResultsToDict(results);
-                // The engine is IEnumerable.
-                foreach (var result in converted)
+                engine.WriteNexts(converted.Select(result => new Data.OuputFileData
                 {
-                    var output = new Data.OuputFileData { thingName = result.Key,
-                                                          ratingValue = result.Value };
-                    engine.WriteNext(output);
-                }
+                    thingName = result.Key,
+                    ratingValue = result.Value
+                }));
             }
             return true;
         }
