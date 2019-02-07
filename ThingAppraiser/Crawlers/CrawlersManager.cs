@@ -11,6 +11,7 @@ namespace ThingAppraiser.Crawlers
 
         public void Add(Crawler crawler)
         {
+            HelperMethods.ThrowIfNull(crawler, nameof(crawler));
             _crawlers.Add(crawler);
         }
 

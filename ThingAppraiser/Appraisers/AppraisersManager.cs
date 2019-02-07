@@ -11,6 +11,8 @@ namespace ThingAppraiser.Appraisers
 
         public void Add(Appraiser appraiser)
         {
+            HelperMethods.ThrowIfNull(appraiser, nameof(appraiser));
+
             if (_appraisers.ContainsKey(appraiser.TypeID))
             {
                 var list = _appraisers[appraiser.TypeID];
