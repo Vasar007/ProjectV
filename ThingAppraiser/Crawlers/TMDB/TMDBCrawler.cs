@@ -35,7 +35,7 @@ namespace ThingAppraiser.Crawlers
             int numberOfTries = 1;
 
             var response = GetSearchResult(SendSearchQuery(entityName));
-            while (response["status_code"] != null &&
+            while (!(response["status_code"] is null) &&
                    response["status_code"].ToString() != goodStatusCode)
             {
                 if (numberOfTries > limitTries)

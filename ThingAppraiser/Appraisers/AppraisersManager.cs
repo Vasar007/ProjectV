@@ -11,11 +11,10 @@ namespace ThingAppraiser.Appraisers
 
         public void Add(Appraiser appraiser)
         {
-            HelperMethods.ThrowIfNull(appraiser, nameof(appraiser));
+            appraiser.ThrowIfNull(nameof(appraiser));
 
-            if (_appraisers.ContainsKey(appraiser.TypeID))
+            if (_appraisers.TryGetValue(appraiser.TypeID, out var list))
             {
-                var list = _appraisers[appraiser.TypeID];
                 if (!list.Contains(appraiser))
                 {
                     list.Add(appraiser);
@@ -23,16 +22,11 @@ namespace ThingAppraiser.Appraisers
             }
             else
             {
-                var list = new List<Appraiser>
-                {
-                    appraiser
-                };
-                _appraisers.Add(appraiser.TypeID, list);
+                _appraisers.Add(appraiser.TypeID, new List<Appraiser> { appraiser });
             }
         }
 
-        public List<List<Data.ResultType>>
-            GetAllRatings(List<List<Data.DataHandler>> data)
+        public List<List<Data.ResultType>> GetAllRatings(List<List<Data.DataHandler>> data)
         {
             var results = new List<List<Data.ResultType>>();
             foreach (var datum in data)
@@ -49,17 +43,6 @@ namespace ThingAppraiser.Appraisers
                 }
             }
             return results;
-        }
-
-        public static void PrintRatingsToConsole(List<List<Data.ResultType>> ratings)
-        {
-            foreach (var rating in ratings)
-            {
-                foreach (var (item, value) in rating)
-                {
-                    Console.WriteLine($"{item.Title} has rating {value}.");
-                }
-            }
         }
 
         public IEnumerator GetEnumerator()

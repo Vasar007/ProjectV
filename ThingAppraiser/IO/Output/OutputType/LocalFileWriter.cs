@@ -5,7 +5,7 @@ using FileHelpers;
 
 namespace ThingAppraiser.IO.Output
 {
-    public class LocalFileWriter : Outputter
+    public class LocalFileWriter : IOutputter
     {
         private static bool WriteFile(List<List<Data.ResultType>> results, string filename)
         {
@@ -20,13 +20,18 @@ namespace ThingAppraiser.IO.Output
                 var converted = ConvertResultsToDict(results);
                 engine.WriteNexts(converted.Select(result => new Data.OuputFileData
                 {
-                    thingName = result.Key,
+                    thingName = $"\"{result.Key}\"", // Escape Thing names.
                     ratingValue = result.Value
                 }));
             }
             return true;
         }
 
+        // TODO: add additional data structure based on Dictionary<string, (Data.ResultType, uint)>
+        // where string is name of the Thing, ResultType is meta information and uint is place in
+        // the rating. If appraiser cannot appraise the Thing, then we would have pair
+        // <nameof(Thing), null>. Such data structure, I think, can help to decrease memory usage
+        // and save sorting order in ratings with meta information.
         private static Dictionary<string, List<float>> ConvertResultsToDict(
             List<List<Data.ResultType>> results)
         {
@@ -48,7 +53,7 @@ namespace ThingAppraiser.IO.Output
             return converted;
         }
 
-        public override bool SaveResults(List<List<Data.ResultType>> results, string storageName)
+        public bool SaveResults(List<List<Data.ResultType>> results, string storageName)
         {
             try
             {

@@ -11,7 +11,7 @@ namespace ThingAppraiser.Appraisers
 
         public override List<Data.ResultType> GetRatings(List<Data.DataHandler> entities)
         {
-            if (entities == null || entities.Count == 0) return null;
+            if (entities is null || entities.Count == 0) return null;
 
             // Check if list have proper type.
             if (!entities.All(e => e is Data.TMDBMovie))

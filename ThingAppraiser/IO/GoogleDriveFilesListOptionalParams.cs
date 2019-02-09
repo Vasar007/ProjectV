@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser.IO.Input
+﻿namespace ThingAppraiser.IO
 {
     public class GoogleDriveFilesListOptionalParams
     {

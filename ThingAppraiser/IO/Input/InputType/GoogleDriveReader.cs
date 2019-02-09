@@ -1,111 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Drive.v3;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
+using System.Collections.Generic;
 using Google.Apis.Download;
 
 namespace ThingAppraiser.IO.Input
 {
-    public class GoogleDriveReader : Inputter
+    public class GoogleDriveReader : GoogleDriveWorker, IInputter
     {
-        // If modifying these scopes, delete your previously saved credentials
-        // at ~/.credentials/drive-dotnet-quickstart.json
-        private static readonly string[] _scopes = { DriveService.Scope.DriveReadonly };
-        private static readonly string _applicationName = "ThingAppraiser";
-
-        private DriveService _driveService;
         private LocalFileReader _localFileReader = new LocalFileReader();
-
-        public GoogleDriveReader()
-        {
-            UserCredential credential;
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                // The file token.json stores the user's access and refresh tokens, and is created
-                // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    _scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
-            }
-
-            // Create Drive API service.
-            _driveService = new DriveService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = _applicationName,
-            });
-        }
-
-        /// <summary>
-        /// Using reflection to apply optional parameters to the request.  
-        /// </summary>
-        /// <remarks>
-        /// If the optonal parameters are null then we will just return the request as is.
-        /// </remarks>
-        /// <param name="request">The request.</param>
-        /// <param name="optional">The optional parameters.</param>  
-        private static object ApplyOptionalParms(object request, object optional)
-        {
-            if (optional is null) return request;
-
-            var optionalProperties = (optional.GetType()).GetProperties();
-
-            foreach (var property in optionalProperties)
-            {
-                // Copy value from optional parms to the request.
-                // WARNING! They should have the same names and datatypes.
-                var piShared = (request.GetType()).GetProperty(property.Name);
-                if (property.GetValue(optional, null) != null)
-                {
-                    // TODO: test that we do not add values for items that are null.
-                    piShared?.SetValue(request, property.GetValue(optional, null), null);
-                }
-            }
-            return request;
-        }
-
-        /// <summary>
-        /// Lists or searches files.
-        /// </summary>
-        /// <see cref="https://developers.google.com/drive/v3/reference/files/list"/>
-        /// <remarks>
-        /// Generation Note: This does not always build corectly.  Google needs to standardise things I need to figuer out which ones are wrong.
-        /// </remarks>
-        /// <param name="optional">Optional paramaters.</param>
-        private Google.Apis.Drive.v3.Data.FileList ListFiles(
-            GoogleDriveFilesListOptionalParams optional = null)
-        {
-            try
-            {
-                // Building the initial request.
-                var request = _driveService.Files.List();
-                // Applying optional parameters to the request.                
-                request = ApplyOptionalParms(request, optional) as FilesResource.ListRequest;
-                // Requesting data.
-                return request.Execute();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Request Files.List failed.", ex);
-            }
-        }
-
-        private static void SaveStream(MemoryStream stream, string saveTo)
-        {
-            using (var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
-            {
-                stream.WriteTo(file);
-            }
-        }
 
         private void DownloadFile(string fileId, string saveTo)
         {
@@ -142,22 +44,7 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        private static string AddExtension(string mimeType)
-        {
-            switch (mimeType)
-            {
-                case "text/plain": return ".txt";
-                case "text/csv": return ".csv";
-                case "text/html": return ".html";
-                case "application/rtf": return ".rtf";
-                case "application/pdf": return ".pdf";
-                default:
-                    Console.WriteLine($"Not found such MIME type: {mimeType}");
-                    return "";
-            }
-        }
-
-        // Duplicated code because of there is not common interface for requests.
+        // Duplicated code because of there is not common interface for get and export requests.
         private void ExportFile(string fileId, string saveTo, string mimeType = "text/plain")
         {
             using (var stream = new MemoryStream())
@@ -179,7 +66,7 @@ namespace ThingAppraiser.IO.Input
                         case DownloadStatus.Completed:
                         {
                             Console.WriteLine("Download complete.");
-                            SaveStream(stream, saveTo + AddExtension(mimeType));
+                            SaveStream(stream, saveTo + GetExtension(mimeType));
                             break;
                         }
                         case DownloadStatus.Failed:
@@ -193,58 +80,50 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        private IList<Google.Apis.Drive.v3.Data.File> GetFiles(int pageSize = 10,
-            string fields = "nextPageToken, files(id, name)")
+        private List<string> DownloadAndReadFile(string storageName, string fileId)
         {
-            // Define parameters of request.
-            var listRequest = _driveService.Files.List();
-            listRequest.PageSize = pageSize;
-            listRequest.Fields = fields;
-
-            // List files.
-            return listRequest.Execute().Files;
-        }
-
-        private static bool DeleteDownloadedFile(string filename)
-        {
+            var result = new List<string>();
             try
             {
-                File.Delete(filename);
+                if (HasExtention(storageName))
+                {
+                    DownloadFile(fileId, storageName);
+                }
+                else
+                {
+                    const string mimeType = "text/csv";
+                    ExportFile(fileId, storageName, mimeType);
+                    storageName = storageName + GetExtension(mimeType);
+                }
+
+                result = _localFileReader.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Couldn't delete donwloaded file {filename}. " +
-                                  $"Error: {ex.Message}");
-                return false;
+                Console.WriteLine("An error occured during downloading and reading " +
+                                  $"file: {ex.Message}");
             }
-            return true;
+            finally
+            {
+                DeleteDownloadedFile(storageName);
+            }
+            return result;
         }
 
-        private static bool HasExtention(string filename)
+        public List<string> ReadThingNames(string storageName)
         {
-            return filename.Contains(".");
-        }
-
-        public override List<string> ReadThingNames(string storageName)
-        {
+            // Get info from API, download file and read it.
             var files = ListFiles(new GoogleDriveFilesListOptionalParams()
                                   { Q = $"name contains '{storageName}'" }).Files;
 
             var result = new List<string>();
-
-            if (files != null && files.Count > 0)
+            if (!(files is null) && files.Count > 0)
             {
                 foreach (var file in files)
                 {
                     if (storageName == file.Name)
                     {
-                        const string mimeType = "text/csv";
-                        if (HasExtention(storageName)) DownloadFile(file.Id, storageName);
-                        else ExportFile(file.Id, storageName, mimeType);
-
-                        storageName = storageName + AddExtension(mimeType);
-                        result = _localFileReader.ReadThingNames(storageName);
-                        DeleteDownloadedFile(storageName);
+                        result = DownloadAndReadFile(storageName, file.Id);
                         break;
                     }
                 }
@@ -253,6 +132,7 @@ namespace ThingAppraiser.IO.Input
             {
                 Console.WriteLine("No files found.");
             }
+
             return result;
         }
     }

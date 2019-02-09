@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 
 namespace ThingAppraiser.Crawlers
 {
@@ -11,7 +9,7 @@ namespace ThingAppraiser.Crawlers
 
         public void Add(Crawler crawler)
         {
-            HelperMethods.ThrowIfNull(crawler, nameof(crawler));
+            crawler.ThrowIfNull(nameof(crawler));
             _crawlers.Add(crawler);
         }
 
@@ -23,17 +21,6 @@ namespace ThingAppraiser.Crawlers
                 results.Add(crawler.GetData(entities));
             }
             return results;
-        }
-
-        public static void PrintResultsToConsole(List<List<Data.DataHandler>> results)
-        {
-            foreach (var result in results)
-            {
-                foreach (var entity in result)
-                {
-                    Console.WriteLine(JToken.FromObject(entity));
-                }
-            }
         }
 
         public IEnumerator GetEnumerator()

@@ -2,8 +2,8 @@
 
 namespace ThingAppraiser.IO.Output
 {
-    public abstract class Outputter
+    public interface IOutputter
     {
-        public abstract bool SaveResults(List<List<Data.ResultType>> results, string storageName);
+        bool SaveResults(List<List<Data.ResultType>> results, string storageName);
     }
 }

@@ -7,9 +7,9 @@ namespace ThingAppraiser.IO.Input
     {
         private const string _defaultFilename = "thing_names.txt";
 
-        private Inputter _inputter;
+        private IInputter _inputter;
 
-        public InputManager(Inputter inputter)
+        public InputManager(IInputter inputter)
         {
             _inputter = inputter;
         }

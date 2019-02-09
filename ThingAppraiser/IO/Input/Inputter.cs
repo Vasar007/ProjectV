@@ -2,8 +2,8 @@
 
 namespace ThingAppraiser.IO.Input
 {
-    public abstract class Inputter
+    public interface IInputter
     {
-        public abstract List<string> ReadThingNames(string storageName);
+        List<string> ReadThingNames(string storageName);
     }
 }

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Output
 {
     public class OutputManager
     {
-        private const string _defaultFilename = "apparaised_things.txt";
+        private const string _defaultFilename = "apparaised_things.csv";
 
-        private Outputter _outputter;
+        private IOutputter _outputter;
 
-        public OutputManager(Outputter outputter)
+        public OutputManager(IOutputter outputter)
         {
             _outputter = outputter;
         }

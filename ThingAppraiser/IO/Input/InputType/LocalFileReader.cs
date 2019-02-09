@@ -6,7 +6,7 @@ using CsvHelper;
 
 namespace ThingAppraiser.IO.Input
 {
-    public class LocalFileReader : Inputter
+    public class LocalFileReader : IInputter
     {
         private static List<string> ReadFile(string filename)
         {
@@ -51,7 +51,7 @@ namespace ThingAppraiser.IO.Input
             {
                 // Scanning name of things and removing special symbols.
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while (!((line = reader.ReadLine()) is null))
                 {
                     result.Add(line.Trim('\r', '\n', ' '));
                 }
@@ -59,7 +59,7 @@ namespace ThingAppraiser.IO.Input
             return result;
         }
 
-        public override List<string> ReadThingNames(string storageName)
+        public List<string> ReadThingNames(string storageName)
         {
             var result = new List<string>();
             if (storageName.EndsWith(".csv"))
