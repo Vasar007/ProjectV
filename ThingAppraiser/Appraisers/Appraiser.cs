@@ -8,9 +8,9 @@ namespace ThingAppraiser.Appraisers
     {
         public virtual Type TypeID { get { return typeof(Data.DataHandler); } }
 
-        public virtual List<(Data.DataHandler, float)> GetRatings(List<Data.DataHandler> entities)
+        public virtual List<Data.ResultType> GetRatings(List<Data.DataHandler> entities)
         {
-            var ratings = new List<(Data.DataHandler, float)>();
+            var ratings = new List<Data.ResultType>();
 
             var normalizerVA = new Normalizer<float, Data.DataHandler>(entities,
                                                                        e => e.Vote_Average);
@@ -21,12 +21,12 @@ namespace ThingAppraiser.Appraisers
                                                    (t1, t2, t3) => (t1, t2, t3));
             foreach (var (entity, normValueVA, normValueVC) in enumerator)
             {
-                ratings.Add((entity, normValueVA + normValueVC));
+                ratings.Add(new Data.ResultType(entity, normValueVA + normValueVC));
                 //Console.WriteLine($"{normValueVA} : {entity.Vote_Average}; \t " +
                 //                  $"{normValueVC} : {entity.Vote_Count}");
             }
 
-            ratings.Sort((x, y) => y.Item2.CompareTo(x.Item2));
+            ratings.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue));
             return ratings;
         }
     }

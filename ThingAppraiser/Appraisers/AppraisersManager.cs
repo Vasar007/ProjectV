@@ -6,14 +6,15 @@ namespace ThingAppraiser.Appraisers
 {
     public class AppraisersManager : IEnumerable
     {
-        public Dictionary<Type, List<Appraiser>> appraisers =
+        private Dictionary<Type, List<Appraiser>> _appraisers =
             new Dictionary<Type, List<Appraiser>>();
 
         public void Add(Appraiser appraiser)
         {
-            if (appraisers.ContainsKey(appraiser.TypeID))
+            appraiser.ThrowIfNull(nameof(appraiser));
+
+            if (_appraisers.TryGetValue(appraiser.TypeID, out var list))
             {
-                var list = appraisers[appraiser.TypeID];
                 if (!list.Contains(appraiser))
                 {
                     list.Add(appraiser);
@@ -21,22 +22,17 @@ namespace ThingAppraiser.Appraisers
             }
             else
             {
-                var list = new List<Appraiser>
-                {
-                    appraiser
-                };
-                appraisers.Add(appraiser.TypeID, list);
+                _appraisers.Add(appraiser.TypeID, new List<Appraiser> { appraiser });
             }
         }
 
-        public List<List<(Data.DataHandler, float)>>
-            GetAllRatings(List<List<Data.DataHandler>> data)
+        public List<List<Data.ResultType>> GetAllRatings(List<List<Data.DataHandler>> data)
         {
-            var results = new List<List<(Data.DataHandler, float)>>();
+            var results = new List<List<Data.ResultType>>();
             foreach (var datum in data)
             {
                 if (datum.Count == 0) continue;
-                if (!appraisers.TryGetValue(datum[0].GetType(), out var values))
+                if (!_appraisers.TryGetValue(datum[0].GetType(), out var values))
                 {
                     Console.WriteLine($"Type {datum[0].GetType()} was not used!");
                     continue;
@@ -49,20 +45,9 @@ namespace ThingAppraiser.Appraisers
             return results;
         }
 
-        public static void PrintRatingsToConsole(List<List<(Data.DataHandler, float)>> ratings)
-        {
-            foreach (var rating in ratings)
-            {
-                foreach (var (item, value) in rating)
-                {
-                    Console.WriteLine($"{item.Title} has rating {value}.");
-                }
-            }
-        }
-
         public IEnumerator GetEnumerator()
         {
-            return appraisers.GetEnumerator();
+            return _appraisers.GetEnumerator();
         }
     }
 }

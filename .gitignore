@@ -329,6 +329,9 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-#User defined block
+# User defined block
 *.sln
-/ThingAppraiser/MigrationBackup/dc6bfd76/ThingAppraiser
+*.csproj
+*.json
+*.txt
+/ThingAppraiser/MigrationBackup

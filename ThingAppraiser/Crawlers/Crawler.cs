@@ -8,14 +8,14 @@ namespace ThingAppraiser.Crawlers
     {
         protected abstract RestClient Client { get; }
 
-        public virtual JObject GetSearchResult(IRestResponse response)
+        protected virtual JObject GetSearchResult(IRestResponse response)
         {
             var parsedJson = JObject.Parse(response.Content);
             return parsedJson;
         }
 
-        public abstract IRestResponse SendSearchQuery(string entityName);
+        protected abstract IRestResponse SendSearchQuery(string entityName);
 
-        public abstract List<Data.DataHandler> GetData(string[] entities, bool ouput = false);
+        public abstract List<Data.DataHandler> GetData(List<string> entities, bool ouput = false);
     }
 }

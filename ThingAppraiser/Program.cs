@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace ThingAppraiser
 {
@@ -7,18 +9,22 @@ namespace ThingAppraiser
         private static void Main(string[] args)
         {
             // Show the case when we have a movies to appraise.
-            string[] names;
+            List<string> names;
+            var inputManager = new IO.Input.InputManager(new IO.Input.GoogleDriveReader()); // LocalFileReader
             if (args.Length == 1)
             {
-                names = Input.Input.GetNamesFromFile(args[0]);
+                names = inputManager.GetNames(args[0]);
             }
             else
             {
-                names = Input.Input.GetNamesFromFile();
+                Console.Write("Enter filename which contains the Things: ");
+                names = inputManager.GetNames(Console.ReadLine());
             }
 
-            if (names.Length == 0)
+            if (names.Count == 0)
             {
+                Console.WriteLine("Input is empty. Closing...");
+                Console.ReadLine();
                 return;
             }
 
@@ -27,7 +33,7 @@ namespace ThingAppraiser
                 new Crawlers.TMDBCrawler()
             };
             var results = crawlerManager.GetAllData(names);
-            Crawlers.CrawlersManager.PrintResultsToConsole(results);
+            PrintResultsToConsole(results);
             Console.ReadLine();
 
             var appraisersManager = new Appraisers.AppraisersManager
@@ -35,8 +41,42 @@ namespace ThingAppraiser
                 new Appraisers.TMDBAppraiser()
             };
             var ratings = appraisersManager.GetAllRatings(results);
-            Appraisers.AppraisersManager.PrintRatingsToConsole(ratings);
+            PrintRatingsToConsole(ratings);
+            Console.ReadLine();
+
+            var outputManager = new IO.Output.OutputManager(new IO.Output.GoogleDriveWriter()); // LocalFileWriter
+            if (outputManager.SaveResults(ratings))
+            {
+                Console.WriteLine("Ratings was saved to the file.");
+            }
+            else
+            {
+                Console.WriteLine("Ratings wasn't saved to the file.");
+            }
             Console.ReadLine();
         }
+
+        public static void PrintResultsToConsole(List<List<Data.DataHandler>> results)
+        {
+            foreach (var result in results)
+            {
+                foreach (var entity in result)
+                {
+                    Console.WriteLine(JToken.FromObject(entity));
+                }
+            }
+        }
+
+        public static void PrintRatingsToConsole(List<List<Data.ResultType>> ratings)
+        {
+            foreach (var rating in ratings)
+            {
+                foreach (var (item, value) in rating)
+                {
+                    Console.WriteLine($"{item.Title} has rating {value}.");
+                }
+            }
+        }
     }
+
 }
