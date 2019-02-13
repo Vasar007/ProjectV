@@ -8,6 +8,8 @@ namespace ThingAppraiser.IO.Output
 {
     public class GoogleDriveWriter : GoogleDriveWorker, IOutputter
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         // The default chunk size is 10MB for Google Drive API uploading methods.
         private const int _maxFileLength = 10_000_000;
 
@@ -66,6 +68,8 @@ namespace ThingAppraiser.IO.Output
                 
                 if (stream.Length > _maxFileLength)
                 {
+                    _logger.Error($"File size {stream.Length} is greater than " +
+                                   "maximum for uploading (10MB).");
                     throw new ArgumentException($"File size {stream.Length} is greater than " +
                                                 "maximum for uploading (10MB).");
                 }
@@ -113,11 +117,13 @@ namespace ThingAppraiser.IO.Output
 
         private static void Upload_ProgressChanged(IUploadProgress progress)
         {
+            _logger.Info($"{progress.Status} {progress.BytesSent}");
             Console.WriteLine($"{progress.Status} {progress.BytesSent}");
         }
 
         private static void Upload_ResponseReceived(GoogleDriveData.File file)
         {
+            _logger.Info($"{file.Name} was uploaded successfully.");
             Console.WriteLine($"{file.Name} was uploaded successfully.");
         }
 
@@ -132,12 +138,15 @@ namespace ThingAppraiser.IO.Output
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occured during uploading: {ex.Message}");
+                _logger.Warn(ex, $"An error occured during uploading to {storageName}.");
+                Console.WriteLine($"An error occured during uploading to {storageName}: " +
+                                  $"{ex.Message}");
                 return false;
             }
             finally
             {
-                DeleteDownloadedFile(storageName);
+                DeleteFile(storageName);
+                _logger.Debug($"Deleted temporary created file {storageName}.");
             }
         }
     }

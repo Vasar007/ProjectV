@@ -11,6 +11,8 @@ namespace ThingAppraiser.IO
 {
     public abstract class GoogleDriveWorker
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/tokens.json
         private static readonly string[] _scopes = { DriveService.Scope.Drive };
@@ -32,6 +34,7 @@ namespace ThingAppraiser.IO
                     _applicationName,
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
+                _logger.Info($"Credential file saved to: {credPath}");
                 Console.WriteLine($"Credential file saved to: {credPath}");
             }
 
@@ -65,6 +68,7 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, "Request Files.List failed.");
                 throw new Exception("Request Files.List failed.", ex);
             }
         }
@@ -102,10 +106,11 @@ namespace ThingAppraiser.IO
                 // WARNING! They should have the same names and datatypes.
                 var piShared = (request.GetType()).GetProperty(property.Name);
                 var propertyValue = property.GetValue(optional, null);
-                if (!(propertyValue is null))
+
+                // Test that we do not add values for items that are null.
+                if (!(propertyValue is null) && !(piShared is null))
                 {
-                    // TODO: test that we do not add values for items that are null.
-                    piShared?.SetValue(request, propertyValue, null);
+                    piShared.SetValue(request, propertyValue, null);
                 }
             }
             return request;
@@ -134,6 +139,7 @@ namespace ThingAppraiser.IO
                 case "application/pdf":
                     return ".pdf";
                 default:
+                    _logger.Warn($"Not found extension for MIME type: {mimeType}");
                     Console.WriteLine($"Not found extension for MIME type: {mimeType}");
                     return default(string);
             }
@@ -143,6 +149,7 @@ namespace ThingAppraiser.IO
         {
             if (!HasExtention(filename))
             {
+                _logger.Error($"Filename {filename} isn't contain extension.");
                 throw new ArgumentException($"Filename {filename} isn't contain extension.");
             }
 
@@ -159,12 +166,13 @@ namespace ThingAppraiser.IO
                 case ".pdf":
                     return "application/pdf";
                 default:
+                    _logger.Warn($"Not found MIME type for extension: {filename}");
                     Console.WriteLine($"Not found MIME type for extension: {filename}");
                     return default(string);
             }
         }
 
-        protected static bool DeleteDownloadedFile(string filename)
+        protected static bool DeleteFile(string filename)
         {
             try
             {
@@ -172,6 +180,7 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
+                _logger.Warn(ex, $"Couldn't delete donwloaded file {filename}.");
                 Console.WriteLine($"Couldn't delete donwloaded file {filename}. " +
                                   $"Error: {ex.Message}");
                 return false;

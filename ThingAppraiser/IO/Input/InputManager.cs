@@ -5,6 +5,8 @@ namespace ThingAppraiser.IO.Input
 {
     public class InputManager
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private const string _defaultFilename = "thing_names.txt";
 
         private IInputter _inputter;
@@ -22,6 +24,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
+                _logger.Warn(ex, "Couldn't get access to the storage.");
                 Console.WriteLine($"Couldn't get access to the storage. Error: {ex.Message}");
                 return false;
             }
@@ -42,10 +45,12 @@ namespace ThingAppraiser.IO.Input
 
             while (result.Count == 0)
             {
+                _logger.Warn("No Things were found.");
                 Console.Write("No Things were found. Enter other storage name: ");
                 TryReadThingNames(ref result, Console.ReadLine());
             }
 
+            _logger.Info("Things were found and parsed.");
             return result;
         }
     }
