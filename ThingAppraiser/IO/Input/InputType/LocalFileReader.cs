@@ -8,6 +8,8 @@ namespace ThingAppraiser.IO.Input
 {
     public class LocalFileReader : IInputter
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static List<string> ReadFile(string filename)
         {
             var engine = new FileHelperAsyncEngine<Data.InputFileData>();
@@ -32,6 +34,7 @@ namespace ThingAppraiser.IO.Input
 
                 if (!csv.Read() || !csv.ReadHeader())
                 {
+                    _logger.Error("CSV file didn't contain header!");
                     throw new InvalidDataException("CSV file didn't contain header!");
                 }
                 while (csv.Read())
@@ -51,7 +54,7 @@ namespace ThingAppraiser.IO.Input
             {
                 // Scanning name of things and removing special symbols.
                 string line;
-                while (!((line = reader.ReadLine()) is null))
+                while (!((line = reader.ReadLine()) is null)) // Yeah, I know it's ugly.
                 {
                     result.Add(line.Trim('\r', '\n', ' '));
                 }

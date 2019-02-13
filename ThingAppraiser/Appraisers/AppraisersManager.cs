@@ -6,6 +6,8 @@ namespace ThingAppraiser.Appraisers
 {
     public class AppraisersManager : IEnumerable
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private Dictionary<Type, List<Appraiser>> _appraisers =
             new Dictionary<Type, List<Appraiser>>();
 
@@ -34,6 +36,7 @@ namespace ThingAppraiser.Appraisers
                 if (datum.Count == 0) continue;
                 if (!_appraisers.TryGetValue(datum[0].GetType(), out var values))
                 {
+                    _logger.Info($"Type {datum[0].GetType()} was not used!");
                     Console.WriteLine($"Type {datum[0].GetType()} was not used!");
                     continue;
                 }

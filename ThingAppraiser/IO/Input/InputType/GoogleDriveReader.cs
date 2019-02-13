@@ -7,6 +7,8 @@ namespace ThingAppraiser.IO.Input
 {
     public class GoogleDriveReader : GoogleDriveWorker, IInputter
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private LocalFileReader _localFileReader = new LocalFileReader();
 
         private void DownloadFile(string fileId, string saveTo)
@@ -29,12 +31,14 @@ namespace ThingAppraiser.IO.Input
                         }
                         case DownloadStatus.Completed:
                         {
+                            _logger.Info("Download completed.");
                             Console.WriteLine("Download completed.");
                             SaveStream(stream, saveTo);
                             break;
                         }
                         case DownloadStatus.Failed:
                         {
+                            _logger.Warn("Download failed.");
                             Console.WriteLine("Download failed.");
                             break;
                         }
@@ -44,7 +48,7 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        // Duplicated code because of there is not common interface for get and export requests.
+        // Duplicated code because of there is no common interface for get and export requests.
         private void ExportFile(string fileId, string saveTo, string mimeType = "text/plain")
         {
             using (var stream = new MemoryStream())
@@ -65,12 +69,14 @@ namespace ThingAppraiser.IO.Input
                         }
                         case DownloadStatus.Completed:
                         {
-                            Console.WriteLine("Download complete.");
+                            _logger.Info("Download completed.");
+                            Console.WriteLine("Download completed.");
                             SaveStream(stream, saveTo + GetExtension(mimeType));
                             break;
                         }
                         case DownloadStatus.Failed:
                         {
+                            _logger.Warn("Download failed.");
                             Console.WriteLine("Download failed.");
                             break;
                         }
@@ -100,12 +106,14 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
+                _logger.Warn("An error occured during downloading and reading file.");
                 Console.WriteLine("An error occured during downloading and reading " +
                                   $"file: {ex.Message}");
             }
             finally
             {
-                DeleteDownloadedFile(storageName);
+                DeleteFile(storageName);
+                _logger.Debug($"Deleted temporary created file {storageName}.");
             }
             return result;
         }
@@ -130,6 +138,7 @@ namespace ThingAppraiser.IO.Input
             }
             else
             {
+                _logger.Info($"No files found. Trid to find {storageName}");
                 Console.WriteLine("No files found.");
             }
 

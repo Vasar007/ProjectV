@@ -58,7 +58,7 @@ namespace FileHelpers
                 //BindingFlags.Instance |
                 //BindingFlags.NonPublic
 
-            // Remove bit flags because they cannot find field order properly.
+            // ATTENTION! Removed bit flags because they cannot find field properly.
 
             return (int)pi.GetValue(attribute, null);
         }

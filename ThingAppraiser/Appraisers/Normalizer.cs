@@ -7,7 +7,7 @@ using MiscUtil;
 
 namespace ThingAppraiser.Appraisers
 {
-    public class Normalizer<T, TL> where TL : Data.DataHandler 
+    public class Normalizer<T, TL> where TL : Data.DataHandler
     {
         private class MinMaxValues
         {

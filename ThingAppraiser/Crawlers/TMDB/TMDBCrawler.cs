@@ -9,6 +9,8 @@ namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
         private const int _requestsPerTime = 30;
         private readonly string _APIKey;
@@ -40,6 +42,7 @@ namespace ThingAppraiser.Crawlers
             {
                 if (numberOfTries > limitTries)
                 {
+                    _logger.Error("Couldn't get good response from TMDB.");
                     throw new InvalidOperationException("Couldn't get good response from TMDB.");
                 }
                 Sleep(numberOfTries * millisecondsTimeout);
@@ -69,6 +72,7 @@ namespace ThingAppraiser.Crawlers
 
                 if (!response["results"].HasValues)
                 {
+                    _logger.Warn($"{movie} wasn't processed.");
                     Console.WriteLine($"{movie} wasn't processed.");
                     continue;
                 }
