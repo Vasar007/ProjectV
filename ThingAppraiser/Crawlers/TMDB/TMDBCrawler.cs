@@ -73,14 +73,14 @@ namespace ThingAppraiser.Crawlers
                 if (!response["results"].HasValues)
                 {
                     _logger.Warn($"{movie} wasn't processed.");
-                    Console.WriteLine($"{movie} wasn't processed.");
+                    Core.Shell.OutputMessage($"{movie} wasn't processed.");
                     continue;
                 }
                 // Get first search result from response.
                 var result = response["results"][0];
                 if (ouput)
                 {
-                    Console.WriteLine(result);
+                    Core.Shell.OutputMessage(result.ToString());
                 }
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
                 var searchResult = result.ToObject<Data.TMDBMovie>();

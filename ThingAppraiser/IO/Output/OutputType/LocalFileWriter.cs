@@ -64,7 +64,7 @@ namespace ThingAppraiser.IO.Output
             catch (Exception ex)
             {
                 _logger.Warn("Couldn't write to the storage.");
-                Console.WriteLine($"Couldn't write to the storage. Error: {ex.Message}");
+                Core.Shell.OutputMessage($"Couldn't write to the storage. Error: {ex.Message}");
                 return false;
             }
         }

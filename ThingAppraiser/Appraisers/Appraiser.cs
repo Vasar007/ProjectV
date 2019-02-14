@@ -22,8 +22,8 @@ namespace ThingAppraiser.Appraisers
             foreach (var (entity, normValueVA, normValueVC) in enumerator)
             {
                 ratings.Add(new Data.ResultType(entity, normValueVA + normValueVC));
-                //Console.WriteLine($"{normValueVA} : {entity.Vote_Average}; \t " +
-                //                  $"{normValueVC} : {entity.Vote_Count}");
+                //Shell.Shell.OutputMessage($"{normValueVA} : {entity.Vote_Average}; \t " +
+                //                          $"{normValueVC} : {entity.Vote_Count}");
             }
 
             ratings.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue));

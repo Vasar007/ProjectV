@@ -35,7 +35,7 @@ namespace ThingAppraiser.IO
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
                 _logger.Info($"Credential file saved to: {credPath}");
-                Console.WriteLine($"Credential file saved to: {credPath}");
+                Core.Shell.OutputMessage($"Credential file saved to: {credPath}");
             }
 
             // Create Drive API service.
@@ -140,7 +140,7 @@ namespace ThingAppraiser.IO
                     return ".pdf";
                 default:
                     _logger.Warn($"Not found extension for MIME type: {mimeType}");
-                    Console.WriteLine($"Not found extension for MIME type: {mimeType}");
+                    Core.Shell.OutputMessage($"Not found extension for MIME type: {mimeType}");
                     return default(string);
             }
         }
@@ -167,7 +167,7 @@ namespace ThingAppraiser.IO
                     return "application/pdf";
                 default:
                     _logger.Warn($"Not found MIME type for extension: {filename}");
-                    Console.WriteLine($"Not found MIME type for extension: {filename}");
+                    Core.Shell.OutputMessage($"Not found MIME type for extension: {filename}");
                     return default(string);
             }
         }
@@ -181,8 +181,8 @@ namespace ThingAppraiser.IO
             catch (Exception ex)
             {
                 _logger.Warn(ex, $"Couldn't delete donwloaded file {filename}.");
-                Console.WriteLine($"Couldn't delete donwloaded file {filename}. " +
-                                  $"Error: {ex.Message}");
+                Core.Shell.OutputMessage($"Couldn't delete donwloaded file {filename}. " +
+                                          $"Error: {ex.Message}");
                 return false;
             }
             return true;

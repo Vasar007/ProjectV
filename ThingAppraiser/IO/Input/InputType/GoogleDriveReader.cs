@@ -26,20 +26,20 @@ namespace ThingAppraiser.IO.Input
                     {
                         case DownloadStatus.Downloading:
                         {
-                            Console.WriteLine(progress.BytesDownloaded);
+                            Core.Shell.OutputMessage(progress.BytesDownloaded.ToString());
                             break;
                         }
                         case DownloadStatus.Completed:
                         {
                             _logger.Info("Download completed.");
-                            Console.WriteLine("Download completed.");
+                            Core.Shell.OutputMessage("Download completed.");
                             SaveStream(stream, saveTo);
                             break;
                         }
                         case DownloadStatus.Failed:
                         {
                             _logger.Warn("Download failed.");
-                            Console.WriteLine("Download failed.");
+                            Core.Shell.OutputMessage("Download failed.");
                             break;
                         }
                     }
@@ -64,20 +64,20 @@ namespace ThingAppraiser.IO.Input
                     {
                         case DownloadStatus.Downloading:
                         {
-                            Console.WriteLine(progress.BytesDownloaded);
+                            Core.Shell.OutputMessage(progress.BytesDownloaded.ToString());
                             break;
                         }
                         case DownloadStatus.Completed:
                         {
                             _logger.Info("Download completed.");
-                            Console.WriteLine("Download completed.");
+                            Core.Shell.OutputMessage("Download completed.");
                             SaveStream(stream, saveTo + GetExtension(mimeType));
                             break;
                         }
                         case DownloadStatus.Failed:
                         {
                             _logger.Warn("Download failed.");
-                            Console.WriteLine("Download failed.");
+                            Core.Shell.OutputMessage("Download failed.");
                             break;
                         }
                     }
@@ -107,8 +107,8 @@ namespace ThingAppraiser.IO.Input
             catch (Exception ex)
             {
                 _logger.Warn("An error occured during downloading and reading file.");
-                Console.WriteLine("An error occured during downloading and reading " +
-                                  $"file: {ex.Message}");
+                Core.Shell.OutputMessage("An error occured during downloading and reading " +
+                                          $"file: {ex.Message}");
             }
             finally
             {
@@ -139,7 +139,7 @@ namespace ThingAppraiser.IO.Input
             else
             {
                 _logger.Info($"No files found. Trid to find {storageName}");
-                Console.WriteLine("No files found.");
+                Core.Shell.OutputMessage("No files found.");
             }
 
             return result;
