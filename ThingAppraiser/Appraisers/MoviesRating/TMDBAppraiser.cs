@@ -37,9 +37,9 @@ namespace ThingAppraiser.Appraisers
             {
                 ratings.Add(new Data.ResultType(entity,
                                                 normValueVA + normValueVC + normValuePopularity));
-                //Console.WriteLine($"{normValueVA} : {entity.Vote_Average}; \t " +
-                //                  $"{normValueVC} : {entity.Vote_Count}; \t " +
-                //                  $"{normValuePopularity} : {entity.Popularity}");
+                //Shell.Shell.OutputMessage($"{normValueVA} : {entity.Vote_Average}; \t " +
+                //                          $"{normValueVC} : {entity.Vote_Count}; \t " +
+                //                          $"{normValuePopularity} : {entity.Popularity}");
             }
 
             ratings.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue));

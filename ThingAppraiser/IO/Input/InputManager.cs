@@ -25,7 +25,7 @@ namespace ThingAppraiser.IO.Input
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Couldn't get access to the storage.");
-                Console.WriteLine($"Couldn't get access to the storage. Error: {ex.Message}");
+                Core.Shell.OutputMessage($"Couldn't get access to the storage. Error: {ex.Message}");
                 return false;
             }
             return true;
@@ -46,8 +46,8 @@ namespace ThingAppraiser.IO.Input
             while (result.Count == 0)
             {
                 _logger.Warn("No Things were found.");
-                Console.Write("No Things were found. Enter other storage name: ");
-                TryReadThingNames(ref result, Console.ReadLine());
+                Core.Shell.OutputMessage("No Things were found. Enter other storage name: ");
+                TryReadThingNames(ref result, Core.Shell.GetMessage());
             }
 
             _logger.Info("Things were found and parsed.");

@@ -37,7 +37,7 @@ namespace ThingAppraiser.Appraisers
                 if (!_appraisers.TryGetValue(datum[0].GetType(), out var values))
                 {
                     _logger.Info($"Type {datum[0].GetType()} was not used!");
-                    Console.WriteLine($"Type {datum[0].GetType()} was not used!");
+                    Core.Shell.OutputMessage($"Type {datum[0].GetType()} was not used!");
                     continue;
                 }
                 foreach (var appraiser in values)
