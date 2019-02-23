@@ -12,7 +12,7 @@ namespace ThingAppraiser.IO.Output
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Default storage name if user will not specify it.

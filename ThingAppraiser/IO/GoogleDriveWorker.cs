@@ -11,7 +11,7 @@ namespace ThingAppraiser.IO
 {
     public abstract class GoogleDriveWorker
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/tokens.json

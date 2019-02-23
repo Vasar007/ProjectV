@@ -6,7 +6,10 @@ namespace ThingAppraiser
     {
         internal static void ThrowIfNull<T>(this T obj, string paramName) where T : class
         {
-            if (obj is null) throw new ArgumentNullException(paramName);
+            if (obj is null)
+            {
+                throw new ArgumentNullException($"{paramName} is null.");
+            }
         }
     }
 }

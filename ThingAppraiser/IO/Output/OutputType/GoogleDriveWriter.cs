@@ -8,7 +8,7 @@ namespace ThingAppraiser.IO.Output
 {
     public class GoogleDriveWriter : GoogleDriveWorker, IOutputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         // The default chunk size is 10MB for Google Drive API uploading methods.
         private const int _maxFileLength = 10_000_000;

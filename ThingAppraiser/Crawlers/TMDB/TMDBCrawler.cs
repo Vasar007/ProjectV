@@ -9,7 +9,7 @@ namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
         private const int _requestsPerTime = 30;
@@ -64,7 +64,7 @@ namespace ThingAppraiser.Crawlers
             return response;
         }
 
-        public override List<Data.DataHandler> GetData(List<string> entities, bool ouput = false)
+        public override List<Data.DataHandler> GetResponse(List<string> entities, bool ouput = false)
         {
             var searchResults = new List<Data.DataHandler>();
             foreach (var movie in entities)

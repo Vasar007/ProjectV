@@ -7,7 +7,7 @@ namespace ThingAppraiser.IO.Output
 {
     public class LocalFileWriter : IOutputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static bool WriteFile(List<List<Data.ResultType>> results, string filename)
         {

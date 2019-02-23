@@ -23,7 +23,7 @@ namespace ThingAppraiser.Core
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         #endregion
 
@@ -106,13 +106,13 @@ namespace ThingAppraiser.Core
         }
 
         /// <summary>
-        /// Send request and collect data from all open sources.
+        /// Send request and collect data from all services.
         /// </summary>
         /// <param name="names">Collection of The Things names which need to appraise.</param>
         /// <returns>Collections of results from crawlers.</returns>
         public List<List<Data.DataHandler>> RequestData(List<string> names)
         {
-            var results = _crawlersManager.GetAllData(names);
+            var results = _crawlersManager.CollectAllResponses(names);
             // TODO: encapsulate this call to interface.
             ConsoleMessageHandler.PrintResultsToConsole(results);
             return results;

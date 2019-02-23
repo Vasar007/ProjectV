@@ -8,7 +8,7 @@ namespace ThingAppraiser.IO.Input
 {
     public class LocalFileReader : IInputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static List<string> ReadFile(string filename)
         {

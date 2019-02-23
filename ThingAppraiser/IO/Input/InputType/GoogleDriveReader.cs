@@ -7,7 +7,7 @@ namespace ThingAppraiser.IO.Input
 {
     public class GoogleDriveReader : GoogleDriveWorker, IInputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private LocalFileReader _localFileReader = new LocalFileReader();
 
