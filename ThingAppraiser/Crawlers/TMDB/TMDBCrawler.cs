@@ -31,22 +31,23 @@ namespace ThingAppraiser.Crawlers
 
         private JObject GetResponse(string entityName)
         {
+            // TODO: encapsulate this const variables into fields and set them in constructor.
             const string goodStatusCode = "200";
-            const int limitTries = 10;
+            const int limitAttempts = 10;
             const int millisecondsTimeout = 1000;
-            int numberOfTries = 1;
+            int numberOfAttempts = 1;
 
             var response = GetSearchResult(SendSearchQuery(entityName));
             while (!(response["status_code"] is null) &&
                    response["status_code"].ToString() != goodStatusCode)
             {
-                if (numberOfTries > limitTries)
+                if (numberOfAttempts > limitAttempts)
                 {
                     _logger.Error("Couldn't get good response from TMDB.");
                     throw new InvalidOperationException("Couldn't get good response from TMDB.");
                 }
-                Sleep(numberOfTries * millisecondsTimeout);
-                ++numberOfTries;
+                Sleep(numberOfAttempts * millisecondsTimeout);
+                ++numberOfAttempts;
                 response = GetSearchResult(SendSearchQuery(entityName));
             }
             return response;

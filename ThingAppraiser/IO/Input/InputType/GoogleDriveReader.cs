@@ -113,7 +113,7 @@ namespace ThingAppraiser.IO.Input
             finally
             {
                 DeleteFile(storageName);
-                _logger.Debug($"Deleted temporary created file {storageName}.");
+                _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
             return result;
         }
@@ -138,7 +138,7 @@ namespace ThingAppraiser.IO.Input
             }
             else
             {
-                _logger.Info($"No files found. Trid to find {storageName}");
+                _logger.Info($"No files found. Trid to find \"{storageName}\".");
                 Core.Shell.OutputMessage("No files found.");
             }
 

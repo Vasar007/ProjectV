@@ -44,7 +44,6 @@ namespace ThingAppraiser.IO.Output
         /// <summary>
         /// Update an existing file's metadata and content.
         /// </summary>
-        /// <param name="service">Drive API service instance.</param>
         /// <param name="fileId">ID of the file to update.</param>
         /// <param name="filename">Filename of the new content to upload.</param>
         /// <param name="newName">New title for the file.</param>
@@ -123,8 +122,8 @@ namespace ThingAppraiser.IO.Output
 
         private static void Upload_ResponseReceived(GoogleDriveData.File file)
         {
-            _logger.Info($"{file.Name} was uploaded successfully.");
-            Core.Shell.OutputMessage($"{file.Name} was uploaded successfully.");
+            _logger.Info($"\"{file.Name}\" was uploaded successfully.");
+            Core.Shell.OutputMessage($"\"{file.Name}\" was uploaded successfully.");
         }
 
         public bool SaveResults(List<List<Data.ResultType>> results, string storageName)
@@ -138,15 +137,15 @@ namespace ThingAppraiser.IO.Output
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, $"An error occured during uploading to {storageName}.");
-                Core.Shell.OutputMessage($"An error occured during uploading to {storageName}: " +
-                                          $"{ex.Message}");
+                _logger.Warn(ex, $"An error occured during uploading to \"{storageName}\".");
+                Core.Shell.OutputMessage($"An error occured during uploading to \"{storageName}\"" +
+                                         $": {ex.Message}");
                 return false;
             }
             finally
             {
                 DeleteFile(storageName);
-                _logger.Debug($"Deleted temporary created file {storageName}.");
+                _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
         }
     }
