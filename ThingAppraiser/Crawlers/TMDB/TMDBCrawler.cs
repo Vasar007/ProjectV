@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -9,19 +8,28 @@ namespace ThingAppraiser.Crawlers
 {
     public class TMDBCrawler : Crawler
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string _searchUrl = "https://api.themoviedb.org/3/search/movie";
-        private const int _requestsPerTime = 30;
         private readonly string _APIKey;
+        private readonly string _searchUrl;
+        private readonly int _requestsPerTime;
+        private readonly string _goodStatusCode;
+        private readonly int _limitAttempts;
+        private readonly int _millisecondsTimeout;
 
-        protected override RestClient Client { get; } = new RestClient(_searchUrl);
+        protected override RestClient Client { get; }
 
-        public TMDBCrawler()
+        public TMDBCrawler(string APIKey, string searchUrl, int requestsPerTime = 30,
+            string goodStatusCode = "200", int limitAttempts = 10, int millisecondsTimeout = 1000)
         {
-            // Load API key from credentials file.
-            var json = JObject.Parse(File.ReadAllText("credentials.json"));
-            _APIKey = json["TMDBAPIKey"].ToString();
+            _APIKey = APIKey;
+            _searchUrl = searchUrl;
+            _requestsPerTime = requestsPerTime;
+            _goodStatusCode = goodStatusCode;
+            _limitAttempts = limitAttempts;
+            _millisecondsTimeout = millisecondsTimeout;
+
+            Client = new RestClient(_searchUrl);
         }
 
         private void Sleep(int millisecondsTimeout = 1000)
@@ -31,22 +39,22 @@ namespace ThingAppraiser.Crawlers
 
         private JObject GetResponse(string entityName)
         {
-            const string goodStatusCode = "200";
-            const int limitTries = 10;
-            const int millisecondsTimeout = 1000;
-            int numberOfTries = 1;
+            int numberOfAttempts = 1;
 
             var response = GetSearchResult(SendSearchQuery(entityName));
             while (!(response["status_code"] is null) &&
-                   response["status_code"].ToString() != goodStatusCode)
+                   response["status_code"].ToString() != _goodStatusCode)
             {
-                if (numberOfTries > limitTries)
+                if (numberOfAttempts > _limitAttempts)
                 {
-                    _logger.Error("Couldn't get good response from TMDB.");
-                    throw new InvalidOperationException("Couldn't get good response from TMDB.");
+                    var ex = new InvalidOperationException("Couldn't get good response from TMDB.");
+                    _logger.Error(ex, $"TMDB was unavailable for {_limitAttempts} attempts.");
+                    throw ex;
                 }
-                Sleep(numberOfTries * millisecondsTimeout);
-                ++numberOfTries;
+
+                // Increase timeout between attempts.
+                Sleep(numberOfAttempts * _millisecondsTimeout);
+                ++numberOfAttempts;
                 response = GetSearchResult(SendSearchQuery(entityName));
             }
             return response;
@@ -63,7 +71,8 @@ namespace ThingAppraiser.Crawlers
             return response;
         }
 
-        public override List<Data.DataHandler> GetData(List<string> entities, bool ouput = false)
+        public override List<Data.DataHandler> GetResponse(List<string> entities,
+            bool ouput = false)
         {
             var searchResults = new List<Data.DataHandler>();
             foreach (var movie in entities)
@@ -76,12 +85,14 @@ namespace ThingAppraiser.Crawlers
                     Core.Shell.OutputMessage($"{movie} wasn't processed.");
                     continue;
                 }
+
                 // Get first search result from response.
                 var result = response["results"][0];
                 if (ouput)
                 {
                     Core.Shell.OutputMessage(result.ToString());
                 }
+
                 // JToken.ToObject is a helper method that uses JsonSerializer internally
                 var searchResult = result.ToObject<Data.TMDBMovie>();
                 searchResults.Add(searchResult);

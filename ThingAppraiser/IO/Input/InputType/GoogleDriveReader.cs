@@ -7,7 +7,7 @@ namespace ThingAppraiser.IO.Input
 {
     public class GoogleDriveReader : GoogleDriveWorker, IInputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private LocalFileReader _localFileReader = new LocalFileReader();
 
@@ -106,14 +106,14 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                _logger.Warn("An error occured during downloading and reading file.");
+                _logger.Warn(ex, "An error occured during downloading and reading file.");
                 Core.Shell.OutputMessage("An error occured during downloading and reading " +
                                           $"file: {ex.Message}");
             }
             finally
             {
                 DeleteFile(storageName);
-                _logger.Debug($"Deleted temporary created file {storageName}.");
+                _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
             return result;
         }
@@ -138,7 +138,7 @@ namespace ThingAppraiser.IO.Input
             }
             else
             {
-                _logger.Info($"No files found. Trid to find {storageName}");
+                _logger.Info($"No files found. Trid to find \"{storageName}\".");
                 Core.Shell.OutputMessage("No files found.");
             }
 

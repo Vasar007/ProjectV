@@ -16,6 +16,6 @@ namespace ThingAppraiser.Crawlers
 
         protected abstract IRestResponse SendSearchQuery(string entityName);
 
-        public abstract List<Data.DataHandler> GetData(List<string> entities, bool ouput = false);
+        public abstract List<Data.DataHandler> GetResponse(List<string> entities, bool ouput = false);
     }
 }

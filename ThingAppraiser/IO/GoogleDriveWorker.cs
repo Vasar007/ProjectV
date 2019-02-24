@@ -11,7 +11,7 @@ namespace ThingAppraiser.IO
 {
     public abstract class GoogleDriveWorker
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/tokens.json
@@ -34,8 +34,8 @@ namespace ThingAppraiser.IO
                     _applicationName,
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
-                _logger.Info($"Credential file saved to: {credPath}");
-                Core.Shell.OutputMessage($"Credential file saved to: {credPath}");
+                _logger.Info($"Credential file saved to: \"{credPath}\"");
+                Core.Shell.OutputMessage($"Credential file saved to: \"{credPath}\"");
             }
 
             // Create Drive API service.
@@ -51,7 +51,8 @@ namespace ThingAppraiser.IO
         /// </summary>
         /// <see cref="https://developers.google.com/drive/v3/reference/files/list"/>
         /// <remarks>
-        /// Generation Note: This does not always build corectly.  Google needs to standardise things I need to figuer out which ones are wrong.
+        /// Generation Note: This does not always build corectly. Google needs to standardise
+        /// things because breaking changes may cause errors.
         /// </remarks>
         /// <param name="optional">Optional paramaters.</param>
         protected Google.Apis.Drive.v3.Data.FileList ListFiles(
@@ -69,7 +70,7 @@ namespace ThingAppraiser.IO
             catch (Exception ex)
             {
                 _logger.Error(ex, "Request Files.List failed.");
-                throw new Exception("Request Files.List failed.", ex);
+                throw new InvalidOperationException("Request Files.List failed.", ex);
             }
         }
 
@@ -95,8 +96,7 @@ namespace ThingAppraiser.IO
         /// <param name="optional">The optional parameters.</param>  
         protected static object ApplyOptionalParms(object request, object optional)
         {
-            if (optional is null)
-                return request;
+            if (optional is null) return request;
 
             var optionalProperties = optional.GetType().GetProperties();
 
@@ -149,11 +149,15 @@ namespace ThingAppraiser.IO
         {
             if (!HasExtention(filename))
             {
-                _logger.Error($"Filename {filename} isn't contain extension.");
-                throw new ArgumentException($"Filename {filename} isn't contain extension.");
+                var ex = new ArgumentException($"Filename \"{filename}\" isn't contain extension.",
+                                               nameof(filename));
+
+                _logger.Error(ex, "Got filename without extension.");
+                throw ex;
             }
 
-            switch (Path.GetExtension(filename))
+            var extension = Path.GetExtension(filename);
+            switch (extension)
             {
                 case ".txt":
                     return "text/plain";
@@ -166,8 +170,8 @@ namespace ThingAppraiser.IO
                 case ".pdf":
                     return "application/pdf";
                 default:
-                    _logger.Warn($"Not found MIME type for extension: {filename}");
-                    Core.Shell.OutputMessage($"Not found MIME type for extension: {filename}");
+                    _logger.Warn($"Not found MIME type for extension: {extension}");
+                    Core.Shell.OutputMessage($"Not found MIME type for extension: {extension}");
                     return default(string);
             }
         }
@@ -180,8 +184,8 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, $"Couldn't delete donwloaded file {filename}.");
-                Core.Shell.OutputMessage($"Couldn't delete donwloaded file {filename}. " +
+                _logger.Warn(ex, $"Couldn't delete donwloaded file \"{filename}\".");
+                Core.Shell.OutputMessage($"Couldn't delete donwloaded file \"{filename}\". " +
                                           $"Error: {ex.Message}");
                 return false;
             }

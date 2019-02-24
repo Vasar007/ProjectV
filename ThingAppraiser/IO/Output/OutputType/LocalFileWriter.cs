@@ -7,7 +7,7 @@ namespace ThingAppraiser.IO.Output
 {
     public class LocalFileWriter : IOutputter
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static bool WriteFile(List<List<Data.ResultType>> results, string filename)
         {
@@ -63,7 +63,7 @@ namespace ThingAppraiser.IO.Output
             }
             catch (Exception ex)
             {
-                _logger.Warn("Couldn't write to the storage.");
+                _logger.Warn(ex, "Couldn't write to the storage.");
                 Core.Shell.OutputMessage($"Couldn't write to the storage. Error: {ex.Message}");
                 return false;
             }
