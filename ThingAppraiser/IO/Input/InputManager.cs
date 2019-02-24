@@ -8,43 +8,48 @@ namespace ThingAppraiser.IO.Input
     /// </summary>
     public class InputManager
     {
-        #region Const & Static Fields
+        #region Static Fields
 
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// Default storage name if user will not specify it.
-        /// </summary>
-        private const string _defaultFilename = "thing_names.txt";
-
         #endregion
 
         #region Class Fields
+
+        /// <summary>
+        /// Number of attempts to read data from input.
+        /// </summary>
+        private readonly int _limitAttempts;
+
+        /// <summary>
+        /// Default storage name if user will not specify it.
+        /// </summary>
+        private readonly string _defaultFilename;
 
         /// <summary>
         /// Implementation of inputter class which can read The Things names from specified source.
         /// </summary>
         private IInputter _inputter;
 
-        /// <summary>
-        /// Number of attempts to read data from input.
-        /// </summary>
-        private int _limitAttempts = 10;
-
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Constructor with dependency injections.
+        /// Initializes instance according to parameter values.
         /// </summary>
         /// <param name="inputter">Instance of <see cref="IInputter"/>.</param>
-        public InputManager(IInputter inputter)
+        /// <param name="defaultFilename">Default file name when user doesn't provide it.</param>
+        /// <param name="limitAttempts">Limit of attempts to read from input.</param>
+        public InputManager(IInputter inputter, string defaultFilename = "thing_names.txt",
+            int limitAttempts = 10)
         {
             _inputter = inputter;
+            _defaultFilename = defaultFilename;
+            _limitAttempts = limitAttempts;
         }
 
         #endregion
@@ -86,7 +91,7 @@ namespace ThingAppraiser.IO.Input
         /// </remarks>
         /// <param name="storageName">Input storage name.</param>
         /// <returns>Collection of The Things names as strings.</returns>
-        public List<string> GetNames(string storageName = _defaultFilename)
+        public List<string> GetNames(string storageName)
         {
             var result = new List<string>();
             if (!string.IsNullOrEmpty(storageName))
@@ -99,7 +104,7 @@ namespace ThingAppraiser.IO.Input
             }
 
             int numberOfAttempts = 1;
-            while (result.Count == 0 || numberOfAttempts < _limitAttempts)
+            while (result.Count == 0 && numberOfAttempts < _limitAttempts)
             {
                 _logger.Warn("No Things were found.");
                 Core.Shell.OutputMessage("No Things were found. Enter other storage name: ");

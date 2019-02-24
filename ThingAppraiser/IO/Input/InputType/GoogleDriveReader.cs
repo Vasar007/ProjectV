@@ -106,7 +106,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                _logger.Warn("An error occured during downloading and reading file.");
+                _logger.Warn(ex, "An error occured during downloading and reading file.");
                 Core.Shell.OutputMessage("An error occured during downloading and reading " +
                                           $"file: {ex.Message}");
             }

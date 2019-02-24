@@ -14,7 +14,7 @@ namespace ThingAppraiser.Appraisers
     /// </remarks>
     public class AppraisersManager : IEnumerable
     {
-        #region Const & Static Fields
+        #region Static Fields
 
         /// <summary>
         /// Logger instance for current class.

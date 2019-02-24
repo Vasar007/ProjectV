@@ -18,7 +18,7 @@ namespace ThingAppraiser.Core
 
         #endregion
 
-        #region Const & Static Fields
+        #region Static Fields
 
         /// <summary>
         /// Logger instance for current class.
@@ -27,7 +27,7 @@ namespace ThingAppraiser.Core
 
         #endregion
 
-        #region Const & Static Properties
+        #region Static Properties
 
         /// <summary>
         /// Message handler to control all communications with service.
@@ -67,19 +67,46 @@ namespace ThingAppraiser.Core
         /// </summary>
         public Shell()
         {
-            // TODO: add config parameters and change constructor body.
-            MessageHandler = new ConsoleMessageHandler();
+            try
+            {
+                MessageHandler = Builder.CreateMessageHandlerByName(
+                    ConfigParser.GetValueByParameterKey("MessageHandlerType")
+                );
 
-            _inputManager = new IO.Input.InputManager(new IO.Input.GoogleDriveReader()); // LocalFileReader
-            _crawlersManager = new Crawlers.CrawlersManager
+                _inputManager = new IO.Input.InputManager(
+                    Builder.CreateInputter(ConfigParser.GetValueByParameterKey("InputType")),
+                    ConfigParser.GetValueByParameterKey("DefaultInFilename"),
+                    ConfigParser.GetValueByParameterKey<int>("LimitAttempts")
+                );
+
+                _crawlersManager = new Crawlers.CrawlersManager();
+                var crawlersNumber = ConfigParser.GetValueByParameterKey<int>("CrawlersNumber");
+                for (int i = 1; i <= crawlersNumber; ++i)
+                {
+                    _crawlersManager.Add(Builder.CreateCrawlerByName(
+                        ConfigParser.GetValueByParameterKey($"Crawler{i}")
+                    ));
+                }
+
+                _appraisersManager = new Appraisers.AppraisersManager();
+                var appraisersNumber = ConfigParser.GetValueByParameterKey<int>("AppraisersNumber");
+                for (int i = 1; i <= crawlersNumber; ++i)
+                {
+                    _appraisersManager.Add(Builder.CreateAppraiserByName(
+                        ConfigParser.GetValueByParameterKey($"Appraiser{i}")
+                    ));
+                }
+
+                _outputManager = new IO.Output.OutputManager(
+                    Builder.CreateOutputter(ConfigParser.GetValueByParameterKey("OutputType")),
+                    ConfigParser.GetValueByParameterKey("DefaultOutFilename")
+                );
+            }
+            catch (Exception ex)
             {
-                new Crawlers.TMDBCrawler()
-            };
-            _appraisersManager = new Appraisers.AppraisersManager
-            {
-                new Appraisers.TMDBAppraiser()
-            };
-            _outputManager = new IO.Output.OutputManager(new IO.Output.GoogleDriveWriter()); // LocalFileWriter
+                _logger.Error(ex, "Error occured during Shell constructor execution.");
+                throw;
+            }
         }
 
         #endregion
