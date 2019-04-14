@@ -10,7 +10,7 @@ Target .NET framework is 4.7.1 and version of C# is 7.0.
 Project uses further dependencies:
 
 - Newtonsoft.Json v12.0.1;
-- RestSharp v106.6.7;
+- RestSharp v106.6.9;
 - System.ValueTuple v4.5.0;
 - JonSkeet.MiscUtil v0.2.0;
 - MoreLINQ v3.1.0;
@@ -19,7 +19,7 @@ Project uses further dependencies:
 - Google.Apis v1.38.0;
 - Google.Apis.Auth v1.38.0;
 - Google.Apis.Core v1.38.0;
-- Google.Apis.Drive.v3 v1.38.0.1477;
+- Google.Apis.Drive.v3 v1.38.0.1512;
 - NLog v4.5.11;
 - NLog.Config v4.5.11;
 - NLog.Schema v4.5.11.

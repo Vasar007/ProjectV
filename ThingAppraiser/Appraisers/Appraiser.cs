@@ -1,29 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using MoreLinq;
+using ThingAppraiser.Communication;
+using ThingAppraiser.Data;
 
 namespace ThingAppraiser.Appraisers
 {
-    public abstract class Appraiser
+    /// <summary>
+    /// Basic appraiser with default rating calculations.
+    /// </summary>
+    public abstract class CAppraiser
     {
-        public virtual Type TypeID { get { return typeof(Data.DataHandler); } }
+        /// <summary>
+        /// Defines which type of data objects this appraiser can process.
+        /// </summary>
+        public virtual Type TypeID => typeof(CBasicInfo);
 
-        public virtual List<Data.ResultType> GetRatings(List<Data.DataHandler> entities)
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public CAppraiser()
         {
-            var ratings = new List<Data.ResultType>();
+        }
 
-            var normalizerVA = new Normalizer<float, Data.DataHandler>(entities,
-                                                                       e => e.Vote_Average);
-            var normalizerVC = new Normalizer<uint, Data.DataHandler>(entities, e => e.Vote_Count);
+        /// <summary>
+        /// Makes prior analysis through normalizers and calculates ratings based on average vote 
+        /// and vote count.
+        /// </summary>
+        /// <param name="entities">Entities to appraise.</param>
+        /// <param name="outputResults">Flag to define need to output.</param>
+        /// <returns>Collection of result object (data object with rating).</returns>
+        /// <remarks>
+        /// Entities collection must be unique because rating calculation errors can occur in such
+        /// situations.
+        /// </remarks>
+        public virtual CRating GetRatings(List<CBasicInfo> entities, Boolean outputResults)
+        {
+            var ratings = new CRating();
+            if (entities.IsNullOrEmpty()) return ratings;
+
+            var normalizerVA = new CNormalizer<Single, CBasicInfo>(entities, e => e.VoteAverage);
+            var normalizerVC = new CNormalizer<Int32, CBasicInfo>(entities, e => e.VoteCount);
 
             var enumerator = entities.ZipShortest(normalizerVA.Normalize(),
-                                                   normalizerVC.Normalize(),
-                                                   (t1, t2, t3) => (t1, t2, t3));
+                                                  normalizerVC.Normalize(),
+                                                  (t1, t2, t3) => (t1, t2, t3));
+
             foreach (var (entity, normValueVA, normValueVC) in enumerator)
             {
-                ratings.Add(new Data.ResultType(entity, normValueVA + normValueVC));
-                //Shell.Shell.OutputMessage($"{normValueVA} : {entity.Vote_Average}; \t " +
-                //                          $"{normValueVC} : {entity.Vote_Count}");
+                var resultInfo = new CResultInfo(entity, normValueVA + normValueVC);
+                ratings.Add(resultInfo);
+                if (outputResults)
+                {
+                    SGlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                }
             }
 
             ratings.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue));
