@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ThingAppraiser.IO.Input
+{
+    /// <summary>
+    /// Represents common necessary methods to work with files.
+    /// </summary>
+    public interface IFileReader
+    {
+        /// <summary>
+        /// Reads local file. File must satisfy a particular
+        /// structure (it's implementation detail, see implementers remarks).
+        /// </summary>
+        /// <param name="filename">Filename to read.</param>
+        /// <returns>Processed collection of entity names.</returns>
+        List<String> ReadFile(String filename);
+
+        /// <summary>
+        /// Reads local csv-file. File must satisfy a particular structure (it's implementation
+        /// detail, see implementers remarks).
+        /// </summary>
+        /// <param name="filename">Filename to read</param>
+        /// <returns>Processed collection of entity names.</returns>
+        List<String> ReadCsvFile(String filename);
+    }
+}

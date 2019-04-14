@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using ThingAppraiser.Logging;
+using ThingAppraiser.Data;
+using ThingAppraiser.Communication;
 
 namespace ThingAppraiser.Appraisers
 {
@@ -8,95 +10,106 @@ namespace ThingAppraiser.Appraisers
     /// Class which connects collected data with appraisers and executes the last one to process
     /// this data.
     /// </summary>
-    /// <remarks>
-    /// Class implements <see cref="IEnumerable"> to simplify call to the constructor with 
-    /// collection initializer.
-    /// </remarks>
-    public class AppraisersManager : IEnumerable
+    public sealed class CAppraisersManager : IManager<CAppraiser>
     {
-        #region Static Fields
-
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
-        #endregion
-
-        #region Class Fields
+        private static readonly CLoggerAbstraction s_logger =
+            CLoggerAbstraction.CreateLoggerInstanceFor<CAppraisersManager>();
 
         /// <summary>
         /// Represents relations one-to-many for every type of the potential data.
         /// </summary>
-        private Dictionary<Type, List<Appraiser>> _appraisers =
-            new Dictionary<Type, List<Appraiser>>();
-
-        #endregion
-
-        #region Public Class Methods
+        private readonly Dictionary<Type, List<CAppraiser>> _appraisers =
+            new Dictionary<Type, List<CAppraiser>>();
 
         /// <summary>
-        /// Add appraiser to collection.
+        /// Sets this flag to <c>true</c> if you need to monitor appraisers results.
         /// </summary>
-        /// <param name="appraiser">Concrete appraiser implementation.</param>
-        public void Add(Appraiser appraiser)
-        {
-            appraiser.ThrowIfNull(nameof(appraiser));
+        private readonly Boolean _outputResults;
 
-            if (_appraisers.TryGetValue(appraiser.TypeID, out var list))
+
+        /// <summary>
+        /// Initializes manager for appraisers.
+        /// </summary>
+        /// <param name="outputResults">Flag to define need to output appraisers results.</param>
+        public CAppraisersManager(Boolean outputResults)
+        {
+            _outputResults = outputResults;
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public CAppraisersManager()
+            : this(false)
+        {
+        }
+
+        #region IManager<CAppraiser> Implementation
+
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// </exception>
+        public void Add(CAppraiser item)
+        {
+            item.ThrowIfNull(nameof(item));
+
+            if (_appraisers.TryGetValue(item.TypeID, out List<CAppraiser> list))
             {
-                if (!list.Contains(appraiser))
+                if (!list.Contains(item))
                 {
-                    list.Add(appraiser);
+                    list.Add(item);
                 }
             }
             else
             {
-                _appraisers.Add(appraiser.TypeID, new List<Appraiser> { appraiser });
+                _appraisers.Add(item.TypeID, new List<CAppraiser> { item });
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// </exception>
+        public Boolean Remove(CAppraiser item)
+        {
+            item.ThrowIfNull(nameof(item));
+            return _appraisers.Remove(item.TypeID);
+        }
+
+        #endregion
+
         /// <summary>
-        /// Find suitable appraisers for every collection and execute ratings calculations.
+        /// Finds suitable appraisers for every collection and execute ratings calculations.
         /// </summary>
         /// <param name="data">Collections of crawlers results.</param>
         /// <returns>Appraised collections produced from a set of data.</returns>
-        public List<List<Data.ResultType>> GetAllRatings(List<List<Data.DataHandler>> data)
+        public List<CRating> GetAllRatings(List<List<CBasicInfo>> data)
         {
-            var results = new List<List<Data.ResultType>>();
-            foreach (var datum in data)
+            var results = new List<CRating>();
+            foreach (List<CBasicInfo> datum in data)
             {
                 // Skip empty collections of data.
                 if (datum.Count == 0) continue;
 
                 // Suggest that all types in collection are identical.
-                if (!_appraisers.TryGetValue(datum[0].GetType(), out var values))
+                if (!_appraisers.TryGetValue(datum[0].GetType(), out List<CAppraiser> values))
                 {
-                    _logger.Info($"Type {datum[0].GetType()} wasn't used to appraise!");
-                    Core.Shell.OutputMessage($"Type {datum[0].GetType()} wasn't used to appraise!");
+                    s_logger.Info($"Type {datum[0].GetType()} wasn't used to appraise!");
+                    SGlobalMessageHandler.OutputMessage(
+                        $"Type {datum[0].GetType()} wasn't used to appraise!"
+                    );
                     continue;
                 }
-                foreach (var appraiser in values)
+                foreach (CAppraiser appraiser in values)
                 {
-                    results.Add(appraiser.GetRatings(datum));
+                    results.Add(appraiser.GetRatings(datum, _outputResults));
                 }
             }
             return results;
         }
-
-        #endregion
-
-        #region Impements IEnumerable
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>A collection enumerator.</returns>
-        public IEnumerator GetEnumerator()
-        {
-            return _appraisers.GetEnumerator();
-        }
-
-        #endregion
     }
 }
