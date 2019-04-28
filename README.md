@@ -6,23 +6,25 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET framework is 4.7.1 and version of C# is 7.0.
+Target .NET framework is 4.7.2 and version of C# is 7.0.
 Project uses further dependencies:
 
-- Newtonsoft.Json v12.0.1;
-- RestSharp v106.6.9;
-- System.ValueTuple v4.5.0;
-- JonSkeet.MiscUtil v0.2.0;
-- MoreLINQ v3.1.0;
 - CsvHelper v12.1.2;
-- FileHelpers v3.3.0;
-- Google.Apis v1.38.0;
-- Google.Apis.Auth v1.38.0;
-- Google.Apis.Core v1.38.0;
-- Google.Apis.Drive.v3 v1.38.0.1512;
-- NLog v4.5.11;
-- NLog.Config v4.5.11;
-- NLog.Schema v4.5.11.
+- FileHelpers v3.4.0;
+- Google.Apis v1.38.2;
+- Google.Apis.Auth v1.38.2;
+- Google.Apis.Core v1.38.2;
+- Google.Apis.Drive.v3 v1.38.2.1566;
+- MaterialDesignColors v1.1.3;
+- MaterialDesignThemes v2.5.1;
+- Newtonsoft.Json v12.0.2;
+- NLog v4.6.2;
+- NLog.Config v4.6.2;
+- NLog.Schema v4.6.2;
+- RestSharp v106.6.9;
+- System.Reactive v4.1.5;
+- System.Threading.Tasks.Dataflow v4.9.0;
+- System.ValueTuple v4.5.0.
 
 You can install dependencies using NuGet package manager.
 
