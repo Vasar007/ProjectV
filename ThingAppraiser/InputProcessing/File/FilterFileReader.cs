@@ -18,7 +18,7 @@ namespace ThingAppraiser.IO.Input
         /// Logger instance for current class.
         /// </summary>
         private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CSimpleFileReader>();
+            CLoggerAbstraction.CreateLoggerInstanceFor<CFilterFileReader>();
 
         /// <summary>
         /// Name of the column with status which can contain some details about Thing.

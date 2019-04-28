@@ -11,7 +11,7 @@ namespace DesktopApp.Model
 
         private Int32 _thingID;
 
-        private Single _voteAverage;
+        private Double _voteAverage;
 
         private Int32 _voteCount;
 
@@ -39,7 +39,7 @@ namespace DesktopApp.Model
             }
         }
 
-        public Single VoteAverage
+        public Double VoteAverage
         {
             get => _voteAverage;
             set
@@ -80,7 +80,7 @@ namespace DesktopApp.Model
         public void UpdateData(CBasicInfo data)
         {
             Name = data.Title;
-            ThingID = data.ID;
+            ThingID = data.ThingID;
             VoteAverage = data.VoteAverage;
             VoteCount = data.VoteCount;
         }

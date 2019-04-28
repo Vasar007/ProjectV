@@ -37,7 +37,7 @@ namespace DesktopApp.ViewModel
         private CThingProducer _thingProducer;
 
         private readonly CThingSupplier _thingSupplier = 
-            new CThingSupplier(new CImageSupplierTMDB(CCrawlerTMDB.ServiceConfigurationTMDB));
+            new CThingSupplier(new CImageSupplierTMDB(SServiceConfigurationTMDB.Configuration));
 
         public Boolean IsBusy
         {
@@ -249,7 +249,6 @@ namespace DesktopApp.ViewModel
             _xmlConfigCreator.AddCrawlersManagerAttribute(
                 new XAttribute("CrawlersOutputFlag", "false")
             );
-
             _xmlConfigCreator.AddCrawlerElement(
                 new XElement("CrawlerTMDB",
                     new XAttribute("APIKeyTMDB", "f7440a70737103fea00fb6e8352a3533"),
@@ -266,14 +265,22 @@ namespace DesktopApp.ViewModel
             _xmlConfigCreator.AddAppraisersManagerAttribute(
                 new XAttribute("AppraisersOutputFlag", "false")
             );
-
             _xmlConfigCreator.AddAppraiserElement(
-                //new XElement("AppraiserTMDB"),
-                new XElement("FuzzyAppraiserTMDB")
+                new XElement("AppraiserTMDB")
+                //new XElement("FuzzyAppraiserTMDB")
             );
 
             _xmlConfigCreator.AddOutputManagerAttribute(
                 new XAttribute("DefaultOutFilename", "appraised_things.csv")
+            );
+
+            _xmlConfigCreator.AddDataBaseManagerAttribute(
+                new XAttribute("ConnectionString", @"Data Source=(localdb)\MSSQLLocalDB;
+Initial Catalog=thing_appraiser;Integrated Security=True;Connect Timeout=30;Encrypt=False;
+TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+            );
+            _xmlConfigCreator.AddRepositoryElement(
+                new XElement("MovieTMDBRepository")
             );
         }
     }

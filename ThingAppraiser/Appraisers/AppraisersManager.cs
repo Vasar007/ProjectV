@@ -29,6 +29,8 @@ namespace ThingAppraiser.Appraisers
         /// </summary>
         private readonly Boolean _outputResults;
 
+        private readonly CRatingsStorage _ratingsStorage = new CRatingsStorage();
+
 
         /// <summary>
         /// Initializes manager for appraisers.
@@ -37,14 +39,6 @@ namespace ThingAppraiser.Appraisers
         public CAppraisersManager(Boolean outputResults)
         {
             _outputResults = outputResults;
-        }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public CAppraisersManager()
-            : this(false)
-        {
         }
 
         #region IManager<CAppraiser> Implementation
@@ -61,11 +55,13 @@ namespace ThingAppraiser.Appraisers
             {
                 if (!list.Contains(item))
                 {
+                    item.RatingID = _ratingsStorage.Register(item.TypeID, item.RatingName);
                     list.Add(item);
                 }
             }
             else
             {
+                item.RatingID = _ratingsStorage.Register(item.TypeID, item.RatingName);
                 _appraisers.Add(item.TypeID, new List<CAppraiser> { item });
             }
         }
@@ -77,6 +73,11 @@ namespace ThingAppraiser.Appraisers
         public Boolean Remove(CAppraiser item)
         {
             item.ThrowIfNull(nameof(item));
+
+            if (!_ratingsStorage.Deregister(item.RatingID))
+            {
+                s_logger.Warn("Removed appraiser had unregistered rating ID.");
+            }
             return _appraisers.Remove(item.TypeID);
         }
 
@@ -87,29 +88,32 @@ namespace ThingAppraiser.Appraisers
         /// </summary>
         /// <param name="data">Collections of crawlers results.</param>
         /// <returns>Appraised collections produced from a set of data.</returns>
-        public List<CRating> GetAllRatings(List<List<CBasicInfo>> data)
+        public CProcessedDataContainer GetAllRatings(List<CRawDataContainer> data)
         {
-            var results = new List<CRating>();
-            foreach (List<CBasicInfo> datum in data)
+            var results = new List<CResultList>();
+            foreach (CRawDataContainer datum in data)
             {
+                IReadOnlyList<CBasicInfo> internalData = datum.GetData();
                 // Skip empty collections of data.
-                if (datum.Count == 0) continue;
+                if (internalData.IsNullOrEmpty()) continue;
 
                 // Suggest that all types in collection are identical.
-                if (!_appraisers.TryGetValue(datum[0].GetType(), out List<CAppraiser> values))
+                if (!_appraisers.TryGetValue(internalData[0].GetType(),
+                                             out List<CAppraiser> values))
                 {
-                    s_logger.Info($"Type {datum[0].GetType()} wasn't used to appraise!");
+                    s_logger.Info($"Type {internalData[0].GetType()} wasn't used to appraise!");
                     SGlobalMessageHandler.OutputMessage(
-                        $"Type {datum[0].GetType()} wasn't used to appraise!"
+                        $"Type {internalData[0].GetType()} wasn't used to appraise!"
                     );
                     continue;
                 }
+
                 foreach (CAppraiser appraiser in values)
                 {
                     results.Add(appraiser.GetRatings(datum, _outputResults));
                 }
             }
-            return results;
+            return new CProcessedDataContainer(results, _ratingsStorage);
         }
     }
 }

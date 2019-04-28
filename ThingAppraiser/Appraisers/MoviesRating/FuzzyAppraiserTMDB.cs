@@ -18,7 +18,13 @@ namespace ThingAppraiser.Appraisers
         private readonly IFuzzyController _fuzzyController = new FuzzyControllerIFuzzyController();
 
         /// <inheritdoc />
+        public override String Tag => "FuzzyAppraiserTMDB";
+
+        /// <inheritdoc />
         public override Type TypeID => typeof(CMovieTMDBInfo);
+
+        /// <inheritdoc />
+        public override String RatingName => "Fuzzy logic rating";
 
 
         /// <summary>
@@ -30,41 +36,38 @@ namespace ThingAppraiser.Appraisers
 
         #region CMoviesAppraiser Overriden Methods
 
-        /// <summary>
-        /// Calculates ratings based on average vote, vote count, year of release date, popularity
-        /// and adult factor.
-        /// </summary>
-        /// <param name="entities">Entities to appraise.</param>
-        /// <param name="outputResults">Flag to define need to output.</param>
-        /// <returns>Collection of result object (data object with rating).</returns>
+        /// <inheritdoc />
         /// <remarks>This appraiser uses MATLAB module to calculate ratings.</remarks>
         /// <exception cref="ArgumentException">
-        /// <paramref name="entities">entities</paramref> contains instances of invalid type for
-        /// this appraiser.
+        /// <paramref name="rawDataContainer">rawDataContainer</paramref> contains instances of
+        /// invalid type for this appraiser.
         /// </exception>
-        public override CRating GetRatings(List<CBasicInfo> entities, Boolean outputResults)
+        public override CResultList GetRatings(CRawDataContainer rawDataContainer,
+            Boolean outputResults)
         {
-            var ratings = new CRating();
-            if (entities.IsNullOrEmpty())
-                return ratings;
+            CheckRatingID();
+
+            var ratings = new CResultList();
+            IReadOnlyList<CBasicInfo> rawData = rawDataContainer.GetData();
+            if (rawData.IsNullOrEmpty()) return ratings;
 
             // Check if list have proper type.
-            if (!entities.All(e => e is CMovieTMDBInfo))
+            if (!rawData.All(e => e is CMovieTMDBInfo))
             {
                 throw new ArgumentException(
                     $"Element type is invalid for appraiser with type {TypeID.FullName}"
                 );
             }
 
-            var converted = entities.ConvertAll(e => (CMovieTMDBInfo) e);
-            foreach (var entity in converted)
+            var converted = rawData.Select(e => (CMovieTMDBInfo) e);
+            foreach (CMovieTMDBInfo entityInfo in converted)
             {
-                Single rating = _fuzzyController.CalculateRating(
-                    entity.VoteCount, entity.VoteAverage, entity.ReleaseDate.Year,
-                    entity.Popularity, entity.Adult ? 1 : 0
+                Double ratingValue = _fuzzyController.CalculateRating(
+                    entityInfo.VoteCount, entityInfo.VoteAverage, entityInfo.ReleaseDate.Year,
+                    entityInfo.Popularity, entityInfo.Adult ? 1 : 0
                 );
 
-                var resultInfo = new CResultInfo(entity, rating);
+                var resultInfo = new CResultInfo(entityInfo.ThingID, ratingValue, RatingID);
                 ratings.Add(resultInfo);
                 if (outputResults)
                 {

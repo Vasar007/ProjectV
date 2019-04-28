@@ -38,6 +38,11 @@
         void BuildOutputManager();
 
         /// <summary>
+        /// Creates data base manager with repositories which can interact with DB.
+        /// </summary>
+        void BuildDataBaseManager();
+
+        /// <summary>
         /// Collects all managers and initializes <see cref="CShell" /> instance.
         /// </summary>
         /// <returns>Fully initialized instance.</returns>

@@ -40,15 +40,6 @@ namespace ThingAppraiser.IO.Input
             _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Provides constructor call with some default parameters.
-        /// </summary>
-        public CInputManager()
-            : this("thing_names.txt")
-        {
-        }
-
         #region IManager<IInputter> Implementation
 
         /// <inheritdoc />
@@ -58,7 +49,10 @@ namespace ThingAppraiser.IO.Input
         public void Add(IInputter item)
         {
             item.ThrowIfNull(nameof(item));
-            _inputters.Add(item);
+            if (!_inputters.Contains(item))
+            {
+                _inputters.Add(item);
+            }
         }
 
         /// <inheritdoc />
@@ -78,10 +72,6 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="storageName">Input storage name.</param>
         /// <returns>Collection of The Things names as strings.</returns>
-        /// <remarks>
-        /// This method try to read data several attempts. Number of attempts is specified in the 
-        /// configuration file.
-        /// </remarks>
         public List<String> GetNames(String storageName)
         {
             var result = new List<String>();
@@ -92,12 +82,15 @@ namespace ThingAppraiser.IO.Input
 
             foreach (IInputter inputter in _inputters)
             {
-                TryReadThingNames(inputter, storageName, out List<String> value);
+                Boolean success = TryReadThingNames(inputter, storageName, out List<String> value);
 
-                if (value.IsNullOrEmpty())
+                if (!success || value.IsNullOrEmpty())
                 {
-                    s_logger.Warn("No Things were found.");
-                    SGlobalMessageHandler.OutputMessage("No Things were found.");
+                    String message = $"No Things were found in {storageName} by inputter " +
+                                     $"{inputter.Tag}.";
+
+                    s_logger.Warn(message);
+                    SGlobalMessageHandler.OutputMessage(message);
                     continue;
                 }
 
@@ -127,7 +120,8 @@ namespace ThingAppraiser.IO.Input
             catch (Exception ex)
             {
                 s_logger.Warn(ex, "Couldn't get access to the storage.");
-                SGlobalMessageHandler.OutputMessage("Couldn't get access to the storage. " +
+                SGlobalMessageHandler.OutputMessage("Couldn't get access to the storage for " +
+                                                    $"inputter {inputter.Tag}. " +
                                                     $"Error: {ex.Message}");
                 result = new List<String>();
                 return false;

@@ -9,37 +9,47 @@ namespace ThingAppraiser.Data
     public class CResultInfo
     {
         /// <summary>
-        /// Contains all data about appraised Thing.
+        /// Thing ID.
         /// </summary>
-        public CBasicInfo DataHandler { get; }
+        public Int32 ThingID { get; }
 
         /// <summary>
         /// Calculated rating value of Thing.
         /// </summary>
-        public Single RatingValue { get; }
+        public Double RatingValue { get; }
+
+        /// <summary>
+        /// Unique identifier of the rating.
+        /// </summary>
+        public Guid RatingID { get; }
 
 
         /// <summary>
         /// Constructor which initializes fields.
         /// </summary>
-        /// <param name="dataHandler">Instance of data class.</param>
+        /// <param name="thingID">ID of the Thing.</param>
         /// <param name="ratingValue">Calculated rating value.</param>
-        public CResultInfo(CBasicInfo dataHandler, Single ratingValue)
+        /// <param name="ratingID">ID of the rating.</param>
+        public CResultInfo(Int32 thingID, Double ratingValue, Guid ratingID)
         {
-            DataHandler = dataHandler;
+            ThingID = thingID;
             RatingValue = ratingValue;
+            RatingID = ratingID;
         }
 
         /// <summary>
         /// Deconstruct object and get all field values.
         /// </summary>
-        /// <param name="dataHandler">Variable to write data about The Thing.</param>
+        /// <param name="thingID">Variable to write The Thing ID.</param>
         /// <param name="ratingValue">Variable to write rating value.</param>
+        /// <param name="ratingID">Variable to write rating ID.</param>
         /// <remarks>Need to work with deconstructing user-defined types.</remarks>
-        public void Deconstruct(out CBasicInfo dataHandler, out Single ratingValue)
+        public void Deconstruct(out Int32 thingID, out Double ratingValue,
+            out Guid ratingID)
         {
-            dataHandler = DataHandler;
+            thingID = ThingID;
             ratingValue = RatingValue;
+            ratingID = RatingID;
         }
 
         #region Object Overridden Methods
@@ -47,7 +57,7 @@ namespace ThingAppraiser.Data
         /// <inheritdoc />
         public override String ToString()
         {
-            return DataHandler.Title + RatingValue;
+            return RatingID + " " + ThingID + " " + RatingValue;
         }
 
         #endregion

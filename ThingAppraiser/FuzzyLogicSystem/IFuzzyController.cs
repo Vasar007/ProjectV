@@ -17,7 +17,8 @@ namespace ThingAppraiser.FuzzyLogicSystem
         /// <param name="popularity">Value of movie popularity metric.</param>
         /// <param name="adult">If movie is adult only.</param>
         /// <returns>Movie rating which calculates in MATLAB module</returns>
-        Single CalculateRating(Single voteCount, Single voteAverage, Single releaseYear,
-            Single popularity, Single adult);
+        /// <remarks>MATLAB accepts only <c>single</c> or <c>double</c>> values.</remarks>
+        Double CalculateRating(Double voteCount, Double voteAverage, Double releaseYear,
+            Double popularity, Double adult);
     }
 }

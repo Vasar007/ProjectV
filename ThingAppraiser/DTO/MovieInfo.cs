@@ -25,14 +25,14 @@ namespace ThingAppraiser.Data
         /// Initializes instance with given parameters.
         /// </summary>
         /// <param name="overview">Movie description.</param>
-        /// <param name="release_Date">Movie release date.</param>
+        /// <param name="release_date">Movie release date.</param>
         [JsonConstructor]
-        public CMovieInfo(String title, Int32 id, Int32 vote_Count, Single vote_Average,
-            String overview, DateTime release_Date)
-            : base(title, id, vote_Count, vote_Average)
+        public CMovieInfo(Int32 id, String title, Int32 vote_count, Double vote_average,
+            String overview, DateTime release_date)
+            : base(id, title, vote_count, vote_average)
         {
             Overview = overview;
-            ReleaseDate = release_Date;
+            ReleaseDate = release_date;
         }
     }
 }

@@ -41,14 +41,6 @@ namespace ThingAppraiser.IO.Output
             _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
         }
 
-        /// <summary>
-        /// Provides constructor call with some default parameters.
-        /// </summary>
-        public COutputManager()
-            : this("appraised_things.csv")
-        {
-        }
-
         #region IManager<IOutputter> Implementation
 
         /// <inheritdoc />
@@ -58,7 +50,10 @@ namespace ThingAppraiser.IO.Output
         public void Add(IOutputter item)
         {
             item.ThrowIfNull(nameof(item));
-            _outputters.Add(item);
+            if (!_outputters.Contains(item))
+            {
+                _outputters.Add(item);
+            }
         }
 
         /// <inheritdoc />
@@ -79,24 +74,24 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Collections of appraised results to save.</param>
         /// <param name="storageName">Storage name of output source.</param>
         /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
-        public Boolean SaveResults(List<CRating> results, String storageName)
+        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
         {
             if (String.IsNullOrEmpty(storageName))
             {
                 storageName = _defaultFilename;
             }
 
-            var result = _outputters.Select(
+            List<Boolean> statuses = _outputters.Select(
                 outputter => outputter.SaveResults(results, storageName)
             ).ToList();
 
-            if (!result.IsNullOrEmpty() && result.All(r => r))
+            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info($"Successfully saved results to \"{storageName}\".");
+                s_logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            s_logger.Info($"Couldn't save results to \"{storageName}\".");
+            s_logger.Info($"Couldn't save some results to \"{storageName}\".");
             return false;
         }
     }

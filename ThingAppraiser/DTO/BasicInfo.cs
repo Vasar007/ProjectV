@@ -7,21 +7,21 @@ namespace ThingAppraiser.Data
     /// Basic data object to manipulate all kind of information.
     /// </summary>
     /// <remarks>
-    /// ATTENTION! Be careful with naming of properties! They must match the values received in 
+    /// ATTENTION! Be careful with naming of parameters! They must match the values received in 
     /// JSON.
     /// </remarks>
     [Serializable]
     public class CBasicInfo
     {
         /// <summary>
+        /// Unique Thing identifier. We can get this ID from Internet data service.
+        /// </summary>
+        public Int32 ThingID { get; }
+
+        /// <summary>
         /// Represents name of the appraised Thing.
         /// </summary>
         public String Title { get; }
-
-        /// <summary>
-        /// Unique Thing identifier. We can get this ID from Internet data service.
-        /// </summary>
-        public Int32 ID { get; }
 
         /// <summary>
         /// Number of Thing votes.
@@ -31,23 +31,23 @@ namespace ThingAppraiser.Data
         /// <summary>
         /// Average vote value.
         /// </summary>
-        public Single VoteAverage { get; }
+        public Double VoteAverage { get; }
 
 
         /// <summary>
         /// Initializes instance with given parameters.
         /// </summary>
-        /// <param name="title">Title of the Thing.</param>
         /// <param name="id">Unique ID of the Thing.</param>
-        /// <param name="vote_Count">Number of votes.</param>
-        /// <param name="vote_Average">Average vote value.</param>
+        /// <param name="title">Title of the Thing.</param>
+        /// <param name="vote_count">Number of votes.</param>
+        /// <param name="vote_average">Average vote value.</param>
         [JsonConstructor]
-        public CBasicInfo(String title, Int32 id, Int32 vote_Count, Single vote_Average)
+        public CBasicInfo(Int32 id, String title, Int32 vote_count, Double vote_average)
         {
+            ThingID = id;
             Title = title;
-            ID = id;
-            VoteCount = vote_Count;
-            VoteAverage = vote_Average;
+            VoteCount = vote_count;
+            VoteAverage = vote_average;
         }
 
         #region Object Overridden Methods
@@ -62,8 +62,8 @@ namespace ThingAppraiser.Data
             if (!(obj is CBasicInfo basicInfo)) return false;
 
             const Double eps = 1e-6;
-            return Title.IsEqualWithInvariantCulture(basicInfo.Title) &&
-                   ID == basicInfo.ID &&
+            return ThingID == basicInfo.ThingID &&
+                   Title.IsEqualWithInvariantCulture(basicInfo.Title) &&
                    VoteCount == basicInfo.VoteCount && 
                    Math.Abs(VoteAverage - basicInfo.VoteAverage) < eps;
         }
@@ -71,7 +71,7 @@ namespace ThingAppraiser.Data
         /// <inheritdoc />
         public override Int32 GetHashCode()
         {
-            return ID;
+            return ThingID;
         }
 
         #endregion
