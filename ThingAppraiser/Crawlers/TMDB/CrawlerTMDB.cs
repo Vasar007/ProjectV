@@ -60,10 +60,11 @@ namespace ThingAppraiser.Crawlers
         /// </summary>
         private Int32 _actualRequestCounter;
 
-        /// <summary>
-        /// Stores service configuration.
-        /// </summary>
-        public static CServiceConfigurationTMDB ServiceConfigurationTMDB { get; private set; }
+        /// <inheritdoc />
+        public override String Tag => "CrawlerTMDB";
+
+        /// <inheritdoc />
+        public override Type TypeID => typeof(CMovieTMDBInfo);
 
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace ThingAppraiser.Crawlers
         public override List<CBasicInfo> GetResponse(List<String> entities, Boolean outputResults)
         {
             _actualRequestCounter = 0;
-            ServiceConfigurationTMDB = GetServiceConfiguration(outputResults);
+            SServiceConfigurationTMDB.Configuration = GetServiceConfiguration(outputResults);
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<CBasicInfo>();
@@ -116,6 +117,7 @@ namespace ThingAppraiser.Crawlers
                 JObject response = TryGetResponse(movie);
                 ++_actualRequestCounter;
 
+                // Avoid service overload otherwise TMDB can block our crawler.
                 if (_actualRequestCounter == _requestsPerTime)
                 {
                     _actualRequestCounter = 0;
@@ -163,7 +165,7 @@ namespace ThingAppraiser.Crawlers
         /// </summary>
         /// <param name="outputResults">Flag to define need to output.</param>
         /// <returns>Transformed configuration of the service.</returns>
-        private CServiceConfigurationTMDB GetServiceConfiguration(Boolean outputResults)
+        private CServiceConfigurationInfoTMDB GetServiceConfiguration(Boolean outputResults)
         {
             JObject response = GetResponseResult(SendGetConfigurationQuery());
 
@@ -181,7 +183,7 @@ namespace ThingAppraiser.Crawlers
             }
 
             // JToken.ToObject is a helper method that uses JsonSerializer internally.
-            return result.ToObject<CServiceConfigurationTMDB>();
+            return result.ToObject<CServiceConfigurationInfoTMDB>();
         }
 
         /// <summary>

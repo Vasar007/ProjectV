@@ -24,7 +24,7 @@ namespace ThingAppraiser.IO.Output
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag { get; } = "LocalFileWriter";
+        public String Tag => "LocalFileWriter";
 
         #endregion
 
@@ -48,7 +48,8 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Results to save.</param>
         /// <param name="filename">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        private static Boolean WriteFile(List<CRating> results, String filename)
+        private static Boolean WriteFile(List<List<CRatingDataContainer>> results, 
+            String filename)
         {
             if (String.IsNullOrEmpty(filename)) return false;
 
@@ -59,7 +60,7 @@ namespace ThingAppraiser.IO.Output
 
             using (engine.BeginWriteFile(filename))
             {
-                Dictionary<String, List<Single>> converted = ConvertResultsToDict(results);
+                Dictionary<String, List<Double>> converted = ConvertResultsToDict(results);
                 engine.WriteNexts(converted.Select(result => new COuputFileData
                 {
                     thingName = $"\"{result.Key}\"", // Escape Thing names.
@@ -71,30 +72,34 @@ namespace ThingAppraiser.IO.Output
 
         /// <summary>
         /// Converts sequential collection <see cref="List{T}" /> to associative collection
-        /// <see cref="Dictionary{TKey,TValue}"/>.
+        /// <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
         /// <param name="results">Result to convert.</param>
         /// <returns>Transformed results.</returns>
-        private static Dictionary<String, List<Single>> ConvertResultsToDict(List<CRating> results)
+        private static Dictionary<String, List<Double>> ConvertResultsToDict(
+            List<List<CRatingDataContainer>> results)
         {
-            // TODO: add additional data structure based on Dictionary<string, (CResultDTO, uint)>
-            // where string is name of the Thing, CResultDTO is meta information and uint is place
+            // TODO: add additional data structure based on Dictionary<String, (CResultInfo, Int32)>
+            // where String is name of the Thing, CResultInfo is meta information and Int32 is place
             // in the rating. If appraiser cannot appraise the Thing, then we would have pair
-            // <nameof(Thing), null>. Such data structure, I think, can help to decrease memory
-            // usage and save sorting order in ratings with meta information.
+            // <nameof(Thing), null> (yes, ValueType cannot be null, we'd simply have something
+            // similar, i.e. default or special value). Such data structure, I think, can help to
+            // decrease memory usage and save sorting order in ratings with meta information.
 
-            var converted = new Dictionary<String, List<Single>>();
-            foreach (CRating rating in results)
+            var converted = new Dictionary<String, List<Double>>();
+            foreach (List<CRatingDataContainer> rating in results)
             {
-                foreach (CResultInfo rat in rating)
+                foreach (CRatingDataContainer ratingDataContainer in rating)
                 {
-                    if (converted.TryGetValue(rat.DataHandler.Title, out List<Single> ratings))
+                    if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
+                        out List<Double> ratingValues))
                     {
-                        ratings.Add(rat.RatingValue);
+                        ratingValues.Add(ratingDataContainer.RatingValue);
                     }
                     else
                     {
-                        converted.Add(rat.DataHandler.Title, new List<Single> { rat.RatingValue });
+                        converted.Add(ratingDataContainer.DataHandler.Title,
+                                      new List<Double> { ratingDataContainer.RatingValue });
                     }
                 }
             }
@@ -109,7 +114,7 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Results to save.</param>
         /// <param name="storageName">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        public Boolean SaveResults(List<CRating> results, String storageName)
+        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
         {
             if (String.IsNullOrEmpty(storageName)) return false;
 

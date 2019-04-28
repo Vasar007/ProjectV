@@ -28,7 +28,7 @@ namespace ThingAppraiser.IO.Input
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag { get; } = "GoogleDriveReader";
+        public String Tag => "GoogleDriveReader";
 
         #endregion
 

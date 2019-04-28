@@ -47,6 +47,11 @@ namespace ThingAppraiser.Core
         /// </summary>
         public IO.Output.COutputManager OutputManager { get; }
 
+        /// <summary>
+        /// Manager to interact with data base.
+        /// </summary>
+        public DAL.CDataBaseManager DataBaseManager { get; }
+
 
         /// <summary>
         /// Default constructor which initialize all managers.
@@ -61,12 +66,14 @@ namespace ThingAppraiser.Core
             IO.Input.CInputManager inputManager,
             Crawlers.CCrawlersManager crawlersManager,
             Appraisers.CAppraisersManager appraisersManager,
-            IO.Output.COutputManager outputManager)
+            IO.Output.COutputManager outputManager,
+            DAL.CDataBaseManager dataBaseManager)
         {
             InputManager = inputManager.ThrowIfNull(nameof(inputManager));
             CrawlersManager = crawlersManager.ThrowIfNull(nameof(crawlersManager));
             AppraisersManager = appraisersManager.ThrowIfNull(nameof(appraisersManager));
             OutputManager = outputManager.ThrowIfNull(nameof(outputManager));
+            DataBaseManager = dataBaseManager.ThrowIfNull(nameof(dataBaseManager));
         }
 
         /// <summary>
@@ -74,7 +81,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="storageName">Name of the input source.</param>
         /// <returns>Collection of The Things names as strings.</returns>
-        public List<String> GetThingsNames(String storageName)
+        private List<String> GetThingsNames(String storageName)
         {
             var names = new List<String>();
             if (String.IsNullOrEmpty(storageName)) return names;
@@ -84,11 +91,14 @@ namespace ThingAppraiser.Core
                 names = InputManager.GetNames(storageName);
                 if (names.Count == 0)
                 {
-                    SGlobalMessageHandler.OutputMessage("Input is empty.");
+                    SGlobalMessageHandler.OutputMessage(
+                        $"No Things were found in \"{storageName}\"."
+                    );
                     _status = EStatus.Nothing;
                 }
                 else
                 {
+                    SGlobalMessageHandler.OutputMessage("Things were successfully gotten.");
                     _status = EStatus.Ok;
                 }
             }
@@ -105,67 +115,94 @@ namespace ThingAppraiser.Core
         /// Sends request and collect data from all services.
         /// </summary>
         /// <param name="names">Collection of The Things names which need to appraise.</param>
-        /// <returns>Collections of results from crawlers.</returns>
-        public List<List<Data.CBasicInfo>> RequestData(List<String> names)
+        private void RequestData(List<String> names)
         {
-            var results = new List<List<Data.CBasicInfo>>();
-
             try
             {
-                results = CrawlersManager.CollectAllResponses(names);
+                List<List<Data.CBasicInfo>> results = CrawlersManager.CollectAllResponses(names);
 
-                _status = results.Count == 0 ? EStatus.Nothing : EStatus.Ok;
+                // TODO: encapsulate this call to interface.
+                CConsoleMessageHandler.PrintResultsToConsole(results);
+
+                if (results.Count == 0)
+                {
+                    SGlobalMessageHandler.OutputMessage(
+                        "Crawlers have not received responses from services. Result is empty."
+                    );
+                    _status = EStatus.Nothing;
+                }
+                else
+                {
+                    DataBaseManager.PutResultsToDB(results);
+
+                    SGlobalMessageHandler.OutputMessage(
+                        "Crawlers have received responses from services."
+                    );
+                    _status = EStatus.Ok;
+                }
             }
             catch (Exception ex)
             {
                 s_logger.Error(ex, "Exception occured during collecting data.");
                 _status = EStatus.RequestError;
             }
-
-            // TODO: encapsulate this call to interface.
-            CConsoleMessageHandler.PrintResultsToConsole(results);
-
-            return results;
         }
 
         /// <summary>
         /// Processes the data in accordance with the formulas.
         /// </summary>
-        /// <param name="results">Collections of crawlers results to appraise.</param>
-        /// <returns>Collections of processed data from appraisers.</returns>
-        public List<Data.CRating> AppraiseThings(List<List<Data.CBasicInfo>> results)
+        private Data.CRatingsStorage AppraiseThings()
         {
-            var ratings = new List<Data.CRating>();
-
+            Data.CRatingsStorage ratingsStorage = null;
             try
             {
-                ratings = AppraisersManager.GetAllRatings(results);
+                List<Data.CRawDataContainer> results = 
+                    DataBaseManager.GetResultsFromDBWithAdditionalInfo();
+                Data.CProcessedDataContainer ratings = AppraisersManager.GetAllRatings(results);
 
-                _status = ratings.Count == 0 ? EStatus.Nothing : EStatus.Ok;
+                ratingsStorage = ratings.RatingsStorage;
+
+                // TODO: encapsulate this call to interface.
+                CConsoleMessageHandler.PrintRatingsToConsole(ratings.GetData());
+
+                if (ratings.GetData().Count == 0)
+                {
+                    SGlobalMessageHandler.OutputMessage(
+                        "Appraisers have not calculated ratings. Result is empty."
+                    );
+                    _status = EStatus.Nothing;
+                }
+                else
+                {
+                    DataBaseManager.DeleteResultAndRatings();
+                    DataBaseManager.PutRatingsToDB(ratings);
+
+                    SGlobalMessageHandler.OutputMessage(
+                        "Appraisers have calculated ratings successfully."
+                    );
+                    _status = EStatus.Ok;
+                }
             }
             catch (Exception ex)
             {
                 s_logger.Error(ex, "Exception occured during appraising work.");
                 _status = EStatus.AppraiseError;
             }
-
-            // TODO: encapsulate this call to interface.
-            CConsoleMessageHandler.PrintRatingsToConsole(ratings);
-
-            return ratings;
+            return ratingsStorage;
         }
 
         /// <summary>
         /// Saves ratings to the output sources.
         /// </summary>
-        /// <param name="ratings">Collections of appraisers data to save.</param>
         /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
-        public Boolean SaveResults(List<Data.CRating> ratings)
+        private Boolean SaveResults(Data.CRatingsStorage ratingsStorage)
         {
             Boolean success = false;
 
             try
             {
+                var ratings = DataBaseManager.GetRatingValuesFromDB(ratingsStorage);
+
                 if (OutputManager.SaveResults(ratings, String.Empty))
                 {
                     success = true;
@@ -201,15 +238,15 @@ namespace ThingAppraiser.Core
             if (_status != EStatus.Ok) return _status;
 
             // Crawlers component work.
-            List<List<Data.CBasicInfo>> results = RequestData(names);
+            RequestData(names);
             if (_status != EStatus.Ok) return _status;
 
             // Appraisers component work.
-            List<Data.CRating> ratings = AppraiseThings(results);
+            Data.CRatingsStorage ratingsStorage = AppraiseThings();
             if (_status != EStatus.Ok) return _status;
 
             // Output component work.
-            SaveResults(ratings);
+            SaveResults(ratingsStorage);
             if (_status != EStatus.Ok) return _status;
 
             s_logger.Info("Shell finished work successfully.");

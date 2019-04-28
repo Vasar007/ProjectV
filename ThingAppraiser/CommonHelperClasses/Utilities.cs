@@ -19,7 +19,8 @@ namespace ThingAppraiser
         /// <exception cref="ArgumentNullException">
         /// <paramref name="obj">obj</paramref> is <c>null</c>.
         /// </exception>
-        public static T ThrowIfNull<T>(this T obj, String paramName) where T : class
+        public static T ThrowIfNull<T>(this T obj, String paramName)
+            where T : class
         {
             if (obj is null)
             {

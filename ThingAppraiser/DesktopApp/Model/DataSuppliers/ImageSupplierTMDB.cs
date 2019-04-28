@@ -7,24 +7,24 @@ namespace DesktopApp.Model.DataSuppliers
 {
     public class CImageSupplierTMDB : IImageSupplier
     {
-        private CServiceConfigurationTMDB _serviceConfiguration;
+        private CServiceConfigurationInfoTMDB _serviceConfigurationInfo;
 
 
-        public CImageSupplierTMDB(CServiceConfigurationTMDB serviceConfiguration)
+        public CImageSupplierTMDB(CServiceConfigurationInfoTMDB serviceConfigurationInfo)
         {
-            _serviceConfiguration = serviceConfiguration;
+            _serviceConfigurationInfo = serviceConfigurationInfo;
         }
 
         #region IImageSupplier Implamentation
 
         public String GetImageLink(CBasicInfo data, EImageSize imageSize)
         {
-            if (_serviceConfiguration is null)
+            if (_serviceConfigurationInfo is null)
             {
-                _serviceConfiguration = CCrawlerTMDB.ServiceConfigurationTMDB;
+                _serviceConfigurationInfo = SServiceConfigurationTMDB.Configuration;
             }
 
-            _serviceConfiguration.ThrowIfNull(nameof(_serviceConfiguration));
+            _serviceConfigurationInfo.ThrowIfNull(nameof(_serviceConfigurationInfo));
 
             if (!(data is CMovieTMDBInfo movieInfo))
             {
@@ -32,12 +32,12 @@ namespace DesktopApp.Model.DataSuppliers
             }
 
             Int32 sizeIndex = GetImageSizeIndex(imageSize,
-                                                _serviceConfiguration.PosterSizes.Count);
+                                                _serviceConfigurationInfo.PosterSizes.Count);
 
-            String imageSizeValue = _serviceConfiguration.PosterSizes[sizeIndex];
+            String imageSizeValue = _serviceConfigurationInfo.PosterSizes[sizeIndex];
 
 
-            String result = _serviceConfiguration.SecureBaseUrl + imageSizeValue +
+            String result = _serviceConfigurationInfo.SecureBaseUrl + imageSizeValue +
                             movieInfo.PosterPath;
             return result;
         }

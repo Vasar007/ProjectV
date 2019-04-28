@@ -67,6 +67,16 @@ namespace ThingAppraiser.Core.Building
         private const String _filterFileReaderParameterName = "Filter";
 
         /// <summary>
+        /// Attribute value for basic info repository.
+        /// </summary>
+        private const String _basicInfoRepositoryParameterName = "BasicInfoRepository";
+
+        /// <summary>
+        /// Attribute value for basic info repository.
+        /// </summary>
+        private const String _movieTMDBRepositoryParameterName = "MovieTMDBRepository";
+
+        /// <summary>
         /// Attribute name for message handler.
         /// </summary>
         private static readonly String _messageHandlerTypeParameterName = "MessageHandlerType";
@@ -311,7 +321,7 @@ namespace ThingAppraiser.Core.Building
         /// <param name="outputterName">Name of the outputter.</param>
         /// <returns>Fully initialized instance of outputter interface.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="outputterName">outputType</paramref> isn't specified in method.
+        /// <paramref name="outputterName">outputterName</paramref> isn't specified in method.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="outputterName">outputterName</paramref> is <c>null</c> or presents empty
@@ -338,6 +348,48 @@ namespace ThingAppraiser.Core.Building
                     var ex = new ArgumentOutOfRangeException(nameof(outputterName), outputterName,
                                                              "Couldn't recognize output type.");
                     s_logger.Error(ex, $"Passed incorrect data to method: {outputterName}");
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates repository instance depend on parameter value (could be read from config file).
+        /// </summary>
+        /// <param name="repositoryName">Name of the repository.</param>
+        /// <returns>Fully initialized instance of repository interface.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="repositoryName">repositoryName</paramref> isn't specified in method.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="repositoryName">repositoryName</paramref> is <c>null</c> or presents 
+        /// empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="storageSettings">storageSettings</paramref> is <c>null</c>.
+        /// </exception>
+        public static DAL.Repositories.IDataRepository CreateRepositoryWithConfigParameters(
+            String repositoryName, DAL.CDataStorageSettings storageSettings)
+        {
+            repositoryName.ThrowIfNullOrEmpty(nameof(repositoryName));
+
+            switch (repositoryName)
+            {
+                case _basicInfoRepositoryParameterName:
+                {
+                    return new DAL.Repositories.CBasicInfoRepository(storageSettings);
+                }
+
+                case _movieTMDBRepositoryParameterName:
+                {
+                    return new DAL.Repositories.CMovieTMDBRepository(storageSettings);
+                }
+
+                default:
+                {
+                    var ex = new ArgumentOutOfRangeException(nameof(repositoryName), repositoryName,
+                                                             "Couldn't recognize repository type.");
+                    s_logger.Error(ex, $"Passed incorrect data to method: {repositoryName}");
                     throw ex;
                 }
             }
@@ -575,6 +627,53 @@ namespace ThingAppraiser.Core.Building
                     );
                     s_logger.Error(ex, "Passed incorrect data to method: " +
                                        $"{outputterElement.Name.LocalName}");
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates repository instance depend on parameter value (could be get from config).
+        /// </summary>
+        /// <param name="repositoryElement">Element from XML config.</param>
+        /// <param name="storageSettings">
+        /// Storage settings for repositrory (at least contain connection string).
+        /// </param>
+        /// <returns>Fully initialized instance of repository interface.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="repositoryElement">repositoryElement</paramref> isn't specified in 
+        /// config.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="repositoryElement">repositoryElement</paramref> or 
+        /// <paramref name="storageSettings">storageSettings</paramref> is <c>null</c>.
+        /// </exception>
+        public static DAL.Repositories.IDataRepository CreateRepositoryWithXMLParameters(
+            XElement repositoryElement, DAL.CDataStorageSettings storageSettings)
+        {
+            repositoryElement.ThrowIfNull(nameof(repositoryElement));
+            storageSettings.ThrowIfNull(nameof(storageSettings));
+
+            switch (repositoryElement.Name.LocalName)
+            {
+                case _basicInfoRepositoryParameterName:
+                {
+                    return new DAL.Repositories.CBasicInfoRepository(storageSettings);
+                }
+
+                case _movieTMDBRepositoryParameterName:
+                {
+                    return new DAL.Repositories.CMovieTMDBRepository(storageSettings);
+                }
+
+                default:
+                {
+                    var ex = new ArgumentOutOfRangeException(
+                        nameof(repositoryElement), repositoryElement,
+                        "Couldn't recognize output type specified in XML config."
+                    );
+                    s_logger.Error(ex, "Passed incorrect data to method: " +
+                                       $"{repositoryElement.Name.LocalName}");
                     throw ex;
                 }
             }

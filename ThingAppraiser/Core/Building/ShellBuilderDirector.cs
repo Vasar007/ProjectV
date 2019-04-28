@@ -49,6 +49,7 @@
             _shellBuilder.BuildCrawlersManager();
             _shellBuilder.BuildAppraisersManager();
             _shellBuilder.BuildOutputManager();
+            _shellBuilder.BuildDataBaseManager();
 
             return _shellBuilder.GetResult();
         }

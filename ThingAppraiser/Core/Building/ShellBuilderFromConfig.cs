@@ -93,6 +93,24 @@ namespace ThingAppraiser.Core.Building
         private readonly String _outputterBaseParameterName = "Outputter";
 
         /// <summary>
+        /// Attribute name for number of repositories in config.
+        /// </summary>
+        private readonly String _repositoriesNumberParameterName = "RepositoriesNumber";
+
+        /// <summary>
+        /// Attribute name for repository base part of the name in config. Each repository
+        /// definition must contain this base part with serial number after it without spaces.
+        /// Numbering starts with 1.
+        /// </summary>
+        private readonly String _repositoryBaseParameterName = "Repository";
+
+        /// <summary>
+        /// Attribute name for connection string for data base component.
+        /// </summary>
+        private readonly String _connectionStringParameterName = "ConnectionString";
+
+
+        /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
         private IO.Input.CInputManager _inputManager;
@@ -112,6 +130,11 @@ namespace ThingAppraiser.Core.Building
         /// </summary>
         private IO.Output.COutputManager _outputManager;
 
+        /// <summary>
+        /// Variables which saves data base manager instance during building process.
+        /// </summary>
+        private DAL.CDataBaseManager _dataBaseManager;
+
 
         /// <summary>
         /// Initializes builder which works with default App.config file.
@@ -130,6 +153,7 @@ namespace ThingAppraiser.Core.Building
             _crawlersManager = null;
             _appraisersManager = null;
             _outputManager = null;
+            _dataBaseManager = null;
         }
 
         /// <inheritdoc />
@@ -214,10 +238,37 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <inheritdoc />
+        public void BuildDataBaseManager()
+        {
+            var connectionString = SConfigParser.GetValueByParameterKey(
+                _connectionStringParameterName
+            );
+            var dataBaseSettings = new DAL.CDataStorageSettings(connectionString);
+            _dataBaseManager = new DAL.CDataBaseManager(
+                new DAL.Repositories.CResultInfoRepository(dataBaseSettings),
+                new DAL.Repositories.CRatingRepository(dataBaseSettings)
+            );
+
+            var repositoriesNumber = SConfigParser.GetValueByParameterKey<Int32>(
+                _repositoriesNumberParameterName
+            );
+            for (Int32 i = 1; i <= repositoriesNumber; ++i)
+            {
+                _dataBaseManager.DataRepositoriesManager.Add(
+                    SServiceBuilder.CreateRepositoryWithConfigParameters(
+                        SConfigParser.GetValueByParameterKey(_repositoryBaseParameterName + i),
+                        dataBaseSettings
+                    )
+                );
+            }
+        }
+
+        /// <inheritdoc />
         public CShell GetResult()
         {
             s_logger.Info("Created Shell from App config.");
-            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager);
+            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
+                              _dataBaseManager);
         }
 
         #endregion

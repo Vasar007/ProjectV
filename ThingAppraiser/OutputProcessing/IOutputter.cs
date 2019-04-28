@@ -18,6 +18,6 @@ namespace ThingAppraiser.IO.Output
         /// <returns>
         /// <c>true</c> if results were saved successfully, <c>false</c> otherwise.
         /// </returns>
-        Boolean SaveResults(List<CRating> results, String storageName);
+        Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName);
     }
 }

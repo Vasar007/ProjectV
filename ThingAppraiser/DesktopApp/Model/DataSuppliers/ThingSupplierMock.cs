@@ -14,25 +14,25 @@ namespace DesktopApp.Model.DataSuppliers
             _things = new List<CThing>
             {
                 // CBasicInfo => Title, ID, VoteCount, VoteAverage.
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie One",    1, 100, 1.0f),
+                new CThing(Guid.NewGuid(), new CBasicInfo(1,  "Movie One",   100, 1.0),
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Two",    2, 200, 2.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(2,  "Movie Two",   200, 2.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Three",  3, 300, 3.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(3,  "Movie Three", 300, 3.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Four",   4, 400, 4.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(4,  "Movie Four",  400, 4.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Five",   5, 500, 5.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(5,  "Movie Five",  500, 5.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Six",    6, 600, 6.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(6,  "Movie Six",   600, 6.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Seven",  7, 700, 7.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(7,  "Movie Seven", 700, 7.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Eight",  8, 800, 8.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(8,  "Movie Eight", 800, 8.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Nine",   9, 900, 9.0f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(9,  "Movie Nine",  900, 9.0), 
                            "https://dummyimage.com/300.png"),
-                new CThing(Guid.NewGuid(), new CBasicInfo("Movie Ten",   10, 999, 9.9f), 
+                new CThing(Guid.NewGuid(), new CBasicInfo(10, "Movie Ten",   999, 9.9), 
                            "https://dummyimage.com/300.png")
             };
         }

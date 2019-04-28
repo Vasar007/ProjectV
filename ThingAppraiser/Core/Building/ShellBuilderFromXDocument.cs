@@ -71,6 +71,17 @@ namespace ThingAppraiser.Core.Building
         private readonly String _defaultOutFilenameParameterName = "DefaultOutFilename";
 
         /// <summary>
+        /// Element name for data base manager part.
+        /// </summary>
+        private readonly String _dataBaseManagerParameterName =
+            CXMLConfigCreator.DataBaseManagerParameterName;
+
+        /// <summary>
+        /// Attribute name for connection string for data base component.
+        /// </summary>
+        private readonly String _connectionStringParameterName = "ConnectionString";
+
+        /// <summary>
         /// Helper class which contains several methods to parse XML configuration.
         /// </summary>
         private readonly CXDocumentParser _documentParser;
@@ -95,6 +106,11 @@ namespace ThingAppraiser.Core.Building
         /// </summary>
         private IO.Output.COutputManager _outputManager;
 
+        /// <summary>
+        /// Variables which saves data base manager instance during building process.
+        /// </summary>
+        private DAL.CDataBaseManager _dataBaseManager;
+
 
         /// <summary>
         /// Initializes builder instance and associates <see cref="CXDocumentParser" /> which
@@ -116,6 +132,7 @@ namespace ThingAppraiser.Core.Building
             _crawlersManager = null;
             _appraisersManager = null;
             _outputManager = null;
+            _dataBaseManager = null;
         }
 
         /// <inheritdoc />
@@ -148,15 +165,7 @@ namespace ThingAppraiser.Core.Building
             String defaultFilename = CXDocumentParser.GetAttributeValue(
                 inputManagerElement, _defaultInFilenameParameterName
             );
-
-            if (String.IsNullOrEmpty(defaultFilename))
-            {
-                _inputManager = new IO.Input.CInputManager();
-            }
-            else
-            {
-                _inputManager = new IO.Input.CInputManager(defaultFilename);
-            }
+            _inputManager = new IO.Input.CInputManager(defaultFilename);
 
             foreach (var element in inputManagerElement.Elements())
             {
@@ -249,15 +258,7 @@ namespace ThingAppraiser.Core.Building
             String defaultFilename = CXDocumentParser.GetAttributeValue(
                 inputManagerElement, _defaultOutFilenameParameterName
             );
-
-            if (String.IsNullOrEmpty(defaultFilename))
-            {
-                _outputManager = new IO.Output.COutputManager();
-            }
-            else
-            {
-                _outputManager = new IO.Output.COutputManager(defaultFilename);
-            }
+            _outputManager = new IO.Output.COutputManager(defaultFilename);
 
             foreach (var element in inputManagerElement.Elements())
             {
@@ -269,10 +270,46 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <inheritdoc />
+        /// <exception cref="InvalidOperationException">
+        /// XML configuration doesn't contain element for data base manager with specified name.
+        /// </exception>
+        public void BuildDataBaseManager()
+        {
+            XElement dataBaseManagerElement = _documentParser.FindElement(
+                _dataBaseManagerParameterName
+            );
+            if (dataBaseManagerElement is null)
+            {
+                var ex = new InvalidOperationException(
+                    $"XML document hasn't value for {_dataBaseManagerParameterName}."
+                );
+                s_logger.Error(ex, "Cannot build DataBaseManager.");
+                throw ex;
+            }
+
+            var connectionString = CXDocumentParser.GetAttributeValue<String>(
+                dataBaseManagerElement, _connectionStringParameterName
+            );
+            var dataBaseSettings = new DAL.CDataStorageSettings(connectionString);
+            _dataBaseManager = new DAL.CDataBaseManager(
+                new DAL.Repositories.CResultInfoRepository(dataBaseSettings),
+                new DAL.Repositories.CRatingRepository(dataBaseSettings)
+            );
+
+            foreach (var element in dataBaseManagerElement.Elements())
+            {
+                DAL.Repositories.IDataRepository repository =
+                    SServiceBuilder.CreateRepositoryWithXMLParameters(element, dataBaseSettings);
+                _dataBaseManager.DataRepositoriesManager.Add(repository);
+            }
+        }
+
+        /// <inheritdoc />
         public CShell GetResult()
         {
             s_logger.Info("Created Shell from user-defined XML config.");
-            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager);
+            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
+                              _dataBaseManager);
         }
 
         #endregion

@@ -9,8 +9,25 @@ namespace ThingAppraiser.Crawlers
     /// <summary>
     /// Crawlers base class. You should inherit this class if would like to create your own crawler.
     /// </summary>
-    public abstract class CCrawler
+    public abstract class CCrawler : ITagable, ITypeID
     {
+        #region ITagable Implementation
+
+        /// <inheritdoc />
+        public virtual String Tag => "Crawler";
+
+        #endregion
+
+        #region ITypeID Implementation
+
+        /// <summary>
+        /// Defines which type of data objects this crawler can produce.
+        /// </summary>
+        public virtual Type TypeID => typeof(CBasicInfo);
+
+        #endregion
+
+
         /// <summary>
         /// Default constructor.
         /// </summary>

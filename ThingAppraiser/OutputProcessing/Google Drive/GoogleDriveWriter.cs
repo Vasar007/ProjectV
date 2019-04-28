@@ -35,7 +35,7 @@ namespace ThingAppraiser.IO.Output
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag { get; } = "GoogleDriveWriter";
+        public String Tag => "GoogleDriveWriter";
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace ThingAppraiser.IO.Output
         /// <remarks>
         /// This method creates and deletes temporary file to store appraised content.
         /// </remarks>
-        public Boolean SaveResults(List<CRating> results, String storageName)
+        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
         {
             if (String.IsNullOrEmpty(storageName)) return false;
 

@@ -125,7 +125,8 @@ namespace ThingAppraiser
         /// <paramref name="element">element</paramref> or
         /// <paramref name="attribute">attribute</paramref> is <c>null</c> or presents empty string.
         /// </exception>
-        public T GetAttributeValue<T>(String element, String attribute) where T : IConvertible
+        public T GetAttributeValue<T>(String element, String attribute)
+            where T : IConvertible
         {
             String stringValue = GetAttributeValue(element, attribute);
             return (T) Convert.ChangeType(stringValue, typeof(T));

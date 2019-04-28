@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
 
@@ -13,7 +12,13 @@ namespace ThingAppraiser.Appraisers
     public class CAppraiserTMDB : CMoviesAppraiser
     {
         /// <inheritdoc />
+        public override String Tag => "AppraiserTMDB";
+
+        /// <inheritdoc />
         public override Type TypeID => typeof(CMovieTMDBInfo);
+
+        /// <inheritdoc />
+        public override String RatingName => "Rating based on popularity and votes";
 
 
         /// <summary>
@@ -23,45 +28,55 @@ namespace ThingAppraiser.Appraisers
         {
         }
 
+        protected static Double CalculateRating(CMovieTMDBInfo entity, 
+            CMinMaxDenominator voteCountMMD, CMinMaxDenominator voteAverageMMD, 
+            CMinMaxDenominator popularityMMD)
+        {
+            Double baseValue = CalculateRating(entity, voteCountMMD, voteAverageMMD);
+            Double popValue = (entity.Popularity - popularityMMD.MinValue) / 
+                              popularityMMD.Denominator;
+
+            return baseValue + popValue;
+        }
+
         #region CMoviesAppraiser Overriden Methods
 
         /// <inheritdoc />
         /// <remarks>Consider popularity value in addition to average vote and vote count.</remarks>
         /// <exception cref="ArgumentException">
-        /// <paramref name="entities">entities</paramref> contains instances of invalid type for
-        /// this appraiser.
+        /// <paramref name="rawDataContainer">rawDataContainer</paramref> contains instances of
+        /// invalid type for this appraiser.
         /// </exception>
-        public override CRating GetRatings(List<CBasicInfo> entities, Boolean outputResults)
+        public override CResultList GetRatings(CRawDataContainer rawDataContainer,
+            Boolean outputResults)
         {
-            var ratings = new CRating();
-            if (entities.IsNullOrEmpty()) return ratings;
+            CheckRatingID();
+
+            var ratings = new CResultList();
+            IReadOnlyList<CBasicInfo> rawData = rawDataContainer.GetData();
+            if (rawData.IsNullOrEmpty()) return ratings;
 
             // Check if list have proper type.
-            if (!entities.All(e => e is CMovieTMDBInfo))
+            if (!rawData.All(e => e is CMovieTMDBInfo))
             {
                 throw new ArgumentException(
                     $"Element type is invalid for appraiser with type {TypeID.FullName}"
                 );
             }
 
-            var converted = entities.ConvertAll(e => (CMovieTMDBInfo) e);
+            CMinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");
+            CMinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter("VoteAverage");
+            CMinMaxDenominator popularityMMD = rawDataContainer.GetParameter("Popularity");
 
-            var normalizerVA = new CNormalizer<Single, CMovieTMDBInfo>(converted,
-                                                                       c => c.VoteAverage);
-            var normalizerVC = new CNormalizer<Int32, CMovieTMDBInfo>(converted, c => c.VoteCount);
-            var normalizerPopularity = new CNormalizer<Single, CMovieTMDBInfo>(converted,
-                                                                               c => c.Popularity);
-
-            // Use additional property (Popularity).
-            var enumerator = converted.ZipShortest(normalizerVA.Normalize(),
-                                                   normalizerVC.Normalize(),
-                                                   normalizerPopularity.Normalize(),
-                                                   (t1, t2, t3, t4) => (t1, t2, t3, t4));
-            foreach (var (entity, normValueVA, normValueVC, normValuePopularity) in enumerator)
+            var converted = rawData.Select(e => (CMovieTMDBInfo) e);
+            foreach (CMovieTMDBInfo entityInfo in converted)
             {
-                var resultInfo = new CResultInfo(entity,
-                                                 normValueVA + normValueVC + normValuePopularity);
+                Double ratingValue = CalculateRating(entityInfo, voteCountMMD, voteAverageMMD,
+                                                     popularityMMD);
+
+                var resultInfo = new CResultInfo(entityInfo.ThingID, ratingValue, RatingID);
                 ratings.Add(resultInfo);
+
                 if (outputResults)
                 {
                     SGlobalMessageHandler.OutputMessage(resultInfo.ToString());

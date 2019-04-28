@@ -44,7 +44,7 @@ namespace DesktopApp.Model.DataSuppliers
 
         #region IOutputter Implementation
 
-        public Boolean SaveResults(List<CRating> results, String storageName)
+        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
         {
             StorageName = storageName;
 
@@ -52,7 +52,7 @@ namespace DesktopApp.Model.DataSuppliers
             {
                 _things.Clear();
             }
-            foreach (CRating rating in results)
+            foreach (List<CRatingDataContainer> rating in results)
             {
                 _things.AddRange(rating.Select(r => 
                     new CThing(

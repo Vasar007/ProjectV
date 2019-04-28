@@ -7,6 +7,7 @@ namespace ThingAppraiser
     /// </summary>
     /// <typeparam name="T">Type of the manager subordinate.</typeparam>
     public interface IManager<in T>
+        where T : ITagable
     {
         /// <summary>
         /// Adds item to current manager.

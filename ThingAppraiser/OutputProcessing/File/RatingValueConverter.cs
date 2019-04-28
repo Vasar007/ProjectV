@@ -26,15 +26,15 @@ namespace ThingAppraiser.IO.Output
         public override Object StringToField(String from)
         {
             List<String> values = from.Split(s_separator).ToList();
-            return values.ConvertAll(Single.Parse);
+            return values.ConvertAll(Double.Parse);
         }
 
         /// <inheritdoc />
         public override String FieldToString(Object fieldValue)
         {
-            if (fieldValue is List<Single> value)
+            if (fieldValue is List<Double> value)
             {
-                return String.Join(s_separator + " ", value.ToArray());
+                return String.Join(s_separator + " ", value);
             }
 
             throw new ArgumentException("Object value is not a List<float>");

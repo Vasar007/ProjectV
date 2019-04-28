@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
     /// <summary>
-    /// Class which can read from files and parse it. Uses FileHelpers library to delegate all
-    /// routine work.
+    /// Class which can read from files and parse it.
     /// </summary>
     public class CLocalFileReader : IInputter, ITagable
     {
@@ -23,7 +20,7 @@ namespace ThingAppraiser.IO.Input
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag { get; } = "LocalFileReader";
+        public String Tag => "LocalFileReader";
 
         #endregion
 
@@ -34,28 +31,6 @@ namespace ThingAppraiser.IO.Input
         public CLocalFileReader(IFileReader fileReader)
         {
             _fileReader = fileReader.ThrowIfNull(nameof(fileReader));
-        }
-
-        /// <summary>
-        /// Read local file without any restrictions.
-        /// </summary>
-        /// <param name="filename">Filename to read.</param>
-        /// <returns>Row by row representation of file as collection.</returns>
-        private static List<String> ReadRawFile(String filename)
-        {
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
-            using (var reader = new StreamReader(filename))
-            {
-                // Scan line and remove special symbols.
-                String line = reader.ReadLine();
-                while (!(line is null))
-                {
-                    result.Add(line.Trim('\r', '\n', ' '));
-                    line = reader.ReadLine();
-                }
-            }
-            return result.ToList();
         }
 
         #region IInputter Implementation

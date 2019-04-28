@@ -23,6 +23,6 @@ namespace ThingAppraiser.IO.Output
         /// Rating values of all appraisers. Appraisers list user can specify in config.
         /// </summary>
         [FieldOrder(2), FieldTitle("Rating Value"), FieldConverter(typeof(CRatingValueConverter))]
-        public List<Single> ratingValue = default(List<Single>); // Default assignment to remove warning.
+        public List<Double> ratingValue = default(List<Double>); // Default assignment to remove warning.
     }
 }

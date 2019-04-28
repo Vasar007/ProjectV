@@ -1,55 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace ThingAppraiser.Crawlers
 {
     /// <summary>
-    /// Represent configuration of the TMDB service.
+    /// Provides global thread-safe access to TMDB service configuration.
     /// </summary>
-    /// <remarks>
-    /// ATTENTION! Be careful with naming of properties! They must match the values received in 
-    /// JSON.
-    /// </remarks>
-    [Serializable]
-    public class CServiceConfigurationTMDB
+    public static class SServiceConfigurationTMDB
     {
         /// <summary>
-        /// Provides base url to image server.
+        /// Synchronization object for lock statement.
         /// </summary>
-        public String BaseUrl { get; }
+        private static readonly Object s_lockObject = new Object();
 
         /// <summary>
-        /// Provides secure url to image server.
+        /// Value for service configuration property.
         /// </summary>
-        public String SecureBaseUrl { get; }
+        private static CServiceConfigurationInfoTMDB s_serviceConfigurationInfoTMDB;
 
         /// <summary>
-        /// Contains available backdrop sizes in string format.
+        /// Stores service configuration.
         /// </summary>
-        public List<String> BackdropSizes { get; }
-
-        /// <summary>
-        /// Contains available poster sizes in string format.
-        /// </summary>
-        public List<String> PosterSizes { get; }
-
-
-        /// <summary>
-        /// Initializes configuration of the service.
-        /// </summary>
-        /// <param name="base_Url">Base url to image server.</param>
-        /// <param name="secure_Base_Url">Secure url to image server.</param>
-        /// <param name="backdrop_Sizes">Collection of backdrop sizes in string format.</param>
-        /// <param name="poster_Sizes">Collection of poster sizes in string format.</param>
-        [JsonConstructor]
-        public CServiceConfigurationTMDB(String base_Url, String secure_Base_Url,
-            List<String> backdrop_Sizes, List<String> poster_Sizes)
+        public static CServiceConfigurationInfoTMDB Configuration
         {
-            BaseUrl = base_Url;
-            SecureBaseUrl = secure_Base_Url;
-            BackdropSizes = backdrop_Sizes;
-            PosterSizes = poster_Sizes;
+            get
+            {
+                lock (s_lockObject)
+                {
+                    return s_serviceConfigurationInfoTMDB;
+                }
+            }
+            set
+            {
+                lock (s_lockObject)
+                {
+                    s_serviceConfigurationInfoTMDB = value;
+                }
+            }
         }
     }
 }

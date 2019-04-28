@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ThingAppraiser.Data;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Crawlers
 {
@@ -9,6 +10,12 @@ namespace ThingAppraiser.Crawlers
     /// </summary>
     public sealed class CCrawlersManager : IManager<CCrawler>
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
+        private static readonly CLoggerAbstraction s_logger =
+            CLoggerAbstraction.CreateLoggerInstanceFor<CCrawlersManager>();
+
         /// <summary>
         /// Collection of concrete crawler implementations.
         /// </summary>
@@ -29,14 +36,6 @@ namespace ThingAppraiser.Crawlers
             _outputResults = outputResults;
         }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public CCrawlersManager()
-            : this(false)
-        {
-        }
-
         #region IManager<CCrawler> Implementation
 
         /// <inheritdoc />
@@ -46,7 +45,10 @@ namespace ThingAppraiser.Crawlers
         public void Add(CCrawler item)
         {
             item.ThrowIfNull(nameof(item));
-            _crawlers.Add(item);
+            if (!_crawlers.Contains(item))
+            {
+                _crawlers.Add(item);
+            }
         }
 
         /// <inheritdoc />
@@ -73,6 +75,7 @@ namespace ThingAppraiser.Crawlers
             {
                 results.Add(crawler.GetResponse(entities, _outputResults));
             }
+            s_logger.Info("Crawlers have finished work.");
             return results;
         }
     }

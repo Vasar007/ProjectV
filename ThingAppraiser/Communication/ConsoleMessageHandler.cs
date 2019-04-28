@@ -63,9 +63,9 @@ namespace ThingAppraiser.Communication
         {
             foreach (IEnumerable<CResultInfo> rating in ratings)
             {
-                foreach (var (item, value) in rating)
+                foreach (var (id, value, name) in rating)
                 {
-                    Console.WriteLine($"{item.Title} has rating {value}.");
+                    Console.WriteLine($"{id} has rating {name} = {value}.");
                 }
             }
         }

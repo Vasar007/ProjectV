@@ -1,58 +1,40 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace ThingAppraiser.Data
 {
-    /// <summary>
-    /// Class-aggregator for working with ratings. represents a simple wrapper around
-    /// <see cref="List{T}" /> where internal type is <see cref="CResultInfo" />.
-    /// </summary>
-    public class CRating : IEnumerable<CResultInfo>
+    [Serializable]
+    public class CRating
     {
-        /// <summary>
-        /// Data container.
-        /// </summary>
-        private readonly List<CResultInfo> _rating = new List<CResultInfo>();
+        public Guid RatingID { get; }
+
+        public String RatingName { get; }
 
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public CRating()
+        public CRating(Guid ratingID, String ratingName)
         {
+            RatingID = ratingID;
+            RatingName = ratingName;
         }
 
-        /// <inheritdoc cref="List{T}.Add" />
-        public void Add(CResultInfo item)
-        {
-            _rating.Add(item);
-        }
-
-        /// <inheritdoc cref="List{T}.Sort()" />
-        public void Sort()
-        {
-            _rating.Sort();
-        }
-
-        /// <inheritdoc cref="List{T}.Sort(Comparison{T})" />
-        public void Sort(Comparison<CResultInfo> comparison)
-        {
-            _rating.Sort(comparison);
-        }
-
-        #region IEnumerable<CResultInfo> Implementation
+        #region Object Overridden Methods
 
         /// <inheritdoc />
-        public IEnumerator<CResultInfo> GetEnumerator()
+        public override Boolean Equals(Object obj)
         {
-            return _rating.GetEnumerator();
+            if (obj is null) return false;
+
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (!(obj is CRating rating)) return false;
+
+            return RatingID == rating.RatingID &&
+                   RatingName.IsEqualWithInvariantCulture(rating.RatingName);
         }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
+        public override Int32 GetHashCode()
         {
-            return _rating.GetEnumerator();
+            return RatingID.GetHashCode();
         }
 
         #endregion

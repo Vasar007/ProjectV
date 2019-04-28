@@ -53,6 +53,11 @@ namespace ThingAppraiser.Core
         public static String OutputManagerParameterName { get; } = "OutputManager";
 
         /// <summary>
+        /// Element name for data base manager part.
+        /// </summary>
+        public static String DataBaseManagerParameterName { get; } = "DataBaseManager";
+
+        /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly CLoggerAbstraction s_logger =
@@ -117,6 +122,12 @@ namespace ThingAppraiser.Core
                         new XAttribute("DefaultOutFilename", "appraised_things.csv"),
                         new XElement("LocalFile"),
                         new XElement("GoogleDrive")
+                    ),
+                    new XElement(DataBaseManagerParameterName,
+                        new XAttribute("ConnectionString", @"Data Source=(localdb)\MSSQLLocalDB;
+Initial Catalog=thing_appraiser;Integrated Security=True;Connect Timeout=30;Encrypt=False;
+TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"),
+                        new XElement("MovieTMDBRepository")
                     )
                 )
             );
@@ -135,7 +146,8 @@ namespace ThingAppraiser.Core
                     new XElement(InputManagerParameterName),
                     new XElement(CrawlersManagerParameterName),
                     new XElement(AppraisersManagerParameterName),
-                    new XElement(OutputManagerParameterName)
+                    new XElement(OutputManagerParameterName),
+                    new XElement(DataBaseManagerParameterName)
                 )
             );
         }
@@ -259,6 +271,26 @@ namespace ThingAppraiser.Core
         public void AddOutputterElement(XElement outputterElement)
         {
             AddElement(OutputManagerParameterName, outputterElement);
+        }
+
+        /// <summary>
+        /// Adds parameter for data base manager. Method knows where this attribute should place.
+        /// </summary>
+        /// <param name="dataBaseManagerAttribute">
+        /// XML attribute which represents parameter for <see cref="DAL.CDataBaseManager" />.
+        /// </param>
+        public void AddDataBaseManagerAttribute(XAttribute dataBaseManagerAttribute)
+        {
+            AddAttribute(DataBaseManagerParameterName, dataBaseManagerAttribute);
+        }
+
+        /// <summary>
+        /// Adds new element for data base manager part of XML configuration.
+        /// </summary>
+        /// <param name="repositoryElement">XML element to add.</param>
+        public void AddRepositoryElement(XElement repositoryElement)
+        {
+            AddElement(DataBaseManagerParameterName, repositoryElement);
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.Appraisers
@@ -10,6 +9,9 @@ namespace ThingAppraiser.Appraisers
     public abstract class CMoviesAppraiser : CAppraiser
     {
         /// <inheritdoc />
+        public override String Tag => "MoviesAppraiser";
+
+        /// <inheritdoc />
         public override Type TypeID => typeof(CMovieInfo);
 
 
@@ -19,16 +21,5 @@ namespace ThingAppraiser.Appraisers
         public CMoviesAppraiser()
         {
         }
-
-        #region CAppraiser Overridden Methods
-
-        /// <inheritdoc />
-        /// <remarks>This method doesn't change default calculations.</remarks>
-        public override CRating GetRatings(List<CBasicInfo> entities, Boolean outputResults)
-        {
-            return base.GetRatings(entities, outputResults);
-        }
-
-        #endregion
     }
 }
