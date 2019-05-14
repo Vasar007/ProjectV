@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Vasar007/TIMLE/blob/master/LICENSE)
 
-Evaluate your things (movies, games, books e.t.c.) automatically based on popular data bases with ratings.
+Evaluate your things (movies, games, books e.t.c.) automatically based on popular databases with ratings.
 
 ## Dependencies
 
