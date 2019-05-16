@@ -5,30 +5,29 @@ using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Communication;
 
 namespace ThingAppraiser.IO.Input
 {
     /// <summary>
     /// Concrete implementation of reader part for Google Drive API.
     /// </summary>
-    public class CGoogleDriveReader : CGoogleDriveWorker, IInputter, ITagable
+    public class GoogleDriveReader : GoogleDriveWorker, IInputter, IInputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CGoogleDriveReader>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveReader>();
 
         /// <summary>
         /// Used to read downloaded file from Google Drive.
         /// </summary>
-        private readonly CLocalFileReader _localFileReader;
+        private readonly LocalFileReader _localFileReader;
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "GoogleDriveReader";
+        public string Tag { get; } = "GoogleDriveReader";
 
         #endregion
 
@@ -36,10 +35,10 @@ namespace ThingAppraiser.IO.Input
         /// <summary>
         /// Constructor which forwards drive service instance to base class.
         /// </summary>
-        public CGoogleDriveReader(DriveService driveService, IFileReader fileReader)
+        public GoogleDriveReader(DriveService driveService, IFileReader fileReader)
             : base(driveService)
         {
-            _localFileReader = new CLocalFileReader(fileReader);
+            _localFileReader = new LocalFileReader(fileReader);
         }
 
         /// <summary>
@@ -55,20 +54,17 @@ namespace ThingAppraiser.IO.Input
         /// <param name="progress">progress</param> has inconsistent value.
         /// </exception>
         private static void ProgressChanged_Callback(IDownloadProgress progress,
-            MemoryStream stream, String saveTo, String mimeType)
+            MemoryStream stream, string saveTo, string mimeType)
         {
             switch (progress.Status)
             {
                 case DownloadStatus.Downloading:
-                    SGlobalMessageHandler.OutputMessage(
-                        progress.BytesDownloaded.ToString()
-                    );
+                    _logger.Info($"Downloading: {progress.BytesDownloaded}");
                     break;
 
                 case DownloadStatus.Completed:
-                    s_logger.Info("Download completed.");
-                    SGlobalMessageHandler.OutputMessage("Download completed.");
-                    if (String.IsNullOrEmpty(mimeType))
+                    _logger.Info("Download completed.");
+                    if (string.IsNullOrEmpty(mimeType))
                     {
                         SaveStream(stream, saveTo);
                     }
@@ -79,8 +75,7 @@ namespace ThingAppraiser.IO.Input
                     break;
 
                 case DownloadStatus.Failed:
-                    s_logger.Warn("Download failed.");
-                    SGlobalMessageHandler.OutputMessage("Download failed.");
+                    _logger.Warn("Download failed.");
                     break;
 
                 case DownloadStatus.NotStarted:
@@ -90,7 +85,7 @@ namespace ThingAppraiser.IO.Input
                     var ex = new ArgumentOutOfRangeException(
                         nameof(progress), progress.Status, "Not caught switch statement!"
                     );
-                    s_logger.Error(ex, $"Not caught value {progress.Status}!");
+                    _logger.Error(ex, $"Not caught value {progress.Status}!");
                     throw ex;
             }
         }
@@ -102,13 +97,13 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="storageName">Storage name on Google Drive with Things names.</param>
         /// <returns>Processed collection of Things names as strings.</returns>
-        public List<String> ReadThingNames(String storageName)
+        public List<string> ReadThingNames(string storageName)
         {
-            var result = new List<String>();
-            if (String.IsNullOrEmpty(storageName)) return result;
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(storageName)) return result;
 
             // Get info from API, download file and read it.
-            IList<GoogleDriveData.File> files = ListFiles(new CGoogleDriveFilesListOptionalParams
+            IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
                 { Q = $"name contains '{storageName}'" }).Files;
 
             if (!files.IsNullOrEmpty())
@@ -124,8 +119,7 @@ namespace ThingAppraiser.IO.Input
             }
             else
             {
-                s_logger.Info($"No files found. Tried to find \"{storageName}\".");
-                SGlobalMessageHandler.OutputMessage("No files found.");
+                _logger.Info($"No files found. Tried to find \"{storageName}\".");
             }
 
             return result;
@@ -138,7 +132,7 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="fileId">File ID to download. You can get it from Google Drive API.</param>
         /// <param name="saveTo">Filename to save on local storage.</param>
-        private void DownloadFile(String fileId, String saveTo)
+        private void DownloadFile(string fileId, string saveTo)
         {
             using (var stream = new MemoryStream())
             {
@@ -148,7 +142,7 @@ namespace ThingAppraiser.IO.Input
                 // It will notify on each chunk download and when the
                 // download is completed or failed.
                 request.MediaDownloader.ProgressChanged +=
-                    progress => ProgressChanged_Callback(progress, stream, saveTo, String.Empty);
+                    progress => ProgressChanged_Callback(progress, stream, saveTo, string.Empty);
                 request.Download(stream);
             }
         }
@@ -157,7 +151,7 @@ namespace ThingAppraiser.IO.Input
         /// <param name="mimeType">
         /// MIME type which is used to get correct extension for file.
         /// </param>
-        private void ExportFile(String fileId, String saveTo, String mimeType)
+        private void ExportFile(string fileId, string saveTo, string mimeType)
         {
             using (var stream = new MemoryStream())
             {
@@ -172,7 +166,7 @@ namespace ThingAppraiser.IO.Input
 
         /// <summary>
         /// Recognizes file extension and call appropriate downloading method. Then reads file with
-        /// <see cref="CLocalFileReader" />.
+        /// <see cref="LocalFileReader" />.
         /// </summary>
         /// <param name="storageName">Storage name on the Google Drive with Things names.</param>
         /// <param name="fileId">File ID which is used to download file from Google Drive.</param>
@@ -180,9 +174,9 @@ namespace ThingAppraiser.IO.Input
         /// <remarks>
         /// This method creates and deletes temporary file to store downloaded content.
         /// </remarks>
-        private List<String> DownloadAndReadFile(String storageName, String fileId)
+        private List<string> DownloadAndReadFile(string storageName, string fileId)
         {
-            var result = new List<String>();
+            var result = new List<string>();
             try
             {
                 if (HasExtenstionSafe(storageName))
@@ -191,23 +185,21 @@ namespace ThingAppraiser.IO.Input
                 }
                 else
                 {
-                    const String mimeType = "text/csv";
+                    const string mimeType = "text/csv";
                     ExportFile(fileId, storageName, mimeType);
-                    storageName = storageName + GetExtension(mimeType);
+                    storageName += GetExtension(mimeType);
                 }
 
                 result = _localFileReader.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, "An error occured during downloading and reading file.");
-                SGlobalMessageHandler.OutputMessage("An error occured during downloading and " +
-                                                    $"reading file: {ex.Message}");
+                _logger.Warn(ex, "An error occured during downloading and reading file.");
             }
             finally
             {
                 DeleteFile(storageName);
-                s_logger.Debug($"Deleted temporary created file \"{storageName}\".");
+                _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
             return result;
         }

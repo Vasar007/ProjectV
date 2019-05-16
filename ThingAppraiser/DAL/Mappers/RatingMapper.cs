@@ -4,19 +4,19 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class CRatingMapper : IMapper<CRating>
+    public class RatingMapper : IMapper<Rating>
     {
-        public CRatingMapper()
+        public RatingMapper()
         {
         }
 
-        #region IMapper<CRating> Implementation
+        #region IMapper<Rating> Implementation
 
-        public CRating ReadItem(IDataReader reader)
+        public Rating ReadItem(IDataReader reader)
         {
-            var item = new CRating(
+            var item = new Rating(
                 (Guid)   reader["rating_id"],
-                (String) reader["rating_name"]
+                (string) reader["rating_name"]
             );
             return item;
         }

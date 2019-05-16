@@ -7,34 +7,34 @@ using ThingAppraiser.Data;
 namespace ThingAppraiser.DAL.Mappers
 {
     /// <remarks>
-    /// It's not an error or typo to inherit from <see cref="IMapper{CBasicInfo}" /> rather than
-    /// <see cref="IMapper{CMovieTMDBInfo}" />  because we must correspond
+    /// It's not an error or typo to inherit from <see cref="IMapper{BasicInfo}" /> rather than
+    /// <see cref="IMapper{TmdbMovieInfo}" />  because we must correspond
     /// <see cref="Repositories.IRepository" /> interface.
     /// </remarks>
-    public class CMovieTMDBMapper : IMapper<CBasicInfo>
+    public class TmdbMovieMapper : IMapper<BasicInfo>
     {
-        public CMovieTMDBMapper()
+        public TmdbMovieMapper()
         {
         }
 
-        #region IMapper<CBasicInfo> Implementation
+        #region IMapper<BasicInfo> Implementation
 
-        public CBasicInfo ReadItem(IDataReader reader)
+        public BasicInfo ReadItem(IDataReader reader)
         {
-            var genreIDsAsString = (String) reader["genre_ids"];
-            List<Int32> genreIDs = genreIDsAsString.Split(',').Select(Int32.Parse).ToList();
+            var genreIdsAsString = (string) reader["genre_ids"];
+            List<int> genreIds = genreIdsAsString.Split(',').Select(int.Parse).ToList();
 
-            var item = new CMovieTMDBInfo(
-                id:           (Int32) reader["thing_id"],
-                title:        (String) reader["title"],
-                vote_count:   (Int32) reader["vote_count"],
-                vote_average: (Double) reader["vote_average"],
-                overview:     (String) reader["overview"],
-                release_date: (DateTime) reader["release_date"],
-                popularity:   (Double) reader["popularity"],
-                adult:        (Boolean) reader["adult"],
-                genre_ids:    genreIDs,
-                poster_path:  (String) reader["poster_path"]
+            var item = new TmdbMovieInfo(
+                thingId:     (int)      reader["thing_id"],
+                title:       (string)   reader["title"],
+                voteCount:   (int)      reader["vote_count"],
+                voteAverage: (double)   reader["vote_average"],
+                overview:    (string)   reader["overview"],
+                releaseDate: (DateTime) reader["release_date"],
+                popularity:  (double)   reader["popularity"],
+                adult:       (bool)     reader["adult"],
+                genreIds:    genreIds,
+                posterPath:  (string)   reader["poster_path"]
             );
             return item;
         }

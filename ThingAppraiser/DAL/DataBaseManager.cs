@@ -1,62 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Communication;
 using ThingAppraiser.DAL.Repositories;
 using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DAL
 {
-    public sealed class CDataBaseManager
+    public sealed class DataBaseManager
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CDataBaseManager>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<DataBaseManager>();
 
         private readonly IResultRepository _resultRepository;
 
         private readonly IRatingRepository _ratingRepository;
 
-        public CDataRepositoriesManager DataRepositoriesManager {get; } =
-            new CDataRepositoriesManager();
+        public DataRepositoriesManager DataRepositoriesManager {get; } =
+            new DataRepositoriesManager();
 
 
-        public CDataBaseManager(IResultRepository resultRepository, 
+        public DataBaseManager(IResultRepository resultRepository, 
             IRatingRepository ratingRepository)
         {
             _resultRepository = resultRepository.ThrowIfNull(nameof(resultRepository));
             _ratingRepository = ratingRepository.ThrowIfNull(nameof(ratingRepository));
         }
 
-        public List<List<CBasicInfo>> GetResultsFromDB()
+        public List<List<BasicInfo>> GetResultsFromDb()
         {
-            return DataRepositoriesManager.GetResultsFromDB();
+            return DataRepositoriesManager.GetResultsFromDb();
         }
 
-        public List<CRawDataContainer> GetResultsFromDBWithAdditionalInfo()
+        public List<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
         {
-            return DataRepositoriesManager.GetResultsFromDBWithAdditionalInfo();
+            return DataRepositoriesManager.GetResultsFromDbWithAdditionalInfo();
         }
 
-        public List<List<CRatingDataContainer>> GetRatingValuesFromDB(
-            CRatingsStorage ratingsStorage)
+        public List<List<RatingDataContainer>> GetRatingValuesFromDb(
+            RatingsStorage ratingsStorage)
         {
-            var results = new List<List<CRatingDataContainer>>();
+            var results = new List<List<RatingDataContainer>>();
 
-            List<CRating> ratings = _ratingRepository.GetAllData();
-            foreach (CRating rating in ratings)
+            List<Rating> ratings = _ratingRepository.GetAllData();
+            foreach (Rating rating in ratings)
             {
-                List<CThingIDWithRating> ratingsValue = _resultRepository.GetOrderedRatingsValue(
-                    rating.RatingID
+                List<ThingIdWithRating> ratingsValue = _resultRepository.GetOrderedRatingsValue(
+                    rating.RatingId
                 );
 
-                List<CRatingDataContainer> dataHandlers = ratingsValue.Select(
-                    thingIDWithRating => new CRatingDataContainer(
-                        DataRepositoriesManager.GetProperDataHandlerByID(
-                            thingIDWithRating.ThingID,
-                            ratingsStorage.GetTypeByRatingID(rating.RatingID)
+                List<RatingDataContainer> dataHandlers = ratingsValue.Select(
+                    thingIdWithRating => new RatingDataContainer(
+                        DataRepositoriesManager.GetProperDataHandlerById(
+                            thingIdWithRating.ThingId,
+                            ratingsStorage.GetTypeByRatingId(rating.RatingId)
                         ),
-                        thingIDWithRating.Rating
+                        thingIdWithRating.Rating
                     )
                 ).ToList();
                 results.Add(dataHandlers);
@@ -65,27 +63,27 @@ namespace ThingAppraiser.DAL
             return results;
         }
 
-        public void PutResultsToDB(List<List<CBasicInfo>> results)
+        public void PutResultsToDb(List<List<BasicInfo>> results)
         {
-            DataRepositoriesManager.PutResultsToDB(results);
+            DataRepositoriesManager.PutResultsToDb(results);
         }
 
-        public void PutRatingsToDB(CProcessedDataContainer ratings)
+        public void PutRatingsToDb(ProcessedDataContainer ratings)
         {
-            foreach (CRating rating in ratings.RatingsStorage.GetAllRatings())
+            foreach (Rating rating in ratings.RatingsStorage.GetAllRatings())
             {
-                if (!_ratingRepository.Contains(rating.RatingID))
+                if (!_ratingRepository.Contains(rating.RatingId))
                 {
                     _ratingRepository.InsertItem(rating);
                 }
             }
 
-            foreach (CResultList datum in ratings.GetData())
+            foreach (ResultList datum in ratings.GetData())
             {
                 // Skip empty collections of data.
                 if (datum.IsNullOrEmpty()) continue;
 
-                foreach (CResultInfo info in datum)
+                foreach (ResultInfo info in datum)
                 {
                     _resultRepository.InsertItem(info);
                 }
@@ -94,11 +92,13 @@ namespace ThingAppraiser.DAL
 
         public void DeleteData()
         {
+            _logger.Info("Deletes all data in repositories.");
             DataRepositoriesManager.DeleteData();
         }
 
         public void DeleteResultAndRatings()
         {
+            _logger.Info("Deletes result and ratings.");
             _resultRepository.DeleteAllData();
             _ratingRepository.DeleteAllData();
         }

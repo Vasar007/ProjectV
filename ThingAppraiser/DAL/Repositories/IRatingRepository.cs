@@ -3,7 +3,8 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public interface IRatingRepository : IRepository<CRating, Guid>, ITagable, ITypeID
+    public interface IRatingRepository : IRepository<Rating, Guid>, IRepositoryBase, ITagable,
+        ITypeId
     {
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -10,19 +11,21 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Output
 {
-    public sealed class COutputManagerRx : IManager<IOutputterRx>
+    public sealed class OutputManagerRx : IManager<IOutputterRx>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<COutputManagerRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<OutputManagerRx>();
 
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         private readonly List<IOutputterRx> _outputtersRx = new List<IOutputterRx>();
 
 
-        public COutputManagerRx(String defaultFilename)
+        public OutputManagerRx(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
         }
 
         #region IManager<IOutputterRx> Implementation
@@ -36,7 +39,7 @@ namespace ThingAppraiser.IO.Output
             }
         }
 
-        public Boolean Remove(IOutputterRx item)
+        public bool Remove(IOutputterRx item)
         {
             item.ThrowIfNull(nameof(item));
             return _outputtersRx.Remove(item);
@@ -44,69 +47,66 @@ namespace ThingAppraiser.IO.Output
 
         #endregion
         
-        public async Task<Boolean> SaveResults(IObservable<CRatingDataContainer> resultsQueues,
-            String storageName)
+        public async Task<bool> SaveResults(
+            IDictionary<Type, IObservable<RatingDataContainer>> resultsQueues,
+            string storageName)
         {
-            if (String.IsNullOrEmpty(storageName))
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                _logger.Info("Storage name is empty, using the default value.");
             }
 
-            List<Boolean> statuses = await Consume(resultsQueues, storageName);
+            List<bool> statuses = await Consume(resultsQueues, storageName);
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info($"Successfully saved all results to \"{storageName}\".");
+                _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            s_logger.Info($"Couldn't save some results to \"{storageName}\".");
+            _logger.Info($"Couldn't save some results to \"{storageName}\".");
             return false;
         }
 
-        private Task<List<Boolean>> Consume(IObservable<CRatingDataContainer> resultsQueue,
-            String storageName)
+        private async Task<List<bool>> Consume(
+            IDictionary<Type, IObservable<RatingDataContainer>> resultsQueues, string storageName)
         {
-            var converted = new ConcurrentDictionary<String, ConcurrentBag<Double>>();
+            var consumed = new ConcurrentBag<ConcurrentBag<RatingDataContainer>>();
+            var consumers = new List<Task>();
 
-            Task drainTask = resultsQueue.ObserveOn(ThreadPoolScheduler.Instance).ForEachAsync(
-                dataContainer =>
-                {
-                    if (converted.TryGetValue(dataContainer.DataHandler.Title,
-                                              out ConcurrentBag<Double> ratingValues))
+            foreach (var resultQueue  in resultsQueues.Values)
+            {
+                var rating = new ConcurrentBag<RatingDataContainer>();
+                consumed.Add(rating);
+
+                Task task = resultQueue.ObserveOn(ThreadPoolScheduler.Instance).ForEachAsync(
+                    dataContainer =>
                     {
-                        ratingValues.Add(dataContainer.RatingValue);
+                        rating.Add(dataContainer);
                     }
-                    else
-                    {
-                        converted.TryAdd(dataContainer.DataHandler.Title,
-                                         new ConcurrentBag<Double> { dataContainer.RatingValue });
-                    }
-                }
+                );
+                consumers.Add(task);
+            }
+
+            await Task.WhenAll(consumers);
+
+            List<List<RatingDataContainer>> results = consumed.Select(
+                x => x.ToList()
+            ).ToList();
+
+            results.AsParallel().ForAll(
+                rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
             );
 
-            Task<List<Boolean>> continueWithTask = drainTask.ContinueWith(task =>
-            {
-                IReadOnlyList<COuputFileData> outputData = converted
-                    .Select(
-                        result => new COuputFileData
-                        {
-                            thingName = $"\"{result.Key}\"", // Escape Thing names.
-                            ratingValue = result.Value.ToList()
-                        })
-                    .OrderByDescending(x => x.ratingValue.First())
-                    .ToList();
+            List<bool> outputterStatuses = _outputtersRx.AsParallel().Select(
+                outputterRx => outputterRx.SaveResults(results, storageName)
+            ).ToList();
 
-                List<Boolean> outputterStatuses = _outputtersRx.AsParallel().Select(
-                    outputterRx => outputterRx.SaveResults(outputData, storageName)
-                ).ToList();
+            _logger.Info("Outputters were configured.");
 
-                s_logger.Info("Outputters were configured.");
-
-                return outputterStatuses;
-            });
-
-            return continueWithTask;
+            return outputterStatuses;
         }
     }
 }

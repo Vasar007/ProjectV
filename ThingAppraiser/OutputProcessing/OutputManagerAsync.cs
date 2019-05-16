@@ -8,12 +8,12 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Output
 {
-    public sealed class COutputManagerAsync : IManager<IOutputterAsync>
+    public sealed class OutputManagerAsync : IManager<IOutputterAsync>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<COutputManagerAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<OutputManagerAsync>();
 
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         private readonly ExecutionDataflowBlockOptions _consumerOptions;
 
@@ -22,9 +22,11 @@ namespace ThingAppraiser.IO.Output
         private readonly List<IOutputterAsync> _outputtersAsync = new List<IOutputterAsync>();
 
 
-        public COutputManagerAsync(String defaultFilename)
+        public OutputManagerAsync(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
 
             _consumerOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
             _linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
@@ -41,7 +43,7 @@ namespace ThingAppraiser.IO.Output
             }
         }
 
-        public Boolean Remove(IOutputterAsync item)
+        public bool Remove(IOutputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
             return _outputtersAsync.Remove(item);
@@ -49,22 +51,24 @@ namespace ThingAppraiser.IO.Output
 
         #endregion
 
-        public async Task<Boolean> SaveResults(
-            Dictionary<Type, BufferBlock<CRatingDataContainer>> resultsQueues, String storageName)
+        public async Task<bool> SaveResults(
+            IDictionary<Type, BufferBlock<RatingDataContainer>> resultsQueues, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName))
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                _logger.Info("Storage name is empty, using the default value.");
             }
 
-            var consumers = new List<ActionBlock<CRatingDataContainer>>();
-            var results = new List<List<CRatingDataContainer>>();
-            foreach (KeyValuePair<Type, BufferBlock<CRatingDataContainer>> keyValue in resultsQueues)
+            var consumers = new List<ActionBlock<RatingDataContainer>>();
+            var results = new List<List<RatingDataContainer>>();
+            foreach (KeyValuePair<Type, BufferBlock<RatingDataContainer>> keyValue in resultsQueues)
             {
-                var rating = new List<CRatingDataContainer>();
+                var rating = new List<RatingDataContainer>();
                 results.Add(rating);
 
-                var consumer = new ActionBlock<CRatingDataContainer>(x => rating.Add(x),
+                var consumer = new ActionBlock<RatingDataContainer>(x => rating.Add(x),
                                                                      _consumerOptions);
                 consumers.Add(consumer);
                 keyValue.Value.LinkTo(consumer, _linkOptions);
@@ -76,18 +80,18 @@ namespace ThingAppraiser.IO.Output
                 rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
             );
 
-            List<Task<Boolean>> resultTasks = _outputtersAsync.Select(
+            List<Task<bool>> resultTasks = _outputtersAsync.Select(
                 outputterAsync => outputterAsync.SaveResults(results, storageName)
             ).ToList();
 
-            Boolean[] statuses = await Task.WhenAll(resultTasks);
+            bool[] statuses = await Task.WhenAll(resultTasks);
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info($"Successfully saved all results to \"{storageName}\".");
+                _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            s_logger.Info($"Couldn't save some results to \"{storageName}\".");
+            _logger.Info($"Couldn't save some results to \"{storageName}\".");
             return false;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.IO.Output
@@ -7,7 +6,7 @@ namespace ThingAppraiser.IO.Output
     /// <summary>
     /// Defines outputter classes interface to use in output component.
     /// </summary>
-    public interface IOutputter : ITagable
+    public interface IOutputter : IOutputterBase, ITagable
     {
         /// <summary>
         /// Saves results of the processing to the storage. It could be NOT only direct writing to
@@ -18,6 +17,6 @@ namespace ThingAppraiser.IO.Output
         /// <returns>
         /// <c>true</c> if results were saved successfully, <c>false</c> otherwise.
         /// </returns>
-        Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName);
+        bool SaveResults(List<List<RatingDataContainer>> results, string storageName);
     }
 }

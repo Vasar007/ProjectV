@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Communication;
 
 namespace ThingAppraiser.Appraisers
 {
-    public sealed class CAppraisersManagerRx : IManager<CAppraiserRx>
+    public sealed class AppraisersManagerRx : IManager<AppraiserRx>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CAppraisersManagerRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<AppraisersManagerRx>();
 
-        private readonly Dictionary<Type, List<CAppraiserRx>> _appraisersRx =
-            new Dictionary<Type, List<CAppraiserRx>>();
+        private readonly Dictionary<Type, List<AppraiserRx>> _appraisersRx =
+            new Dictionary<Type, List<AppraiserRx>>();
 
-        private readonly Boolean _outputResults;
+        private readonly bool _outputResults;
 
 
-        public CAppraisersManagerRx(Boolean outputResults)
+        public AppraisersManagerRx(bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CAppraiserRx> Implementation
+        #region IManager<AppraiserRx> Implementation
 
-        public void Add(CAppraiserRx item)
+        public void Add(AppraiserRx item)
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisersRx.TryGetValue(item.TypeID, out List<CAppraiserRx> list))
+            if (_appraisersRx.TryGetValue(item.TypeId, out List<AppraiserRx> list))
             {
                 if (!list.Contains(item))
                 {
@@ -39,35 +39,44 @@ namespace ThingAppraiser.Appraisers
             }
             else
             {
-                _appraisersRx.Add(item.TypeID, new List<CAppraiserRx> { item });
+                _appraisersRx.Add(item.TypeId, new List<AppraiserRx> { item });
             }
         }
 
-        public Boolean Remove(CAppraiserRx item)
+        public bool Remove(AppraiserRx item)
         {
             item.ThrowIfNull(nameof(item));
-            return _appraisersRx.Remove(item.TypeID);
+            return _appraisersRx.Remove(item.TypeId);
         }
 
         #endregion
 
-        public IObservable<CRatingDataContainer> GetAllRatings(IObservable<CBasicInfo> entitiesInfoQueue)
+        public IDictionary<Type, IObservable<RatingDataContainer>> GetAllRatings(
+            IDictionary<Type, IObservable<BasicInfo>> entitiesInfoQueues)
         {
-            IObservable<CRatingDataContainer> entitiesRatingQueues =
-                entitiesInfoQueue.ObserveOn(ThreadPoolScheduler.Instance)
-                    .Where(basicInfo => !(basicInfo is null) &&
-                                        _appraisersRx.Any(kv => kv.Key == basicInfo.GetType()))
-                    .Select(basicInfo =>
-                    {
-                        List<CAppraiserRx> values = _appraisersRx[basicInfo.GetType()];
-                        return values.Select(appraisersRx => appraisersRx.GetRatings(
-                            basicInfo, _outputResults)
-                        ).ToObservable();
-                    }
-                ).Merge();
+            var ratingsQueues = new Dictionary<Type, IObservable<RatingDataContainer>>();
 
-            s_logger.Info("Appraisers were configured.");
-            return entitiesRatingQueues;
+            foreach (KeyValuePair<Type, IObservable<BasicInfo>> keyValue in entitiesInfoQueues)
+            {
+                if (!_appraisersRx.TryGetValue(keyValue.Key, out List<AppraiserRx> values))
+                {
+                    string message = $"Type {keyValue.Key} wasn't used to appraise!";
+                    _logger.Info(message);
+                    GlobalMessageHandler.OutputMessage(message);
+                    continue;
+                }
+
+                var entitiesRatingQueue = values.Select(appraisersRx =>
+                    keyValue.Value.Select(
+                        basicInfo => appraisersRx.GetRatings(basicInfo, _outputResults)
+                    )
+                ).Concat();
+
+                ratingsQueues.Add(keyValue.Key, entitiesRatingQueue);
+            }
+
+            _logger.Info("Appraisers were configured.");
+            return ratingsQueues;
         }
     }
 }

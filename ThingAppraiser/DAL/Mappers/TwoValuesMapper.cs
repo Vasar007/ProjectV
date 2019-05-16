@@ -2,9 +2,9 @@
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class CTwoValuesMapper<T> : IMapper<(T, T)>
+    public class TwoValuesMapper<T> : IMapper<(T, T)>
     {
-        public CTwoValuesMapper()
+        public TwoValuesMapper()
         {
         }
 

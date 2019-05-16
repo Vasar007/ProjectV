@@ -3,53 +3,57 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Transactions;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DAL
 {
-    public class CDBHelperScope : IDisposable
+    // TODO: add command creation method (important).
+    public class DbHelperScope : IDisposable
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CDBHelperScope>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<DbHelperScope>();
 
         private readonly SqlConnection _connection;
 
-        private readonly TransactionScope _transaction;
+        private readonly SqlTransaction _transaction;
 
-        private Boolean _disposedValue;
+        private bool _disposedValue;
 
 
-        public CDBHelperScope(CDataStorageSettings settings)
+        public DbHelperScope(DataStorageSettings settings)
         {
             settings.ThrowIfNull(nameof(settings));
-            settings.DBConnectionString.ThrowIfNull(nameof(settings.DBConnectionString));
+            settings.DbConnectionString.ThrowIfNull(nameof(settings.DbConnectionString));
 
             try
             {
-                _connection = new SqlConnection(settings.DBConnectionString);
-                _transaction = new TransactionScope();
+                _connection = new SqlConnection(settings.DbConnectionString);
+                _connection.Open();
+                _transaction = _connection.BeginTransaction();
             }
             catch (Exception ex)
             {
                 Dispose();
-                s_logger.Error(ex, "Exception occurred during connection to database.");
+                _logger.Error(ex, "Exception occurred during connection to database.");
                 throw;
             }
         }
 
+        private static void ConfigureCommand(IDbCommand command, IDbConnection connection,
+            IDbTransaction transaction)
+        {
+            command.Connection = connection;
+            command.Transaction = transaction;
+        }
+
         private static List<T> GetData<T>(IDbConnection connection, IMapper<T> mapper,
-            IDbCommand query)
+            IDbCommand query, IDbTransaction transaction)
         {
             var result = new List<T>();
             try
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                query.Connection = connection;
+                ConfigureCommand(query, connection, transaction);
 
                 using (IDataReader reader = query.ExecuteReader())
                 {
@@ -63,7 +67,7 @@ namespace ThingAppraiser.DAL
             }
             catch (Exception ex)
             {
-                s_logger.Error(
+                _logger.Error(
                     ex, "Exception occurred during database query execution (array of data)."
                 );
                 throw;
@@ -71,16 +75,13 @@ namespace ThingAppraiser.DAL
             return result;
         }
 
-        private static T GetItem<T>(IDbConnection connection, IMapper<T> mapper, IDbCommand query)
+        private static T GetItem<T>(IDbConnection connection, IMapper<T> mapper, IDbCommand query,
+            IDbTransaction transaction)
         {
             T result;
             try
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                query.Connection = connection;
+                ConfigureCommand(query, connection, transaction);
 
                 using (IDataReader reader = query.ExecuteReader())
                 {
@@ -91,7 +92,7 @@ namespace ThingAppraiser.DAL
             }
             catch (Exception ex)
             {
-                s_logger.Error(
+                _logger.Error(
                     ex, "Exception occurred during database query execution (single item)."
                 );
                 throw;
@@ -99,22 +100,19 @@ namespace ThingAppraiser.DAL
             return result;
         }
 
-        private static T GetScalar<T>(IDbConnection connection, IDbCommand query)
+        private static T GetScalar<T>(IDbConnection connection, IDbCommand query,
+            IDbTransaction transaction)
         {
             T result;
             try
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                query.Connection = connection;
+                ConfigureCommand(query, connection, transaction);
 
                 result = (T) query.ExecuteScalar();
             }
             catch (Exception ex)
             {
-                s_logger.Error(
+                _logger.Error(
                     ex, "Exception occurred during database query execution (scalar value)."
                 );
                 throw;
@@ -122,23 +120,20 @@ namespace ThingAppraiser.DAL
             return result;
         }
 
-        private static Int32 ExecuteCommand(IDbConnection connection, IDbCommand command)
+        private static int ExecuteCommand(IDbConnection connection, IDbCommand command,
+            IDbTransaction transaction)
         {
-            Int32 recordsAffected;
+            int recordsAffected;
             try
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                command.Connection = connection;
+                ConfigureCommand(command, connection, transaction);
 
                 recordsAffected = command.ExecuteNonQuery();
-                s_logger.Info($"Changed {recordsAffected} records in DB.");
+                _logger.Info($"Changed {recordsAffected} records in DB.");
             }
             catch (SqlException ex)
             {
-                s_logger.Error(
+                _logger.Error(
                     ex, "Exception occurred during database query execution (just command)."
                 );
                 throw;
@@ -150,34 +145,34 @@ namespace ThingAppraiser.DAL
         {
             mapper.ThrowIfNull(nameof(mapper));
             query.ThrowIfNull(nameof(query));
-            return GetData(_connection, mapper, query);
+            return GetData(_connection, mapper, query, _transaction);
         }
 
         public T GetItem<T>(IMapper<T> mapper, IDbCommand query)
         {
             mapper.ThrowIfNull(nameof(mapper));
             query.ThrowIfNull(nameof(query));
-            return GetItem(_connection, mapper, query);
+            return GetItem(_connection, mapper, query, _transaction);
         }
 
         public T GetScalar<T>(IDbCommand query)
         {
             query.ThrowIfNull(nameof(query));
-            return GetScalar<T>(_connection, query);
+            return GetScalar<T>(_connection, query, _transaction);
         }
 
-        public Int32 ExecuteCommand(IDbCommand command)
+        public int ExecuteCommand(IDbCommand command)
         {
             command.ThrowIfNull(nameof(command));
-            return ExecuteCommand(_connection, command);
+            return ExecuteCommand(_connection, command, _transaction);
         }
 
         public void Commit()
         {
-            _transaction?.Complete();
+            _transaction.Commit();
         }
 
-        public DbConnection GetDBConnection()
+        public DbConnection GetDbConnection()
         {
             return _connection;
         }

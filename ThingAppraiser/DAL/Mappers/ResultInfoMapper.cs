@@ -4,19 +4,19 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class CResultInfoMapper : IMapper<CResultInfo>
+    public class ResultInfoMapper : IMapper<ResultInfo>
     {
-        public CResultInfoMapper()
+        public ResultInfoMapper()
         {
         }
 
-        #region IMapper<CResultInfo> Implementation
+        #region IMapper<ResultInfo> Implementation
 
-        public CResultInfo ReadItem(IDataReader reader)
+        public ResultInfo ReadItem(IDataReader reader)
         {
-            var item = new CResultInfo(
-                (Int32)  reader["thing_id"],
-                (Double) reader["rating_value"],
+            var item = new ResultInfo(
+                (int)    reader["thing_id"],
+                (double) reader["rating_value"],
                 (Guid)   reader["rating_id"]
             );
             return item;

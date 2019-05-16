@@ -1,7 +1,7 @@
 ﻿namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Creates interface to build <see cref="CShell" /> class step by step.
+    /// Creates interface to build <see cref="Shell" /> class step by step.
     /// </summary>
     public interface IShellBuilder
     {
@@ -43,9 +43,9 @@
         void BuildDataBaseManager();
 
         /// <summary>
-        /// Collects all managers and initializes <see cref="CShell" /> instance.
+        /// Collects all managers and initializes <see cref="Shell" /> instance.
         /// </summary>
         /// <returns>Fully initialized instance.</returns>
-        CShell GetResult();
+        Shell GetResult();
     }
 }

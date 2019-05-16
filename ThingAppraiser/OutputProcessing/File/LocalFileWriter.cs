@@ -13,31 +13,31 @@ namespace ThingAppraiser.IO.Output
     /// Class which can write to files and process output content. Uses FileHelpers library to
     /// delegate all routine work.
     /// </summary>
-    public class CLocalFileWriter : IOutputter, ITagable
+    public class LocalFileWriter : IOutputter, IOutputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CLocalFileWriter>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileWriter>();
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "LocalFileWriter";
+        public string Tag { get; } = "LocalFileWriter";
 
         #endregion
 
 
         /// <summary>
-        /// Default constructor.
+        /// Creates instance with default values.
         /// </summary>
-        public CLocalFileWriter()
+        public LocalFileWriter()
         {
         }
 
         /// <inheritdoc cref="File.Exists" />
-        public static Boolean DoesExistFile(String path)
+        public static bool DoesExistFile(string path)
         {
             return File.Exists(path);
         }
@@ -48,10 +48,9 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Results to save.</param>
         /// <param name="filename">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        private static Boolean WriteFile(List<List<CRatingDataContainer>> results, 
-            String filename)
+        private static bool WriteFile(List<List<RatingDataContainer>> results, string filename)
         {
-            if (String.IsNullOrEmpty(filename)) return false;
+            if (string.IsNullOrEmpty(filename)) return false;
 
             var engine = new FileHelperAsyncEngine<COuputFileData>
             {
@@ -60,7 +59,7 @@ namespace ThingAppraiser.IO.Output
 
             using (engine.BeginWriteFile(filename))
             {
-                Dictionary<String, List<Double>> converted = ConvertResultsToDict(results);
+                Dictionary<string, List<double>> converted = ConvertResultsToDict(results);
                 engine.WriteNexts(converted.Select(result => new COuputFileData
                 {
                     thingName = $"\"{result.Key}\"", // Escape Thing names.
@@ -76,30 +75,30 @@ namespace ThingAppraiser.IO.Output
         /// </summary>
         /// <param name="results">Result to convert.</param>
         /// <returns>Transformed results.</returns>
-        private static Dictionary<String, List<Double>> ConvertResultsToDict(
-            List<List<CRatingDataContainer>> results)
+        private static Dictionary<string, List<double>> ConvertResultsToDict(
+            List<List<RatingDataContainer>> results)
         {
-            // TODO: add additional data structure based on Dictionary<String, (CResultInfo, Int32)>
-            // where String is name of the Thing, CResultInfo is meta information and Int32 is place
+            // TODO: add additional data structure based on Dictionary<string, (CResultInfo, Int32)>
+            // where string is name of the Thing, CResultInfo is meta information and Int32 is place
             // in the rating. If appraiser cannot appraise the Thing, then we would have pair
             // <nameof(Thing), null> (yes, ValueType cannot be null, we'd simply have something
             // similar, i.e. default or special value). Such data structure, I think, can help to
             // decrease memory usage and save sorting order in ratings with meta information.
 
-            var converted = new Dictionary<String, List<Double>>();
-            foreach (List<CRatingDataContainer> rating in results)
+            var converted = new Dictionary<string, List<double>>();
+            foreach (List<RatingDataContainer> rating in results)
             {
-                foreach (CRatingDataContainer ratingDataContainer in rating)
+                foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                        out List<Double> ratingValues))
+                        out List<double> ratingValues))
                     {
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }
                     else
                     {
                         converted.Add(ratingDataContainer.DataHandler.Title,
-                                      new List<Double> { ratingDataContainer.RatingValue });
+                                      new List<double> { ratingDataContainer.RatingValue });
                     }
                 }
             }
@@ -114,9 +113,9 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Results to save.</param>
         /// <param name="storageName">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(storageName)) return false;
 
             try
             {
@@ -124,9 +123,8 @@ namespace ThingAppraiser.IO.Output
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, "Couldn't write to the storage.");
-                SGlobalMessageHandler.OutputMessage("Couldn't write to the storage. " +
-                                                    $"Error: {ex.Message}");
+                _logger.Warn(ex, "Couldn't write to the storage.");
+                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
                 return false;
             }
         }

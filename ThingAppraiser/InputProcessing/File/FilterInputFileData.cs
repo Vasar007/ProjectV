@@ -1,5 +1,4 @@
-﻿using System;
-using FileHelpers;
+﻿using FileHelpers;
 
 namespace ThingAppraiser.IO.Input
 {
@@ -11,19 +10,19 @@ namespace ThingAppraiser.IO.Input
     /// FileHelper doesn't support properties. That's why this data class contains public field.
     /// </remarks>
     [DelimitedRecord(","), IgnoreEmptyLines(true), IgnoreFirst(1)]
-    public class CFilterInputFileData
+    public class FilterInputFileData
     {
         /// <summary>
         /// Finds in header "Status" column and try to read its values.
         /// </summary>
         [FieldOrder(1), FieldTitle("Status")]
-        public String status = default(String); // Default assignment to remove warning.
+        public string status = default; // Default assignment to remove warning.
 
         /// <summary>
         /// Finds in header "Thing Name" column and try to read its values.
         /// </summary>
         [FieldOrder(2), FieldTitle("Thing Name")]
-        public String thingName = default(String); // Default assignment to remove warning.
+        public string thingName = default; // Default assignment to remove warning.
 
     }
 }

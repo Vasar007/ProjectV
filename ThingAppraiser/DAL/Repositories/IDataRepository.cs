@@ -1,14 +1,14 @@
-﻿using System;
-using ThingAppraiser.Data;
+﻿using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public interface IDataRepository : IRepository<CBasicInfo, Int32>, ITagable, ITypeID
+    public interface IDataRepository : IRepository<BasicInfo, int>, IRepositoryBase, ITagable,
+        ITypeId
     {
-        T GetMinimum<T>(String columnName);
+        T GetMinimum<T>(string columnName);
 
-        T GetMaximum<T>(String columnName);
+        T GetMaximum<T>(string columnName);
 
-        (T, T) GetMinMax<T>(String columnName);
+        (T, T) GetMinMax<T>(string columnName);
     }
 }

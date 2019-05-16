@@ -5,122 +5,68 @@ using ThingAppraiser.Logging;
 namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="CShell" /> instances from
+    /// Builder class which provides the way of constructing <see cref="Shell" /> instances from
     /// <see cref="XDocument" /> config.
     /// </summary>
     /// <remarks>
     /// Structure of XML config must satisfy certain contracts, otherwise different exception could
     /// be thrown.
     /// </remarks>
-    public sealed class CShellBuilderFromXDocument : IShellBuilder
+    public sealed class CShellBuilderFromXDocument : ShellBuilderBase, IShellBuilder
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CShellBuilderFromXDocument>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CShellBuilderFromXDocument>();
 
         /// <summary>
-        /// Element name for message handler part.
+        /// Provides methods to create instances of service classes.
         /// </summary>
-        private readonly String _messageHandlerParameterName =
-            CXMLConfigCreator.MessageHandlerParameterName;
-
-        /// <summary>
-        /// Element name for input manager part.
-        /// </summary>
-        private readonly String _inputManagerParameterName =
-            CXMLConfigCreator.InputManagerParameterName;
-
-        /// <summary>
-        /// Attribute name for default input filename of input manager.
-        /// </summary>
-        private readonly String _defaultInFilenameParameterName = "DefaultInFilename";
-
-        /// <summary>
-        /// Element name for crawlers manager part.
-        /// </summary>
-        private readonly String _crawlersManagerParameterName =
-            CXMLConfigCreator.CrawlersManagerParameterName;
-
-        /// <summary>
-        /// Attribute name for crawlers output flag of crawlers manager.
-        /// </summary>
-        private readonly String _crawlersOutputParameterName = "CrawlersOutputFlag";
-
-        /// <summary>
-        /// Element name for appraisers manager part.
-        /// </summary>
-        private readonly String _appraisersManagerParameterName =
-            CXMLConfigCreator.AppraisersManagerParameterName;
-
-        /// <summary>
-        /// Attribute name for appraisers output flag of appraisers manager.
-        /// </summary>
-        private readonly String _appraisersOutputParameterName = "AppraisersOutputFlag";
-
-        /// <summary>
-        /// Element name for output manager part.
-        /// </summary>
-        private readonly String _outputManagerParameterName =
-            CXMLConfigCreator.OutputManagerParameterName;
-
-        /// <summary>
-        /// Attribute name for default output filename of output manager.
-        /// </summary>
-        private readonly String _defaultOutFilenameParameterName = "DefaultOutFilename";
-
-        /// <summary>
-        /// Element name for data base manager part.
-        /// </summary>
-        private readonly String _dataBaseManagerParameterName =
-            CXMLConfigCreator.DataBaseManagerParameterName;
-
-        /// <summary>
-        /// Attribute name for connection string for data base component.
-        /// </summary>
-        private readonly String _connectionStringParameterName = "ConnectionString";
+        private readonly ServiceBuilderForXmlConfig _serviceBuilder =
+            new ServiceBuilderForXmlConfig();
 
         /// <summary>
         /// Helper class which contains several methods to parse XML configuration.
         /// </summary>
-        private readonly CXDocumentParser _documentParser;
+        private readonly XDocumentParser _documentParser;
 
         /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.CInputManager _inputManager;
+        private IO.Input.InputManager _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CCrawlersManager _crawlersManager;
+        private Crawlers.CrawlersManager _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.CAppraisersManager _appraisersManager;
+        private Appraisers.AppraisersManager _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.COutputManager _outputManager;
+        private IO.Output.OutputManager _outputManager;
 
         /// <summary>
         /// Variables which saves data base manager instance during building process.
         /// </summary>
-        private DAL.CDataBaseManager _dataBaseManager;
+        private DAL.DataBaseManager _dataBaseManager;
 
 
         /// <summary>
-        /// Initializes builder instance and associates <see cref="CXDocumentParser" /> which
+        /// Initializes builder instance and associates <see cref="XDocumentParser" /> which
         /// provides deferred parsing of XML configuration.
         /// </summary>
-        /// <param name="configuration">XML configuration of <see cref="CShell" /> class.</param>
+        /// <param name="configuration">XML configuration of <see cref="Shell" /> class.</param>
         public CShellBuilderFromXDocument(XDocument configuration)
         {
-            _documentParser = new CXDocumentParser(configuration);
-            Reset();
+            _documentParser = new XDocumentParser(
+                new XDocument(configuration.Root.Element(_rootElementName))
+            );
         }
 
         #region IShellBuilder Implementation
@@ -142,8 +88,9 @@ namespace ThingAppraiser.Core.Building
                 _messageHandlerParameterName
             );
 
-            Communication.SGlobalMessageHandler.MessageHandler =
-                SServiceBuilder.CreateMessageHandlerWithXMLParameters(messageHandlerElement);
+            Communication.GlobalMessageHandler.SetMessageHangler(
+                _serviceBuilder.CreateMessageHandler(messageHandlerElement)
+            );
         }
 
         /// <inheritdoc />
@@ -158,20 +105,18 @@ namespace ThingAppraiser.Core.Building
                 var ex = new InvalidOperationException(
                     $"XML document hasn't value for {_inputManagerParameterName}."
                 );
-                s_logger.Error(ex, "Cannot build InputManager.");
+                _logger.Error(ex, "Cannot build InputManager.");
                 throw ex;
             }
 
-            String defaultFilename = CXDocumentParser.GetAttributeValue(
-                inputManagerElement, _defaultInFilenameParameterName
+            String defaultStorageName = XDocumentParser.GetAttributeValue(
+                inputManagerElement, _defaultInStorageNameParameterName
             );
-            _inputManager = new IO.Input.CInputManager(defaultFilename);
+            _inputManager = new IO.Input.InputManager(defaultStorageName);
 
             foreach (var element in inputManagerElement.Elements())
             {
-                IO.Input.IInputter inputter = SServiceBuilder.CreateInputterWithXMLParameters(
-                    element
-                );
+                IO.Input.IInputter inputter = _serviceBuilder.CreateInputter(element);
                 _inputManager.Add(inputter);
             }
         }
@@ -190,18 +135,18 @@ namespace ThingAppraiser.Core.Building
                 var ex = new InvalidOperationException(
                     $"XML document hasn't value for {_crawlersManagerParameterName}."
                 );
-                s_logger.Error(ex, "Cannot build CrawlersManager.");
+                _logger.Error(ex, "Cannot build CrawlersManager.");
                 throw ex;
             }
 
-            var crawlersOutput = CXDocumentParser.GetAttributeValue<Boolean>(
+            var crawlersOutput = XDocumentParser.GetAttributeValue<Boolean>(
                 crawlerManagerElement, _crawlersOutputParameterName
             );
-            _crawlersManager = new Crawlers.CCrawlersManager(crawlersOutput);
+            _crawlersManager = new Crawlers.CrawlersManager(crawlersOutput);
 
             foreach (var element in crawlerManagerElement.Elements())
             {
-                Crawlers.CCrawler crawler = SServiceBuilder.CreateCrawlerWithXMLParameters(element);
+                Crawlers.Crawler crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
             }
         }
@@ -212,7 +157,6 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildAppraisersManager()
         {
-            
             XElement appraiserManagerElement = _documentParser.FindElement(
                 _appraisersManagerParameterName
             );
@@ -221,20 +165,18 @@ namespace ThingAppraiser.Core.Building
                 var ex = new InvalidOperationException(
                     $"XML document hasn't value for {_appraisersManagerParameterName}."
                 );
-                s_logger.Error(ex, "Cannot build AppraisersManager.");
+                _logger.Error(ex, "Cannot build AppraisersManager.");
                 throw ex;
             }
 
-            var appraisersOutput = CXDocumentParser.GetAttributeValue<Boolean>(
+            var appraisersOutput = XDocumentParser.GetAttributeValue<Boolean>(
                 appraiserManagerElement, _appraisersOutputParameterName
             );
-            _appraisersManager = new Appraisers.CAppraisersManager(appraisersOutput);
+            _appraisersManager = new Appraisers.AppraisersManager(appraisersOutput);
 
             foreach (var element in appraiserManagerElement.Elements())
             {
-                Appraisers.CAppraiser crawler = SServiceBuilder.CreateAppraiserWithXMLParameters(
-                    element
-                );
+                Appraisers.Appraiser crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
             }
         }
@@ -245,26 +187,26 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildOutputManager()
         {
-            XElement inputManagerElement = _documentParser.FindElement(_outputManagerParameterName);
-            if (inputManagerElement is null)
+            XElement outputManagerElement = _documentParser.FindElement(
+                _outputManagerParameterName
+            );
+            if (outputManagerElement is null)
             {
                 var ex = new InvalidOperationException(
                     $"XML document hasn't value for {_outputManagerParameterName}."
                 );
-                s_logger.Error(ex, "Cannot build OutputManager.");
+                _logger.Error(ex, "Cannot build OutputManager.");
                 throw ex;
             }
 
-            String defaultFilename = CXDocumentParser.GetAttributeValue(
-                inputManagerElement, _defaultOutFilenameParameterName
+            String defaultStorageName = XDocumentParser.GetAttributeValue(
+                outputManagerElement, _defaultOutStorageNameParameterName
             );
-            _outputManager = new IO.Output.COutputManager(defaultFilename);
+            _outputManager = new IO.Output.OutputManager(defaultStorageName);
 
-            foreach (var element in inputManagerElement.Elements())
+            foreach (var element in outputManagerElement.Elements())
             {
-                IO.Output.IOutputter outputter = SServiceBuilder.CreateOutputterWithXMLParameters(
-                    element
-                );
+                IO.Output.IOutputter outputter = _serviceBuilder.CreateOutputter(element);
                 _outputManager.Add(outputter);
             }
         }
@@ -283,33 +225,34 @@ namespace ThingAppraiser.Core.Building
                 var ex = new InvalidOperationException(
                     $"XML document hasn't value for {_dataBaseManagerParameterName}."
                 );
-                s_logger.Error(ex, "Cannot build DataBaseManager.");
+                _logger.Error(ex, "Cannot build DataBaseManager.");
                 throw ex;
             }
 
-            var connectionString = CXDocumentParser.GetAttributeValue<String>(
+            string connectionString = XDocumentParser.GetAttributeValue(
                 dataBaseManagerElement, _connectionStringParameterName
             );
-            var dataBaseSettings = new DAL.CDataStorageSettings(connectionString);
-            _dataBaseManager = new DAL.CDataBaseManager(
-                new DAL.Repositories.CResultInfoRepository(dataBaseSettings),
-                new DAL.Repositories.CRatingRepository(dataBaseSettings)
+            var dataBaseSettings = new DAL.DataStorageSettings(connectionString);
+            _dataBaseManager = new DAL.DataBaseManager(
+                new DAL.Repositories.ResultInfoRepository(dataBaseSettings),
+                new DAL.Repositories.RatingRepository(dataBaseSettings)
             );
 
             foreach (var element in dataBaseManagerElement.Elements())
             {
-                DAL.Repositories.IDataRepository repository =
-                    SServiceBuilder.CreateRepositoryWithXMLParameters(element, dataBaseSettings);
+                DAL.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
+                    element, dataBaseSettings
+                );
                 _dataBaseManager.DataRepositoriesManager.Add(repository);
             }
         }
 
         /// <inheritdoc />
-        public CShell GetResult()
+        public Shell GetResult()
         {
-            s_logger.Info("Created Shell from user-defined XML config.");
-            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
-                              _dataBaseManager);
+            _logger.Info("Created Shell from user-defined XML config.");
+            return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
+                             _dataBaseManager);
         }
 
         #endregion

@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Windows.Input;
-using Google.Apis.Util;
 
-namespace DesktopApp.Domain.Commands
+namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
     /// <summary>
     /// No WPF project is complete without it's own version of this.
     /// </summary>
-    public class CRelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
-        private readonly Action<Object> _execute;
+        private readonly Action<object> _execute;
 
-        private readonly Func<Object, Boolean> _canExecute;
+        private readonly Func<object, bool> _canExecute;
 
 
-        public CRelayCommand(Action<Object> execute, Func<Object, Boolean> canExecute)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
             _canExecute = canExecute ?? (x => true);
         }
 
-        public CRelayCommand(Action<Object> execute)
+        public RelayCommand(Action<object> execute)
             : this(execute, null)
         {
         }
@@ -32,12 +31,12 @@ namespace DesktopApp.Domain.Commands
 
         #region ICommand Implementation
 
-        public Boolean CanExecute(Object parameter)
+        public bool CanExecute(object parameter)
         {
             return _canExecute(parameter);
         }
 
-        public void Execute(Object parameter)
+        public void Execute(object parameter)
         {
             _execute(parameter);
         }

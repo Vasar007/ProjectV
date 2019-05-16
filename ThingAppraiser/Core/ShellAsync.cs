@@ -3,35 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using System.Xml.Linq;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Core
 {
-    public sealed class CShellAsync
+    public sealed class ShellAsync
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CShellAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<ShellAsync>();
 
-        private readonly Int32 _boundedCapacity;
+        private readonly int _boundedCapacity;
 
         private readonly DataflowBlockOptions _dataFlowOptions;
 
-        public IO.Input.CInputManagerAsync InputManagerAsync { get; }
+        public IO.Input.InputManagerAsync InputManagerAsync { get; }
 
-        public Crawlers.CCrawlersManagerAsync CrawlersManagerAsync { get; }
+        public Crawlers.CrawlersManagerAsync CrawlersManagerAsync { get; }
 
-        public Appraisers.CAppraisersManagerAsync AppraisersManagerAsync { get; }
+        public Appraisers.AppraisersManagerAsync AppraisersManagerAsync { get; }
 
-        public IO.Output.COutputManagerAsync OutputManagerAsync { get; }
+        public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
 
 
-        public CShellAsync(
-            IO.Input.CInputManagerAsync inputManagerAsync,
-            Crawlers.CCrawlersManagerAsync crawlersManagerAsync,
-            Appraisers.CAppraisersManagerAsync appraisersManagerAsync,
-            IO.Output.COutputManagerAsync outputManagerAsync,
-            Int32 boundedCapacity)
+        public ShellAsync(
+            IO.Input.InputManagerAsync inputManagerAsync,
+            Crawlers.CrawlersManagerAsync crawlersManagerAsync,
+            Appraisers.AppraisersManagerAsync appraisersManagerAsync,
+            IO.Output.OutputManagerAsync outputManagerAsync,
+            int boundedCapacity)
         {
             InputManagerAsync = inputManagerAsync.ThrowIfNull(nameof(inputManagerAsync));
             CrawlersManagerAsync = crawlersManagerAsync.ThrowIfNull(nameof(crawlersManagerAsync));
@@ -43,132 +45,138 @@ namespace ThingAppraiser.Core
             _dataFlowOptions = new DataflowBlockOptions { BoundedCapacity = _boundedCapacity };
         }
 
-        private async Task<EStatus> GetThingsNames(BufferBlock<String> queue, String storageName)
+        public static Building.ShellAsyncBuilderDirector CreateBuilderDirector(
+            XDocument configuration)
         {
-            if (String.IsNullOrEmpty(storageName)) return EStatus.Error;
+            return new Building.ShellAsyncBuilderDirector(
+                new Building.ShellAsyncBuilderFromXDocument(configuration)
+            );
+        }
 
+        private async Task<ServiceStatus> GetThingNames(BufferBlock<string> queue, string storageName)
+        {
             try
             {
-                Boolean status = await InputManagerAsync.GetNames(queue, storageName);
+                bool status = await InputManagerAsync.GetNames(queue, storageName);
                 if (status)
                 {
-                    SGlobalMessageHandler.OutputMessage("Things were successfully gotten.");
-                    return EStatus.Ok;
+                    GlobalMessageHandler.OutputMessage("Things were successfully gotten.");
+                    return ServiceStatus.Ok;
                 }
 
-                SGlobalMessageHandler.OutputMessage($"No Things were found in \"{storageName}\".");
-                return EStatus.Nothing;
+                GlobalMessageHandler.OutputMessage($"No Things were found in \"{storageName}\".");
+                return ServiceStatus.Nothing;
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Exception occured during input work.");
-                return EStatus.InputError;
+                _logger.Error(ex, "Exception occured during input work.");
+                return ServiceStatus.InputError;
             }
         }
 
-        private async Task<EStatus> RequestData(BufferBlock<String> entitiesQueue,
-            Dictionary<Type, BufferBlock<Data.CBasicInfo>> responsesQueues)
+        private async Task<ServiceStatus> RequestData(BufferBlock<string> entitiesQueue,
+            Dictionary<Type, BufferBlock<BasicInfo>> responsesQueues)
         {
             try
             {
-                Boolean status = await CrawlersManagerAsync.CollectAllResponses(
+                bool status = await CrawlersManagerAsync.CollectAllResponses(
                     entitiesQueue, responsesQueues, _dataFlowOptions
                 );
                 if (status)
                 {
-                    SGlobalMessageHandler.OutputMessage(
+                    GlobalMessageHandler.OutputMessage(
                         "Crawlers have received responses from services."
                     );
-                    return EStatus.Ok;
+                    return ServiceStatus.Ok;
                 }
 
-                SGlobalMessageHandler.OutputMessage(
+                GlobalMessageHandler.OutputMessage(
                     "Crawlers have not received responses from services. Result is empty."
                 );
-                return EStatus.Nothing;
+                return ServiceStatus.Nothing;
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Exception occured during collecting data.");
-                return EStatus.RequestError;
+                _logger.Error(ex, "Exception occured during collecting data.");
+                return ServiceStatus.RequestError;
             }
         }
 
-        private async Task<EStatus> AppraiseThings(
-            Dictionary<Type, BufferBlock<Data.CBasicInfo>> entitiesInfoQueues,
-            Dictionary<Type, BufferBlock<Data.CRatingDataContainer>> entitiesRatingQueues)
+        private async Task<ServiceStatus> AppraiseThings(
+            Dictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
+            Dictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues)
         {
             try
             {
-                Boolean status = await AppraisersManagerAsync.GetAllRatings(
+                bool status = await AppraisersManagerAsync.GetAllRatings(
                     entitiesInfoQueues, entitiesRatingQueues, _dataFlowOptions
                 );
                 if (status)
                 {
-                    SGlobalMessageHandler.OutputMessage(
+                    GlobalMessageHandler.OutputMessage(
                         "Appraisers have calculated ratings successfully."
                     );
-                    return EStatus.Ok;
+                    return ServiceStatus.Ok;
                 }
 
-                SGlobalMessageHandler.OutputMessage(
+                GlobalMessageHandler.OutputMessage(
                     "Appraisers have not calculated ratings. Result is empty."
                 );
-                return EStatus.Nothing;
+                return ServiceStatus.Nothing;
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Exception occured during appraising work.");
-                return EStatus.AppraiseError;
+                _logger.Error(ex, "Exception occured during appraising work.");
+                return ServiceStatus.AppraiseError;
             }
         }
 
-        private async Task<EStatus> SaveResults(
-            Dictionary<Type, BufferBlock<Data.CRatingDataContainer>> ratings)
+        private async Task<ServiceStatus> SaveResults(
+            Dictionary<Type, BufferBlock<RatingDataContainer>> ratings)
         {
             try
             {
-                Boolean status = await OutputManagerAsync.SaveResults(ratings, String.Empty);
+                bool status = await OutputManagerAsync.SaveResults(ratings, string.Empty);
                 if (status)
                 {
-                    SGlobalMessageHandler.OutputMessage("Ratings was saved successfully.");
-                    return EStatus.Ok;
+                    GlobalMessageHandler.OutputMessage("Ratings was saved successfully.");
+                    return ServiceStatus.Ok;
                 }
 
-                SGlobalMessageHandler.OutputMessage("Ratings wasn't saved.");
-                return EStatus.OutputUnsaved;
+                GlobalMessageHandler.OutputMessage("Ratings wasn't saved.");
+                return ServiceStatus.OutputUnsaved;
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Exception occured during output work.");
-                return EStatus.OutputError;
+                _logger.Error(ex, "Exception occured during output work.");
+                return ServiceStatus.OutputError;
             }
         }
 
-        public async Task<EStatus> Run(String storageName)
+        public async Task<ServiceStatus> Run(string storageName)
         {
-            SGlobalMessageHandler.OutputMessage("Shell started work.");
-            s_logger.Info("Shell started work.");
+            GlobalMessageHandler.OutputMessage("Shell started work.");
+            _logger.Info("Shell started work.");
 
-            var inputQueue = new BufferBlock<String>(_dataFlowOptions);
+            var inputQueue = new BufferBlock<string>(_dataFlowOptions);
 
-            var responsesQueues = new Dictionary<Type, BufferBlock<Data.CBasicInfo>>();
+            var responsesQueues = new Dictionary<Type, BufferBlock<BasicInfo>>();
 
-            var ratingsQueues = new Dictionary<Type, BufferBlock<Data.CRatingDataContainer>>();
+            var ratingsQueues = new Dictionary<Type, BufferBlock<RatingDataContainer>>();
 
             // Input component work.
-            Task<EStatus> inputStatus = GetThingsNames(inputQueue, storageName);
+            Task<ServiceStatus> inputStatus = GetThingNames(inputQueue, storageName);
 
             // Crawlers component work.
-            Task<EStatus> crawlersStatus = RequestData(inputQueue, responsesQueues);
+            Task<ServiceStatus> crawlersStatus = RequestData(inputQueue, responsesQueues);
 
             // Appraisers component work.
-            Task<EStatus> appraisersStatus = AppraiseThings(responsesQueues, ratingsQueues);
+            Task<ServiceStatus> appraisersStatus = AppraiseThings(responsesQueues, ratingsQueues);
 
             // Output component work.
-            Task<EStatus> outputStatus = SaveResults(ratingsQueues);
+            Task<ServiceStatus> outputStatus = SaveResults(ratingsQueues);
 
-            Task<EStatus[]> statusesTask = Task.WhenAll(inputStatus, crawlersStatus,
+            Task<ServiceStatus[]> statusesTask = Task.WhenAll(inputStatus, crawlersStatus,
                                                         appraisersStatus, outputStatus);
 
             Task responsesQueuesTasks = Task.WhenAll(
@@ -183,19 +191,19 @@ namespace ThingAppraiser.Core
 
             // FIX ME: if there are error statuses need to create aggregate status which contains
             // more details then simple EStatus.Error value.
-            EStatus[] statuses = await statusesTask;
-            if (statuses.Any(status => status != EStatus.Ok))
+            ServiceStatus[] statuses = await statusesTask;
+            if (statuses.Any(status => status != ServiceStatus.Ok))
             {
-                SGlobalMessageHandler.OutputMessage(
+                GlobalMessageHandler.OutputMessage(
                     "Shell got error status during data processing."
                 );
-                s_logger.Info("Shell got error status during data processing.");
-                return EStatus.Error;
+                _logger.Info("Shell got error status during data processing.");
+                return ServiceStatus.Error;
             }
 
-            s_logger.Info("Shell finished work successfully.");
-            SGlobalMessageHandler.OutputMessage("Shell finished work successfully.");
-            return EStatus.Ok;
+            _logger.Info("Shell finished work successfully.");
+            GlobalMessageHandler.OutputMessage("Shell finished work successfully.");
+            return ServiceStatus.Ok;
         }
     }
 }

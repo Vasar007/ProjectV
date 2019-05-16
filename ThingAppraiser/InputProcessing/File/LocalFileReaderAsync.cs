@@ -5,31 +5,31 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
-    public class CLocalFileReaderAsync : IInputterAsync, ITagable
+    public class LocalFileReaderAsync : IInputterAsync, IInputterBase, ITagable
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CLocalFileReaderAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileReaderAsync>();
 
         private readonly IFileReaderAsync _fileReaderAsync;
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "LocalFileReaderAsync";
+        public string Tag { get; } = "LocalFileReaderAsync";
 
         #endregion
 
 
-        public CLocalFileReaderAsync(IFileReaderAsync fileReaderAsync)
+        public LocalFileReaderAsync(IFileReaderAsync fileReaderAsync)
         {
             _fileReaderAsync = fileReaderAsync.ThrowIfNull(nameof(fileReaderAsync));
         }
 
         #region IInputterAsync Implementation
 
-        public async Task ReadThingNames(BufferBlock<String> queueToWrite, String storageName)
+        public async Task ReadThingNames(BufferBlock<string> queueToWrite, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName)) return;
+            if (string.IsNullOrEmpty(storageName)) return;
 
             try
             {
@@ -44,7 +44,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Async file reader throws exception.");
+                _logger.Error(ex, "Async file reader throws exception.");
                 throw;
             }
 

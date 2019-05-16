@@ -1,18 +1,18 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
-namespace DesktopApp.Domain.Commands
+namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    public static class SApplicationCloseCommand
+    public static class ApplicationCloseCommand
     {
-        public static Boolean CanExecute(Object parameter)
+        public static bool CanExecute(object _)
         {
             return !(Application.Current is null) && !(Application.Current.MainWindow is null);
         }
 
-        public static void Execute(Object parameter)
+        public static void Execute(object _)
         {
             Application.Current.MainWindow.Close();
+
             // If no need to handle closing event, use this:
             // Application.Current.Shutdown();
         }

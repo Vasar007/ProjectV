@@ -1,15 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Globals">
     <SccProjectName>SAK</SccProjectName>
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +27,49 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\SQLStatementsForCommon.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SQLStatementsForCommon.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SQLStatementsForRatings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SQLStatementsForRatings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SQLStatementsForResults.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SQLStatementsForResults.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SQLStatementsForTmdb.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SQLStatementsForTmdb.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\SQLStatementsForCommon.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLStatementsForCommon.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\SQLStatementsForRatings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLStatementsForRatings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\SQLStatementsForResults.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLStatementsForResults.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\SQLStatementsForTmdb.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SQLStatementsForTmdb.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

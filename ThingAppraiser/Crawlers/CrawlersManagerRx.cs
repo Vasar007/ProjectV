@@ -8,24 +8,24 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Crawlers
 {
-    public sealed class CCrawlersManagerRx : IManager<CCrawlerRx>
+    public sealed class CrawlersManagerRx : IManager<CrawlerRx>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CCrawlersManagerRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CrawlersManagerRx>();
 
-        private readonly List<CCrawlerRx> _crawlersRx = new List<CCrawlerRx>();
+        private readonly List<CrawlerRx> _crawlersRx = new List<CrawlerRx>();
 
-        private readonly Boolean _outputResults;
+        private readonly bool _outputResults;
 
 
-        public CCrawlersManagerRx(Boolean outputResults)
+        public CrawlersManagerRx(bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CCrawlerRx> Implementation
+        #region IManager<CrawlerRx> Implementation
 
-        public void Add(CCrawlerRx item)
+        public void Add(CrawlerRx item)
         {
             item.ThrowIfNull(nameof(item));
             if (!_crawlersRx.Contains(item))
@@ -34,7 +34,7 @@ namespace ThingAppraiser.Crawlers
             }
         }
 
-        public Boolean Remove(CCrawlerRx item)
+        public bool Remove(CrawlerRx item)
         {
             item.ThrowIfNull(nameof(item));
             return _crawlersRx.Remove(item);
@@ -42,18 +42,25 @@ namespace ThingAppraiser.Crawlers
 
         #endregion
 
-        public IObservable<CBasicInfo> CollectAllResponses(IObservable<String> entitiesQueue)
+        public IDictionary<Type, IObservable<BasicInfo>> CollectAllResponses(
+            IObservable<string> entitiesQueue)
         {
-            IObservable<CBasicInfo> responsesQueue = _crawlersRx.Select(crawlerRx =>
-                entitiesQueue.ObserveOn(ThreadPoolScheduler.Instance).Select(
+            var responsesQueues = new Dictionary<Type, IObservable<BasicInfo>>();
+
+            foreach (CrawlerRx crawlerRx in _crawlersRx)
+            {
+                var responseQueue = entitiesQueue.ObserveOn(ThreadPoolScheduler.Instance).Select(
                     entity => Observable.FromAsync(
                         async () => await crawlerRx.FindResponse(entity, _outputResults)
                     )
-                ).Concat()
-            ).Merge();
+                    .Where(x => !(x is null))
+                ).Concat();
 
-            s_logger.Info("Crawlers were configured.");
-            return responsesQueue;
+                responsesQueues.Add(crawlerRx.TypeId, responseQueue);
+            }
+
+            _logger.Info("Crawlers were configured.");
+            return responsesQueues;
         }
     }
 }

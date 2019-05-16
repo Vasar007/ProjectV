@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using FileHelpers;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Output
 {
-    public class CLocalFileWriterRx : IOutputterRx, ITagable
+    public class CLocalFileWriterRx : IOutputterRx, IOutputterBase, ITagable
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CLocalFileWriterRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CLocalFileWriterRx>();
+
+        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
+
 
         #region ITagable Implementation
 
-        public String Tag => "LocalFileWriterRx";
+        public string Tag { get; } = "LocalFileWriterRx";
 
         #endregion
 
@@ -22,37 +25,20 @@ namespace ThingAppraiser.IO.Output
         {
         }
 
-        private static Boolean WriteFile(IEnumerable<COuputFileData> outputData, String filename)
-        {
-            if (String.IsNullOrEmpty(filename)) return false;
-
-            var engine = new FileHelperAsyncEngine<COuputFileData>
-            {
-                HeaderText = typeof(COuputFileData).GetCsvHeader()
-            };
-
-            using (engine.BeginWriteFile(filename))
-            {
-                engine.WriteNexts(outputData);
-            }
-            return true;
-        }
-
         #region IOutputterRx Implementation
 
-        public Boolean SaveResults(IEnumerable<COuputFileData> outputData, String storageName)
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(storageName)) return false;
 
             try
             {
-                return WriteFile(outputData, storageName);
+                return _localFileWriter.SaveResults(results, storageName);
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, "Couldn't write to the storage.");
-                SGlobalMessageHandler.OutputMessage("Couldn't write to the storage. " +
-                                                    $"Error: {ex.Message}");
+                _logger.Warn(ex, "Couldn't write to the storage.");
+                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
                 return false;
             }
         }

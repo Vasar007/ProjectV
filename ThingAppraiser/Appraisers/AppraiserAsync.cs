@@ -1,43 +1,37 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.Appraisers
 {
-    public abstract class CAppraiserAsync : ITagable, ITypeID
+    public abstract class AppraiserAsync : AppraiserBase
     {
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public virtual String Tag => "AppraiserAsync";
+        public override string Tag { get; } = "AppraiserAsync";
 
         #endregion
 
-        #region ITypeID Implementation
 
-        public virtual Type TypeID => typeof(CBasicInfo);
-
-        #endregion
-
-        public CAppraiserAsync()
+        protected AppraiserAsync()
         {
         }
 
-        public virtual async Task<Boolean> GetRatings(BufferBlock<CBasicInfo> entitiesInfoQueue,
-            BufferBlock<CRatingDataContainer> entitiesRatingQueue, Boolean outputResults)
+        public virtual async Task<bool> GetRatings(BufferBlock<BasicInfo> entitiesInfoQueue,
+            BufferBlock<RatingDataContainer> entitiesRatingQueue, bool outputResults)
         {
             while (await entitiesInfoQueue.OutputAvailableAsync())
             {
-                CBasicInfo entityInfo = await entitiesInfoQueue.ReceiveAsync();
+                BasicInfo entityInfo = await entitiesInfoQueue.ReceiveAsync();
 
-                var resultInfo = new CRatingDataContainer(entityInfo, entityInfo.VoteAverage);
+                var resultInfo = new RatingDataContainer(entityInfo, entityInfo.VoteAverage);
                 await entitiesRatingQueue.SendAsync(resultInfo);
 
                 if (outputResults)
                 {
-                    SGlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
                 }
             }
             return true;

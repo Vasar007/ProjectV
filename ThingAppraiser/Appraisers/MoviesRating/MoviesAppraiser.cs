@@ -6,19 +6,19 @@ namespace ThingAppraiser.Appraisers
     /// <summary>
     /// Expands appraiser behavior and lets process movie data objects.
     /// </summary>
-    public abstract class CMoviesAppraiser : CAppraiser
+    public abstract class MoviesAppraiser : Appraiser
     {
         /// <inheritdoc />
-        public override String Tag => "MoviesAppraiser";
+        public override string Tag { get; } = "MoviesAppraiser";
 
         /// <inheritdoc />
-        public override Type TypeID => typeof(CMovieInfo);
+        public override Type TypeId { get; } = typeof(MovieInfo);
 
 
         /// <summary>
-        /// Default constructor.
+        /// Creates instance with default values.
         /// </summary>
-        public CMoviesAppraiser()
+        public MoviesAppraiser()
         {
         }
     }

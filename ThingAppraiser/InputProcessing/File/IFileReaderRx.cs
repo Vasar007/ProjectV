@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Input
 {
     public interface IFileReaderRx
     {
-        IEnumerable<String> ReadFile(String filename);
+        IEnumerable<string> ReadFile(string filename);
 
-        IEnumerable<String> ReadCsvFile(String filename);
+        IEnumerable<string> ReadCsvFile(string filename);
     }
 }

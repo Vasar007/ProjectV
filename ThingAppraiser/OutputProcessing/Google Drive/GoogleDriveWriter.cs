@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Google.Apis.Upload;
 using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
@@ -14,28 +13,28 @@ namespace ThingAppraiser.IO.Output
     /// <summary>
     /// Concrete implementation of writer part for Google Drive API.
     /// </summary>
-    public class CGoogleDriveWriter : CGoogleDriveWorker, IOutputter, ITagable
+    public class GoogleDriveWriter : GoogleDriveWorker, IOutputter, IOutputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CGoogleDriveWriter>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveWriter>();
 
         /// <summary>
         /// The default chunk size is 10MB for Google Drive API uploading methods.
         /// </summary>
-        private static readonly Int32 s_maxFileLength = 10_000_000;
+        private static readonly int _maxFileLength = 10_000_000;
 
         /// <summary>
         /// Used to write results to local file which would be upload to Google Drive.
         /// </summary>
-        private readonly CLocalFileWriter _localFileWriter = new CLocalFileWriter();
+        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "GoogleDriveWriter";
+        public string Tag { get; } = "GoogleDriveWriter";
 
         #endregion
 
@@ -43,7 +42,7 @@ namespace ThingAppraiser.IO.Output
         /// <summary>
         /// Constructor which forwards drive service instance to base class.
         /// </summary>
-        public CGoogleDriveWriter(DriveService driveService)
+        public GoogleDriveWriter(DriveService driveService)
             : base(driveService)
         {
         }
@@ -54,8 +53,8 @@ namespace ThingAppraiser.IO.Output
         /// <param name="progress">Reporting upload progress.</param>
         private static void Upload_ProgressChanged(IUploadProgress progress)
         {
-            s_logger.Info($"{progress.Status} {progress.BytesSent}");
-            SGlobalMessageHandler.OutputMessage($"{progress.Status} {progress.BytesSent}");
+            _logger.Info($"{progress.Status} {progress.BytesSent}");
+            GlobalMessageHandler.OutputMessage($"{progress.Status} {progress.BytesSent}");
         }
 
         /// <summary>
@@ -64,8 +63,8 @@ namespace ThingAppraiser.IO.Output
         /// <param name="file">The meta data for file.</param>
         private static void Upload_ResponseReceived(GoogleDriveData.File file)
         {
-            s_logger.Info($"\"{file.Name}\" was uploaded successfully.");
-            SGlobalMessageHandler.OutputMessage($"\"{file.Name}\" was uploaded successfully.");
+            _logger.Info($"\"{file.Name}\" was uploaded successfully.");
+            GlobalMessageHandler.OutputMessage($"\"{file.Name}\" was uploaded successfully.");
         }
 
         #region IOutputter Implementation
@@ -79,12 +78,12 @@ namespace ThingAppraiser.IO.Output
         /// <remarks>
         /// This method creates and deletes temporary file to store appraised content.
         /// </remarks>
-        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(storageName)) return false;
 
-            String tempStorageName = "temp_" + storageName;
-            while (CLocalFileWriter.DoesExistFile(tempStorageName))
+            string tempStorageName = "temp_" + storageName;
+            while (LocalFileWriter.DoesExistFile(tempStorageName))
             {
                 tempStorageName = "temp_" + tempStorageName;
             }
@@ -101,15 +100,15 @@ namespace ThingAppraiser.IO.Output
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, $"An error occured during uploading \"{storageName}\".");
-                SGlobalMessageHandler.OutputMessage("An error occured during uploading " +
-                                                    $"\"{storageName}\" : {ex.Message}");
+                _logger.Warn(ex, $"An error occured during uploading \"{storageName}\".");
+                GlobalMessageHandler.OutputMessage("An error occured during uploading " +
+                                                    $"\"{storageName}\" : {ex}");
                 return false;
             }
             finally
             {
                 DeleteFile(tempStorageName);
-                s_logger.Debug($"Deleted temporary created file \"{tempStorageName}\".");
+                _logger.Debug($"Deleted temporary created file \"{tempStorageName}\".");
             }
         }
 
@@ -124,7 +123,7 @@ namespace ThingAppraiser.IO.Output
         /// MIME type which is used to specify output format.
         /// </param>
         /// <returns><c>true</c> if uploading was successful, <c>false</c> otherwise</returns>
-        private Boolean UploadFile(String path, String name, String mimeTypeToUpload)
+        private bool UploadFile(string path, string name, string mimeTypeToUpload)
         {
             using (var stream = new FileStream(path, FileMode.Open))
             {
@@ -132,7 +131,7 @@ namespace ThingAppraiser.IO.Output
                     new GoogleDriveData.File
                     {
                         Name = name,
-                        MimeType = mimeTypeToUpload ?? String.Empty
+                        MimeType = mimeTypeToUpload ?? string.Empty
                     },
                     stream,
                     GetMimeType(path)
@@ -156,7 +155,7 @@ namespace ThingAppraiser.IO.Output
         /// <param name="path">Local file path to upload.</param>
         /// <param name="name">Filename to set.</param>
         /// <returns><c>true</c> if uploading was successful, <c>false</c> otherwise</returns>
-        private Boolean UploadFile(String path, String name)
+        private bool UploadFile(string path, string name)
         {
             return UploadFile(path, name, "application/vnd.google-apps.spreadsheet");
         }
@@ -172,7 +171,7 @@ namespace ThingAppraiser.IO.Output
         /// <exception cref="ArgumentOutOfRangeException">
         /// Maximum uploading file size exceeded.
         /// </exception>
-        private Boolean UpdateFile(String fileId, String path, String newName, String newMimeType)
+        private bool UpdateFile(string fileId, string path, string newName, string newMimeType)
         {
             // First retrieve the file from the API.
             GoogleDriveData.File file = GoogleDriveService.Files.Get(fileId).Execute();
@@ -186,12 +185,12 @@ namespace ThingAppraiser.IO.Output
 
             using (var stream = new FileStream(path, FileMode.Open))
             {
-                if (stream.Length > s_maxFileLength)
+                if (stream.Length > _maxFileLength)
                 {
                     var ex = new ArgumentOutOfRangeException(nameof(stream), stream.Length,
                         $"File size {stream.Length} is greater than maximum for uploading (10MB)."
                     );
-                    s_logger.Error(ex, "Maximum uploading file size exceeded.");
+                    _logger.Error(ex, "Maximum uploading file size exceeded.");
                     throw ex;
                 }
 
@@ -218,7 +217,7 @@ namespace ThingAppraiser.IO.Output
         /// <param name="fileId">ID of the file to update.</param>
         /// <param name="path">Local file path to upload.</param>
         /// <returns><c>true</c> if uploading was successful, <c>false</c> otherwise.</returns>
-        private Boolean UpdateFile(String fileId, String path)
+        private bool UpdateFile(string fileId, string path)
         {
             return UpdateFile(fileId, path, null, null);
         }
@@ -230,15 +229,15 @@ namespace ThingAppraiser.IO.Output
         /// <param name="path">Local file path to upload.</param>
         /// <param name="storageName">Local filename to save on Google Drive.</param>
         /// <returns><c>true</c> if procedure was successful, <c>false</c> otherwise.</returns>
-        private Boolean ReadFileAndUploadOrUpdate(String path, String storageName)
+        private bool ReadFileAndUploadOrUpdate(string path, string storageName)
         {
-            if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName)) return false;
 
             String storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
-            IList<GoogleDriveData.File> files = ListFiles(new CGoogleDriveFilesListOptionalParams
+            IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
                 { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
 
-            Boolean result = false;
+            bool result = false;
             if (!files.IsNullOrEmpty())
             {
                 foreach (GoogleDriveData.File file in files)

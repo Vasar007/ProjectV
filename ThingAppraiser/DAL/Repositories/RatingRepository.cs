@@ -1,68 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using DAL.Properties;
 using ThingAppraiser.Data;
 using ThingAppraiser.DAL.Mappers;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class CRatingRepository : IRatingRepository, IRepository<CRating, Guid>, ITagable, 
-        ITypeID
+    public class RatingRepository : IRatingRepository, IRepository<Rating, Guid>, IRepositoryBase,
+        ITagable, ITypeId
     {
-        private readonly CDataStorageSettings _dbSettings;
+        private readonly DataStorageSettings _dbSettings;
 
-        public IReadOnlyList<String> Columns { get; } = new List<String>
+        public IReadOnlyList<string> Columns { get; } = new List<string>
         {
             "rating_id", "rating_name"
         };
 
+        public string TableName { get; } = "[dbo].[ratings]";
+
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "RatingRepository";
+        public string Tag { get; } = "RatingRepository";
 
         #endregion
 
-        #region ITypeID Implementation
+        #region ITypeId Implementation
 
         /// <inheritdoc />
-        public Type TypeID => typeof(CRating);
+        public Type TypeId { get; } = typeof(Rating);
 
         #endregion
 
 
-        public CRatingRepository(CDataStorageSettings dbSettings)
+        public RatingRepository(DataStorageSettings dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }
 
         #region IRepository<CRating, Guid> Implementation
 
-        public Boolean Contains(Guid id)
+        public bool Contains(Guid ratingId)
         {
-            String sqlStatement = "SELECT COUNT(*) " +
-                                  "FROM [dbo].[ratings] " +
-                                  "WHERE rating_id = @rating_id";
+            string sqlStatement = SQLStatementsForRatings.CountItemsById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                query.Parameters.AddWithValue("@rating_id", id);
+                query.Parameters.AddWithValue("@rating_id", ratingId);
 
-                return dbHelper.GetScalar<Int32>(query) > 0;
+                return dbHelper.GetScalar<int>(query) > 0;
             }
         }
 
-        public void InsertItem(CRating item)
+        public void InsertItem(Rating item)
         {
-            String sqlStatement = "INSERT INTO [dbo].[ratings] " +
-                                  "(rating_id, rating_name) " +
-                                  "VALUES (@rating_id, @rating_name)";
+            string sqlStatement = SQLStatementsForRatings.InsertItem;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
-                command.Parameters.AddWithValue("@rating_id", item.RatingID);
+                command.Parameters.AddWithValue("@rating_id", item.RatingId);
                 command.Parameters.AddWithValue("@rating_name", item.RatingName);
 
                 dbHelper.ExecuteCommand(command);
@@ -70,57 +69,53 @@ namespace ThingAppraiser.DAL.Repositories
             }
         }
 
-        public CRating GetItemByID(Guid id)
+        public Rating GetItemById(Guid ratingId)
         {
-            String sqlStatement = "SELECT rating_id, rating_name " +
-                                  "FROM [dbo].[ratings]";
+            string sqlStatement = SQLStatementsForRatings.SelectItemById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                return dbHelper.GetItem(new CRatingMapper(), query);
+                query.Parameters.AddWithValue("@rating_id", ratingId);
+
+                return dbHelper.GetItem(new RatingMapper(), query);
             }
         }
 
-        public List<CRating> GetAllData()
+        public List<Rating> GetAllData()
         {
-            String sqlStatement = "SELECT rating_id, rating_name " +
-                                  "FROM [dbo].[ratings]";
+            string sqlStatement = SQLStatementsForRatings.SelectAllItems;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                return dbHelper.GetData(new CRatingMapper(), query);
+                return dbHelper.GetData(new RatingMapper(), query);
             }
         }
 
-        public void UpdateItem(CRating item)
+        public void UpdateItem(Rating item)
         {
-            String sqlStatement = "UPDATE [dbo].[ratings] " +
-                                  "SET rating_name = @rating_name " +
-                                  "WHERE rating_id = @rating_id";
+            string sqlStatement = SQLStatementsForRatings.UpdateItemById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
                 command.Parameters.AddWithValue("@rating_name", item.RatingName);
-                command.Parameters.AddWithValue("@rating_id", item.RatingID);
+                command.Parameters.AddWithValue("@rating_id", item.RatingId);
 
                 dbHelper.ExecuteCommand(command);
                 dbHelper.Commit();
             }
         }
 
-        public void DeleteItemByID(Guid ratingID)
+        public void DeleteItemById(Guid ratingId)
         {
-            String sqlStatement = "DELETE " +
-                                  "FROM [dbo].[ratings] " +
-                                  "WHERE rating_id = @rating_id";
+            string sqlStatement = SQLStatementsForRatings.DeleteItemById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
-                command.Parameters.AddWithValue("@rating_id", ratingID);
+                command.Parameters.AddWithValue("@rating_id", ratingId);
 
                 dbHelper.ExecuteCommand(command);
                 dbHelper.Commit();
@@ -129,9 +124,8 @@ namespace ThingAppraiser.DAL.Repositories
 
         public void DeleteAllData()
         {
-            String sqlStatement = "DELETE " +
-                                  "FROM [dbo].[ratings]";
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            string sqlStatement = SQLStatementsForRatings.DeleteAllItems;
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
                 dbHelper.ExecuteCommand(command);

@@ -3,16 +3,16 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.Appraisers
 {
-    public abstract class CMoviesAppraiserRx : CAppraiserRx
+    public abstract class MoviesAppraiserRx : AppraiserRx
     {
         /// <inheritdoc />
-        public override String Tag => "MoviesAppraiserRx";
+        public override string Tag { get; } = "MoviesAppraiserRx";
 
         /// <inheritdoc />
-        public override Type TypeID => typeof(CMovieInfo);
+        public override Type TypeId { get; } = typeof(MovieInfo);
 
 
-        public CMoviesAppraiserRx()
+        public MoviesAppraiserRx()
         {
         }
     }

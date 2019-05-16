@@ -1,14 +1,13 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace DesktopApp.Domain
+namespace ThingAppraiser.DesktopApp.Domain
 {
-    public class CNotEmptyValidationRule : ValidationRule
+    public class NotEmptyValidationRule : ValidationRule
     {
-        public override ValidationResult Validate(Object value, CultureInfo cultureInfo)
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            return String.IsNullOrWhiteSpace((value ?? String.Empty).ToString())
+            return string.IsNullOrWhiteSpace((value ?? string.Empty).ToString())
                 ? new ValidationResult(false, "Field is required.")
                 : ValidationResult.ValidResult;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThingAppraiser
+﻿namespace ThingAppraiser
 {
     /// <summary>
     /// Adds tag name to class instance.
@@ -10,6 +8,6 @@ namespace ThingAppraiser
         /// <summary>
         /// Instance tag.
         /// </summary>
-        String Tag { get; }
+        string Tag { get; }
     }
 }
