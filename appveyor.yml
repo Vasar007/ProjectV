@@ -13,4 +13,6 @@ nuget:
     disable_publish_on_pr: true
 
 before_build:
-- cmd: dotnet restore
+- cmd:
+    - cd ThingAppraiser
+    - dotnet restore
