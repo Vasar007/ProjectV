@@ -7,14 +7,14 @@ namespace ThingAppraiser.Core
     /// Defines methods to interact with app config file and allows to read values from it.
     /// </summary>
     /// <remarks>Uses default app config file from .NET environment.</remarks>
-    public static class SConfigParser
+    public static class ConfigParser
     {
         /// <summary>
         /// Default method to get value from app config file as string.
         /// </summary>
         /// <param name="key">Name of the key to read.</param>
         /// <returns>Value of the key.</returns>
-        public static String GetValueByParameterKey(String key)
+        public static string GetValueByParameterKey(string key)
         {
             return ConfigurationManager.AppSettings[key];
         }
@@ -26,9 +26,10 @@ namespace ThingAppraiser.Core
         /// <param name="key">Name of the key to read.</param>
         /// <returns>Value of the key which is converted to T.</returns>
         /// <remarks>Method doesn't catch any possible exceptions.</remarks>
-        public static T GetValueByParameterKey<T>(String key) where T : IConvertible
+        public static T GetValueByParameterKey<T>(string key)
+            where T : IConvertible
         {
-            String stringValue = GetValueByParameterKey(key);
+            string stringValue = GetValueByParameterKey(key);
             return (T) Convert.ChangeType(stringValue, typeof(T));
         }
     }

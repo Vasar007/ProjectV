@@ -1,13 +1,13 @@
 ﻿namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Builder director which controls of <see cref="CShell" /> creating process with the help of \
+    /// Builder director which controls of <see cref="Shell" /> creating process with the help of
     /// specified builder.
     /// </summary>
-    public class CShellBuilderDirector
+    public class ShellBuilderDirector
     {
         /// <summary>
-        /// Builder which create step by step <see cref="CShell" /> class.
+        /// Builder which create step by step <see cref="Shell" /> class.
         /// </summary>
         private IShellBuilder _shellBuilder;
 
@@ -17,9 +17,9 @@
         /// </summary>
         /// <param name="shellBuilder">Instance of builder.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// <paramref name="shellBuilder">shellBuilder</paramref> is <c>null</c>.
+        /// <paramref name="shellBuilder" /> is <c>null</c>.
         /// </exception>
-        public CShellBuilderDirector(IShellBuilder shellBuilder)
+        public ShellBuilderDirector(IShellBuilder shellBuilder)
         {
             _shellBuilder = shellBuilder.ThrowIfNull(nameof(shellBuilder));
         }
@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="newBuilder">New builder to set.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// <paramref name="newBuilder">newBuilder</paramref> is <c>null</c>.
+        /// <paramref name="newBuilder" /> is <c>null</c>.
         /// </exception>
         public void ChangeShellBuilder(IShellBuilder newBuilder)
         {
@@ -39,8 +39,8 @@
         /// <summary>
         /// Executes building process and gets result.
         /// </summary>
-        /// <returns>Fully initialized <see cref="CShell" /> class.</returns>
-        public CShell MakeShell()
+        /// <returns>Fully initialized <see cref="Shell" /> class.</returns>
+        public Shell MakeShell()
         {
             _shellBuilder.Reset();
 

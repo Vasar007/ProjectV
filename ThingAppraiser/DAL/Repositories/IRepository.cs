@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public interface IRepository<TData, in TIdentifier> : ITagable, ITypeID
+    public interface IRepository<TData, in TIdentifier> : IRepositoryBase, ITagable, ITypeId
     {
-        Boolean Contains(TIdentifier id);
+        bool Contains(TIdentifier id);
 
         void InsertItem(TData item);
 
-        TData GetItemByID(TIdentifier id);
+        TData GetItemById(TIdentifier id);
 
         List<TData> GetAllData();
 
         void UpdateItem(TData item);
 
-        void DeleteItemByID(TIdentifier id);
+        void DeleteItemById(TIdentifier id);
 
         void DeleteAllData();
     }

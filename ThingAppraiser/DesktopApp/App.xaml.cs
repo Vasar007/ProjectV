@@ -3,14 +3,14 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace DesktopApp
+namespace ThingAppraiser.DesktopApp
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class CApp : Application
+    public partial class App : Application
     {
-        public CApp()
+        public App()
         {
             // Set current culture for app globally.
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

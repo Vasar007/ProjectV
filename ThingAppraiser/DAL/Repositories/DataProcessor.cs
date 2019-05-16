@@ -1,54 +1,50 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using ThingAppraiser.DAL.Mappers;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class CDataProcessor : IDataProcessor
+    public class DataProcessor : IDataProcessor
     {
-        private readonly CDataStorageSettings _dbSettings;
+        private readonly DataStorageSettings _dbSettings;
 
 
-        public CDataProcessor(CDataStorageSettings dbSettings)
+        public DataProcessor(DataStorageSettings dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }
 
         #region IDataProcessor Implementation
 
-        public T GetMinimum<T>(String columnName, String tableName)
+        public T GetMinimum<T>(string columnName, string tableName)
         {
-            String sqlStatement = $"SELECT MIN({columnName}) " +
-                                  $"FROM {tableName}";
+            string sqlStatement = $"SELECT MIN({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
                 return dbHelper.GetScalar<T>(query);
             }
         }
 
-        public T GetMaximum<T>(String columnName, String tableName)
+        public T GetMaximum<T>(string columnName, string tableName)
         {
-            String sqlStatement = $"SELECT MAX({columnName}) " +
-                                  $"FROM {tableName}";
+            string sqlStatement = $"SELECT MAX({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
                 return dbHelper.GetScalar<T>(query);
             }
         }
 
-        public (T, T) GetMinMax<T>(String columnName, String tableName)
+        public (T, T) GetMinMax<T>(string columnName, string tableName)
         {
-            String sqlStatement = $"SELECT MIN({columnName}), MAX({columnName}) " +
-                                  $"FROM {tableName}";
+            string sqlStatement = $"SELECT MIN({columnName}), MAX({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                return dbHelper.GetData(new CTwoValuesMapper<T>(), query)[0];
+                return dbHelper.GetData(new TwoValuesMapper<T>(), query)[0];
             }
         }
 
@@ -56,16 +52,16 @@ namespace ThingAppraiser.DAL.Repositories
 
         //TODO: install .NET Standard 2.1 (now we have only preview) and add command sanitizing.
         /*
-        private IDbCommand SanitizeCommand(CDBHelper dbHelper, String columnName, String tableName)
+        private IDbCommand SanitizeCommand(DbHelper dbHelper, string columnName, string tableName)
         {
-            DbConnection connection = dbHelper.GetDBConnection();
+            DbConnection connection = dbHelper.GetDbConnection();
 
             DbProviderFactory factory = DbProviderFactories.GetFactory(connection);
 
             // Sanitize the table name
             DbCommandBuilder commandBuilder = factory.CreateCommandBuilder();
 
-            String sanitizedTableName = commandBuilder.QuoteIdentifier(tableName);
+            string sanitizedTableName = commandBuilder.QuoteIdentifier(tableName);
 
             IDbCommand command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM " + sanitizedTableName;

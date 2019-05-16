@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.IO.Output
 {
-    public interface IOutputterAsync : ITagable
+    public interface IOutputterAsync : IOutputterBase, ITagable
     {
-        Task<Boolean> SaveResults(List<List<CRatingDataContainer>> resultsQueues, 
-            String storageName);
+        Task<bool> SaveResults(List<List<RatingDataContainer>> results, string storageName);
     }
 }

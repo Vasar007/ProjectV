@@ -8,41 +8,41 @@ namespace ThingAppraiser.Crawlers
     /// <summary>
     /// Class to control all process of collecting data from services.
     /// </summary>
-    public sealed class CCrawlersManager : IManager<CCrawler>
+    public sealed class CrawlersManager : IManager<Crawler>
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CCrawlersManager>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CrawlersManager>();
 
         /// <summary>
         /// Collection of concrete crawler implementations.
         /// </summary>
-        private readonly List<CCrawler> _crawlers = new List<CCrawler>();
+        private readonly List<Crawler> _crawlers = new List<Crawler>();
 
         /// <summary>
         /// Sets this flag to <c>true</c> if you need to monitor crawlers results.
         /// </summary>
-        private readonly Boolean _outputResults;
+        private readonly bool _outputResults;
 
 
         /// <summary>
         /// Initializes manager for crawlers.
         /// </summary>
         /// <param name="outputResults">Flag to define need to output crawlers results.</param>
-        public CCrawlersManager(Boolean outputResults)
+        public CrawlersManager(bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CCrawler> Implementation
+        #region IManager<Crawler> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(CCrawler item)
+        public void Add(Crawler item)
         {
             item.ThrowIfNull(nameof(item));
             if (!_crawlers.Contains(item))
@@ -53,9 +53,9 @@ namespace ThingAppraiser.Crawlers
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public Boolean Remove(CCrawler item)
+        public bool Remove(Crawler item)
         {
             item.ThrowIfNull(nameof(item));
             return _crawlers.Remove(item);
@@ -68,14 +68,14 @@ namespace ThingAppraiser.Crawlers
         /// </summary>
         /// <param name="entities">Collection of entities as strings to process.</param>
         /// <returns>Collection of results from crawlers produced from a set of entities.</returns>
-        public List<List<CBasicInfo>> CollectAllResponses(List<String> entities)
+        public List<List<BasicInfo>> CollectAllResponses(List<string> entities)
         {
-            var results = new List<List<CBasicInfo>>();
-            foreach (CCrawler crawler in _crawlers)
+            var results = new List<List<BasicInfo>>();
+            foreach (Crawler crawler in _crawlers)
             {
                 results.Add(crawler.GetResponse(entities, _outputResults));
             }
-            s_logger.Info("Crawlers have finished work.");
+            _logger.Info("Crawlers have finished work.");
             return results;
         }
     }

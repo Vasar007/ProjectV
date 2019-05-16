@@ -6,7 +6,7 @@ namespace ThingAppraiser
     /// <summary>
     /// XML config parser which provides methods with deferred execution to work with it.
     /// </summary>
-    public class CXDocumentParser
+    public class XDocumentParser
     {
         /// <summary>
         /// Keeps passed document inside instance.
@@ -19,9 +19,9 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="document">XML config to parse.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="document">document</paramref> or it property <c>Root</c> is <c>null</c>.
+        /// <paramref name="document" /> or it property <c>Root</c> is <c>null</c>.
         /// </exception>
-        public CXDocumentParser(XDocument document)
+        public XDocumentParser(XDocument document)
         {
             document.ThrowIfNull(nameof(document));
             document.Root.ThrowIfNull(nameof(document.Root));
@@ -34,20 +34,20 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="element">Element to process.</param>
         /// <param name="attribute">Name of the attribute.</param>
-        /// <returns>String value if found attribute, otherwise empty string.</returns>
+        /// <returns>string value if found attribute, otherwise empty string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element">element</paramref> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="attribute">attribute</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
         /// </exception>
-        public static String GetAttributeValue(XElement element, String attribute)
+        public static string GetAttributeValue(XElement element, string attribute)
         {
             element.ThrowIfNull(nameof(element));
             attribute.ThrowIfNullOrEmpty(nameof(attribute));
 
-            String value = element.Attribute(attribute)?.Value;
-            return value ?? String.Empty;
+            string value = element.Attribute(attribute)?.Value;
+            return value ?? string.Empty;
         }
 
         /// <summary>
@@ -60,15 +60,48 @@ namespace ThingAppraiser
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element">element</paramref> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="attribute">attribute</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
         /// </exception>
-        public static T GetAttributeValue<T>(XElement element, String attribute)
+        public static T GetAttributeValue<T>(XElement element, string attribute)
             where T : IConvertible
         {
-            String stringValue = GetAttributeValue(element, attribute);
+            string stringValue = GetAttributeValue(element, attribute);
+            return (T) Convert.ChangeType(stringValue, typeof(T));
+        }
+
+        /// <summary>
+        /// Gets element value.
+        /// </summary>
+        /// <param name="element">Element to process.</param>
+        /// <returns>string value if element is valid, otherwise empty string.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c>.
+        /// </exception>
+        public static string GetElementValue(XElement element)
+        {
+            element.ThrowIfNull(nameof(element));
+
+            string value = element.Value;
+            return value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Gets element value and converts to specified type.
+        /// </summary>
+        /// <typeparam name="T">Type to convert.</typeparam>
+        /// <param name="element">Element to process.</param>
+        /// <returns>
+        /// Converted value if element is valid, otherwise exception could be thrown.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c>.
+        public static T GetElementValue<T>(XElement element)
+            where T : IConvertible
+        {
+            string stringValue = GetElementValue(element);
             return (T) Convert.ChangeType(stringValue, typeof(T));
         }
 
@@ -79,13 +112,13 @@ namespace ThingAppraiser
         /// <param name="subelement">Name of the subelement to find.</param>
         /// <returns>First found subelement which can be <c>null</c>.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element">element</paramref> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="subelement">subelement</paramref> is <c>null</c> or presents empty
+        /// <paramref name="subelement" /> is <c>null</c> or presents empty
         /// string.
         /// </exception>
-        public static XElement FindSubelement(XElement element, String subelement)
+        public static XElement FindSubelement(XElement element, string subelement)
         {
             element.ThrowIfNull(nameof(element));
             subelement.ThrowIfNullOrEmpty(subelement);
@@ -98,18 +131,18 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="element">Name of the element to find.</param>
         /// <param name="attribute">Name of the attribute.</param>
-        /// <returns>String value if found attribute, otherwise empty string.</returns>
+        /// <returns>string value if found attribute, otherwise empty string.</returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element">element</paramref> or
-        /// <paramref name="attribute">attribute</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> or
+        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
         /// </exception>
-        public String GetAttributeValue(String element, String attribute)
+        public string GetAttributeValue(string element, string attribute)
         {
             element.ThrowIfNullOrEmpty(nameof(element));
             attribute.ThrowIfNullOrEmpty(nameof(attribute));
 
-            String value = _document.Root.Element(element)?.Attribute(attribute)?.Value;
-            return value ?? String.Empty;
+            string value = _document.Root.Element(element)?.Attribute(attribute)?.Value;
+            return value ?? string.Empty;
         }
 
         /// <summary>
@@ -122,13 +155,13 @@ namespace ThingAppraiser
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element">element</paramref> or
-        /// <paramref name="attribute">attribute</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> or
+        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
         /// </exception>
-        public T GetAttributeValue<T>(String element, String attribute)
+        public T GetAttributeValue<T>(string element, string attribute)
             where T : IConvertible
         {
-            String stringValue = GetAttributeValue(element, attribute);
+            string stringValue = GetAttributeValue(element, attribute);
             return (T) Convert.ChangeType(stringValue, typeof(T));
         }
 
@@ -138,9 +171,9 @@ namespace ThingAppraiser
         /// <param name="element">Name of the element to find.</param>
         /// <returns>First found element which can be <c>null</c>.</returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element">element</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> is <c>null</c> or presents empty string.
         /// </exception>
-        public XElement FindElement(String element)
+        public XElement FindElement(string element)
         {
             element.ThrowIfNullOrEmpty(nameof(element));
 

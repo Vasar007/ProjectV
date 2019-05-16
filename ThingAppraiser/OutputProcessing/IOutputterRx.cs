@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ThingAppraiser.Data;
 
 namespace ThingAppraiser.IO.Output
 {
-    public interface IOutputterRx : ITagable
+    public interface IOutputterRx : IOutputterBase, ITagable
     {
-        Boolean SaveResults(IEnumerable<COuputFileData> outputData, String storageName);
+        bool SaveResults(List<List<RatingDataContainer>> results, string storageName);
     }
 }

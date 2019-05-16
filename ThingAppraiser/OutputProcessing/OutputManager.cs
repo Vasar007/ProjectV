@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Data;
+using ThingAppraiser.Communication;
 
 namespace ThingAppraiser.IO.Output
 {
     /// <summary>
     /// Class which controlling results saving.
     /// </summary>
-    public sealed class COutputManager : IManager<IOutputter>
+    public sealed class OutputManager : IManager<IOutputter>
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<COutputManager>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<OutputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
         /// </summary>
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         /// <summary>
         /// Collection of concrete outputter classes which can save results to specified source.
@@ -31,21 +32,23 @@ namespace ThingAppraiser.IO.Output
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="defaultFilename">Default file name when user doesn't provide it.</param>
+        /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultFilename">defaultFilename</param> is <c>null</c> or presents empty
-        /// string.
+        /// <param name="defaultStorageName">defaultStorageName</param> is <c>null</c> or presents 
+        /// empty string.
         /// </exception>
-        public COutputManager(String defaultFilename)
+        public OutputManager(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
         }
 
         #region IManager<IOutputter> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
         public void Add(IOutputter item)
         {
@@ -58,9 +61,9 @@ namespace ThingAppraiser.IO.Output
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public Boolean Remove(IOutputter item)
+        public bool Remove(IOutputter item)
         {
             item.ThrowIfNull(nameof(item));
             return _outputters.Remove(item);
@@ -74,24 +77,28 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Collections of appraised results to save.</param>
         /// <param name="storageName">Storage name of output source.</param>
         /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
-        public Boolean SaveResults(List<List<CRatingDataContainer>> results, String storageName)
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName))
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                string message = "Storage name is empty, using the default value.";
+                _logger.Info(message);
+                GlobalMessageHandler.OutputMessage(message);
             }
 
-            List<Boolean> statuses = _outputters.Select(
+            List<bool> statuses = _outputters.Select(
                 outputter => outputter.SaveResults(results, storageName)
             ).ToList();
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info($"Successfully saved all results to \"{storageName}\".");
+                _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            s_logger.Info($"Couldn't save some results to \"{storageName}\".");
+            _logger.Info($"Couldn't save some results to \"{storageName}\".");
             return false;
         }
     }

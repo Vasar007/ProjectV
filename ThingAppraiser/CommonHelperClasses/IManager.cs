@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThingAppraiser
+﻿namespace ThingAppraiser
 {
     /// <summary>
     /// Contains common methods for manager classes.
@@ -19,9 +17,11 @@ namespace ThingAppraiser
         /// Removes items from current manager.
         /// </summary>
         /// <param name="item">Item to remove</param>
-        /// <returns><c>true</c> if <paramref name="item">item</paramref> is successfully removed,
-        /// otherwise, <c>false</c>. This method also returns false if
-        /// <paramref name="item">item</paramref> was not found in current manager.</returns>
-        Boolean Remove(T item);
+        /// <returns>
+        /// <c>true</c> if <paramref name="item" /> is successfully removed, otherwise, 
+        /// <c>false</c>. This method also returns false if <paramref name="item" /> was not found 
+        /// in current manager.
+        /// </returns>
+        bool Remove(T item);
     }
 }

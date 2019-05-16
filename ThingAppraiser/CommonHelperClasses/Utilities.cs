@@ -7,7 +7,7 @@ namespace ThingAppraiser
     /// <summary>
     /// Adds extension methods for convenient.
     /// </summary>
-    public static class SUtilities
+    public static class Utilities
     {
         /// <summary>
         /// Provides <c>null</c> check for every class.
@@ -17,9 +17,9 @@ namespace ThingAppraiser
         /// <param name="paramName">Name of the parameter for error message.</param>
         /// <returns>Returns passed value.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="obj">obj</paramref> is <c>null</c>.
+        /// <paramref name="obj" /> is <c>null</c>.
         /// </exception>
-        public static T ThrowIfNull<T>(this T obj, String paramName)
+        public static T ThrowIfNull<T>(this T obj, string paramName)
             where T : class
         {
             if (obj is null)
@@ -32,17 +32,37 @@ namespace ThingAppraiser
         /// <summary>
         /// Checks if the string is <c>null</c> or empty.
         /// </summary>
-        /// <param name="str">String to check.</param>
+        /// <param name="str">string to check.</param>
         /// <param name="paramName">Name of the parameter for error message.</param>
         /// <exception cref="ArgumentException">
-        /// <paramref name="str">str</paramref> is <c>null</c> or presents empty string.
+        /// <paramref name="str" /> is <c>null</c> or presents empty string.
         /// </exception>
         /// <returns>The original string.</returns>
-        public static String ThrowIfNullOrEmpty(this String str, String paramName)
+        public static string ThrowIfNullOrEmpty(this string str, string paramName)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 throw new ArgumentException($"{paramName} is null or empty.", paramName);
+            }
+            return str;
+        }
+
+        /// <summary>
+        /// Checks if the string is <c>null</c>, empty or contains only whitespaces.
+        /// </summary>
+        /// <param name="str">string to check.</param>
+        /// <param name="paramName">Name of the parameter for error message.</param>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="str" /> is <c>null</c>, presents empty string or contains only 
+        /// whitespaces.
+        /// </exception>
+        /// <returns>The original string.</returns>
+        public static string ThrowIfNullOrWhiteSpace(this string str, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                throw new ArgumentException($"{paramName} is null, empty or contains only " +
+                                            "whitespaces.", paramName);
             }
             return str;
         }
@@ -54,7 +74,7 @@ namespace ThingAppraiser
         /// <param name="collection">Enumerable to check.</param>
         /// <returns>Returns <c>true</c> in case the enumerable is <c>null</c> or empty,
         /// <c>false</c> otherwise.</returns>
-        public static Boolean IsNullOrEmpty<T>(this IEnumerable<T> collection)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
         {
             return collection is null || !collection.Any();
         }
@@ -65,9 +85,9 @@ namespace ThingAppraiser
         /// <param name="str">First string to compare.</param>
         /// <param name="other">Second string to compare.</param>
         /// <returns><c>true</c> if strings are equal, <c>false</c> otherwise.</returns>
-        public static Boolean IsEqualWithInvariantCulture(this String str, String other)
+        public static bool IsEqualWithInvariantCulture(this string str, string other)
         {
-            return String.Compare(str, other, StringComparison.InvariantCulture) == 0;
+            return string.Compare(str, other, StringComparison.InvariantCulture) == 0;
         }
     }
 }

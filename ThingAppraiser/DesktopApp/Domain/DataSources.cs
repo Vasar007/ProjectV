@@ -1,10 +1,13 @@
-﻿namespace DesktopApp.Domain
+﻿namespace ThingAppraiser.DesktopApp.Domain
 {
-    public enum EDataSource
+    public enum DataSource
     {
         Nothing,
+
         InputThing,
+
         LocalFile,
+
         GoogleDrive
     }
 }

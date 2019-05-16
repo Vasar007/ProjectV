@@ -6,36 +6,31 @@ namespace ThingAppraiser.Communication
     /// <summary>
     /// Provides global message handler. Need to set it before you can use it.
     /// </summary>
-    public static class SGlobalMessageHandler
+    public static class GlobalMessageHandler
     {
         /// <summary>
         /// Synchronization object for lock statement.
         /// </summary>
-        private static readonly Object s_lockObject = new Object();
-
-        /// <summary>
-        /// Value of the message handler property.
-        /// </summary>
-        private static IMessageHandler s_messageHandler;
+        private static readonly object _syncRoot = new object();
 
         /// <summary>
         /// Message handler to control communications with service and its components.
         /// </summary>
-        public static IMessageHandler MessageHandler
+        public static IMessageHandler MessageHandler { get; private set; }
+
+        /// <summary>
+        /// Sets new global message handler.
+        /// </summary>
+        /// <param name="messageHandler">New message handler instance.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <see cref="messageHandler" /> is <c>null</c>.
+        /// </exception>
+        public static void SetMessageHangler(IMessageHandler messageHandler)
         {
-            get
+            lock (_syncRoot)
             {
-                lock (s_lockObject)
-                {
-                    return s_messageHandler;
-                }
-            }
-            set
-            {
-                lock (s_lockObject)
-                {
-                    s_messageHandler = value;
-                }
+                messageHandler.ThrowIfNull(nameof(messageHandler));
+                MessageHandler = messageHandler;
             }
         }
 
@@ -46,9 +41,9 @@ namespace ThingAppraiser.Communication
         /// <exception cref="ArgumentNullException">
         /// <see cref="MessageHandler" /> is <c>null</c>.
         /// </exception>
-        public static String GetMessage()
+        public static string GetMessage()
         {
-            lock (s_lockObject)
+            lock (_syncRoot)
             {
                 MessageHandler.ThrowIfNull(nameof(MessageHandler));
                 return MessageHandler.GetMessage();
@@ -62,9 +57,9 @@ namespace ThingAppraiser.Communication
         /// <exception cref="ArgumentNullException">
         /// <see cref="MessageHandler" /> is <c>null</c>.
         /// </exception>
-        public static void OutputMessage(String message)
+        public static void OutputMessage(string message)
         {
-            lock (s_lockObject)
+            lock (_syncRoot)
             {
                 MessageHandler.ThrowIfNull(nameof(MessageHandler));
                 MessageHandler.OutputMessage(message);
@@ -75,11 +70,14 @@ namespace ThingAppraiser.Communication
         /// Outputs service information about thread with specified values.
         /// </summary>
         /// <param name="outputObjects">Additional objects to output.</param>
-        public static void PrintThreadInfoWithParams(params Object[] outputObjects)
+        /// <exception cref="ArgumentNullException">
+        /// <see cref="outputObjects" /> is <c>null</c>.
+        /// </exception>
+        public static void PrintThreadInfoWithParams(params object[] outputObjects)
         {
-            String message = outputObjects.Length > 0
-                             ? ", params: " + String.Join(", ", outputObjects)
-                             : String.Empty;
+            string message = outputObjects.Length > 0
+                             ? ", params: " + string.Join(", ", outputObjects)
+                             : string.Empty;
             OutputMessage($"On thread {Thread.CurrentThread.ManagedThreadId}" + message);
         }
     }

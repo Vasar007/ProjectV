@@ -2,116 +2,112 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using DAL.Properties;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class CBasicInfoRepository : IDataRepository, IRepository<CBasicInfo, Int32>, ITagable, 
-        ITypeID
+    public class BasicInfoRepository : IDataRepository, IRepository<BasicInfo, int>, 
+        IRepositoryBase, ITagable, ITypeId
     {
-        private readonly CDataStorageSettings _dbSettings;
+        private readonly DataStorageSettings _dbSettings;
 
-        private readonly CDataProcessor _dataProcessor;
+        private readonly DataProcessor _dataProcessor;
 
-        public IReadOnlyList<String> Columns { get; } = new List<String>
+        public IReadOnlyList<string> Columns { get; } = new List<string>
         {
             "thing_id", "title", "vote_count", "vote_average"
         };
 
+        public string TableName { get; } = "[dbo].[common]";
+
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "BasicInfoRepository";
+        public string Tag { get; } = "BasicInfoRepository";
 
         #endregion
 
-        #region ITypeID Implementation
+        #region ITypeId Implementation
 
         /// <inheritdoc />
-        public Type TypeID => typeof(CBasicInfo);
+        public Type TypeId { get; } = typeof(BasicInfo);
 
         #endregion
 
 
-        public CBasicInfoRepository(CDataStorageSettings dbSettings)
+        public BasicInfoRepository(DataStorageSettings dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
-            _dataProcessor = new CDataProcessor(_dbSettings);
+            _dataProcessor = new DataProcessor(_dbSettings);
         }
 
         #region IRepository Implementation
 
-        public Boolean Contains(Int32 thingID)
+        public bool Contains(int thingId)
         {
-            String sqlStatement = "SELECT COUNT(*) " +
-                                  "FROM [dbo].[common] " +
-                                  "WHERE thing_id = @thing_id";
+            string sqlStatement = SQLStatementsForCommon.CountItemsById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                query.Parameters.AddWithValue("@thing_id", thingID);
+                query.Parameters.AddWithValue("@thing_id", thingId);
 
-                return dbHelper.GetScalar<Int32>(query) > 0;
+                return dbHelper.GetScalar<int>(query) > 0;
             }
         }
 
-        public void InsertItem(CBasicInfo item)
+        public void InsertItem(BasicInfo item)
         {
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             {
                 InsertItem(item, dbHelper);
                 dbHelper.Commit();
             }
         }
 
-        public CBasicInfo GetItemByID(Int32 thingID)
+        public BasicInfo GetItemById(int thingId)
         {
-            String sqlStatement = "SELECT thing_id, title, vote_count, vote_average " +
-                                  "FROM [dbo].[common] " +
-                                  "WHERE thing_id = @thing_id";
+            string sqlStatement = SQLStatementsForCommon.SelectItemById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                query.Parameters.AddWithValue("@thing_id", thingID);
+                query.Parameters.AddWithValue("@thing_id", thingId);
 
-                return dbHelper.GetItem(new CBasicInfoMapper(), query);
+                return dbHelper.GetItem(new BasicInfoMapper(), query);
             }
         }
 
-        public List<CBasicInfo> GetAllData()
+        public List<BasicInfo> GetAllData()
         {
-            String sqlStatement = "SELECT thing_id, title, vote_count, vote_average " +
-                                  "FROM [dbo].[common]";
+            string sqlStatement = SQLStatementsForCommon.SelectAllItems;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var query = new SqlCommand(sqlStatement))
             {
-                return dbHelper.GetData(new CBasicInfoMapper(), query);
+                return dbHelper.GetData(new BasicInfoMapper(), query);
             }
         }
 
-        public void UpdateItem(CBasicInfo item)
+        public void UpdateItem(BasicInfo item)
         {
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             {
                 UpdateItem(item, dbHelper);
                 dbHelper.Commit();
             }
         }
 
-        public void DeleteItemByID(Int32 thingID)
+        public void DeleteItemById(int thingId)
         {
-            String sqlStatement = "DELETE " +
-                                  "FROM [dbo].[common] " +
-                                  "WHERE thing_id = @thing_id";
+            string sqlStatement = SQLStatementsForCommon.DeleteItemById;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
-                command.Parameters.AddWithValue("@thing_id", thingID);
+                command.Parameters.AddWithValue("@thing_id", thingId);
 
                 dbHelper.ExecuteCommand(command);
                 dbHelper.Commit();
@@ -120,10 +116,9 @@ namespace ThingAppraiser.DAL.Repositories
 
         public void DeleteAllData()
         {
-            String sqlStatement = "DELETE " +
-                                  "FROM [dbo].[common]";
+            string sqlStatement = SQLStatementsForCommon.DeleteAllItems;
 
-            using (var dbHelper = new CDBHelperScope(_dbSettings))
+            using (var dbHelper = new DbHelperScope(_dbSettings))
             using (var command = new SqlCommand(sqlStatement))
             {
                 dbHelper.ExecuteCommand(command);
@@ -135,35 +130,33 @@ namespace ThingAppraiser.DAL.Repositories
 
         #region IDataRepository Implementation
 
-        public T GetMinimum<T>(String columnName)
+        public T GetMinimum<T>(string columnName)
         {
-            if (!Columns.Contains(columnName)) return default(T);
-            return _dataProcessor.GetMinimum<T>(columnName, "[dbo].[common]");
+            if (!Columns.Contains(columnName)) return default;
+            return _dataProcessor.GetMinimum<T>(columnName, TableName);
         }
 
-        public T GetMaximum<T>(String columnName)
+        public T GetMaximum<T>(string columnName)
         {
-            if (!Columns.Contains(columnName)) return default(T);
-            return _dataProcessor.GetMaximum<T>(columnName, "[dbo].[common]");
+            if (!Columns.Contains(columnName)) return default;
+            return _dataProcessor.GetMaximum<T>(columnName, TableName);
         }
 
-        public (T, T) GetMinMax<T>(String columnName)
+        public (T, T) GetMinMax<T>(string columnName)
         {
-            if (!Columns.Contains(columnName)) return (default(T), default(T));
-            return _dataProcessor.GetMinMax<T>(columnName, "[dbo].[common]");
+            if (!Columns.Contains(columnName)) return (default, default);
+            return _dataProcessor.GetMinMax<T>(columnName, TableName);
         }
 
         #endregion
 
-        public void InsertItem(CBasicInfo item, CDBHelperScope dbHelper)
+        public void InsertItem(BasicInfo item, DbHelperScope dbHelper)
         {
-            String sqlStatement = "INSERT INTO [dbo].[common] " +
-                                  "(thing_id, title, vote_count, vote_average) " +
-                                  "VALUES (@thing_id, @title, @vote_count, @vote_average)";
+            string sqlStatement = SQLStatementsForCommon.InsertItem;
 
             using (var command = new SqlCommand(sqlStatement))
             {
-                command.Parameters.AddWithValue("@thing_id", item.ThingID);
+                command.Parameters.AddWithValue("@thing_id", item.ThingId);
                 command.Parameters.AddWithValue("@title", item.Title);
                 command.Parameters.AddWithValue("@vote_count", item.VoteCount);
                 command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
@@ -172,19 +165,16 @@ namespace ThingAppraiser.DAL.Repositories
             }
         }
 
-        public void UpdateItem(CBasicInfo item, CDBHelperScope dbHelper)
+        public void UpdateItem(BasicInfo item, DbHelperScope dbHelper)
         {
-            String sqlStatement = "UPDATE [dbo].[common] " +
-                                  "SET title = @title, vote_count = @vote_count, " +
-                                      "vote_average = @vote_average " +
-                                  "WHERE thing_id = @thing_id";
+            string sqlStatement = SQLStatementsForCommon.UpdateItemById;
 
             using (var command = new SqlCommand(sqlStatement))
             {
                 command.Parameters.AddWithValue("@title", item.Title);
                 command.Parameters.AddWithValue("@vote_count", item.VoteCount);
                 command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
-                command.Parameters.AddWithValue("@thing_id", item.ThingID);
+                command.Parameters.AddWithValue("@thing_id", item.ThingId);
 
                 dbHelper.ExecuteCommand(command);
             }

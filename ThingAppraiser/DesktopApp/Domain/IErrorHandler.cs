@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DesktopApp.Domain
+namespace ThingAppraiser.DesktopApp.Domain
 {
     public interface IErrorHandler
     {

@@ -6,50 +6,37 @@ using ThingAppraiser.Data;
 namespace ThingAppraiser.Appraisers
 {
     /// <summary>
-    /// Basic appraiser with default rating calculations.
+    /// Basic appraiser with default rating calculations. You should inherit this class if would 
+    /// like to create your own appraiser with rating calculation.
     /// </summary>
-    public abstract class CAppraiser : ITagable, ITypeID
+    public abstract class Appraiser : AppraiserBase
     {
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public virtual String Tag => "Appraiser";
-
-        #endregion
-
-        #region ITypeID Implementation
-
-        /// <summary>
-        /// Defines which type of data objects this appraiser can process.
-        /// </summary>
-        public virtual Type TypeID => typeof(CBasicInfo);
+        public override string Tag { get; } = "Appraiser";
 
         #endregion
 
         /// <summary>
         /// Rating name which describes rating calculation.
         /// </summary>
-        public virtual String RatingName => "Common rating";
-
-        /// <summary>
-        /// Specify rating ID for result.
-        /// </summary>
-        public Guid RatingID { get; set; }
+        public override string RatingName { get; } = "Common rating";
 
 
         /// <summary>
-        /// Default constructor.
+        /// Creates instance with default values.
         /// </summary>
-        public CAppraiser()
+        protected Appraiser()
         {
         }
 
-        protected static Double CalculateRating(CBasicInfo entity, CMinMaxDenominator voteCountMMD,
-            CMinMaxDenominator voteAverageMMD)
+        protected static double CalculateRating(BasicInfo entity, MinMaxDenominator voteCountMMD,
+            MinMaxDenominator voteAverageMMD)
         {
-            Double vcValue = (entity.VoteCount - voteCountMMD.MinValue) / 
+            double vcValue = (entity.VoteCount - voteCountMMD.MinValue) / 
                              voteCountMMD.Denominator;
-            Double vaValue = (entity.VoteAverage - voteAverageMMD.MinValue) / 
+            double vaValue = (entity.VoteAverage - voteAverageMMD.MinValue) / 
                              voteAverageMMD.Denominator;
 
             return vcValue + vaValue;
@@ -66,28 +53,27 @@ namespace ThingAppraiser.Appraisers
         /// Entities collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        public virtual CResultList GetRatings(CRawDataContainer rawDataContainer,
-            Boolean outputResults)
+        public virtual ResultList GetRatings(RawDataContainer rawDataContainer, bool outputResults)
         {
-            CheckRatingID();
+            CheckRatingId();
 
-            var ratings = new CResultList();
-            IReadOnlyList<CBasicInfo> rawData = rawDataContainer.GetData();
+            var ratings = new ResultList();
+            IReadOnlyList<BasicInfo> rawData = rawDataContainer.GetData();
             if (rawData.IsNullOrEmpty()) return ratings;
 
-            CMinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");
-            CMinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter("VoteAverage");
+            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");
+            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter("VoteAverage");
 
-            foreach (CBasicInfo entityInfo in rawData)
+            foreach (BasicInfo entityInfo in rawData)
             {
-                Double ratingValue = CalculateRating(entityInfo, voteCountMMD, voteAverageMMD);
+                double ratingValue = CalculateRating(entityInfo, voteCountMMD, voteAverageMMD);
 
-                var resultInfo = new CResultInfo(entityInfo.ThingID, ratingValue, RatingID);
+                var resultInfo = new ResultInfo(entityInfo.ThingId, ratingValue, RatingId);
                 ratings.Add(resultInfo);
 
                 if (outputResults)
                 {
-                    SGlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
                 }
             }
 
@@ -98,9 +84,9 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Checks that class was registered rating and has proper rating ID.
         /// </summary>
-        protected void CheckRatingID()
+        protected void CheckRatingId()
         {
-            if (RatingID == Guid.Empty)
+            if (RatingId == Guid.Empty)
             {
                 throw new InvalidOperationException(
                     "Rating ID has no value."

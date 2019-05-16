@@ -6,7 +6,7 @@ namespace ThingAppraiser.Logging
     /// <summary>
     /// Additional abstraction to avoid direct link with logger library.
     /// </summary>
-    public class CLoggerAbstraction
+    public class LoggerAbstraction
     {
         /// <summary>
         /// Concrete logger instance.
@@ -20,9 +20,9 @@ namespace ThingAppraiser.Logging
         /// </summary>
         /// <param name="loggerInstance">Concrete logger instance.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="loggerInstance">loggerInstance</paramref> is <c>null</c>.
+        /// <paramref name="loggerInstance" /> is <c>null</c>.
         /// </exception>
-        private CLoggerAbstraction(Logger loggerInstance)
+        private LoggerAbstraction(Logger loggerInstance)
         {
             _logger = loggerInstance.ThrowIfNull(nameof(loggerInstance));
         }
@@ -35,12 +35,12 @@ namespace ThingAppraiser.Logging
         /// <exception cref="ArgumentException">
         /// Cannot get full name of type <see cref="T"/>
         /// </exception>
-        public static CLoggerAbstraction CreateLoggerInstanceFor<T>()
+        public static LoggerAbstraction CreateLoggerInstanceFor<T>()
         {
-            String fullName = typeof(T).FullName ?? throw new ArgumentException(
+            string fullName = typeof(T).FullName ?? throw new ArgumentException(
                 $"Could not get full name of class {nameof(T)}"
             );
-            return new CLoggerAbstraction(LogManager.GetLogger(fullName));
+            return new LoggerAbstraction(LogManager.GetLogger(fullName));
         }
 
         /// <summary>
@@ -49,47 +49,47 @@ namespace ThingAppraiser.Logging
         /// <param name="className">Class name. Try to pass it with nameof operator.</param>
         /// <returns>Created logger instance.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="className">loggerInstance</paramref> is <c>null</c> or presents empty
+        /// <paramref name="className" /> is <c>null</c> or presents empty
         /// string.
         /// </exception>
-        public static CLoggerAbstraction CreateLoggerInstanceWithName(String className)
+        public static LoggerAbstraction CreateLoggerInstanceWithName(string className)
         {
             className.ThrowIfNullOrEmpty(nameof(className));
-            return new CLoggerAbstraction(LogManager.GetLogger(className));
+            return new LoggerAbstraction(LogManager.GetLogger(className));
         }
 
-        /// <inheritdoc cref="Logger.Debug(String)" />
-        public void Debug(String message)
+        /// <inheritdoc cref="Logger.Debug(string)" />
+        public void Debug(string message)
         {
             _logger.Debug(message);
         }
 
-        /// <inheritdoc cref="Logger.Info(String)" />
-        public void Info(String message)
+        /// <inheritdoc cref="Logger.Info(string)" />
+        public void Info(string message)
         {
             _logger.Info(message);
         }
 
-        /// <inheritdoc cref="Logger.Warn(String)" />
-        public void Warn(String message)
+        /// <inheritdoc cref="Logger.Warn(string)" />
+        public void Warn(string message)
         {
             _logger.Warn(message);
         }
 
-        /// <inheritdoc cref="Logger.Warn(Exception, String)" />
-        public void Warn(Exception ex, String message)
+        /// <inheritdoc cref="Logger.Warn(Exception, string)" />
+        public void Warn(Exception ex, string message)
         {
             _logger.Warn(ex, message);
         }
 
-        /// <inheritdoc cref="Logger.Error(String)" />
-        public void Error(String message)
+        /// <inheritdoc cref="Logger.Error(string)" />
+        public void Error(string message)
         {
             _logger.Error(message);
         }
 
-        /// <inheritdoc cref="Logger.Error(Exception, String)" />
-        public void Error(Exception ex, String message)
+        /// <inheritdoc cref="Logger.Error(Exception, string)" />
+        public void Error(Exception ex, string message)
         {
             _logger.Error(ex, message);
         }

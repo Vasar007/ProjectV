@@ -7,31 +7,31 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DAL
 {
-    public sealed class CDataRepositoriesManager : IManager<IDataRepository>
+    public sealed class DataRepositoriesManager : IManager<IDataRepository>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CDataBaseManager>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<DataBaseManager>();
 
         private readonly Dictionary<Type, IDataRepository> _repositories =
             new Dictionary<Type, IDataRepository>();
 
 
-        public CDataRepositoriesManager()
+        public DataRepositoriesManager()
         {
         }
 
-        private static CMinMaxDenominator GetAdditionalInfoDouble(IDataRepository repository,
-            String infoToRequest)
+        private static MinMaxDenominator GetAdditionalInfoDouble(IDataRepository repository,
+            string infoToRequest)
         {
-            var (min, max) = repository.GetMinMax<Double>(infoToRequest);
-            return new CMinMaxDenominator(min, max);
+            var (min, max) = repository.GetMinMax<double>(infoToRequest);
+            return new MinMaxDenominator(min, max);
         }
 
-        private static CMinMaxDenominator GetAdditionalInfoInt32(IDataRepository repository,
-            String infoToRequest)
+        private static MinMaxDenominator GetAdditionalInfoInt32(IDataRepository repository,
+            string infoToRequest)
         {
-            var (min, max) = repository.GetMinMax<Int32>(infoToRequest);
-            return new CMinMaxDenominator(min, max);
+            var (min, max) = repository.GetMinMax<int>(infoToRequest);
+            return new MinMaxDenominator(min, max);
         }
 
         #region IManager<IRepository> Implementation
@@ -40,23 +40,23 @@ namespace ThingAppraiser.DAL
         {
             item.ThrowIfNull(nameof(item));
 
-            if (!_repositories.ContainsKey(item.TypeID))
+            if (!_repositories.ContainsKey(item.TypeId))
             {
-                _repositories.Add(item.TypeID, item);
+                _repositories.Add(item.TypeId, item);
             }
         }
 
-        public Boolean Remove(IDataRepository item)
+        public bool Remove(IDataRepository item)
         {
             item.ThrowIfNull(nameof(item));
-            return _repositories.Remove(item.TypeID);
+            return _repositories.Remove(item.TypeId);
         }
 
         #endregion
 
-        public List<List<CBasicInfo>> GetResultsFromDB()
+        public List<List<BasicInfo>> GetResultsFromDb()
         {
-            var results = new List<List<CBasicInfo>>();
+            var results = new List<List<BasicInfo>>();
             foreach (IDataRepository repository in _repositories.Values)
             {
                 results.Add(repository.GetAllData());
@@ -64,33 +64,33 @@ namespace ThingAppraiser.DAL
             return results;
         }
 
-        public List<CRawDataContainer> GetResultsFromDBWithAdditionalInfo()
+        public List<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
         {
-            var results = new List<CRawDataContainer>();
+            var results = new List<RawDataContainer>();
             foreach (IDataRepository repository in _repositories.Values)
             {
-                List<CBasicInfo> data = repository.GetAllData();
+                List<BasicInfo> data = repository.GetAllData();
                 results.Add(AddAdditionalParameters(data));
             }
             return results;
         }
 
-        public CBasicInfo GetProperDataHandlerByID(Int32 thingID, Type dataHandlerType)
+        public BasicInfo GetProperDataHandlerById(int thingId, Type dataHandlerType)
         {
             if (!_repositories.TryGetValue(dataHandlerType, out IDataRepository repository))
             {
                 var ex = new ArgumentException(
                     $"Type {dataHandlerType} didn't exist in repositories!", nameof(dataHandlerType)
                 );
-                s_logger.Error(ex, "Tried to get invalid thing data handler.");
+                _logger.Error(ex, "Tried to get invalid thing data handler.");
                 throw ex;
             }
-            return repository.GetItemByID(thingID);
+            return repository.GetItemById(thingId);
         }
 
-        public void PutResultsToDB(List<List<CBasicInfo>> results)
+        public void PutResultsToDb(List<List<BasicInfo>> results)
         {
-            foreach (List<CBasicInfo> datum in results)
+            foreach (List<BasicInfo> datum in results)
             {
                 // Skip empty collections of data.
                 if (datum.IsNullOrEmpty()) continue;
@@ -98,15 +98,15 @@ namespace ThingAppraiser.DAL
                 // Suggest that all types in collection are identical.
                 if (!_repositories.TryGetValue(datum[0].GetType(), out IDataRepository repository))
                 {
-                    s_logger.Info($"Type {datum[0].GetType()} didn't save!");
-                    SGlobalMessageHandler.OutputMessage(
+                    _logger.Info($"Type {datum[0].GetType()} didn't save!");
+                    GlobalMessageHandler.OutputMessage(
                         $"Type {datum[0].GetType()} didn't save!"
                     );
                     continue;
                 }
-                foreach (CBasicInfo info in datum)
+                foreach (BasicInfo info in datum)
                 {
-                    if (repository.Contains(info.ThingID))
+                    if (repository.Contains(info.ThingId))
                     {
                         repository.UpdateItem(info);
                     }
@@ -126,14 +126,14 @@ namespace ThingAppraiser.DAL
             }
         }
 
-        private CRawDataContainer AddAdditionalParameters(List<CBasicInfo> data)
+        private RawDataContainer AddAdditionalParameters(List<BasicInfo> data)
         {
-            var container = new CRawDataContainer(data);
+            var container = new RawDataContainer(data);
             switch (data[0])
             {
-                case CMovieTMDBInfo _:
+                case TmdbMovieInfo _:
                 {
-                    if (_repositories.TryGetValue(typeof(CMovieTMDBInfo),
+                    if (_repositories.TryGetValue(typeof(TmdbMovieInfo),
                                                   out IDataRepository repository))
                     {
                         container.AddParameter(
@@ -149,13 +149,13 @@ namespace ThingAppraiser.DAL
                     break;
                 }
 
-                case CBasicInfo _:
+                case BasicInfo _:
                 {
-                    if (_repositories.TryGetValue(typeof(CBasicInfo), 
+                    if (_repositories.TryGetValue(typeof(BasicInfo), 
                                                   out IDataRepository repository))
                     {
                         container.AddParameter(
-                            "VoteCount", GetAdditionalInfoDouble(repository, "vote_count")
+                            "VoteCount", GetAdditionalInfoInt32(repository, "vote_count")
                         );
                         container.AddParameter(
                             "VoteAverage", GetAdditionalInfoDouble(repository, "vote_average")
@@ -163,6 +163,10 @@ namespace ThingAppraiser.DAL
                     }
                     break;
                 }
+
+                default:
+                    _logger.Warn($"Unregornized data type: {data[0].GetType().FullName}");
+                    break;
             }
             return container;
         }

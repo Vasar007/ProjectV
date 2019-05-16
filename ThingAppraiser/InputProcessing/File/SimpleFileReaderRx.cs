@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using CsvHelper;
 using FileHelpers;
@@ -7,25 +6,26 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
-    public class CSimpleFileReaderRx : IFileReaderRx
+    public class SimpleFileReaderRx : IFileReaderRx
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CSimpleFileReaderRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<SimpleFileReaderRx>();
 
-        private readonly String _thingNameHeader = "Thing Name";
+        private readonly string _thingNameHeader = "Thing Name";
 
 
-        public CSimpleFileReaderRx()
+        public SimpleFileReaderRx(string thingNameHeader = "Thing Name")
         {
+            _thingNameHeader = thingNameHeader.ThrowIfNullOrWhiteSpace(nameof(thingNameHeader));
         }
 
         #region IFileReaderAsync Implementation
 
-        public IEnumerable<String> ReadFile(String filename)
+        public IEnumerable<string> ReadFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
-            var engine = new FileHelperAsyncEngine<CInputFileData>();
+            var result = new HashSet<string>();
+            var engine = new FileHelperAsyncEngine<InputFileData>();
             using (engine.BeginReadFile(filename))
             {
                 foreach (var record in engine)
@@ -38,10 +38,10 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        public IEnumerable<String> ReadCsvFile(String filename)
+        public IEnumerable<string> ReadCsvFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
+            var result = new HashSet<string>();
             using (var reader = new StreamReader(filename))
             {
                 var csv = new CsvReader(
@@ -51,12 +51,12 @@ namespace ThingAppraiser.IO.Input
                 if (!csv.Read() || !csv.ReadHeader())
                 {
                     var ex = new InvalidDataException("CSV file doesn't contain header!");
-                    s_logger.Error(ex, "Got CSV file without header.");
+                    _logger.Error(ex, "Got CSV file without header.");
                     throw ex;
                 }
                 while (csv.Read())
                 {
-                    String thingName = csv[_thingNameHeader];
+                    string thingName = csv[_thingNameHeader];
                     if (result.Add(thingName))
                     {
                         yield return thingName;

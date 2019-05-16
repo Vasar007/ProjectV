@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
-    public sealed class CInputManagerAsync : IManager<IInputterAsync>
+    public sealed class InputManagerAsync : IManager<IInputterAsync>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CInputManagerAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<InputManagerAsync>();
 
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         private readonly List<IInputterAsync> _inputtersAsync = new List<IInputterAsync>();
 
 
-        public CInputManagerAsync(String defaultFilename)
+        public InputManagerAsync(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
         }
 
         #region IManager<IInputterAsync> Implementation
@@ -33,7 +36,7 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        public Boolean Remove(IInputterAsync item)
+        public bool Remove(IInputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
             return _inputtersAsync.Remove(item);
@@ -41,32 +44,36 @@ namespace ThingAppraiser.IO.Input
 
         #endregion
 
-        public async Task<Boolean> GetNames(BufferBlock<String> queueToWrite, String storageName)
+        public async Task<bool> GetNames(BufferBlock<string> queueToWrite, string storageName)
         {
-            if (String.IsNullOrEmpty(storageName))
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                string message = "Storage name is empty, using the default value.";
+                _logger.Info(message);
+                GlobalMessageHandler.OutputMessage(message);
             }
 
-            List<Task<Boolean>> producers = _inputtersAsync.Select(
+            List<Task<bool>> producers = _inputtersAsync.Select(
                 inputterAsync => TryReadThingNames(inputterAsync, queueToWrite, storageName)
             ).ToList();
 
-            Boolean[] statuses = await Task.WhenAll(producers);
+            bool[] statuses = await Task.WhenAll(producers);
             queueToWrite.Complete();
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info($"{statuses.Length} Things were found.");
+                _logger.Info($"{statuses.Length} Things were found.");
                 return true;
             }
 
-            s_logger.Info($"No Things were found in \"{storageName}\".");
+            _logger.Info($"No Things were found in \"{storageName}\".");
             return false;
         }
 
         private static async Task<Boolean> TryReadThingNames(IInputterAsync inputterAsync,
-            BufferBlock<String> queueToWrite, String storageName)
+            BufferBlock<string> queueToWrite, string storageName)
         {
             try
             {
@@ -74,7 +81,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, "Couldn't get access to the storage.");
+                _logger.Warn(ex, "Couldn't get access to the storage.");
                 return false;
             }
             return true;

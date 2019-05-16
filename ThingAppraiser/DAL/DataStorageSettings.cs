@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace ThingAppraiser.DAL
+﻿namespace ThingAppraiser.DAL
 {
-    public class CDataStorageSettings
+    public class DataStorageSettings
     {
-        public String DBConnectionString { get; }
+        public string DbConnectionString { get; }
 
-        public CDataStorageSettings(String dbConnectionString)
+        public DataStorageSettings(string dbConnectionString)
         {
-            DBConnectionString = dbConnectionString.ThrowIfNullOrEmpty(nameof(dbConnectionString));
+            DbConnectionString = dbConnectionString.ThrowIfNullOrEmpty(nameof(dbConnectionString));
         }
     }
 }

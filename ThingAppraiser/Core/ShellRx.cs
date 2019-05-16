@@ -1,80 +1,83 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Core
 {
-    public sealed class CShellRx
+    public sealed class ShellRx
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CShellRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<ShellRx>();
 
-        private readonly Int32 _boundedCapacity;
+        public IO.Input.InputManagerRx InputManagerRx { get; }
 
-        public IO.Input.CInputManagerRx InputManagerRx { get; }
+        public Crawlers.CrawlersManagerRx CrawlersManagerRx { get; }
 
-        public Crawlers.CCrawlersManagerRx CrawlersManagerRx { get; }
+        public Appraisers.AppraisersManagerRx AppraisersManagerRx { get; }
 
-        public Appraisers.CAppraisersManagerRx AppraisersManagerRx { get; }
-
-        public IO.Output.COutputManagerRx OutputManagerRx { get; }
+        public IO.Output.OutputManagerRx OutputManagerRx { get; }
 
 
-        public CShellRx(
-            IO.Input.CInputManagerRx inputManagerRx,
-            Crawlers.CCrawlersManagerRx crawlersManagerRx,
-            Appraisers.CAppraisersManagerRx appraisersManagerRx,
-            IO.Output.COutputManagerRx outputManagerRx,
-            Int32 boundedCapacity)
+        public ShellRx(
+            IO.Input.InputManagerRx inputManagerRx,
+            Crawlers.CrawlersManagerRx crawlersManagerRx,
+            Appraisers.AppraisersManagerRx appraisersManagerRx,
+            IO.Output.OutputManagerRx outputManagerRx,
+            int _) // boundedCapacity not used now.
         {
             InputManagerRx = inputManagerRx.ThrowIfNull(nameof(inputManagerRx));
             CrawlersManagerRx = crawlersManagerRx.ThrowIfNull(nameof(crawlersManagerRx));
             AppraisersManagerRx = appraisersManagerRx.ThrowIfNull(nameof(appraisersManagerRx));
             OutputManagerRx = outputManagerRx.ThrowIfNull(nameof(outputManagerRx));
-
-            _boundedCapacity = boundedCapacity; // Not used now.
         }
 
-        public EStatus Run(String storageName)
+        public static Building.ShellRxBuilderDirector CreateBuilderDirector(
+            XDocument configuration)
         {
-            SGlobalMessageHandler.OutputMessage("Shell started work.");
-            s_logger.Info("Shell started work.");
+            return new Building.ShellRxBuilderDirector(
+                new Building.ShellRxBuilderFromXDocument(configuration)
+            );
+        }
+
+        public async Task<ServiceStatus> Run(string storageName)
+        {
+            GlobalMessageHandler.OutputMessage("Shell started work.");
+            _logger.Info("Shell started work.");
 
             // Input component work.
-            IObservable<String> inputQueue =
+            IObservable<string> inputQueue =
                 InputManagerRx.GetNames(storageName);
 
             // Crawlers component work.
-            IObservable<CBasicInfo> responsesQueue =
+            IDictionary<Type, IObservable<BasicInfo>> responsesQueues =
                 CrawlersManagerRx.CollectAllResponses(inputQueue);
 
             // Appraisers component work.
-            IObservable<CRatingDataContainer> appraisersStatus =
-                AppraisersManagerRx.GetAllRatings(responsesQueue);
+            IDictionary<Type, IObservable<RatingDataContainer>> ratingsQueues =
+                AppraisersManagerRx.GetAllRatings(responsesQueues);
 
             // Output component work.
-            Task<Boolean> outputStatus =
-                OutputManagerRx.SaveResults(appraisersStatus, String.Empty);
-
-            outputStatus.Wait();
+            bool outputStatus =
+                await OutputManagerRx.SaveResults(ratingsQueues, string.Empty);
 
             // FIX ME: if there are error statuses need to create aggregate status which contains
             // more details then simple EStatus.Error value.
-            Boolean success = outputStatus.Result;
-            if (!success)
+            if (!outputStatus)
             {
-                SGlobalMessageHandler.OutputMessage(
+                GlobalMessageHandler.OutputMessage(
                     "Shell got error status during data processing."
                 );
-                s_logger.Info("Shell got error status during data processing.");
-                return EStatus.Error;
+                _logger.Info("Shell got error status during data processing.");
+                return ServiceStatus.Error;
             }
 
-            s_logger.Info("Shell finished work successfully.");
-            SGlobalMessageHandler.OutputMessage("Shell finished work successfully.");
-            return EStatus.Ok;
+            _logger.Info("Shell finished work successfully.");
+            GlobalMessageHandler.OutputMessage("Shell finished work successfully.");
+            return ServiceStatus.Ok;
         }
     }
 }

@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Output
 {
-    public class CLocalFileWriterAsync : IOutputterAsync, ITagable
+    public class CLocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
-        private readonly CLocalFileWriter _localFileWriter = new CLocalFileWriter();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CLocalFileWriterAsync>();
+
+        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "LocalFileWriterAsync";
+        public string Tag { get; } = "LocalFileWriterAsync";
 
         #endregion
 
@@ -23,13 +28,21 @@ namespace ThingAppraiser.IO.Output
 
         #region IOutputterAsync Implementation
 
-        // Disables because there are no async operations but other outputters may have such ones.
-#pragma warning disable 1998
-        public async Task<Boolean> SaveResults(List<List<CRatingDataContainer>> results, 
-            String storageName)
-#pragma warning restore 1998
+        public async Task<bool> SaveResults(List<List<RatingDataContainer>> results,
+            string storageName)
         {
-            return _localFileWriter.SaveResults(results, storageName);
+            if (string.IsNullOrEmpty(storageName)) return false;
+
+            try
+            {
+                return await Task.Run(() => _localFileWriter.SaveResults(results, storageName));
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Couldn't write to the storage.");
+                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
+                return false;
+            }
         }
 
         #endregion

@@ -1,12 +1,12 @@
 ﻿using System;
 using ThingAppraiser.Logging;
 
-namespace DesktopApp.Domain
+namespace ThingAppraiser.DesktopApp.Domain
 {
     public class CommonErrorHandler : IErrorHandler
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CommonErrorHandler>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CommonErrorHandler>();
 
 
         public CommonErrorHandler()
@@ -17,7 +17,7 @@ namespace DesktopApp.Domain
 
         public void HandleError(Exception ex)
         {
-            s_logger.Error(ex, "Exception occured during task execution.");
+            _logger.Error(ex, "Exception occured during task execution.");
         }
 
         #endregion

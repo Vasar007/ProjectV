@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Input
 {
-    public interface IInputterRx : ITagable
+    public interface IInputterRx : IInputterBase, ITagable
     {
-        IEnumerable<String> ReadThingNames(String storageName);
+        IEnumerable<string> ReadThingNames(string storageName);
     }
 }

@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using DesktopApp.View;
-using DesktopApp.ViewModel;
+using ThingAppraiser.DesktopApp.Views;
+using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Logging;
 
-namespace DesktopApp
+namespace ThingAppraiser.DesktopApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class CMainWindow : Window
+    public partial class MainWindow : Window
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CMainWindow>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<MainWindow>();
 
-        public CMainWindow()
+        public MainWindow()
         {
             InitializeComponent();
 
-            DataContext = new CMainWindowViewModel(new CStartControl());
+            DataContext = new MainWindowViewModel(new StartControl());
 
-            s_logger.Info("Client application started.");
+            _logger.Info("Client application started.");
         }
 
-        private void OnCopy(Object sender, ExecutedRoutedEventArgs e)
+        private void OnCopy(object sender, ExecutedRoutedEventArgs e)
         {
-            if (e.Parameter is String stringValue)
+            if (e.Parameter is string stringValue)
             {
                 try
                 {
@@ -34,7 +34,7 @@ namespace DesktopApp
                 }
                 catch (Exception ex)
                 {
-                    s_logger.Error(ex, "Data couldn't be copied to clipboard.");
+                    _logger.Error(ex, "Data couldn't be copied to clipboard.");
                 }
             }
         }

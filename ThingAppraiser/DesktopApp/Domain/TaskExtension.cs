@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace DesktopApp.Domain
+namespace ThingAppraiser.DesktopApp.Domain
 {
     public static class TaskExtension
     {

@@ -330,7 +330,8 @@ ASALocalRun/
 .mfractor/
 
 # User defined block
-*.json
+credentials.json
+token.json/
 *.txt
 *.obj
 /ThingAppraiser/MigrationBackup

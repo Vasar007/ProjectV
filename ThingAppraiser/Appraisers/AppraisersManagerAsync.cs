@@ -9,29 +9,29 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Appraisers
 {
-    public sealed class CAppraisersManagerAsync : IManager<CAppraiserAsync>
+    public sealed class AppraisersManagerAsync : IManager<AppraiserAsync>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CAppraisersManagerAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<AppraisersManagerAsync>();
 
-        private readonly Dictionary<Type, List<CAppraiserAsync>> _appraisersAsync =
-            new Dictionary<Type, List<CAppraiserAsync>>();
+        private readonly Dictionary<Type, List<AppraiserAsync>> _appraisersAsync =
+            new Dictionary<Type, List<AppraiserAsync>>();
 
-        private readonly Boolean _outputResults;
+        private readonly bool _outputResults;
 
 
-        public CAppraisersManagerAsync(Boolean outputResults)
+        public AppraisersManagerAsync(bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CAppraiserAsync> Implementation
+        #region IManager<AppraiserAsync> Implementation
 
-        public void Add(CAppraiserAsync item)
+        public void Add(AppraiserAsync item)
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisersAsync.TryGetValue(item.TypeID, out List<CAppraiserAsync> list))
+            if (_appraisersAsync.TryGetValue(item.TypeId, out List<AppraiserAsync> list))
             {
                 if (!list.Contains(item))
                 {
@@ -40,35 +40,35 @@ namespace ThingAppraiser.Appraisers
             }
             else
             {
-                _appraisersAsync.Add(item.TypeID, new List<CAppraiserAsync> { item });
+                _appraisersAsync.Add(item.TypeId, new List<AppraiserAsync> { item });
             }
         }
 
-        public Boolean Remove(CAppraiserAsync item)
+        public bool Remove(AppraiserAsync item)
         {
             item.ThrowIfNull(nameof(item));
-            return _appraisersAsync.Remove(item.TypeID);
+            return _appraisersAsync.Remove(item.TypeId);
         }
 
         #endregion
 
-        public async Task<Boolean> GetAllRatings(
-            Dictionary<Type, BufferBlock<CBasicInfo>> entitiesInfoQueues,
-            Dictionary<Type, BufferBlock<CRatingDataContainer>> entitiesRatingQueues,
+        public async Task<bool> GetAllRatings(
+            IDictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
+            IDictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues,
             DataflowBlockOptions options)
         {
-            List<Task<Boolean>> producers = new List<Task<Boolean>>();
-            foreach (KeyValuePair<Type, BufferBlock<CBasicInfo>> keyValue in entitiesInfoQueues)
+            List<Task<bool>> producers = new List<Task<bool>>();
+            foreach (KeyValuePair<Type, BufferBlock<BasicInfo>> keyValue in entitiesInfoQueues)
             {
-                if (!_appraisersAsync.TryGetValue(keyValue.Key, out List<CAppraiserAsync> values))
+                if (!_appraisersAsync.TryGetValue(keyValue.Key, out List<AppraiserAsync> values))
                 {
-                    String message = $"Type {keyValue.Key} wasn't used to appraise!";
-                    s_logger.Info(message);
-                    SGlobalMessageHandler.OutputMessage(message);
+                    string message = $"Type {keyValue.Key} wasn't used to appraise!";
+                    _logger.Info(message);
+                    GlobalMessageHandler.OutputMessage(message);
                     continue;
                 }
 
-                var entitiesRatingQueue = new BufferBlock<CRatingDataContainer>(options);
+                var entitiesRatingQueue = new BufferBlock<RatingDataContainer>(options);
                 entitiesRatingQueues.Add(keyValue.Key, entitiesRatingQueue);
                 producers.AddRange(values.Select(
                     appraiserAsync => appraiserAsync.GetRatings(keyValue.Value, entitiesRatingQueue,
@@ -76,8 +76,8 @@ namespace ThingAppraiser.Appraisers
                 );
             }
 
-            Boolean[] statuses = await Task.WhenAll(producers);
-            foreach (BufferBlock<CRatingDataContainer> entitiesRatingQueue in 
+            bool[] statuses = await Task.WhenAll(producers);
+            foreach (BufferBlock<RatingDataContainer> entitiesRatingQueue in 
                      entitiesRatingQueues.Values)
             {
                 entitiesRatingQueue.Complete();
@@ -85,11 +85,11 @@ namespace ThingAppraiser.Appraisers
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info("Appraisers have finished work.");
+                _logger.Info("Appraisers have finished work.");
                 return true;
             }
 
-            s_logger.Info("Appraisers have not processed any data.");
+            _logger.Info("Appraisers have not processed any data.");
             return false;
         }
     }

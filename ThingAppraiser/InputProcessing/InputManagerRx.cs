@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
-    public sealed class CInputManagerRx: IManager<IInputterRx>
+    public sealed class InputManagerRx: IManager<IInputterRx>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CInputManagerRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<InputManagerRx>();
 
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         private readonly List<IInputterRx> _inputtersRx = new List<IInputterRx>();
 
 
-        public CInputManagerRx(String defaultFilename)
+        public InputManagerRx(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
         }
 
         #region IManager<IInputterRx> Implementation
@@ -33,7 +36,7 @@ namespace ThingAppraiser.IO.Input
             }
         }
 
-        public Boolean Remove(IInputterRx item)
+        public bool Remove(IInputterRx item)
         {
             item.ThrowIfNull(nameof(item));
             return _inputtersRx.Remove(item);
@@ -41,19 +44,23 @@ namespace ThingAppraiser.IO.Input
 
         #endregion
 
-        public IObservable<String> GetNames(String storageName)
+        public IObservable<string> GetNames(string storageName)
         {
-            if (String.IsNullOrEmpty(storageName))
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                string message = "Storage name is empty, using the default value.";
+                _logger.Info(message);
+                GlobalMessageHandler.OutputMessage(message);
             }
 
-            IObservable<String> inputQueue = _inputtersRx.AsParallel().Select(inputterRx => 
-                Observable.Create((IObserver<String> observer) =>
+            IObservable<string> inputQueue = _inputtersRx.AsParallel().Select(inputterRx => 
+                Observable.Create((IObserver<string> observer) =>
                 {
                     try
                     {
-                        foreach (String value in inputterRx.ReadThingNames(storageName))
+                        foreach (string value in inputterRx.ReadThingNames(storageName))
                         {
                             observer.OnNext(value);
                         }
@@ -62,7 +69,7 @@ namespace ThingAppraiser.IO.Input
                     }
                     catch (Exception ex)
                     {
-                        s_logger.Error(ex, $"Inputter {inputterRx.Tag} threw exception.");
+                        _logger.Error(ex, $"Inputter {inputterRx.Tag} threw exception.");
                         observer.OnError(ex);
                     }
 
@@ -70,7 +77,7 @@ namespace ThingAppraiser.IO.Input
                 })
             ).Merge();
 
-            s_logger.Info($"Inputters were configured to read from \"{storageName}\".");
+            _logger.Info($"Inputters were configured to read from \"{storageName}\".");
             return inputQueue;
         }
     }

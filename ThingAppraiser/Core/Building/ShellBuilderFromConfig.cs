@@ -1,145 +1,149 @@
-﻿using System;
-using ThingAppraiser.Logging;
+﻿using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="CShell" /> instances from
+    /// Builder class which provides the way of constructing <see cref="Shell" /> instances from
     /// default App.config file.
     /// </summary>
     /// <remarks>
     /// Structure of App.config file must satisfy certain contracts, otherwise different exception
     /// could be thrown.
     /// </remarks>
-    public sealed class CShellBuilderFromConfig : IShellBuilder
+    public sealed class ShellBuilderFromConfig : IShellBuilder
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CShellBuilderFromConfig>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<ShellBuilderFromConfig>();
 
         /// <summary>
         /// Attribute name for message handler.
         /// </summary>
-        private readonly String _messageHandlerTypeParameterName = "MessageHandlerType";
+        private static readonly string _messageHandlerTypeParameterName = "MessageHandlerType";
 
         /// <summary>
         /// Attribute name for default input filename of input manager.
         /// </summary>
-        private readonly String _defaultInFilenameParameterName = "DefaultInFilename";
+        private static readonly string _defaultInStorageNameParameterName = "DefaultInStorageName";
 
         /// <summary>
         /// Attribute name for number of inputters in config.
         /// </summary>
-        private readonly String _inputtersNumberParameterName = "InputtersNumber";
+        private static readonly string _inputtersNumberParameterName = "InputtersNumber";
 
         /// <summary>
         /// Attribute name for inputters base part of the name in config. Each inputter definition
         /// must contain this base part with serial number after it without spaces. Numbering
         /// starts with 1.
         /// </summary>
-        private readonly String _inputterBaseParameterName = "Inputter";
+        private static readonly string _inputterBaseParameterName = "Inputter";
 
         /// <summary>
         /// Attribute name for crawlers output flag of crawlers manager.
         /// </summary>
-        private readonly String _crawlersOutputParameterName = "CrawlersOutputFlag";
+        private static readonly string _crawlersOutputParameterName = "CrawlersOutputFlag";
 
         /// <summary>
         /// Attribute name for number of crawlers in config.
         /// </summary>
-        private readonly String _crawlersNumberParameterName = "CrawlersNumber";
+        private static readonly string _crawlersNumberParameterName = "CrawlersNumber";
 
         /// <summary>
         /// Attribute name for crawler base part of the name in config. Each crawler definition
         /// must contain this base part with serial number after it without spaces. Numbering
         /// starts with 1.
         /// </summary>
-        private readonly String _crawlerBaseParameterName = "Crawler";
+        private static readonly string _crawlerBaseParameterName = "Crawler";
 
         /// <summary>
         /// Attribute name for appraisers output flag of appraisers manager.
         /// </summary>
-        private readonly String _appraisersOutputParameterName = "AppraisersOutputFlag";
+        private static readonly string _appraisersOutputParameterName = "AppraisersOutputFlag";
 
         /// <summary>
         /// Attribute name for number of appraises in config.
         /// </summary>
-        private readonly String _appraisersNumberParameterName = "AppraisersNumber";
+        private static readonly string _appraisersNumberParameterName = "AppraisersNumber";
 
         /// <summary>
         /// Attribute name for appraiser base part of the name in config. Each appraiser definition
         /// must contain this base part with serial number after it without spaces. Numbering
         /// starts with 1.
         /// </summary>
-        private readonly String _appraiserBaseParameterName = "Appraiser";
+        private static readonly string _appraiserBaseParameterName = "Appraiser";
 
         /// <summary>
         /// Attribute name for default output filename of output manager.
         /// </summary>
-        private readonly String _defaultOutFilenameParameterName = "DefaultOutFilename";
+        private static readonly string _defaultOutStorageNameParameterName = "DefaultOutStorageName";
 
         /// <summary>
         /// Attribute name for number of outputters in config.
         /// </summary>
-        private readonly String _outputtersNumberParameterName = "OutputtersNumber";
+        private static readonly string _outputtersNumberParameterName = "OutputtersNumber";
 
         /// <summary>
         /// Attribute name for output base part of the name in config. Each output definition
         /// must contain this base part with serial number after it without spaces. Numbering
         /// starts with 1.
         /// </summary>
-        private readonly String _outputterBaseParameterName = "Outputter";
+        private static readonly string _outputterBaseParameterName = "Outputter";
 
         /// <summary>
         /// Attribute name for number of repositories in config.
         /// </summary>
-        private readonly String _repositoriesNumberParameterName = "RepositoriesNumber";
+        private static readonly string _repositoriesNumberParameterName = "RepositoriesNumber";
 
         /// <summary>
         /// Attribute name for repository base part of the name in config. Each repository
         /// definition must contain this base part with serial number after it without spaces.
         /// Numbering starts with 1.
         /// </summary>
-        private readonly String _repositoryBaseParameterName = "Repository";
+        private static readonly string _repositoryBaseParameterName = "Repository";
 
         /// <summary>
         /// Attribute name for connection string for data base component.
         /// </summary>
-        private readonly String _connectionStringParameterName = "ConnectionString";
+        private static readonly string _connectionStringParameterName = "ConnectionString";
 
+        /// <summary>
+        /// Provides methods to create instances of service classes.
+        /// </summary>
+        private readonly ServiceBuilderForAppConfig _serviceBuilder =
+            new ServiceBuilderForAppConfig();
 
         /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.CInputManager _inputManager;
+        private IO.Input.InputManager _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CCrawlersManager _crawlersManager;
+        private Crawlers.CrawlersManager _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.CAppraisersManager _appraisersManager;
+        private Appraisers.AppraisersManager _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.COutputManager _outputManager;
+        private IO.Output.OutputManager _outputManager;
 
         /// <summary>
         /// Variables which saves data base manager instance during building process.
         /// </summary>
-        private DAL.CDataBaseManager _dataBaseManager;
+        private DAL.DataBaseManager _dataBaseManager;
 
 
         /// <summary>
         /// Initializes builder which works with default App.config file.
         /// </summary>
-        public CShellBuilderFromConfig()
+        public ShellBuilderFromConfig()
         {
             Reset();
         }
@@ -159,26 +163,27 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildMessageHandler()
         {
-            Communication.SGlobalMessageHandler.MessageHandler =
-                SServiceBuilder.CreateMessageHandlerWithConfigParameters(
-                    SConfigParser.GetValueByParameterKey(_messageHandlerTypeParameterName)
-                );
+            Communication.GlobalMessageHandler.SetMessageHangler(
+                _serviceBuilder.CreateMessageHandler(
+                    ConfigParser.GetValueByParameterKey(_messageHandlerTypeParameterName)
+                )
+            );
         }
 
         /// <inheritdoc />
         public void BuildInputManager()
         {
-            _inputManager = new IO.Input.CInputManager(
-                SConfigParser.GetValueByParameterKey(_defaultInFilenameParameterName)
+            _inputManager = new IO.Input.InputManager(
+                ConfigParser.GetValueByParameterKey(_defaultInStorageNameParameterName)
             );
 
-            var inputtersNumber = SConfigParser.GetValueByParameterKey<Int32>(
+            var inputtersNumber = ConfigParser.GetValueByParameterKey<int>(
                 _inputtersNumberParameterName
             );
-            for (Int32 i = 1; i <= inputtersNumber; ++i)
+            for (int i = 1; i <= inputtersNumber; ++i)
             {
-                _inputManager.Add(SServiceBuilder.CreateInputterWithConfigParameters(
-                    SConfigParser.GetValueByParameterKey(_inputterBaseParameterName + i)
+                _inputManager.Add(_serviceBuilder.CreateInputter(
+                    ConfigParser.GetValueByParameterKey(_inputterBaseParameterName + i)
                 ));
             }
         }
@@ -186,17 +191,17 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildCrawlersManager()
         {
-            _crawlersManager = new Crawlers.CCrawlersManager(
-                SConfigParser.GetValueByParameterKey<Boolean>(_crawlersOutputParameterName)
+            _crawlersManager = new Crawlers.CrawlersManager(
+                ConfigParser.GetValueByParameterKey<bool>(_crawlersOutputParameterName)
             );
 
-            var crawlersNumber = SConfigParser.GetValueByParameterKey<Int32>(
+            var crawlersNumber = ConfigParser.GetValueByParameterKey<int>(
                 _crawlersNumberParameterName
             );
-            for (Int32 i = 1; i <= crawlersNumber; ++i)
+            for (int i = 1; i <= crawlersNumber; ++i)
             {
-                _crawlersManager.Add(SServiceBuilder.CreateCrawlerWithConfigParameters(
-                    SConfigParser.GetValueByParameterKey(_crawlerBaseParameterName + i)
+                _crawlersManager.Add(_serviceBuilder.CreateCrawler(
+                    ConfigParser.GetValueByParameterKey(_crawlerBaseParameterName + i)
                 ));
             }
         }
@@ -204,17 +209,17 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildAppraisersManager()
         {
-            _appraisersManager = new Appraisers.CAppraisersManager(
-                SConfigParser.GetValueByParameterKey<Boolean>(_appraisersOutputParameterName)
+            _appraisersManager = new Appraisers.AppraisersManager(
+                ConfigParser.GetValueByParameterKey<bool>(_appraisersOutputParameterName)
             );
 
-            var appraisersNumber = SConfigParser.GetValueByParameterKey<Int32>(
+            var appraisersNumber = ConfigParser.GetValueByParameterKey<int>(
                 _appraisersNumberParameterName
             );
-            for (Int32 i = 1; i <= appraisersNumber; ++i)
+            for (int i = 1; i <= appraisersNumber; ++i)
             {
-                _appraisersManager.Add(SServiceBuilder.CreateAppraiserWithConfigParameters(
-                    SConfigParser.GetValueByParameterKey(_appraiserBaseParameterName + i)
+                _appraisersManager.Add(_serviceBuilder.CreateAppraiser(
+                    ConfigParser.GetValueByParameterKey(_appraiserBaseParameterName + i)
                 ));
             }
         }
@@ -222,17 +227,17 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildOutputManager()
         {
-            _outputManager = new IO.Output.COutputManager(
-                SConfigParser.GetValueByParameterKey(_defaultOutFilenameParameterName)
+            _outputManager = new IO.Output.OutputManager(
+                ConfigParser.GetValueByParameterKey(_defaultOutStorageNameParameterName)
             );
 
-            var outputtersNumber = SConfigParser.GetValueByParameterKey<Int32>(
+            var outputtersNumber = ConfigParser.GetValueByParameterKey<int>(
                 _outputtersNumberParameterName
             );
-            for (Int32 i = 1; i <= outputtersNumber; ++i)
+            for (int i = 1; i <= outputtersNumber; ++i)
             {
-                _outputManager.Add(SServiceBuilder.CreateOutputterWithConfigParameters(
-                    SConfigParser.GetValueByParameterKey(_outputterBaseParameterName + i)
+                _outputManager.Add(_serviceBuilder.CreateOutputter(
+                    ConfigParser.GetValueByParameterKey(_outputterBaseParameterName + i)
                 ));
             }
         }
@@ -240,23 +245,23 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildDataBaseManager()
         {
-            var connectionString = SConfigParser.GetValueByParameterKey(
+            var connectionString = ConfigParser.GetValueByParameterKey(
                 _connectionStringParameterName
             );
-            var dataBaseSettings = new DAL.CDataStorageSettings(connectionString);
-            _dataBaseManager = new DAL.CDataBaseManager(
-                new DAL.Repositories.CResultInfoRepository(dataBaseSettings),
-                new DAL.Repositories.CRatingRepository(dataBaseSettings)
+            var dataBaseSettings = new DAL.DataStorageSettings(connectionString);
+            _dataBaseManager = new DAL.DataBaseManager(
+                new DAL.Repositories.ResultInfoRepository(dataBaseSettings),
+                new DAL.Repositories.RatingRepository(dataBaseSettings)
             );
 
-            var repositoriesNumber = SConfigParser.GetValueByParameterKey<Int32>(
+            var repositoriesNumber = ConfigParser.GetValueByParameterKey<int>(
                 _repositoriesNumberParameterName
             );
-            for (Int32 i = 1; i <= repositoriesNumber; ++i)
+            for (int i = 1; i <= repositoriesNumber; ++i)
             {
                 _dataBaseManager.DataRepositoriesManager.Add(
-                    SServiceBuilder.CreateRepositoryWithConfigParameters(
-                        SConfigParser.GetValueByParameterKey(_repositoryBaseParameterName + i),
+                    _serviceBuilder.CreateRepository(
+                        ConfigParser.GetValueByParameterKey(_repositoryBaseParameterName + i),
                         dataBaseSettings
                     )
                 );
@@ -264,11 +269,11 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <inheritdoc />
-        public CShell GetResult()
+        public Shell GetResult()
         {
-            s_logger.Info("Created Shell from App config.");
-            return new CShell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
-                              _dataBaseManager);
+            _logger.Info("Created Shell from App config.");
+            return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
+                             _dataBaseManager);
         }
 
         #endregion

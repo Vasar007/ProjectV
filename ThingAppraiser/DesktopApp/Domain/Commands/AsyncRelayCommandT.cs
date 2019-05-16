@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThingAppraiser;
 
-namespace DesktopApp.Domain.Commands
+namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    public class CAsyncRelayCommand<T> : IAsyncCommand<T>
+    public class AsyncRelayCommand<T> : IAsyncCommand<T>
     {
-        private Boolean _isExecuting;
+        private bool _isExecuting;
 
         private readonly Func<T, Task> _execute;
 
-        private readonly Func<T, Boolean> _canExecute;
+        private readonly Func<T, bool> _canExecute;
 
         private readonly IErrorHandler _errorHandler;
 
 
-        public CAsyncRelayCommand(Func<T, Task> execute, Func<T, Boolean> canExecute,
+        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool> canExecute,
             IErrorHandler errorHandler)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
@@ -24,12 +23,12 @@ namespace DesktopApp.Domain.Commands
             _errorHandler = errorHandler;
         }
 
-        public CAsyncRelayCommand(Func<T, Task> execute, Func<T, Boolean> canExecute)
+        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool> canExecute)
             : this(execute, canExecute, null)
         {
         }
 
-        public CAsyncRelayCommand(Func<T, Task> execute)
+        public AsyncRelayCommand(Func<T, Task> execute)
             : this(execute, null, null)
         {
         }
@@ -41,7 +40,7 @@ namespace DesktopApp.Domain.Commands
 
         #region IAsyncCommand<T> Implementation
 
-        public Boolean CanExecute(T parameter)
+        public bool CanExecute(T parameter)
         {
             return !_isExecuting && _canExecute.Invoke(parameter);
         }
@@ -70,12 +69,12 @@ namespace DesktopApp.Domain.Commands
 
         public event EventHandler CanExecuteChanged;
 
-        bool ICommand.CanExecute(Object parameter)
+        bool ICommand.CanExecute(object parameter)
         {
-            return CanExecute((T)parameter);
+            return CanExecute((T) parameter);
         }
 
-        void ICommand.Execute(Object parameter)
+        void ICommand.Execute(object parameter)
         {
             ExecuteAsync((T) parameter).FireAndForgetSafeAsync(_errorHandler);
         }

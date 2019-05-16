@@ -7,28 +7,31 @@ namespace ThingAppraiser.IO.Input
     /// <summary>
     /// Class which can read from files and parse it.
     /// </summary>
-    public class CLocalFileReader : IInputter, ITagable
+    public class LocalFileReader : IInputter, IInputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CLocalFileReader>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileReader>();
 
+        /// <summary>
+        /// Helper variable to read data from file with additional processing.
+        /// </summary>
         private readonly IFileReader _fileReader;
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public String Tag => "LocalFileReader";
+        public string Tag { get; } = "LocalFileReader";
 
         #endregion
 
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes instance with specified reader.
         /// </summary>
-        public CLocalFileReader(IFileReader fileReader)
+        public LocalFileReader(IFileReader fileReader)
         {
             _fileReader = fileReader.ThrowIfNull(nameof(fileReader));
         }
@@ -40,10 +43,10 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="storageName">Storage with Things names.</param>
         /// <returns>Things names as collection of strings.</returns>
-        public List<String> ReadThingNames(String storageName)
+        public List<string> ReadThingNames(string storageName)
         {
-            var result = new List<String>();
-            if (String.IsNullOrEmpty(storageName)) return result;
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(storageName)) return result;
 
             try
             {
@@ -58,7 +61,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "File reader throws exception.");
+                _logger.Error(ex, "File reader throws exception.");
                 throw;
             }
 

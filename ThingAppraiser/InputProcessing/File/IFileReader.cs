@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Input
 {
@@ -14,7 +13,7 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="filename">Filename to read.</param>
         /// <returns>Processed collection of entity names.</returns>
-        List<String> ReadFile(String filename);
+        List<string> ReadFile(string filename);
 
         /// <summary>
         /// Reads local csv-file. File must satisfy a particular structure (it's implementation
@@ -22,6 +21,6 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="filename">Filename to read</param>
         /// <returns>Processed collection of entity names.</returns>
-        List<String> ReadCsvFile(String filename);
+        List<string> ReadCsvFile(string filename);
     }
 }

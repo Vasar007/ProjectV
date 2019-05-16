@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThingAppraiser;
 
-namespace DesktopApp.Domain.Commands
+namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    public class CAsyncRelayCommand : IAsyncCommand
+    public class AsyncRelayCommand : IAsyncCommand
     {
         private readonly Func<Task> _execute;
 
-        private readonly Func<Boolean> _canExecute;
+        private readonly Func<bool> _canExecute;
 
         private readonly IErrorHandler _errorHandler;
 
-        private Boolean _isExecuting;
+        private bool _isExecuting;
 
 
-        public CAsyncRelayCommand(Func<Task> execute, Func<Boolean> canExecute,
+        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute,
             IErrorHandler errorHandler)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
@@ -24,12 +23,12 @@ namespace DesktopApp.Domain.Commands
             _errorHandler = errorHandler;
         }
 
-        public CAsyncRelayCommand(Func<Task> execute, Func<Boolean> canExecute)
+        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute)
             : this(execute, canExecute, null)
         {
         }
 
-        public CAsyncRelayCommand(Func<Task> execute)
+        public AsyncRelayCommand(Func<Task> execute)
             : this(execute, null, null)
         {
         }
@@ -41,7 +40,7 @@ namespace DesktopApp.Domain.Commands
 
         #region IAsyncCommand Implementation
 
-        public Boolean CanExecute()
+        public bool CanExecute()
         {
             return !_isExecuting && _canExecute.Invoke();
         }
@@ -70,12 +69,12 @@ namespace DesktopApp.Domain.Commands
 
         public event EventHandler CanExecuteChanged;
 
-        Boolean ICommand.CanExecute(Object parameter)
+        bool ICommand.CanExecute(object parameter)
         {
             return CanExecute();
         }
 
-        void ICommand.Execute(Object parameter)
+        void ICommand.Execute(object parameter)
         {
             ExecuteAsync().FireAndForgetSafeAsync(_errorHandler);
         }

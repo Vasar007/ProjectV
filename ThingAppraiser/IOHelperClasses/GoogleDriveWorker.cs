@@ -12,13 +12,13 @@ namespace ThingAppraiser.IO
     /// <summary>
     /// Base class to interact with Google Drive API.
     /// </summary>
-    public abstract class CGoogleDriveWorker
+    public abstract class GoogleDriveWorker
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CGoogleDriveWorker>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveWorker>();
 
         /// <summary>
         /// Available OAuth scopes to use with the Drive API.
@@ -27,12 +27,12 @@ namespace ThingAppraiser.IO
         /// If modifying these scopes, delete your previously saved credentials
         /// at ~/.credentials/tokens.json
         /// </remarks>
-        public static String[] Scopes { get; } = { DriveService.Scope.Drive };
+        public static string[] Scopes { get; } = { DriveService.Scope.Drive };
 
         /// <summary>
         /// The name of the application that is used to obtain the required credentials.
         /// </summary>
-        public static String ApplicationName { get; } = "ThingAppraiser";
+        public static string ApplicationName { get; } = "ThingAppraiser";
 
         /// <summary>
         /// Instance of Drive Service to send requests and get responses from Google Drive API.
@@ -41,15 +41,15 @@ namespace ThingAppraiser.IO
 
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes worker with specified service to interact with GoogleDrive API.
         /// </summary>
         /// <param name="driveService">
         /// Instance of Drive Service. Use service builder class to get it right.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="driveService">driveService</paramref> is <c>null</c>.
+        /// <paramref name="driveService" /> is <c>null</c>.
         /// </exception>
-        public CGoogleDriveWorker(DriveService driveService)
+        public GoogleDriveWorker(DriveService driveService)
         {
             GoogleDriveService = driveService.ThrowIfNull(nameof(driveService));
         }
@@ -62,7 +62,7 @@ namespace ThingAppraiser.IO
         /// <remarks>
         /// If the optional parameters are <c>null</c> then we will just return the request as is.
         /// </remarks>
-        protected static Object ApplyOptionalParams(Object request, Object optional)
+        protected static object ApplyOptionalParams(object request, object optional)
         {
             if (optional is null) return request;
 
@@ -72,7 +72,7 @@ namespace ThingAppraiser.IO
                 // Copy value from optional parms to the request.
                 // WARNING! They should have the same names and data types.
                 PropertyInfo piShared = (request.GetType()).GetProperty(property.Name);
-                Object propertyValue = property.GetValue(optional, null);
+                object propertyValue = property.GetValue(optional, null);
 
                 // Test that we do not add values for items that are null.
                 if (!(propertyValue is null) && !(piShared is null))
@@ -88,7 +88,7 @@ namespace ThingAppraiser.IO
         /// </summary>
         /// <param name="stream">Stream to process.</param>
         /// <param name="saveTo">Filename (absolute or relative).</param>
-        protected static void SaveStream(MemoryStream stream, String saveTo)
+        protected static void SaveStream(MemoryStream stream, string saveTo)
         {
             using (var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
             {
@@ -101,7 +101,7 @@ namespace ThingAppraiser.IO
         /// </summary>
         /// <param name="mimeType">MIME type to process.</param>
         /// <returns>Appropriate extension to passed type.</returns>
-        protected static String GetExtension(String mimeType)
+        protected static string GetExtension(string mimeType)
         {
             switch (mimeType)
             {
@@ -117,11 +117,11 @@ namespace ThingAppraiser.IO
                     return ".pdf";
 
                 default:
-                    s_logger.Warn($"Not found extension for MIME type: {mimeType}");
-                    SGlobalMessageHandler.OutputMessage(
+                    _logger.Warn($"Not found extension for MIME type: {mimeType}");
+                    GlobalMessageHandler.OutputMessage(
                         $"Not found extension for MIME type: {mimeType}"
                     );
-                    return String.Empty;
+                    return string.Empty;
             }
         }
 
@@ -133,18 +133,18 @@ namespace ThingAppraiser.IO
         /// <exception cref="ArgumentException">
         /// <param name="filename">filename</param> isn't contain extension.
         /// </exception>
-        protected static String GetMimeType(String filename)
+        protected static string GetMimeType(string filename)
         {
             if (!HasExtenstionSafe(filename))
             {
                 var ex = new ArgumentException($"Filename \"{filename}\" isn't contain extension.",
                                                nameof(filename));
 
-                s_logger.Error(ex, "Got filename without extension.");
+                _logger.Error(ex, "Got filename without extension.");
                 throw ex;
             }
 
-            String extension = Path.GetExtension(filename);
+            string extension = Path.GetExtension(filename);
             switch (extension)
             {
                 case ".txt":
@@ -159,11 +159,11 @@ namespace ThingAppraiser.IO
                     return "application/pdf";
 
                 default:
-                    s_logger.Warn($"Not found MIME type for extension: {extension}");
-                    SGlobalMessageHandler.OutputMessage(
+                    _logger.Warn($"Not found MIME type for extension: {extension}");
+                    GlobalMessageHandler.OutputMessage(
                         $"Not found MIME type for extension: {extension}"
                     );
-                    return String.Empty;
+                    return string.Empty;
             }
         }
 
@@ -172,7 +172,7 @@ namespace ThingAppraiser.IO
         /// </summary>
         /// <param name="filename">Filename to delete.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        protected static Boolean DeleteFile(String filename)
+        protected static bool DeleteFile(string filename)
         {
             try
             {
@@ -180,9 +180,9 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, $"Couldn't delete downloaded file \"{filename}\".");
-                SGlobalMessageHandler.OutputMessage("Couldn't delete downloaded file " +
-                                                    $" \"{filename}\". Error: {ex.Message}");
+                _logger.Warn(ex, $"Couldn't delete downloaded file \"{filename}\".");
+                GlobalMessageHandler.OutputMessage("Couldn't delete downloaded file " +
+                                                    $" \"{filename}\". Error: {ex}");
                 return false;
             }
             return true;
@@ -196,9 +196,9 @@ namespace ThingAppraiser.IO
         /// <c>true</c> if filename has extension, <c>false</c> otherwise (including case when
         /// <param name="filename">filename</param> is <c>null</c> or presents empty string).
         /// </returns>
-        protected static Boolean HasExtenstionSafe(String filename)
+        protected static bool HasExtenstionSafe(string filename)
         {
-            if (String.IsNullOrEmpty(filename)) return false;
+            if (string.IsNullOrEmpty(filename)) return false;
 
             return filename.Contains(".");
         }
@@ -215,7 +215,7 @@ namespace ThingAppraiser.IO
         /// <seealso href="https://developers.google.com/drive/v3/reference/files/list" />
         /// <exception cref="InvalidOperationException">Request failed.</exception>
         protected GoogleDriveData.FileList ListFiles(
-            CGoogleDriveFilesListOptionalParams optional)
+            GoogleDriveFilesListOptionalParams optional)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Request Files.List failed.");
+                _logger.Error(ex, "Request Files.List failed.");
                 throw new InvalidOperationException("Request Files.List failed.", ex);
             }
         }
@@ -239,7 +239,7 @@ namespace ThingAppraiser.IO
         /// <param name="pageSize">The maximum number of files return per page.</param>
         /// <param name="fields">Selector specifying which fields to include in a response.</param>
         /// <returns>The list of files from request.</returns>
-        protected IList<GoogleDriveData.File> GetFiles(Int32 pageSize, String fields)
+        protected IList<GoogleDriveData.File> GetFiles(int pageSize, string fields)
         {
             // Define parameters of request.
             FilesResource.ListRequest listRequest = GoogleDriveService.Files.List();

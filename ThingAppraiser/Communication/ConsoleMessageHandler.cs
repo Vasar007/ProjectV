@@ -11,19 +11,19 @@ namespace ThingAppraiser.Communication
     /// <summary>
     /// Message handler to interact with console.
     /// </summary>
-    public class CConsoleMessageHandler : IMessageHandler
+    public class ConsoleMessageHandler : IMessageHandler
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CConsoleMessageHandler>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<ConsoleMessageHandler>();
 
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes message handler and sets unicode encoding if required.
         /// </summary>
-        public CConsoleMessageHandler(Boolean setUnicode)
+        public ConsoleMessageHandler(bool setUnicode)
         {
             if (setUnicode)
             {
@@ -34,7 +34,7 @@ namespace ThingAppraiser.Communication
                 }
                 catch (IOException ex)
                 {
-                    s_logger.Error(ex, "Cannot set encoding for console, most likely because IO " +
+                    _logger.Error(ex, "Cannot set encoding for console, most likely because IO " +
                                        "stream is redirected.");
                 }
             }
@@ -44,11 +44,11 @@ namespace ThingAppraiser.Communication
         /// Helper method to display crawlers results.
         /// </summary>
         /// <param name="results">Data to show.</param>
-        public static void PrintResultsToConsole(IEnumerable<IEnumerable<CBasicInfo>> results)
+        public static void PrintResultsToConsole(IEnumerable<IEnumerable<BasicInfo>> results)
         {
-            foreach (IEnumerable<CBasicInfo> result in results)
+            foreach (IEnumerable<BasicInfo> result in results)
             {
-                foreach (CBasicInfo entity in result)
+                foreach (BasicInfo entity in result)
                 {
                     Console.WriteLine(JToken.FromObject(entity));
                 }
@@ -59,9 +59,9 @@ namespace ThingAppraiser.Communication
         /// Helper method to display appraisers results.
         /// </summary>
         /// <param name="ratings">Data to show.</param>
-        public static void PrintRatingsToConsole(IEnumerable<IEnumerable<CResultInfo>> ratings)
+        public static void PrintRatingsToConsole(IEnumerable<IEnumerable<ResultInfo>> ratings)
         {
-            foreach (IEnumerable<CResultInfo> rating in ratings)
+            foreach (IEnumerable<ResultInfo> rating in ratings)
             {
                 foreach (var (id, value, name) in rating)
                 {
@@ -79,9 +79,9 @@ namespace ThingAppraiser.Communication
         /// <exception cref="ArgumentNullException">
         /// Read input line is <c>null</c>.
         /// </exception>
-        public String GetMessage()
+        public string GetMessage()
         {
-            String line = Console.ReadLine();
+            string line = Console.ReadLine();
             line.ThrowIfNull(nameof(line));
             return line;
         }
@@ -90,7 +90,7 @@ namespace ThingAppraiser.Communication
         /// Writes message to the standard output stream.
         /// </summary>
         /// <param name="message">The value to write.</param>
-        public void OutputMessage(String message)
+        public void OutputMessage(string message)
         {
             Console.WriteLine(message);
         }

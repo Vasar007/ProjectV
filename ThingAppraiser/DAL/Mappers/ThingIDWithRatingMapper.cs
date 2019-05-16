@@ -1,22 +1,21 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class CThingIDWithRatingMapper : IMapper<CThingIDWithRating>
+    public class ThingIdWithRatingMapper : IMapper<ThingIdWithRating>
     {
-        public CThingIDWithRatingMapper()
+        public ThingIdWithRatingMapper()
         {
         }
 
-        #region IMapper<CBasicInfo> Implementation
+        #region IMapper<ThingIdWithRating> Implementation
 
-        public CThingIDWithRating ReadItem(IDataReader reader)
+        public ThingIdWithRating ReadItem(IDataReader reader)
         {
-            var item = new CThingIDWithRating(
-                id:     (Int32)  reader["thing_id"],
-                rating: (Double) reader["rating_value"]
+            var item = new ThingIdWithRating(
+                id:     (int)    reader["thing_id"],
+                rating: (double) reader["rating_value"]
             );
             return item;
         }

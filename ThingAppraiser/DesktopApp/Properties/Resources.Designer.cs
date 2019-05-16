@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DesktopApp.Properties
+namespace ThingAppraiser.DesktopApp.Properties
 {
 
 

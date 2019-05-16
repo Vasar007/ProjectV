@@ -8,18 +8,18 @@ namespace ThingAppraiser.IO.Input
     /// <summary>
     /// Class to read The Things name from input.
     /// </summary>
-    public sealed class CInputManager : IManager<IInputter>
+    public sealed class InputManager : IManager<IInputter>
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CInputManager>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
         /// </summary>
-        private readonly String _defaultFilename;
+        private readonly string _defaultStorageName;
 
         /// <summary>
         /// Collection of concrete inputter classes which can save results to specified source.
@@ -30,21 +30,23 @@ namespace ThingAppraiser.IO.Input
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="defaultFilename">Default file name when user doesn't provide it.</param>
+        /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultFilename">defaultFilename</param> is <c>null</c> or presents empty
-        /// string.
+        /// <param name="defaultStorageName">defaultStorageName</param> is <c>null</c> or presents 
+        /// empty string.
         /// </exception>
-        public CInputManager(String defaultFilename)
+        public InputManager(string defaultStorageName)
         {
-            _defaultFilename = defaultFilename.ThrowIfNullOrEmpty(nameof(defaultFilename));
+            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
+                nameof(defaultStorageName)
+            );
         }
 
         #region IManager<IInputter> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
         public void Add(IInputter item)
         {
@@ -57,9 +59,9 @@ namespace ThingAppraiser.IO.Input
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item">item</paramref> is <c>null</c>.
+        /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public Boolean Remove(IInputter item)
+        public bool Remove(IInputter item)
         {
             item.ThrowIfNull(nameof(item));
             return _inputters.Remove(item);
@@ -72,32 +74,36 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="storageName">Input storage name.</param>
         /// <returns>Collection of The Things names as strings.</returns>
-        public List<String> GetNames(String storageName)
+        public List<string> GetNames(string storageName)
         {
-            var result = new List<String>();
-            if (String.IsNullOrEmpty(storageName))
+            var result = new List<string>();
+            if (string.IsNullOrWhiteSpace(storageName))
             {
-                storageName = _defaultFilename;
+                storageName = _defaultStorageName;
+
+                string message = "Storage name is empty, using the default value.";
+                _logger.Info(message);
+                GlobalMessageHandler.OutputMessage(message);
             }
 
             foreach (IInputter inputter in _inputters)
             {
-                Boolean success = TryReadThingNames(inputter, storageName, out List<String> value);
+                bool success = TryReadThingNames(inputter, storageName, out List<string> value);
 
                 if (!success || value.IsNullOrEmpty())
                 {
-                    String message = $"No Things were found in {storageName} by inputter " +
+                    string message = $"No Things were found in {storageName} by inputter " +
                                      $"{inputter.Tag}.";
 
-                    s_logger.Warn(message);
-                    SGlobalMessageHandler.OutputMessage(message);
+                    _logger.Warn(message);
+                    GlobalMessageHandler.OutputMessage(message);
                     continue;
                 }
 
                 result.AddRange(value);
             }
 
-            s_logger.Info($"{result.Count} Things were found.");
+            _logger.Info($"{result.Count} Things were found.");
             return result;
         }
 
@@ -110,8 +116,8 @@ namespace ThingAppraiser.IO.Input
         /// <returns>
         /// <c>true</c> if read method doesn't throw any exceptions, <c>false</c> otherwise.
         /// </returns>
-        private Boolean TryReadThingNames(IInputter inputter, String storageName,
-            out List<String> result)
+        private bool TryReadThingNames(IInputter inputter, string storageName,
+            out List<string> result)
         {
             try
             {
@@ -119,11 +125,10 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                s_logger.Warn(ex, "Couldn't get access to the storage.");
-                SGlobalMessageHandler.OutputMessage("Couldn't get access to the storage for " +
-                                                    $"inputter {inputter.Tag}. " +
-                                                    $"Error: {ex.Message}");
-                result = new List<String>();
+                _logger.Warn(ex, "Couldn't get access to the storage.");
+                GlobalMessageHandler.OutputMessage("Couldn't get access to the storage for " +
+                                                    $"inputter {inputter.Tag}. Error: {ex}");
+                result = new List<string>();
                 return false;
             }
             return true;

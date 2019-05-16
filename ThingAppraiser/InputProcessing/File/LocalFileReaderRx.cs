@@ -4,28 +4,28 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
 {
-    public class CLocalFileReaderRx : IInputterRx, ITagable
+    public class LocalFileReaderRx : IInputterRx, IInputterBase, ITagable
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CLocalFileReaderRx>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileReaderRx>();
 
         private readonly IFileReaderRx _fileReaderRx;
 
         #region ITagable Implementation
 
-        public String Tag => "LocalFileReaderRx";
+        public string Tag { get; } = "LocalFileReaderRx";
 
         #endregion
 
 
-        public CLocalFileReaderRx(IFileReaderRx fileReader)
+        public LocalFileReaderRx(IFileReaderRx fileReader)
         {
             _fileReaderRx = fileReader.ThrowIfNull(nameof(fileReader));
         }
 
         #region IInputterRx Implementation
 
-        public IEnumerable<String> ReadThingNames(String storageName)
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
             storageName.ThrowIfNullOrEmpty(nameof(storageName));
 
@@ -42,7 +42,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                s_logger.Error(ex, "Rx file reader throws exception.");
+                _logger.Error(ex, "Rx file reader throws exception.");
                 throw;
             }
         }

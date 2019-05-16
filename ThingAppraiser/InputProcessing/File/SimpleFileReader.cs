@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FileHelpers;
@@ -11,36 +10,38 @@ namespace ThingAppraiser.IO.Input
     /// <summary>
     /// Provides simple and common methods to read data from files.
     /// </summary>
-    public class CSimpleFileReader : IFileReader
+    public class SimpleFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CSimpleFileReader>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<SimpleFileReader>();
 
         /// <summary>
         /// Name of the column with Thing name.
         /// </summary>
-        private readonly String _thingNameHeader = "Thing Name";
+        private readonly string _thingNameHeader;
 
 
         /// <summary>
-        /// Default constructor.
+        /// Creates instance with default values.
         /// </summary>
-        public CSimpleFileReader()
+        /// <param name="thingNameHeader">Name of the header with Thing names.</param>
+        public SimpleFileReader(string thingNameHeader = "Thing Name")
         {
+            _thingNameHeader = thingNameHeader.ThrowIfNullOrWhiteSpace(nameof(thingNameHeader));
         }
 
         #region IFileReader Implementation
 
         /// <inheritdoc />
         /// <remarks>File must contain "Thing Name" columns.</remarks>
-        public List<String> ReadFile(String filename)
+        public List<string> ReadFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
-            var engine = new FileHelperAsyncEngine<CInputFileData>();
+            var result = new HashSet<string>();
+            var engine = new FileHelperAsyncEngine<InputFileData>();
             using (engine.BeginReadFile(filename))
             {
                 // The engine is IEnumerable.
@@ -52,10 +53,10 @@ namespace ThingAppraiser.IO.Input
         /// <inheritdoc />
         /// <remarks>File must contain "Thing Name" columns.</remarks>
         /// <exception cref="InvalidDataException">CSV file doesn't contain header.</exception>
-        public List<String> ReadCsvFile(String filename)
+        public List<string> ReadCsvFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
+            var result = new HashSet<string>();
             using (var reader = new StreamReader(filename))
             {
                 var csv = new CsvReader(
@@ -65,12 +66,12 @@ namespace ThingAppraiser.IO.Input
                 if (!csv.Read() || !csv.ReadHeader())
                 {
                     var ex = new InvalidDataException("CSV file doesn't contain header!");
-                    s_logger.Error(ex, "Got CSV file without header.");
+                    _logger.Error(ex, "Got CSV file without header.");
                     throw ex;
                 }
                 while (csv.Read())
                 {
-                    String thingName = csv[_thingNameHeader];
+                    string thingName = csv[_thingNameHeader];
                     result.Add(thingName);
                 }
             }

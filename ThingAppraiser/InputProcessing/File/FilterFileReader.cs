@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FileHelpers;
@@ -12,29 +11,29 @@ namespace ThingAppraiser.IO.Input
     /// Provides reading data from files with some filtering. Now this class filters by value of
     /// status field.
     /// </summary>
-    public class CFilterFileReader : IFileReader
+    public class FilterFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CFilterFileReader>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<FilterFileReader>();
 
         /// <summary>
         /// Name of the column with status which can contain some details about Thing.
         /// </summary>
-        private readonly String _statusHeader = "Status";
+        private readonly string _statusHeader = "Status";
 
         /// <summary>
         /// Name of the column with Thing name.
         /// </summary>
-        private readonly String _thingNameHeader = "Thing Name";
+        private readonly string _thingNameHeader = "Thing Name";
 
 
         /// <summary>
-        /// Default constructor.
+        /// Creates instance with default values.
         /// </summary>
-        public CFilterFileReader()
+        public FilterFileReader()
         {
         }
 
@@ -42,16 +41,16 @@ namespace ThingAppraiser.IO.Input
 
         /// <inheritdoc />
         /// <remarks>File must contain "Status" and "Thing Name" columns.</remarks>
-        public List<String> ReadFile(String filename)
+        public List<string> ReadFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
-            var engine = new FileHelperAsyncEngine<CFilterInputFileData>();
+            var result = new HashSet<string>();
+            var engine = new FileHelperAsyncEngine<FilterInputFileData>();
             using (engine.BeginReadFile(filename))
             {
                 // The engine is IEnumerable.
                 result.UnionWith(engine
-                                    .Where(data => String.IsNullOrEmpty(data.status))
+                                    .Where(data => string.IsNullOrEmpty(data.status))
                                     .Select(data => data.thingName)
                 );
             }
@@ -61,10 +60,10 @@ namespace ThingAppraiser.IO.Input
         /// <inheritdoc />
         /// <remarks>File must contain "Status" and "Thing Name" columns.</remarks>
         /// <exception cref="InvalidDataException">CSV file doesn't contain header.</exception>
-        public List<String> ReadCsvFile(String filename)
+        public List<string> ReadCsvFile(string filename)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var result = new HashSet<String>();
+            var result = new HashSet<string>();
             using (var reader = new StreamReader(filename))
             {
                 var csv = new CsvReader(
@@ -74,15 +73,15 @@ namespace ThingAppraiser.IO.Input
                 if (!csv.Read() || !csv.ReadHeader())
                 {
                     var ex = new InvalidDataException("CSV file doesn't contain header!");
-                    s_logger.Error(ex, "Got CSV file without header.");
+                    _logger.Error(ex, "Got CSV file without header.");
                     throw ex;
                 }
                 while (csv.Read())
                 {
-                    String status = csv[_statusHeader];
-                    if (!String.IsNullOrEmpty(status)) continue;
+                    string status = csv[_statusHeader];
+                    if (!string.IsNullOrEmpty(status)) continue;
 
-                    String field = csv[_thingNameHeader];
+                    string field = csv[_thingNameHeader];
                     result.Add(field);
                 }
             }

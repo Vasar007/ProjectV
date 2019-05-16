@@ -8,24 +8,24 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Crawlers
 {
-    public sealed class CCrawlersManagerAsync : IManager<CCrawlerAsync>
+    public sealed class CrawlersManagerAsync : IManager<CrawlerAsync>
     {
-        private static readonly CLoggerAbstraction s_logger =
-            CLoggerAbstraction.CreateLoggerInstanceFor<CCrawlersManagerAsync>();
+        private static readonly LoggerAbstraction _logger =
+            LoggerAbstraction.CreateLoggerInstanceFor<CrawlersManagerAsync>();
 
-        private readonly List<CCrawlerAsync> _crawlersAsync = new List<CCrawlerAsync>();
+        private readonly List<CrawlerAsync> _crawlersAsync = new List<CrawlerAsync>();
 
-        private readonly Boolean _outputResults;
+        private readonly bool _outputResults;
 
 
-        public CCrawlersManagerAsync(Boolean outputResults)
+        public CrawlersManagerAsync(bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CCrawlerAsync> Implementation
+        #region IManager<CrawlerAsync> Implementation
 
-        public void Add(CCrawlerAsync item)
+        public void Add(CrawlerAsync item)
         {
             item.ThrowIfNull(nameof(item));
             if (!_crawlersAsync.Contains(item))
@@ -34,7 +34,7 @@ namespace ThingAppraiser.Crawlers
             }
         }
 
-        public Boolean Remove(CCrawlerAsync item)
+        public bool Remove(CrawlerAsync item)
         {
             item.ThrowIfNull(nameof(item));
             return _crawlersAsync.Remove(item);
@@ -42,31 +42,31 @@ namespace ThingAppraiser.Crawlers
 
         #endregion
 
-        public async Task<Boolean> CollectAllResponses(BufferBlock<String> entitiesQueue,
-            Dictionary<Type, BufferBlock<CBasicInfo>> responsesQueues, DataflowBlockOptions options)
+        public async Task<bool> CollectAllResponses(BufferBlock<string> entitiesQueue,
+            IDictionary<Type, BufferBlock<BasicInfo>> responsesQueues, DataflowBlockOptions options)
         {
-            var producers = new List<Task<Boolean>>();
-            foreach (CCrawlerAsync crawlerAsync in _crawlersAsync)
+            var producers = new List<Task<bool>>();
+            foreach (CrawlerAsync crawlerAsync in _crawlersAsync)
             {
-                var responseQueue = new BufferBlock<CBasicInfo>(options);
-                responsesQueues.Add(crawlerAsync.TypeID, responseQueue);
+                var responseQueue = new BufferBlock<BasicInfo>(options);
+                responsesQueues.Add(crawlerAsync.TypeId, responseQueue);
                 producers.Add(crawlerAsync.GetResponse(entitiesQueue, responseQueue,
                                                        _outputResults));
             }
 
-            Boolean[] statuses =  await Task.WhenAll(producers);
-            foreach (BufferBlock<CBasicInfo> responsesQueue in responsesQueues.Values)
+            bool[] statuses =  await Task.WhenAll(producers);
+            foreach (BufferBlock<BasicInfo> responsesQueue in responsesQueues.Values)
             {
                 responsesQueue.Complete();
             }
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                s_logger.Info("Crawlers have finished work.");
+                _logger.Info("Crawlers have finished work.");
                 return true;
             }
 
-            s_logger.Info("Crawlers have not received any data.");
+            _logger.Info("Crawlers have not received any data.");
             return false;
         }
     }

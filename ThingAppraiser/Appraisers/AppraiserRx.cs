@@ -1,37 +1,29 @@
-﻿using System;
-using ThingAppraiser.Communication;
+﻿using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
 
 namespace ThingAppraiser.Appraisers
 {
-    public abstract class CAppraiserRx : ITagable, ITypeID
+    public abstract class AppraiserRx : AppraiserBase
     {
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public virtual String Tag => "AppraiserRx";
-
-        #endregion
-
-        #region ITypeID Implementation
-
-        public virtual Type TypeID => typeof(CBasicInfo);
+        public override string Tag { get; } = "AppraiserRx";
 
         #endregion
 
 
-        public CAppraiserRx()
+        public AppraiserRx()
         {
         }
 
-        public virtual CRatingDataContainer GetRatings(CBasicInfo entityInfo,
-            Boolean outputResults)
+        public virtual RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults)
         {
-            var resultInfo = new CRatingDataContainer(entityInfo, entityInfo.VoteAverage);
+            var resultInfo = new RatingDataContainer(entityInfo, entityInfo.VoteAverage);
 
             if (outputResults)
             {
-                SGlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                GlobalMessageHandler.OutputMessage(resultInfo.ToString());
             }
 
             return resultInfo;
