@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FileHelpers;
@@ -28,6 +29,10 @@ namespace ThingAppraiser.IO.Input
         /// Creates instance with default values.
         /// </summary>
         /// <param name="thingNameHeader">Name of the header with Thing names.</param>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="thingNameHeader" /> is <c>null</c>, presents empty strings or contains
+        /// only whitespaces.
+        /// </exception>
         public SimpleFileReader(string thingNameHeader = "Thing Name")
         {
             _thingNameHeader = thingNameHeader.ThrowIfNullOrWhiteSpace(nameof(thingNameHeader));

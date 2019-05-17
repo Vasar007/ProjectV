@@ -2,103 +2,89 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using SteamWebApiLib;
-using SteamWebApiLib.Models.AppDetails;
-using SteamWebApiLib.Models.BriefInfo;
+using OMDbApiNet;
+using OMDbApiNet.Model;
+using ThingAppraiser.Logging;
+using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Crawlers.Mappers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Crawlers
 {
     /// <summary>
-    /// Provides async version of Steam crawler.
+    /// Provides async version of OMDB crawler.
     /// </summary>
-    public class SteamCrawlerAsync : CrawlerAsync
+    public class OmdbCrawlerAsync : CrawlerAsync
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<SteamCrawlerAsync>();
+            LoggerAbstraction.CreateLoggerInstanceFor<OmdbCrawlerAsync>();
 
         /// <summary>
         /// Helper class to transform raw DTO objects to concrete object without extra data.
         /// </summary>
-        private readonly IDataMapper<SteamApp, SteamGameInfo> _dataMapper =
-            new DataMapperSteamGame(); 
+        private readonly IDataMapper<Item, OmdbMovieInfo> _dataMapper =
+            new DataMapperOmdbMovie();
 
         /// <summary>
-        /// Key to get access to Steam service (using only for client data requests).
+        /// Key to get access to OMDB service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to Steam API.
+        /// Third-party helper class to make a calls to OMDB API.
         /// </summary>
-        private readonly SteamApiClient _steamApiClient;
+        private readonly AsyncOmdbClient _omdbClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "SteamCrawlerAsync";
+        public override string Tag { get; } = "OmdbCrawlerAsync";
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(SteamGameInfo);
+        public override Type TypeId { get; } = typeof(OmdbMovieInfo);
 
 
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to Steam service.</param>
+        /// <param name="apiKey">Key to get access to OMDB service.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> is <c>null</c>, presents empty strings or contains only 
         /// whitespaces.
         /// </exception>
-        public SteamCrawlerAsync(string apiKey)
+        public OmdbCrawlerAsync(string apiKey)
         {
             _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _steamApiClient = new SteamApiClient(
-                new SteamApiConfig
-                {
-                    ApiKey = _apiKey
-                }
-            );
+            _omdbClient = new AsyncOmdbClient(_apiKey);
         }
-
-        #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
         public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
             BufferBlock<BasicInfo> responsesQueue, bool outputResults)
         {
-            SteamAppBriefInfoList steamAppsList = await _steamApiClient.GetAppListAsync();
-            SteamAppsStorage.FillStorage(steamAppsList);
-
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();
             while (await entitiesQueue.OutputAvailableAsync())
             {
-                string game = await entitiesQueue.ReceiveAsync();
+                string movie = await entitiesQueue.ReceiveAsync();
 
-                int appId = SteamAppsStorage.GetAppIdByName(game);
-                SteamApp response = await _steamApiClient.GetSteamAppAsync(
-                    appId, CountryCode.Russia, Language.English
-                );
-
-                if (response is null)
+                Item response = await _omdbClient.GetItemByTitleAsync(movie);
+                if (!response.Response.IsEqualWithInvariantCulture("True"))
                 {
-                    _logger.Warn($"{game} wasn't processed.");
-                    GlobalMessageHandler.OutputMessage($"{game} wasn't processed.");
+                    _logger.Warn($"{movie} wasn't processed.");
+                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
                     continue;
                 }
 
+                // Get first search result from response and ignore all the rest.
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {response}");
+                    GlobalMessageHandler.OutputMessage($"Got {response.Title}");
                 }
 
-                SteamGameInfo extractedInfo = _dataMapper.Transform(response);
+                OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
                 if (searchResults.Add(extractedInfo))
                 {
                     await responsesQueue.SendAsync(extractedInfo);
@@ -106,7 +92,5 @@ namespace ThingAppraiser.Crawlers
             }
             return searchResults.Count != 0;
         }
-
-        #endregion
     }
 }

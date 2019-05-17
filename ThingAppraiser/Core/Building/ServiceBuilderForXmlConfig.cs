@@ -153,6 +153,15 @@ namespace ThingAppraiser.Core.Building
                     return new Crawlers.TmdbCrawler(apiKey, maxRetryCount);
                 }
 
+                case _omdbCrawlerParameterName:
+                {
+                    string apiKey = XDocumentParser.GetAttributeValue(
+                        crawlerElement, _omdbApiKeyParameterName
+                    );
+
+                    return new Crawlers.OmdbCrawler(apiKey);
+                }
+
                 case _steamCrawlerParameterName:
                 {
                     string apiKey = XDocumentParser.GetAttributeValue(
@@ -201,6 +210,11 @@ namespace ThingAppraiser.Core.Building
                 case _fuzzyAppraiserTmdbParameterName:
                 {
                     return new Appraisers.FuzzyTmdbAppraiser();
+                }
+
+                case _appraiserOmdbParameterName:
+                {
+                    return new Appraisers.OmdbAppraiser();
                 }
 
                 case _steamAppraiserParameterName:

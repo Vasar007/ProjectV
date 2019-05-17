@@ -41,6 +41,11 @@ namespace ThingAppraiser.Core.Building
         protected const string _tmdbCrawlerParameterName = "TmdbCrawler";
 
         /// <summary>
+        /// Attribute value for OMDB crawler.
+        /// </summary>
+        protected const string _omdbCrawlerParameterName = "OmdbCrawler";
+
+        /// <summary>
         /// Attribute value for Steam crawler.
         /// </summary>
         protected const string _steamCrawlerParameterName = "SteamCrawler";
@@ -54,7 +59,12 @@ namespace ThingAppraiser.Core.Building
         /// Attribute value for TMDB appraiser which based on Fuzzy Logic Toolbox.
         /// </summary>
         protected const string _fuzzyAppraiserTmdbParameterName = "FuzzyTmdbAppraiser";
-        
+
+        /// <summary>
+        /// Attribute value for OMDB appraiser.
+        /// </summary>
+        protected const string _appraiserOmdbParameterName = "OmdbAppraiser";
+
         /// <summary>
         /// Attribute value for Steam appraiser.
         /// </summary>
@@ -95,6 +105,11 @@ namespace ThingAppraiser.Core.Building
         /// Attribute name for number of maximum attemts to retry for TMDB crawler.
         /// </summary>
         protected static readonly string _tmdbMaxRetryCountParameterName = "TmdbMaxRetryCount";
+
+        /// <summary>
+        /// Attribute name for API key of OMDB crawler.
+        /// </summary>
+        protected static readonly string _omdbApiKeyParameterName = "OmdbApiKey";
 
         /// <summary>
         /// Attribute name for API key of TMDB crawler.

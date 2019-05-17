@@ -82,6 +82,12 @@ namespace ThingAppraiser.Core.Building
                 )
             );
 
+            _serviceConfigRegistry.RegisterCrawler("Omdb",
+                new XElement("OmdbCrawler",
+                    new XAttribute("OmdbApiKey", "ba082100")
+                )
+            );
+
             _serviceConfigRegistry.RegisterCrawler("Steam",
                 new XElement("SteamCrawler",
                     new XAttribute("SteamApiKey", "C484852EA599C02C687E579ABB38D346")
@@ -96,6 +102,10 @@ namespace ThingAppraiser.Core.Building
             );
             _serviceConfigRegistry.RegisterAppraiser("TmdbFuzzy",
                 new XElement("FuzzyTmdbAppraiser")
+            );
+
+            _serviceConfigRegistry.RegisterAppraiser("OmdbCommon",
+                new XElement("OmdbAppraiser")
             );
 
             _serviceConfigRegistry.RegisterAppraiser("SteamCommon",

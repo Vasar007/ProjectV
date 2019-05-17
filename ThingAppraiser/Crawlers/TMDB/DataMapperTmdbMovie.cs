@@ -10,7 +10,7 @@ namespace ThingAppraiser.Crawlers.Mappers
         {
         }
 
-        #region IDataMapper<SearchMovie, MovieInfo> Implementation
+        #region IDataMapper<SearchMovie, TmdbMovieInfo> Implementation
 
         public TmdbMovieInfo Transform(SearchMovie dataObject)
         {

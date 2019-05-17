@@ -1,8 +1,8 @@
 ﻿namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Builder director which controls of <see cref="ShellAsync" /> creating process with the help of
-    /// specified builder.
+    /// Builder director which controls of <see cref="ShellAsync" /> creating process with the help
+    /// of specified builder.
     /// </summary>
     public class ShellAsyncBuilderDirector
     {

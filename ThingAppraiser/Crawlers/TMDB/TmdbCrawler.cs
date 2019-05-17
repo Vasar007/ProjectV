@@ -56,8 +56,10 @@ namespace ThingAppraiser.Crawlers
         /// Initializes instance according to parameter values.
         /// </summary>
         /// <param name="apiKey">Key to get access to TMDB service.</param>
+        /// <param name="maxRetryCount">Maximum retry number to get response from TMDB.</param>
         /// <exception cref="ArgumentException">
-        /// <paramref name="apiKey" /> is <c>null</c> or presents empty strings.
+        /// <paramref name="apiKey" /> is <c>null</c>, presents empty string or contains only 
+        /// whitespaces.
         /// </exception>
         public TmdbCrawler(string apiKey, int maxRetryCount)
         {

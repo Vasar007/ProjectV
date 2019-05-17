@@ -34,8 +34,8 @@ namespace ThingAppraiser.IO.Output
         /// </summary>
         /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultStorageName">defaultStorageName</param> is <c>null</c> or presents 
-        /// empty string.
+        /// <param name="defaultStorageName">defaultStorageName</param> is <c>null</c>, presents 
+        /// empty strings or contains only whitespaces.
         /// </exception>
         public OutputManager(string defaultStorageName)
         {
