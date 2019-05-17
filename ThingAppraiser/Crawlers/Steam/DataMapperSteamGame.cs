@@ -15,16 +15,20 @@ namespace ThingAppraiser.Crawlers.Mappers
 
         public SteamGameInfo Transform(SteamApp dataObject)
         {
+            var releaseDate = DateTime.Parse(dataObject.ReleaseDate.Date);
+            var price = Convert.ToDecimal(dataObject.PriceOverview.Final);
+            var genreIds = dataObject.Genres.Select(genre => genre.Id).ToList();
+
             var result = new SteamGameInfo(
                 thingId:     dataObject.SteamAppId,
                 title:       dataObject.Name,
                 voteCount:   dataObject.PriceOverview.DiscountPercent,
                 voteAverage: dataObject.PriceOverview.Initial,
                 overview:    dataObject.ShortDescription,
-                releaseDate: DateTime.Parse(dataObject.ReleaseDate.Date),
-                price:       Convert.ToDecimal(dataObject.PriceOverview.Final),
+                releaseDate: releaseDate,
+                price:       price,
                 requiredAge: dataObject.RequiredAge,
-                genreIds:    dataObject.Genres.Select(genre => genre.Id).ToList(),
+                genreIds:    genreIds,
                 posterPath:  dataObject.HeaderImage
             );
             return result;
