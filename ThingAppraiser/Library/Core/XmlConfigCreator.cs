@@ -133,7 +133,8 @@ namespace ThingAppraiser.Core
                         CrawlersOutputFlag = false,
                         Crawlers = new[]
                         {
-                            ConfigModule.GetConfigForCrawler("Tmdb")
+                            ConfigModule.GetConfigForCrawler("Tmdb"),
+                            ConfigModule.GetConfigForCrawler("Omdb")
                         }
                     },
                     AppraisersManager = new AppraisersManagerConfig
@@ -141,7 +142,8 @@ namespace ThingAppraiser.Core
                         AppraisersOutputFlag = false,
                         Appraisers = new[]
                         {
-                            ConfigModule.GetConfigForAppraiser("TmdbCommon")
+                            ConfigModule.GetConfigForAppraiser("TmdbCommon"),
+                            ConfigModule.GetConfigForAppraiser("OmdbCommon")
                         }
                     },
                     OutputManager = new OutputManagerConfig

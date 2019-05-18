@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DTO\DTO.csproj" />
-    <ProjectReference Include="..\..\Logging\Logging.csproj" />
+    <ProjectReference Include="..\..\Library\DTO\DTO.csproj" />
+    <ProjectReference Include="..\..\Library\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>
