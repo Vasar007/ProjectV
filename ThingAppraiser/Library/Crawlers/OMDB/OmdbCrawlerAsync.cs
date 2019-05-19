@@ -81,9 +81,10 @@ namespace ThingAppraiser.Crawlers
                 // Get first search result from response and ignore all the rest.
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {response.Title}");
+                    GlobalMessageHandler.OutputMessage($"Got {response.Title} from {Tag}");
                 }
 
+                response.Title = movie; // Temporary fix to avoid different movie names.
                 OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
                 if (searchResults.Add(extractedInfo))
                 {

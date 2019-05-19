@@ -57,7 +57,7 @@ namespace ThingAppraiser.Appraisers
             IDictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues,
             DataflowBlockOptions options)
         {
-            List<Task<bool>> producers = new List<Task<bool>>();
+            var producers = new List<Task<bool>>(entitiesInfoQueues.Count);
             foreach (KeyValuePair<Type, BufferBlock<BasicInfo>> keyValue in entitiesInfoQueues)
             {
                 if (!_appraisersAsync.TryGetValue(keyValue.Key, out List<AppraiserAsync> values))
@@ -68,6 +68,8 @@ namespace ThingAppraiser.Appraisers
                     continue;
                 }
 
+                // FIXME: need to split queue to several queues which would be unique for every 
+                // appraiser.
                 var entitiesRatingQueue = new BufferBlock<RatingDataContainer>(options);
                 entitiesRatingQueues.Add(keyValue.Key, entitiesRatingQueue);
                 producers.AddRange(values.Select(

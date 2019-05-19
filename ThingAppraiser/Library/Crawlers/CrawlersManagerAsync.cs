@@ -45,19 +45,28 @@ namespace ThingAppraiser.Crawlers
         public async Task<bool> CollectAllResponses(BufferBlock<string> entitiesQueue,
             IDictionary<Type, BufferBlock<BasicInfo>> responsesQueues, DataflowBlockOptions options)
         {
-            var producers = new List<Task<bool>>();
+            var producers = new List<Task<bool>>(_crawlersAsync.Count);
+            var consumers = new List<BufferBlock<string>>(_crawlersAsync.Count);
+
             foreach (CrawlerAsync crawlerAsync in _crawlersAsync)
             {
+                var consumer = new BufferBlock<string>(options);
                 var responseQueue = new BufferBlock<BasicInfo>(options);
+
                 responsesQueues.Add(crawlerAsync.TypeId, responseQueue);
-                producers.Add(crawlerAsync.GetResponse(entitiesQueue, responseQueue,
-                                                       _outputResults));
+                producers.Add(crawlerAsync.GetResponse(consumer, responseQueue, _outputResults));
+                consumers.Add(consumer);
             }
 
-            bool[] statuses =  await Task.WhenAll(producers);
-            foreach (BufferBlock<BasicInfo> responsesQueue in responsesQueues.Values)
+            Task<bool[]> taskStatuses = Task.WhenAll(producers);
+            Task taskConsumers = Task.WhenAll(consumers.Select(consumer => consumer.Completion));
+
+            await Task.WhenAll(SplitQueue(entitiesQueue, consumers), taskConsumers, taskStatuses);
+
+            bool[] statuses =  await taskStatuses;
+            foreach (BufferBlock<BasicInfo> responseQueue in responsesQueues.Values)
             {
-                responsesQueue.Complete();
+                responseQueue.Complete();
             }
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
@@ -68,6 +77,24 @@ namespace ThingAppraiser.Crawlers
 
             _logger.Info("Crawlers have not received any data.");
             return false;
+        }
+
+        private async Task SplitQueue(BufferBlock<string> entitiesQueue,
+            IList<BufferBlock<string>> consumers)
+        {
+            while (await entitiesQueue.OutputAvailableAsync())
+            {
+                string entity = await entitiesQueue.ReceiveAsync();
+
+                await Task.WhenAll(
+                    consumers.Select(async consumer => await consumer.SendAsync(entity))
+                );
+            }
+
+            foreach (BufferBlock<string> consumer in consumers)
+            {
+                consumer.Complete();
+            }
         }
     }
 }

@@ -130,7 +130,7 @@ namespace ThingAppraiser.Core
                     },
                     CrawlersManager = new CrawlersManagerConfig
                     {
-                        CrawlersOutputFlag = false,
+                        CrawlersOutputFlag = true,
                         Crawlers = new[]
                         {
                             ConfigModule.GetConfigForCrawler("Tmdb"),
@@ -139,7 +139,7 @@ namespace ThingAppraiser.Core
                     },
                     AppraisersManager = new AppraisersManagerConfig
                     {
-                        AppraisersOutputFlag = false,
+                        AppraisersOutputFlag = true,
                         Appraisers = new[]
                         {
                             ConfigModule.GetConfigForAppraiser("TmdbCommon"),

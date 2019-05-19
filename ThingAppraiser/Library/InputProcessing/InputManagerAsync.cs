@@ -64,7 +64,7 @@ namespace ThingAppraiser.IO.Input
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                _logger.Info($"{statuses.Length} Things were found.");
+                _logger.Info($"{statuses.Length} Thing names queues were read.");
                 return true;
             }
 
@@ -72,7 +72,7 @@ namespace ThingAppraiser.IO.Input
             return false;
         }
 
-        private static async Task<Boolean> TryReadThingNames(IInputterAsync inputterAsync,
+        private static async Task<bool> TryReadThingNames(IInputterAsync inputterAsync,
             BufferBlock<string> queueToWrite, string storageName)
         {
             try

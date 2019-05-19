@@ -56,6 +56,8 @@ namespace ThingAppraiser.Appraisers
         {
             var ratingsQueues = new Dictionary<Type, IObservable<RatingDataContainer>>();
 
+            // FIXME: need to split queue to several queues which would be unique for every 
+            // appraiser.
             foreach (KeyValuePair<Type, IObservable<BasicInfo>> keyValue in entitiesInfoQueues)
             {
                 if (!_appraisersRx.TryGetValue(keyValue.Key, out List<AppraiserRx> values))

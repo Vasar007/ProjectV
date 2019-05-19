@@ -26,7 +26,7 @@ namespace ThingAppraiser.ConsoleApp
         private static void MainXDocument(string[] args)
         {
             // Show the case when we have a movies to appraise.
-            var builderDirector = Shell.CreateBuilderDirector(
+            var builderDirector = ShellAsync.CreateBuilderDirector(
                 XmlConfigCreator.CreateDefaultXmlConfigAsXDocument()
             );
             var shell = builderDirector.MakeShell();
@@ -38,19 +38,19 @@ namespace ThingAppraiser.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
-        private static void Run(string[] args, Shell shell)
+        private static void Run(string[] args, ShellAsync shell)
         {
             ServiceStatus status;
             if (args.Length == 1)
             {
-                status = shell.Run(args[0]);
+                status = shell.Run(args[0]).Result;
             }
             else
             {
                 GlobalMessageHandler.OutputMessage(
                     "Enter filename which contains the Things: "
                 );
-                status = shell.Run(GlobalMessageHandler.GetMessage());
+                status = shell.Run(GlobalMessageHandler.GetMessage()).Result;
             }
 
             if (status == ServiceStatus.Nothing)

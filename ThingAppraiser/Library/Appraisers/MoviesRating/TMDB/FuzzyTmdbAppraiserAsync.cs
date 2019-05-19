@@ -43,7 +43,7 @@ namespace ThingAppraiser.Appraisers
                 await entitiesRatingQueue.SendAsync(resultInfo);
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
                 }
             }
             return true;

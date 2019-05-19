@@ -75,7 +75,7 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> RequestData(BufferBlock<string> entitiesQueue,
-            Dictionary<Type, BufferBlock<BasicInfo>> responsesQueues)
+            IDictionary<Type, BufferBlock<BasicInfo>> responsesQueues)
         {
             try
             {
@@ -103,8 +103,8 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> AppraiseThings(
-            Dictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
-            Dictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues)
+            IDictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
+            IDictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> SaveResults(
-            Dictionary<Type, BufferBlock<RatingDataContainer>> ratings)
+            IDictionary<Type, BufferBlock<RatingDataContainer>> ratings)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace ThingAppraiser.Core
             Task<ServiceStatus> outputStatus = SaveResults(ratingsQueues);
 
             Task<ServiceStatus[]> statusesTask = Task.WhenAll(inputStatus, crawlersStatus,
-                                                        appraisersStatus, outputStatus);
+                                                              appraisersStatus, outputStatus);
 
             Task responsesQueuesTasks = Task.WhenAll(
                 responsesQueues.Values.Select(bufferBlock => bufferBlock.Completion)

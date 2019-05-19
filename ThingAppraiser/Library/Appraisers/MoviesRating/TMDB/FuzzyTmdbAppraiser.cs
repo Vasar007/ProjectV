@@ -70,7 +70,7 @@ namespace ThingAppraiser.Appraisers
                 ratings.Add(resultInfo);
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
                 }
             }
 

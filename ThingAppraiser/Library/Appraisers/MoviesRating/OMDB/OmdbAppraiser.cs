@@ -63,7 +63,7 @@ namespace ThingAppraiser.Appraisers
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
                 }
             }
 
