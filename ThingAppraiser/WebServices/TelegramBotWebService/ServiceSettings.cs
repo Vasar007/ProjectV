@@ -2,7 +2,9 @@
 {
     public class ServiceSettings
     {
-        public string TelegramSetWebhookUrlTemplate { get; set; }
+        public string TelegramApiUrl { get; set; }
+
+        public string SetWebhookRequestUrlTemplate { get; set; }
 
         public string NgrokUrl { get; set; }
 

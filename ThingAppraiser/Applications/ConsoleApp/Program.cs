@@ -76,7 +76,7 @@ namespace ThingAppraiser.ConsoleApp
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occurred in Main method.");
+                _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
             }
         }
     }    
