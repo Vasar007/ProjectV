@@ -8,31 +8,37 @@ using ThingAppraiser.Data.Models;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {
-    public class ConfigurationReceiverAsync : IConfigurationReceiverAsync
+    public class ConfigurationReceiverAsync : IConfigurationReceiverAsync, IDisposable
     {
         private readonly ServiceSettings _settings;
+
+        private readonly HttpClient _client;
+
+        private bool _disposedValue;
 
 
         public ConfigurationReceiverAsync(IOptions<ServiceSettings> settingsOptions)
         {
             _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
+
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(_settings.ConfigurationServiceBaseAddress)
+            };
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json")
+            );
         }
 
         #region IConfigurationReceiverAsync Implementation
 
         public async Task<RequestData> ReceiveConfigForRequestAsync(RequestParams requestParams)
         {
-            using (var client = new HttpClient
-                   { BaseAddress = new Uri(_settings.ConfigurationServiceBaseAddress) })
+            using (HttpResponseMessage responseConfigMessage = await _client.PostAsJsonAsync(
+                       _settings.ConfigurationServiceApiUrl, requestParams.Requirements
+                   ))
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json")
-                );
-
-                var responseConfigMessage = await client.PostAsJsonAsync(
-                    _settings.ConfigurationServiceApiUrl, requestParams.ConfigRequirements
-                );
                 if (responseConfigMessage.IsSuccessStatusCode)
                 {
                     var config =
@@ -48,6 +54,20 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
             }
 
             throw new Exception("Config request failed.");
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            if (!_disposedValue)
+            {
+                _disposedValue = true;
+
+                _client.Dispose();
+            }
         }
 
         #endregion

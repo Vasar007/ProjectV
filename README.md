@@ -1,6 +1,7 @@
 # ThingAppraiser
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Vasar007/ThingAppraiser/blob/master/LICENSE)
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/Vasar007/ThingAppraiser/master.svg)](https://ci.appveyor.com/project/Vasar007/thingappraiser)
 
 Evaluate your things (movies, games, books e.t.c.) automatically based on popular databases with ratings.
 

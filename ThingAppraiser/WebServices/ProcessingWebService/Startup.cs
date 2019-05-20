@@ -26,7 +26,6 @@ namespace ThingAppraiser.ProcessingWebService
 
             services
                 .AddMvc()
-                .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddApiVersioning(
