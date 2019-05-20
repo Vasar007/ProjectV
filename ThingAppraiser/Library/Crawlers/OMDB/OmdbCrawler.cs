@@ -68,7 +68,18 @@ namespace ThingAppraiser.Crawlers
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                Item response = _omdbClient.GetItemByTitle(movie, OmdbType.Movie);
+                Item response;
+                try
+                {
+                    response = _omdbClient.GetItemByTitle(movie);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{movie} wasn't processed.");
+                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    continue;
+                }
+
                 if (!response.Response.IsEqualWithInvariantCulture("True"))
                 {
                     _logger.Warn($"{movie} wasn't processed.");

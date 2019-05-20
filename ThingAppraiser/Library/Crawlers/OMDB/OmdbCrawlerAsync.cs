@@ -72,7 +72,18 @@ namespace ThingAppraiser.Crawlers
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                Item response = await _omdbClient.GetItemByTitleAsync(movie);
+                Item response;
+                try
+                {
+                    response = await _omdbClient.GetItemByTitleAsync(movie);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{movie} wasn't processed.");
+                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    continue;
+                }
+
                 if (!response.Response.IsEqualWithInvariantCulture("True"))
                 {
                     _logger.Warn($"{movie} wasn't processed.");

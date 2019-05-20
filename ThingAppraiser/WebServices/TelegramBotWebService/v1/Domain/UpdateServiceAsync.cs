@@ -197,7 +197,7 @@ Usage:
         {
             _logger.Info("Continue process /request command with data.");
 
-            requestParams.ThingNames = data.Skip(1).ToList();
+            requestParams.ThingNames = data.ToList();
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
@@ -227,7 +227,8 @@ Usage:
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                message
+                message,
+                replyMarkup: new ReplyKeyboardRemove()
             );
         }
 
@@ -237,7 +238,8 @@ Usage:
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                "Invalid message. See usage at /help command."
+                "Invalid message. See usage at /help command.",
+                replyMarkup: new ReplyKeyboardRemove()
             );
         }
 
