@@ -6,7 +6,7 @@ namespace ThingAppraiser.Data.Models
     {
         public List<string> ThingNames { get; set; }
 
-        public ConfigRequirements ConfigRequirements { get; set; }
+        public ConfigRequirements Requirements { get; set; }
 
 
         public RequestParams()

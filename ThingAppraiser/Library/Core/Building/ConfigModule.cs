@@ -75,22 +75,26 @@ namespace ThingAppraiser.Core.Building
 
         private static void RegisterCrawlersConfig()
         {
+            string tmdbApiKey = EnvironmentVariablesParser.GetValue("TmdbApiKey");
+            string omdbApiKey = EnvironmentVariablesParser.GetValue("OmdbApiKey");
+            string steamApiKey = EnvironmentVariablesParser.GetValue("SteamApiKey");
+
             _serviceConfigRegistry.RegisterCrawler("Tmdb",
                 new XElement("TmdbCrawler",
-                    new XAttribute("TmdbApiKey", "f7440a70737103fea00fb6e8352a3533"),
+                    new XAttribute("TmdbApiKey", tmdbApiKey),
                     new XAttribute("TmdbMaxRetryCount", "10")
                 )
             );
 
             _serviceConfigRegistry.RegisterCrawler("Omdb",
                 new XElement("OmdbCrawler",
-                    new XAttribute("OmdbApiKey", "ba082100")
+                    new XAttribute("OmdbApiKey", omdbApiKey)
                 )
             );
 
             _serviceConfigRegistry.RegisterCrawler("Steam",
                 new XElement("SteamCrawler",
-                    new XAttribute("SteamApiKey", "C484852EA599C02C687E579ABB38D346")
+                    new XAttribute("SteamApiKey", steamApiKey)
                 )
             );
         }
@@ -131,6 +135,14 @@ namespace ThingAppraiser.Core.Building
 
             _serviceConfigRegistry.RegisterRepository("Tmdb",
                 new XElement("TmdbMovieRepository")
+            );
+
+            _serviceConfigRegistry.RegisterRepository("Omdb",
+                new XElement("NotImplemented")
+            );
+
+            _serviceConfigRegistry.RegisterRepository("Steam",
+                new XElement("NotImplemented")
             );
         }
     }

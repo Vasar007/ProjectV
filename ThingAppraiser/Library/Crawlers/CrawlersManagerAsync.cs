@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using ThingAppraiser.Communication;
 using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
 
@@ -85,6 +86,11 @@ namespace ThingAppraiser.Crawlers
             while (await entitiesQueue.OutputAvailableAsync())
             {
                 string entity = await entitiesQueue.ReceiveAsync();
+
+                if (_outputResults)
+                {
+                    GlobalMessageHandler.OutputMessage($"Got {entity}");
+                }
 
                 await Task.WhenAll(
                     consumers.Select(async consumer => await consumer.SendAsync(entity))

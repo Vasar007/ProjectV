@@ -23,20 +23,6 @@ namespace ThingAppraiser.TelegramBotWebService
                        .UseStartup<Startup>();
         }
 
-        private static async Task SetupService(IWebHost webHost)
-        {
-            try
-            {
-                // Set web hook to get messages from Telegram Bot.
-                var serviceSetup = webHost.Services.GetRequiredService<IServiceSetupAsync>();
-                await serviceSetup.SetWebHook();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, $"Exception occurred in {nameof(SetupService)} method.");
-            }
-        }
-
         private static async Task Main(string[] args)
         {
             try
@@ -44,11 +30,14 @@ namespace ThingAppraiser.TelegramBotWebService
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Set web hook to get messages from Telegram Bot.
-                await SetupService(webHost);
+                var serviceSetup = webHost.Services.GetRequiredService<IServiceSetupAsync>();
+                await serviceSetup.SetWebhook();
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
                 await webHost.RunAsync();
+
+                await serviceSetup.DeleteWebhook();
             }
             catch (Exception ex)
             {

@@ -222,7 +222,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return new RequestParams
             {
                 ThingNames = thingNames,
-                ConfigRequirements = _requirementsCreator.GetResult()
+                Requirements = _requirementsCreator.GetResult()
             };
         }
 
@@ -239,7 +239,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return new RequestParams
             {
                 ThingNames = thingNames,
-                ConfigRequirements = _requirementsCreator.GetResult()
+                Requirements = _requirementsCreator.GetResult()
             };
         }
 
@@ -259,7 +259,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return new RequestParams
             {
                 ThingNames = thingNames,
-                ConfigRequirements = _requirementsCreator.GetResult()
+                Requirements = _requirementsCreator.GetResult()
             };
         }
 

@@ -21,13 +21,17 @@ namespace ThingAppraiser.Data.Models
 
         public static IReadOnlyList<string> AvailableServices { get; } = new List<string>
         {
-            "Tmdb"
+            "Tmdb",
+            "Omdb",
+            "Steam"
         };
 
         public static IReadOnlyList<string> AvailableAppraisals { get; } = new List<string>
         {
             "TmdbCommon",
-            "TmdbFuzzy"
+            "TmdbFuzzy",
+            "OmdbCommon",
+            "SteamCommon"
         };
 
         public static IReadOnlyList<string> AvailableOutput { get; } = new List<string>
@@ -44,7 +48,8 @@ namespace ThingAppraiser.Data.Models
         /// <param name="item">Value to check.</param>
         /// <param name="availableList">Available list from <see cref="ConfigContract" />.</param>
         /// <exception cref="ArgumentException">
-        /// <see cref="ConfigContract" /> list doesn't contain passed <paramref name="item" />.
+        /// <see cref="ConfigContract" /> list doesn't contain passed <paramref name="item" />. -or-
+        /// <paramref name="item" /> is <c>null</c> or presents empty string.
         /// </exception>
         public static void CheckAvailability(string item, IReadOnlyList<string> availableList)
         {

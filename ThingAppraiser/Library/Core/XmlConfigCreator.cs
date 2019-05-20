@@ -133,7 +133,6 @@ namespace ThingAppraiser.Core
                         CrawlersOutputFlag = true,
                         Crawlers = new[]
                         {
-                            ConfigModule.GetConfigForCrawler("Tmdb"),
                             ConfigModule.GetConfigForCrawler("Omdb")
                         }
                     },
@@ -142,7 +141,6 @@ namespace ThingAppraiser.Core
                         AppraisersOutputFlag = true,
                         Appraisers = new[]
                         {
-                            ConfigModule.GetConfigForAppraiser("TmdbCommon"),
                             ConfigModule.GetConfigForAppraiser("OmdbCommon")
                         }
                     },
@@ -163,7 +161,7 @@ namespace ThingAppraiser.Core
                         }
                     }
                 },
-                ServiceType = ServiceType.Sequential
+                ServiceType = ServiceType.TplDataflow
             };
 
             return xmlConfig;
@@ -212,9 +210,9 @@ namespace ThingAppraiser.Core
 
             xmlConfigCreator.SetDefaultInStorageName("thing_names.csv");
 
-            xmlConfigCreator.SetCrawlersOutputFlag(false);
+            xmlConfigCreator.SetCrawlersOutputFlag(true);
 
-            xmlConfigCreator.SetAppraisersOutputFlag(false);
+            xmlConfigCreator.SetAppraisersOutputFlag(true);
 
             xmlConfigCreator.SetDefaultOutStorageName("appraised_things.csv");
 
@@ -264,6 +262,8 @@ namespace ThingAppraiser.Core
                     ConfigModule.GetConfigForOutputter(outputItem)
                 );
             }
+
+            xmlConfigCreator.SetServiceType(ServiceType.TplDataflow);
 
             return xmlConfigCreator.GetResult();
         }

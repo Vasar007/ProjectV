@@ -1,46 +1,51 @@
-﻿using System;
-using System.Configuration;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ThingAppraiser.Data.Models;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
+namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class ServiceProxy : IDisposable
+    public class ServiceProxy : IServiceProxy, IDisposable
     {
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<ServiceProxy>();
 
-        private readonly string _baseAddress;
-
-        private readonly string _apiUrl;
+        private readonly ServiceSettings _settings;
 
         private readonly HttpClient _client;
 
         private bool _disposedValue;
 
 
-        public ServiceProxy()
+        public ServiceProxy(IOptions<ServiceSettings> settings)
         {
-            _baseAddress = ConfigurationManager.AppSettings["ThingAppraiserServiceBaseAddress"];
-            _apiUrl = ConfigurationManager.AppSettings["ThingAppraiserServiceApiUrl"];
+            _settings = settings.Value.ThrowIfNull(nameof(settings));
 
-            _logger.Info($"ThingAppraiser service url: {_baseAddress}");
+            _logger.Info("ThingAppraiser service url: " +
+                         $"{_settings.ThingAppraiserServiceBaseAddress}");
 
-            _client = new HttpClient { BaseAddress = new Uri(_baseAddress) };
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(_settings.ThingAppraiserServiceBaseAddress)
+            };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json")
             );
         }
 
+        #region IServiceProxy Implementation
+
         public async Task<ProcessingResponse> SendPostRequest(RequestParams requestParams)
         {
             _logger.Info("Service method 'PostInitialRequest' is called.");
 
-            using (var response = await _client.PostAsJsonAsync(_apiUrl, requestParams))
+            using (var response = await _client.PostAsJsonAsync(
+                       _settings.ThingAppraiserServiceApiUrl, requestParams
+                   ))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -50,6 +55,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
                 return null;
             }
         }
+
+        #endregion
 
         #region IDisposable Implementation
 

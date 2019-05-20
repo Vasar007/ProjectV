@@ -36,7 +36,7 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
         public async Task<RequestData> ReceiveConfigForRequestAsync(RequestParams requestParams)
         {
             using (HttpResponseMessage responseConfigMessage = await _client.PostAsJsonAsync(
-                       _settings.ConfigurationServiceApiUrl, requestParams.ConfigRequirements
+                       _settings.ConfigurationServiceApiUrl, requestParams.Requirements
                    ))
             {
                 if (responseConfigMessage.IsSuccessStatusCode)

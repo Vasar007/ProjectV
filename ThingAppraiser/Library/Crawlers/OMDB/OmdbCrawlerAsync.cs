@@ -60,6 +60,8 @@ namespace ThingAppraiser.Crawlers
             _omdbClient = new AsyncOmdbClient(_apiKey);
         }
 
+        #region CrawlerAsync Overridden Methods
+
         /// <inheritdoc />
         public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
             BufferBlock<BasicInfo> responsesQueue, bool outputResults)
@@ -93,5 +95,7 @@ namespace ThingAppraiser.Crawlers
             }
             return searchResults.Count != 0;
         }
+
+        #endregion
     }
 }

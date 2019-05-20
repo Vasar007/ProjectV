@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Data.Models;
+using ThingAppraiser.Core.Building;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
@@ -15,10 +17,17 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         private readonly IBotService _botService;
 
+        private readonly IServiceProxy _serviceProxy;
 
-        public UpdateServiceAsync(IBotService botService)
+        private readonly ConcurrentDictionary<long, RequestParams> _cache;
+
+
+        public UpdateServiceAsync(IBotService botService, IServiceProxy serviceProxy)
         {
             _botService = botService.ThrowIfNull(nameof(botService));
+            _serviceProxy = serviceProxy.ThrowIfNull(nameof(serviceProxy));
+
+            _cache = new ConcurrentDictionary<long, RequestParams>();
         }
 
         #region IUpdateService Implementation
@@ -30,117 +39,122 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
                 _logger.Warn("Received empty Message.");
                 return;
             }
-            if (update.Type != UpdateType.Message)
+            
+            switch (update.Type)
             {
-                _logger.Warn("Received not Message.");
-                return;
+                case UpdateType.Message:
+                {
+                    Message message = update.Message;
+                    _logger.Info($"Received Message from {message.Chat.Id}.");
+                    await ProcessMessage(message);
+                    break;
+                }
+
+                default:
+                {
+                    _logger.Warn($"Skipped {update.Type}");
+                    break;
+                }
             }
 
-            var message = update.Message;
-
-            _logger.Info($"Received Message from {message.Chat.Id}.");
-
-            await ProcessMessage(message);
         }
 
         #endregion
 
         private async Task ProcessMessage(Message message)
         {
-            switch (message.Text.Split(' ').First())
+            string[] data = message.Text.Split('\n');
+            string[] firstLine = data.First().Split(' ');
+            string command = firstLine.First();
+
+            switch (command)
             {
-                // send inline keyboard
-                case "/inline":
-                    await _botService.Client.SendChatActionAsync(message.Chat.Id,
-                                                                 ChatAction.Typing);
-
-                    await Task.Delay(500); // simulate longer running task
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(new[]
-                    {
-                        new [] // first row
-                        {
-                            InlineKeyboardButton.WithCallbackData("1.1"),
-                            InlineKeyboardButton.WithCallbackData("1.2"),
-                        },
-                        new [] // second row
-                        {
-                            InlineKeyboardButton.WithCallbackData("2.1"),
-                            InlineKeyboardButton.WithCallbackData("2.2"),
-                        }
-                    });
-
-                    await _botService.Client.SendTextMessageAsync(
-                        message.Chat.Id,
-                        "Choose",
-                        replyMarkup: inlineKeyboard
-                    );
+                case "/services":
+                {
+                    await SendResponseToServicesCommand(message.Chat.Id);
                     break;
+                }
 
-                // send custom keyboard
-                case "/keyboard":
-                    ReplyKeyboardMarkup ReplyKeyboard = new[]
-                    {
-                        new[] { "1.1", "1.2" },
-                        new[] { "2.1", "2.2" },
-                    };
-
-                    await _botService.Client.SendTextMessageAsync(
-                        message.Chat.Id,
-                        "Choose",
-                        replyMarkup: ReplyKeyboard
-                    );
+                case "/input":
+                {
+                    string serviceName = firstLine[1];
+                    await SendResponseToInputCommand(message.Chat.Id, serviceName, data);
                     break;
+                }
 
-                // send a photo
-                case "/photo":
-                    await _botService.Client.SendChatActionAsync(message.Chat.Id,
-                                                                 ChatAction.UploadPhoto);
-
-                    const string file = @"Files/flat.jpg";
-
-                    var fileName = file.Split(Path.DirectorySeparatorChar).Last();
-
-                    using (var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read,
-                                                           FileShare.Read))
-                    {
-                        await _botService.Client.SendPhotoAsync(
-                            message.Chat.Id,
-                            fileStream,
-                            "Nice Picture"
-                        );
-                    }
+                case "/help":
+                {
+                    await SendResponseToHelpCommand(message.Chat.Id);
                     break;
-
-                // request location or contact
-                case "/request":
-                    var RequestReplyKeyboard = new ReplyKeyboardMarkup(new[]
-                    {
-                        KeyboardButton.WithRequestLocation("Location"),
-                        KeyboardButton.WithRequestContact("Contact"),
-                    });
-
-                    await _botService.Client.SendTextMessageAsync(
-                        message.Chat.Id,
-                        "Who or Where are you?",
-                        replyMarkup: RequestReplyKeyboard
-                    );
-                    break;
+                }
 
                 default:
-                    const string usage = @"
-Usage:
-/inline   - send inline keyboard
-/keyboard - send custom keyboard
-/photo    - send a photo
-/request  - request location or contact";
-
-                    await _botService.Client.SendTextMessageAsync(
-                        message.Chat.Id,
-                        usage,
-                        replyMarkup: new ReplyKeyboardRemove());
+                {
+                    _logger.Info($"Skipped message: {message.Text}");
                     break;
+                }
             }
+        }
+
+        private async Task SendResponseToHelpCommand(long chatId)
+        {
+            _logger.Info("Processes /help command.");
+
+            const string usage = @"
+Usage:
+/services — send info about available services for processing;
+/input <service-name> — enter data for a request;
+/help — get help information.";
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                usage,
+                replyMarkup: new ReplyKeyboardRemove()
+            );
+        }
+
+        private async Task SendResponseToServicesCommand(long chatId)
+        {
+            _logger.Info("Processes /services command.");
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                $"Available services: {string.Join(", ", ConfigContract.AvailableServices)}."
+            );
+        }
+
+        private async Task SendResponseToInputCommand(long chatId, string serviceName,
+            string[] data)
+        {
+            _logger.Info("Processes /input command.");
+
+            var requestParams = new RequestParams
+            {
+                Requirements = CreateRequirements(serviceName, $"{serviceName}Common"),
+                ThingNames = data.Skip(1).ToList()
+            };
+            _cache.TryAdd(chatId, requestParams);
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                $"Send request to process data for {serviceName}."
+            );
+
+            ProcessingResponseReceiver.ScheduleRequest(_botService, _serviceProxy,
+                                                       requestParams, chatId);
+        }
+
+        private ConfigRequirements CreateRequirements(string serviceName, string appraisalName)
+        {
+            serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+            appraisalName.ThrowIfNullOrEmpty(nameof(appraisalName));
+
+            IRequirementsCreator requirementsCreator = new RequirementsCreator();
+
+            requirementsCreator.AddServiceRequirement(serviceName);
+            requirementsCreator.AddAppraisalRequirement(appraisalName);
+
+            return requirementsCreator.GetResult();
         }
     }
 }

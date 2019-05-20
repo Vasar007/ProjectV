@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using CsvHelper;
 using FileHelpers;
-using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
@@ -63,7 +62,6 @@ namespace ThingAppraiser.IO.Input
                     if (result.Add(thingName))
                     {
                         await queue.SendAsync(thingName);
-                        GlobalMessageHandler.OutputMessage($"Got {thingName}");
                     }
                 }
             }

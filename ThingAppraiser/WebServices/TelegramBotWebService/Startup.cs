@@ -23,6 +23,7 @@ namespace ThingAppraiser.TelegramBotWebService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IServiceSetupAsync, ServiceSetupAsync>();
+            services.AddSingleton<IServiceProxy, ServiceProxy>();
 
             services.AddScoped<IUpdateServiceAsync, UpdateServiceAsync>();
             services.AddSingleton<IBotService, BotService>();

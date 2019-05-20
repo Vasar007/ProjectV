@@ -34,10 +34,10 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="str">string to check.</param>
         /// <param name="paramName">Name of the parameter for error message.</param>
+        /// <returns>The original string.</returns>
         /// <exception cref="ArgumentException">
         /// <paramref name="str" /> is <c>null</c> or presents empty string.
         /// </exception>
-        /// <returns>The original string.</returns>
         public static string ThrowIfNullOrEmpty(this string str, string paramName)
         {
             if (string.IsNullOrEmpty(str))
@@ -52,11 +52,11 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="str">string to check.</param>
         /// <param name="paramName">Name of the parameter for error message.</param>
+        /// <returns>The original string.</returns>
         /// <exception cref="ArgumentException">
         /// <paramref name="str" /> is <c>null</c>, presents empty string or contains only 
         /// whitespaces.
         /// </exception>
-        /// <returns>The original string.</returns>
         public static string ThrowIfNullOrWhiteSpace(this string str, string paramName)
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -72,8 +72,10 @@ namespace ThingAppraiser
         /// </summary>
         /// <typeparam name="T">Internal type of <see cref="IEnumerable{T}" />.</typeparam>
         /// <param name="collection">Enumerable to check.</param>
-        /// <returns>Returns <c>true</c> in case the enumerable is <c>null</c> or empty,
-        /// <c>false</c> otherwise.</returns>
+        /// <returns>
+        /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty, <c>false</c> 
+        /// otherwise.
+        /// </returns>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
         {
             return collection is null || !collection.Any();

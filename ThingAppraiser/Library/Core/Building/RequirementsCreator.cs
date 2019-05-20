@@ -56,10 +56,8 @@ namespace ThingAppraiser.Core.Building
 
         public ConfigRequirements GetResult()
         {
-            // Return current value and reset reference to avoid errors with further editing.
-            ConfigRequirements result = _configRequirements;
-            Reset();
-            return result;
+            // Warning! You should avoid errors with further editing.
+            return _configRequirements;
         }
     }
 }

@@ -2,7 +2,9 @@
 {
     public class BotConfiguration
     {
-        public string BotToken { get; set; }
+        public string BotToken { get; } = EnvironmentVariablesParser.GetValue("BotToken");
+
+        public bool UseProxy { get; set; }
 
         public string Socks5Host { get; set; }
 

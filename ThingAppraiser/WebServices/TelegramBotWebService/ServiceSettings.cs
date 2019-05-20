@@ -2,13 +2,13 @@
 {
     public class ServiceSettings
     {
-        public string TelegramApiUrl { get; set; }
-
-        public string SetWebhookRequestUrlTemplate { get; set; }
-
         public string NgrokUrl { get; set; }
 
         public string ServiceApiUrl { get; set; }
+
+        public string ThingAppraiserServiceBaseAddress { get; set; }
+
+        public string ThingAppraiserServiceApiUrl { get; set; }
 
 
         public ServiceSettings()
