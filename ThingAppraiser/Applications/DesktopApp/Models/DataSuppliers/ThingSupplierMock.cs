@@ -4,7 +4,7 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public class ThingSupplierMock : IThingSupplier
+    internal class ThingSupplierMock : IThingSupplier
     {
         private readonly List<Thing> _things;
 

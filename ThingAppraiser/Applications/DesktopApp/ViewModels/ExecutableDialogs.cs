@@ -8,7 +8,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public static class ExecutableDialogs
+    internal static class ExecutableDialogs
     {
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceWithName(nameof(ExecutableDialogs));
@@ -40,7 +40,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             var dialog = new WinForms.OpenFileDialog
             {
                 DefaultExt = ".csv",
-                Filter = @"CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
+                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
             };
 
             WinForms.DialogResult result = dialog.ShowDialog();

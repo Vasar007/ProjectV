@@ -5,7 +5,7 @@ using ThingAppraiser.Data.Crawlers;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public class TmdbImageSupplier : IImageSupplier
+    internal class TmdbImageSupplier : IImageSupplier
     {
         private TmdbServiceConfigurationInfo _serviceConfigurationInfo;
 
@@ -27,7 +27,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
             if (!(data is TmdbMovieInfo movieInfo))
             {
-                throw new ArgumentException(@"Data handler has invalid type.", nameof(data));
+                throw new ArgumentException("Data handler has invalid type.", nameof(data));
             }
 
             int sizeIndex = GetImageSizeIndex(imageSize,
@@ -48,7 +48,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             if (length <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(length), length,
-                                                      @"Length value must be positive.");
+                                                      "Length value must be positive.");
             }
 
             switch (imageSize)
@@ -67,7 +67,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(imageSize), imageSize,
-                                                          @"Invalid image size value.");
+                                                          "Invalid image size value.");
             }
         }
     }

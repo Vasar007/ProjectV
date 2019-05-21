@@ -1,5 +1,4 @@
 ﻿using System;
-using JsonSubTypes;
 using Newtonsoft.Json;
 
 namespace ThingAppraiser.Data
@@ -11,9 +10,7 @@ namespace ThingAppraiser.Data
     /// ATTENTION! Be careful with naming of parameters! They must match the values received in 
     /// JSON.
     /// </remarks>
-    [JsonConverter(typeof(JsonSubtypes))]
-    [JsonSubtypes.KnownSubTypeWithProperty(typeof(TmdbMovieInfo), "Popularity")]
-    public class BasicInfo
+    public class BasicInfo : IDataType
     {
         /// <summary>
         /// Unique Thing identifier. We can get this ID from Internet data service.
@@ -35,6 +32,14 @@ namespace ThingAppraiser.Data
         /// </summary>
         public double VoteAverage { get; }
 
+        #region IDataType Implementation
+
+        /// <summary>
+        /// Represents kind of additional value. This property used only for JSON (de)serialization.
+        /// </summary>
+        public virtual string Kind { get; } = nameof(BasicInfo);
+
+        #endregion
 
         /// <summary>
         /// Initializes instance with given parameters.

@@ -16,7 +16,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
 
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
-            RequestParams requestParams, long chatId, CancellationToken token = default)
+            long chatId, RequestParams requestParams, CancellationToken token = default)
         {
             Task.Factory.StartNew(() =>
             {

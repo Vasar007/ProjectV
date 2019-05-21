@@ -7,7 +7,7 @@ using ThingAppraiser.Data;
 namespace ThingAppraiser.Appraisers
 {
     /// <summary>
-    /// Concrete appraiser for TMDB data.
+    /// Concrete appraiser for TMDb data.
     /// </summary>
     public class TmdbAppraiser : MoviesAppraiser
     {

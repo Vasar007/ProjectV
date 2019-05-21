@@ -36,12 +36,12 @@ namespace ThingAppraiser.Crawlers
             new DataMapperTmdbConfig();
 
         /// <summary>
-        /// Key to get access to TMDB service.
+        /// Key to get access to TMDb service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to TMDB API.
+        /// Third-party helper class to make a calls to TMDb API.
         /// </summary>
         private readonly TMDbClient _tmdbClient;
 
@@ -55,8 +55,8 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to TMDB service.</param>
-        /// <param name="maxRetryCount">Maximum retry number to get response from TMDB.</param>
+        /// <param name="apiKey">Key to get access to TMDb service.</param>
+        /// <param name="maxRetryCount">Maximum retry number to get response from TMDb.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> is <c>null</c>, presents empty string or contains only 
         /// whitespaces.
@@ -102,7 +102,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from {Tag}");
                 }
 
-                searchResult.Title = movie; // Temporary fix to avoid different movie names.
                 TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);
                 searchResults.Add(extractedInfo);
             }
@@ -128,7 +127,7 @@ namespace ThingAppraiser.Crawlers
 
             if (outputResults)
             {
-                GlobalMessageHandler.OutputMessage("Got TMDB config.");
+                GlobalMessageHandler.OutputMessage("Got TMDb config.");
             }
 
             return _configMapper.Transform(config);

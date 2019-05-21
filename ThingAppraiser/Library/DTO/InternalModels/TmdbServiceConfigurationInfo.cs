@@ -5,7 +5,7 @@ using Newtonsoft.Json.Serialization;
 namespace ThingAppraiser.Data.Crawlers
 {
     /// <summary>
-    /// Represent configuration of the TMDB service.
+    /// Represent configuration of the TMDb service.
     /// </summary>
     /// <remarks>
     /// ATTENTION! Be careful with naming of parameters! They must match the values received in 

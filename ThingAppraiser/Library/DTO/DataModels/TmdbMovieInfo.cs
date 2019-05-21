@@ -5,12 +5,15 @@ using Newtonsoft.Json;
 namespace ThingAppraiser.Data
 {
     /// <summary>
-    /// Concrete data object for TMDB service <see href="https://www.themoviedb.org" />.
+    /// Concrete data object for TMDb service <see href="https://www.themoviedb.org" />.
     /// </summary>
     public class TmdbMovieInfo : MovieInfo
     {
+        /// <inheritdoc />
+        public override string Kind { get; } = nameof(TmdbMovieInfo);
+
         /// <summary>
-        /// Popularity rating which calculated by TMDB.
+        /// Popularity rating which calculated by TMDb.
         /// </summary>
         public double Popularity { get; }
 
@@ -25,7 +28,7 @@ namespace ThingAppraiser.Data
         public List<int> GenreIds { get; }
 
         /// <summary>
-        /// Poster file path to TMDB image service.
+        /// Poster file path to TMDb image service.
         /// </summary>
         public string PosterPath { get; }
 
@@ -37,7 +40,7 @@ namespace ThingAppraiser.Data
         /// <param name="popularity">Internal popularity rating of online-service.</param>
         /// <param name="adult">Defines if film is for adults.</param>
         /// <param name="genreIds">Collection of all genres.</param>
-        /// <param name="posterPath">Path to image file on TMDB server.</param>
+        /// <param name="posterPath">Path to image file on TMDb server.</param>
         [JsonConstructor]
         public TmdbMovieInfo(int thingId, string title, int voteCount, double voteAverage,
             string overview, DateTime releaseDate, double popularity, bool adult,

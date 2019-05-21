@@ -130,7 +130,7 @@ namespace ThingAppraiser.Core
                     },
                     CrawlersManager = new CrawlersManagerConfig
                     {
-                        CrawlersOutputFlag = true,
+                        CrawlersOutputFlag = false,
                         Crawlers = new[]
                         {
                             ConfigModule.GetConfigForCrawler("Tmdb")
@@ -138,7 +138,7 @@ namespace ThingAppraiser.Core
                     },
                     AppraisersManager = new AppraisersManagerConfig
                     {
-                        AppraisersOutputFlag = true,
+                        AppraisersOutputFlag = false,
                         Appraisers = new[]
                         {
                             ConfigModule.GetConfigForAppraiser("TmdbCommon")
@@ -210,9 +210,9 @@ namespace ThingAppraiser.Core
 
             xmlConfigCreator.SetDefaultInStorageName("thing_names.csv");
 
-            xmlConfigCreator.SetCrawlersOutputFlag(true);
+            xmlConfigCreator.SetCrawlersOutputFlag(false);
 
-            xmlConfigCreator.SetAppraisersOutputFlag(true);
+            xmlConfigCreator.SetAppraisersOutputFlag(false);
 
             xmlConfigCreator.SetDefaultOutStorageName("appraised_things.csv");
 

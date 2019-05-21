@@ -8,6 +8,9 @@ namespace ThingAppraiser.Data
     /// </summary>
     public class MovieInfo : BasicInfo
     {
+        /// <inheritdoc />
+        public override string Kind { get; } = nameof(MovieInfo);
+
         /// <summary>
         /// Brief overview of the movie.
         /// </summary>

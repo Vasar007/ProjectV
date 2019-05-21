@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public class EnterDataDialogViewModel : ViewModelBase
+    internal class EnterDataDialogViewModel : ViewModelBase
     {
         private string _name;
 

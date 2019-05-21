@@ -75,10 +75,15 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
                     break;
                 }
 
-                case "/input":
+                case "/request":
                 {
-                    string serviceName = firstLine[1];
-                    await SendResponseToInputCommand(message.Chat.Id, serviceName, data);
+                    await SendResponseToRequestCommand(message.Chat.Id);
+                    break;
+                }
+
+                case "/cancel":
+                {
+                    await SendResponseToCancelCommand(message.Chat.Id);
                     break;
                 }
 
@@ -90,7 +95,21 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    _logger.Info($"Skipped message: {message.Text}");
+                    if (!_cache.TryGetValue(message.Chat.Id, out RequestParams requestParams))
+                    {
+                        await SendResponseToInvalidMessage(message.Chat.Id);
+                        return;
+                    }
+
+                    if (requestParams.Requirements is null)
+                    {
+                        string serviceName = data.First();
+                        await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
+                                                                requestParams);
+                        return;
+                    }
+
+                    await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
                     break;
                 }
             }
@@ -103,7 +122,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             const string usage = @"
 Usage:
 /services — send info about available services for processing;
-/input <service-name> — enter data for a request;
+/request — create a request to service;
+/cancel — cancel the request;
 /help — get help information.";
 
             await _botService.Client.SendTextMessageAsync(
@@ -119,29 +139,110 @@ Usage:
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Available services: {string.Join(", ", ConfigContract.AvailableServices)}."
+                "Available services: " +
+                $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}."
             );
         }
 
-        private async Task SendResponseToInputCommand(long chatId, string serviceName,
-            string[] data)
+        private async Task SendResponseToRequestCommand(long chatId)
         {
-            _logger.Info("Processes /input command.");
+            _logger.Info("Processes /request command.");
 
-            var requestParams = new RequestParams
-            {
-                Requirements = CreateRequirements(serviceName, $"{serviceName}Common"),
-                ThingNames = data.Skip(1).ToList()
-            };
+            var requestParams = new RequestParams();
             _cache.TryAdd(chatId, requestParams);
+
+            ReplyKeyboardMarkup replyKeyboard = new[]
+            {
+                ConfigContract.AvailableBeautifiedServices.ToArray(),
+                new[] { "/cancel" },
+            };
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Send request to process data for {serviceName}."
+                "Enter service name.",
+                replyMarkup: replyKeyboard
+            );
+        }
+
+        private async Task ContinueRequestCommandWithService(long chatId, string serviceName,
+            RequestParams requestParams)
+        {
+            _logger.Info($"Continue process /request command with service {serviceName}.");
+            ReplyKeyboardMarkup replyKeyboard = new[]
+            {
+                ConfigContract.AvailableBeautifiedServices.ToArray(),
+                new[] { "/cancel" },
+            };
+
+            if (!ConfigContract.ContainsService(serviceName))
+            {
+                await _botService.Client.SendTextMessageAsync(
+                    chatId,
+                    "Invalid service name. Please, try again.",
+                    replyMarkup: replyKeyboard
+                );
+                return;
+            }
+
+            serviceName = ConfigContract.GetProperServiceName(serviceName);
+            requestParams.Requirements = CreateRequirements(serviceName, $"{serviceName}Common");
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                $"Enter data for {serviceName}.",
+                replyMarkup: new ReplyKeyboardRemove()
+            );
+        }
+
+        private async Task ContinueRequestCommandWithData(long chatId, string[] data,
+            RequestParams requestParams)
+        {
+            _logger.Info("Continue process /request command with data.");
+
+            requestParams.ThingNames = data.ToList();
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                "Send request to process data. Return later to see results.",
+                replyMarkup: new ReplyKeyboardRemove()
             );
 
             ProcessingResponseReceiver.ScheduleRequest(_botService, _serviceProxy,
-                                                       requestParams, chatId);
+                                                       chatId, requestParams);
+
+            _cache.TryRemove(chatId, out RequestParams _);
+        }
+
+        private async Task SendResponseToCancelCommand(long chatId)
+        {
+            _logger.Info("Processes /cancel command.");
+
+            string message;
+            if (_cache.TryRemove(chatId, out RequestParams _))
+            {
+                message = "Cancel the operation.";
+            }
+            else
+            {
+                message = "No request to cancel.";
+            }
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                message,
+                replyMarkup: new ReplyKeyboardRemove()
+            );
+        }
+
+        private async Task SendResponseToInvalidMessage(long chatId)
+        {
+            _logger.Info("Processes invalid message.");
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                "Invalid message. See usage at /help command.",
+                replyMarkup: new ReplyKeyboardRemove()
+            );
         }
 
         private ConfigRequirements CreateRequirements(string serviceName, string appraisalName)

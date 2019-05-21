@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    public class NotEmptyValidationRule : ValidationRule
+    internal class NotEmptyValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

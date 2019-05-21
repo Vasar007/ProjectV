@@ -28,12 +28,12 @@ namespace ThingAppraiser.Crawlers
             new DataMapperOmdbMovie();
 
         /// <summary>
-        /// Key to get access to OMDB service.
+        /// Key to get access to OMDb service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to OMDB API.
+        /// Third-party helper class to make a calls to OMDb API.
         /// </summary>
         private readonly OmdbClient _omdbClient;
 
@@ -47,7 +47,7 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to OMDB service.</param>
+        /// <param name="apiKey">Key to get access to OMDb service.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> is <c>null</c>, presents empty strings or contains only 
         /// whitespaces.
@@ -68,7 +68,18 @@ namespace ThingAppraiser.Crawlers
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                Item response = _omdbClient.GetItemByTitle(movie, OmdbType.Movie);
+                Item response;
+                try
+                {
+                    response = _omdbClient.GetItemByTitle(movie);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{movie} wasn't processed.");
+                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    continue;
+                }
+
                 if (!response.Response.IsEqualWithInvariantCulture("True"))
                 {
                     _logger.Warn($"{movie} wasn't processed.");
@@ -82,7 +93,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {response.Title} from {Tag}");
                 }
 
-                response.Title = movie; // Temporary fix to avoid different movie names.
                 OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
                 searchResults.Add(extractedInfo);
             }

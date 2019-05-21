@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    public interface IAsyncCommand<T> : ICommand
+    internal interface IAsyncCommand<T> : ICommand
     {
         Task ExecuteAsync(T parameter);
 

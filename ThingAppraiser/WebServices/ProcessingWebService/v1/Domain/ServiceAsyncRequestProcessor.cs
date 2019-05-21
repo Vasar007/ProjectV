@@ -43,10 +43,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
                     ),
                     CommonResultCollectionsNumber = results.Count,
                     ResultStatus = status,
-                    OptionalData = new Dictionary<string, IOptionalData>
-                    {
-                        { nameof(TmdbServiceConfiguration), TmdbServiceConfiguration.Configuration }
-                    }
+                    OptionalData = CreateOptionalData()
                 },
                 RatingDataContainers = results
             };
@@ -54,5 +51,17 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
         }
 
         #endregion
+
+        private IReadOnlyDictionary<string, IOptionalData> CreateOptionalData()
+        {
+            var result = new Dictionary<string, IOptionalData>();
+            if (TmdbServiceConfiguration.HasValue())
+            {
+                result.Add(nameof(TmdbServiceConfiguration),
+                           TmdbServiceConfiguration.Configuration);
+            }
+
+            return result;
+        }
     }
 }

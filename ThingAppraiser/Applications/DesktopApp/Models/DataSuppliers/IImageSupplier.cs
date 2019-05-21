@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public interface IImageSupplier
+    internal interface IImageSupplier
     {
         string GetImageLink(BasicInfo data, ImageSize imageSize);
     }

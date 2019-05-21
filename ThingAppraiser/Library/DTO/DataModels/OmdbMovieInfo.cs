@@ -5,10 +5,13 @@ using Newtonsoft.Json;
 namespace ThingAppraiser.Data
 {
     /// <summary>
-    /// Concrete data object for OMDB service <see href="http://www.omdbapi.com/" />.
+    /// Concrete data object for OMDb service <see href="http://www.omdbapi.com/" />.
     /// </summary>
     public class OmdbMovieInfo : MovieInfo
     {
+        /// <inheritdoc />
+        public override string Kind { get; } = nameof(OmdbMovieInfo);
+
         /// <summary>
         /// Popularity rating which calculated by Metacritica.
         /// </summary>
@@ -25,7 +28,7 @@ namespace ThingAppraiser.Data
         public List<string> GenreIds { get; }
 
         /// <summary>
-        /// Poster file path to OMDB image service.
+        /// Poster file path to OMDb image service.
         /// </summary>
         public string PosterPath { get; }
 
@@ -37,7 +40,7 @@ namespace ThingAppraiser.Data
         /// <param name="metascore">Internal popularity rating of online-service.</param>
         /// <param name="rated">Defines rate for the movie</param>
         /// <param name="genreIds">Collection of all genres.</param>
-        /// <param name="posterPath">Path to image file on OMDB server.</param>
+        /// <param name="posterPath">Path to image file on OMDb server.</param>
         [JsonConstructor]
         public OmdbMovieInfo(int thingId, string title, int voteCount, double voteAverage,
             string overview, DateTime releaseDate, int metascore, string rated,

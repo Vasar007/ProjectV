@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public interface IThingSupplier
+    internal interface IThingSupplier
     {
         List<Thing> GetAllThings();
 

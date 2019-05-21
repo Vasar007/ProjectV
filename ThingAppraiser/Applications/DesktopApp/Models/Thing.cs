@@ -5,7 +5,7 @@ using ThingAppraiser.Data;
 
 namespace ThingAppraiser.DesktopApp.Models
 {
-    public class Thing : INotifyPropertyChanged
+    internal class Thing : INotifyPropertyChanged
     {
         private string _name;
 

@@ -4,7 +4,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public class InputThingViewModel : ViewModelBase
+    internal class InputThingViewModel : ViewModelBase
     {
         private ObservableCollection<string> _thingList = new ObservableCollection<string>();
 

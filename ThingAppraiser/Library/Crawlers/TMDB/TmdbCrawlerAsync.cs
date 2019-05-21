@@ -79,7 +79,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from {Tag}");
                 }
 
-                searchResult.Title = movie; // Temporary fix to avoid different movie names.
                 TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);
                 if (searchResults.Add(extractedInfo))
                 {
@@ -104,7 +103,7 @@ namespace ThingAppraiser.Crawlers
 
             if (outputResults)
             {
-                GlobalMessageHandler.OutputMessage("Got TMDB config.");
+                GlobalMessageHandler.OutputMessage("Got TMDb config.");
             }
 
             return _configMapper.Transform(config);

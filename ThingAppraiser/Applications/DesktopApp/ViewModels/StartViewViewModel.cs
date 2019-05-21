@@ -1,10 +1,24 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using ThingAppraiser.Data.Models;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public class StartControlViewModel : ViewModelBase
+    internal class StartControlViewModel : ViewModelBase
     {
+        private string _selectedService;
+
+        public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
+            ConfigContract.AvailableBeautifiedServices;
+
+        public string SelectedService
+        {
+            get => _selectedService;
+            set => SetProperty(ref _selectedService, value);
+        }
+
         public object DialogIdentifier { get; }
 
         public ICommand InputThingDialogCommand =>
@@ -20,6 +34,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public StartControlViewModel(object dialogIdentifier)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+
+            SelectedService = AvailableBeautifiedServices.First();
         }
     }
 }

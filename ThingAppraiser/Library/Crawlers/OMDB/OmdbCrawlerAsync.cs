@@ -12,7 +12,7 @@ using ThingAppraiser.Crawlers.Mappers;
 namespace ThingAppraiser.Crawlers
 {
     /// <summary>
-    /// Provides async version of OMDB crawler.
+    /// Provides async version of OMDb crawler.
     /// </summary>
     public class OmdbCrawlerAsync : CrawlerAsync
     {
@@ -29,12 +29,12 @@ namespace ThingAppraiser.Crawlers
             new DataMapperOmdbMovie();
 
         /// <summary>
-        /// Key to get access to OMDB service.
+        /// Key to get access to OMDb service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to OMDB API.
+        /// Third-party helper class to make a calls to OMDb API.
         /// </summary>
         private readonly AsyncOmdbClient _omdbClient;
 
@@ -48,7 +48,7 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to OMDB service.</param>
+        /// <param name="apiKey">Key to get access to OMDb service.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> is <c>null</c>, presents empty strings or contains only 
         /// whitespaces.
@@ -72,7 +72,18 @@ namespace ThingAppraiser.Crawlers
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                Item response = await _omdbClient.GetItemByTitleAsync(movie);
+                Item response;
+                try
+                {
+                    response = await _omdbClient.GetItemByTitleAsync(movie);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{movie} wasn't processed.");
+                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    continue;
+                }
+
                 if (!response.Response.IsEqualWithInvariantCulture("True"))
                 {
                     _logger.Warn($"{movie} wasn't processed.");
@@ -86,7 +97,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {response.Title} from {Tag}");
                 }
 
-                response.Title = movie; // Temporary fix to avoid different movie names.
                 OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
                 if (searchResults.Add(extractedInfo))
                 {

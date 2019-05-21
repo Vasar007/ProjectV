@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ThingAppraiser.DesktopApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -17,8 +16,8 @@
         </Grid.RowDefinitions>
 
         <ListBox Grid.Column="0" ItemsSource="{Binding Things}"
-                 SelectedItem="{Binding SelectedThing}" 
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                 SelectedItem="{Binding SelectedThing}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Margin="0 0 10 10" Grid.RowSpan="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
