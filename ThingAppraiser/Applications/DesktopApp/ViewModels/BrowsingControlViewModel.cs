@@ -29,7 +29,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public void Update()
         {
-            Things.Clear();
+            if (Things.Count > 0)
+            {
+                Things.Clear();
+            }
             foreach (Thing thing in _thingSupplier.GetAllThings())
             {
                 Things.Add(thing);

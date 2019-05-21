@@ -3,7 +3,7 @@
 namespace ThingAppraiser.Crawlers
 {
     /// <summary>
-    /// Provides global thread-safe access to TMDB service configuration.
+    /// Provides global thread-safe access to TMDb service configuration.
     /// </summary>
     public static class TmdbServiceConfiguration
     {
@@ -21,7 +21,7 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Checks if configuration was initilized before.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><c>true</c> if configuration was initilized, <c>false</c> otherwise.</returns>
         public static bool HasValue()
         {
             return !(Configuration is null);
@@ -31,7 +31,8 @@ namespace ThingAppraiser.Crawlers
         /// Updates configuration if it is <c>null</c>.
         /// </summary>
         /// <param name="newConfiguration">New configuration to set.</param>
-        public static void SetServiceConfigurationIfNeed(
+        /// <returns><c>true</c> if value was set, <c>false</c> otherwise.</returns>
+        public static bool SetServiceConfigurationIfNeed(
             TmdbServiceConfigurationInfo newConfiguration)
         {
             if (Configuration is null)
@@ -41,7 +42,25 @@ namespace ThingAppraiser.Crawlers
                     if (Configuration is null)
                     {
                         Configuration = newConfiguration;
+                        return true;
                     }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Changes configuration of TMDb service.
+        /// </summary>
+        /// <param name="newConfiguration">New configuration to set.</param>
+        public static void SetServiceConfiguration(
+            TmdbServiceConfigurationInfo newConfiguration)
+        {
+            lock (_syncRoot)
+            {
+                if (Configuration is null)
+                {
+                    Configuration = newConfiguration;
                 }
             }
         }

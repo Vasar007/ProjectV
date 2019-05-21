@@ -204,12 +204,15 @@
     <Compile Include="Domain\DataSources.cs" />
     <Compile Include="Domain\IErrorHandler.cs" />
     <Compile Include="Domain\NotEmptyValidationRule.cs" />
-    <Compile Include="Domain\NotifyPropertyChangedExtension.cs" />
     <Compile Include="Domain\TaskExtension.cs" />
     <Compile Include="Models\DataSuppliers\IImageSupplier.cs" />
+    <Compile Include="Models\DataSuppliers\IThingGrader.cs" />
+    <Compile Include="Models\DataSuppliers\OmdbImageSupplier.cs" />
+    <Compile Include="Models\DataSuppliers\SteamImageSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingGrader.cs" />
     <Compile Include="Models\DataSuppliers\TmdbImageSupplier.cs" />
     <Compile Include="Models\DataSuppliers\PosterSize.cs" />
+    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\SceneItem.cs" />
     <Compile Include="Models\ThingProducer.cs" />
     <Compile Include="Models\DataSuppliers\IThingSupplier.cs" />

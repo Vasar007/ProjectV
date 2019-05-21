@@ -40,7 +40,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             var dialog = new WinForms.OpenFileDialog
             {
                 DefaultExt = ".csv",
-                Filter = @"CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
+                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
             };
 
             WinForms.DialogResult result = dialog.ShowDialog();

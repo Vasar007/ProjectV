@@ -2,24 +2,24 @@
 using System.Runtime.CompilerServices;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.DesktopApp.ViewModels
+namespace ThingAppraiser.DesktopApp.Models
 {
     /// <summary>
-    /// Base class for all view model classes.
+    /// Base class for all model classes.
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    internal abstract class ModelBase : INotifyPropertyChanged
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ViewModelBase>();
+            LoggerAbstraction.CreateLoggerInstanceFor<ModelBase>();
 
 
         /// <summary>
         /// Creates instance with default values.
         /// </summary>
-        public ViewModelBase()
+        public ModelBase()
         {
         }
 

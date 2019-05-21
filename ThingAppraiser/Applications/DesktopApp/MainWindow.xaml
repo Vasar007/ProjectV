@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:ThingAppraiser.DesktopApp"
         xmlns:models="clr-namespace:ThingAppraiser.DesktopApp.Models"
         mc:Ignorable="d"
         Title="ThingAppraiser" Height="650" Width="850" MinHeight="550" MinWidth="350"

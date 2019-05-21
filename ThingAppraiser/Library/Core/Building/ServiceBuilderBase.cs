@@ -36,12 +36,12 @@ namespace ThingAppraiser.Core.Building
         protected const string _googleDriveParameterName = "GoogleDrive";
 
         /// <summary>
-        /// Attribute value for TMDB crawler.
+        /// Attribute value for TMDb crawler.
         /// </summary>
         protected const string _tmdbCrawlerParameterName = "TmdbCrawler";
 
         /// <summary>
-        /// Attribute value for OMDB crawler.
+        /// Attribute value for OMDb crawler.
         /// </summary>
         protected const string _omdbCrawlerParameterName = "OmdbCrawler";
 
@@ -51,17 +51,17 @@ namespace ThingAppraiser.Core.Building
         protected const string _steamCrawlerParameterName = "SteamCrawler";
 
         /// <summary>
-        /// Attribute value for TMDB appraiser.
+        /// Attribute value for TMDb appraiser.
         /// </summary>
         protected const string _appraiserTmdbParameterName = "TmdbAppraiser";
 
         /// <summary>
-        /// Attribute value for TMDB appraiser which based on Fuzzy Logic Toolbox.
+        /// Attribute value for TMDb appraiser which based on Fuzzy Logic Toolbox.
         /// </summary>
         protected const string _fuzzyAppraiserTmdbParameterName = "FuzzyTmdbAppraiser";
 
         /// <summary>
-        /// Attribute value for OMDB appraiser.
+        /// Attribute value for OMDb appraiser.
         /// </summary>
         protected const string _appraiserOmdbParameterName = "OmdbAppraiser";
 
@@ -97,22 +97,22 @@ namespace ThingAppraiser.Core.Building
         protected static readonly string _fileReaderParameterName = "FileReader";
 
         /// <summary>
-        /// Attribute name for API key of TMDB crawler.
+        /// Attribute name for API key of TMDb crawler.
         /// </summary>
         protected static readonly string _tmdbApiKeyParameterName = "TmdbApiKey";
 
         /// <summary>
-        /// Attribute name for number of maximum attemts to retry for TMDB crawler.
+        /// Attribute name for number of maximum attemts to retry for TMDb crawler.
         /// </summary>
         protected static readonly string _tmdbMaxRetryCountParameterName = "TmdbMaxRetryCount";
 
         /// <summary>
-        /// Attribute name for API key of OMDB crawler.
+        /// Attribute name for API key of OMDb crawler.
         /// </summary>
         protected static readonly string _omdbApiKeyParameterName = "OmdbApiKey";
 
         /// <summary>
-        /// Attribute name for API key of TMDB crawler.
+        /// Attribute name for API key of TMDb crawler.
         /// </summary>
         protected static readonly string _steamApiKeyParameterName = "SteamApiKey";
 

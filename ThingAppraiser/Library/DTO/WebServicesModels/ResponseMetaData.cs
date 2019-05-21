@@ -13,7 +13,7 @@ namespace ThingAppraiser.Data.Models
         [JsonConverter(typeof(StringEnumConverter))]
         public ServiceStatus ResultStatus { get; set; }
 
-        public Dictionary<string, IOptionalData> OptionalData { get; set; }
+        public IReadOnlyDictionary<string, IOptionalData> OptionalData { get; set; }
 
 
         public ResponseMetaData()

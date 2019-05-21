@@ -100,7 +100,7 @@ namespace ThingAppraiser.Crawlers
 
             if (outputResults)
             {
-                GlobalMessageHandler.OutputMessage("Got TMDB config.");
+                GlobalMessageHandler.OutputMessage("Got TMDb config.");
             }
 
             return _configMapper.Transform(config);

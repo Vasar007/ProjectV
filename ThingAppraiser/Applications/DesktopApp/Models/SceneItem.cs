@@ -1,12 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using ThingAppraiser.DesktopApp.Domain;
 
 namespace ThingAppraiser.DesktopApp.Models
 {
-    internal class SceneItem : INotifyPropertyChanged
+    internal class SceneItem : ModelBase
     {
         private string _name;
 
@@ -21,33 +18,31 @@ namespace ThingAppraiser.DesktopApp.Models
         public string Name
         {
             get => _name;
-            set => this.MutateVerbose(ref _name, value, RaisePropertyChanged());
+            set => SetProperty(ref _name, value);
         }
 
         public UserControl Content
         {
             get => _content;
-            set => this.MutateVerbose(ref _content, value, RaisePropertyChanged());
+            set => SetProperty(ref _content, value);
         }
 
         public ScrollBarVisibility HorizontalScrollBarVisibilityRequirement
         {
             get => _horizontalScrollBarVisibilityRequirement;
-            set => this.MutateVerbose(ref _horizontalScrollBarVisibilityRequirement, value,
-                                      RaisePropertyChanged());
+            set => SetProperty(ref _horizontalScrollBarVisibilityRequirement, value);
         }
 
         public ScrollBarVisibility VerticalScrollBarVisibilityRequirement
         {
             get => _verticalScrollBarVisibilityRequirement;
-            set => this.MutateVerbose(ref _verticalScrollBarVisibilityRequirement, value,
-                                      RaisePropertyChanged());
+            set => SetProperty(ref _verticalScrollBarVisibilityRequirement, value);
         }
 
         public Thickness MarginRequirement
         {
             get => _marginRequirement;
-            set => this.MutateVerbose(ref _marginRequirement, value, RaisePropertyChanged());
+            set => SetProperty(ref _marginRequirement, value);
         }
 
 
@@ -56,16 +51,5 @@ namespace ThingAppraiser.DesktopApp.Models
             Name = name;
             Content = content;
         }
-
-        #region INotifyPropertyChanged Implementation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private Action<PropertyChangedEventArgs> RaisePropertyChanged()
-        {
-            return args => PropertyChanged?.Invoke(this, args);
-        }
-
-        #endregion
     }
 }

@@ -40,6 +40,16 @@ namespace ThingAppraiser.Data.Models
             "GoogleDriveWriter"
         };
 
+        public static IReadOnlyList<string> AvailableBeautifiedServices { get; } = new List<string>
+        {
+            "TMDb",
+            "OMDb",
+            "Steam"
+        };
+
+        public static IReadOnlyList<string> AvailableServicesToLower { get; } =
+            AvailableServices.Select(service => service.ToLowerInvariant()).ToList();
+
 
         /// <summary>
         /// Checks availability different service components which specifid in 
@@ -60,6 +70,26 @@ namespace ThingAppraiser.Data.Models
                     $"Config data contains invalid items: {item}.", "configData"
                 );
             }
+        }
+
+        public static bool ContainsService(string serviceName)
+        {
+            serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+
+            serviceName = serviceName.ToLowerInvariant();
+            return AvailableServicesToLower.Contains(serviceName);
+        }
+
+        public static string GetProperServiceName(string serviceName)
+        {
+            serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
+
+            serviceName = serviceName.ToLowerInvariant();
+            int index = AvailableServicesToLower.FindIndex(
+                service => service.IsEqualWithInvariantCulture(serviceName)
+            );
+
+            return AvailableServices[index];
         }
     }
 }

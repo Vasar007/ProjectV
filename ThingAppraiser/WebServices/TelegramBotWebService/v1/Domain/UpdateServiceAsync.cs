@@ -139,7 +139,8 @@ Usage:
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Available services: {string.Join(", ", ConfigContract.AvailableServices)}."
+                "Available services: " +
+                $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}."
             );
         }
 
@@ -152,7 +153,7 @@ Usage:
 
             ReplyKeyboardMarkup replyKeyboard = new[]
             {
-                ConfigContract.AvailableServices.ToArray(),
+                ConfigContract.AvailableBeautifiedServices.ToArray(),
                 new[] { "/cancel" },
             };
 
@@ -169,11 +170,11 @@ Usage:
             _logger.Info($"Continue process /request command with service {serviceName}.");
             ReplyKeyboardMarkup replyKeyboard = new[]
             {
-                ConfigContract.AvailableServices.ToArray(),
+                ConfigContract.AvailableBeautifiedServices.ToArray(),
                 new[] { "/cancel" },
             };
 
-            if (!ConfigContract.AvailableServices.Contains(serviceName))
+            if (!ConfigContract.ContainsService(serviceName))
             {
                 await _botService.Client.SendTextMessageAsync(
                     chatId,
@@ -183,6 +184,7 @@ Usage:
                 return;
             }
 
+            serviceName = ConfigContract.GetProperServiceName(serviceName);
             requestParams.Requirements = CreateRequirements(serviceName, $"{serviceName}Common");
 
             await _botService.Client.SendTextMessageAsync(

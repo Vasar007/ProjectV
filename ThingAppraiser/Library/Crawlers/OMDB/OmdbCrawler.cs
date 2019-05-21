@@ -28,12 +28,12 @@ namespace ThingAppraiser.Crawlers
             new DataMapperOmdbMovie();
 
         /// <summary>
-        /// Key to get access to OMDB service.
+        /// Key to get access to OMDb service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to OMDB API.
+        /// Third-party helper class to make a calls to OMDb API.
         /// </summary>
         private readonly OmdbClient _omdbClient;
 
@@ -47,7 +47,7 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to OMDB service.</param>
+        /// <param name="apiKey">Key to get access to OMDb service.</param>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> is <c>null</c>, presents empty strings or contains only 
         /// whitespaces.

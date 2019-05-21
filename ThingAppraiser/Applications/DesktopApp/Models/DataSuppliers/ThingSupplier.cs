@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ThingAppraiser.Data;
+using ThingAppraiser.Data.Models;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
     internal class ThingSupplier : IThingSupplier, ITagable
     {
+        private readonly IThingGrader _thingGrader;
+
         private readonly List<Thing> _things = new List<Thing>();
 
         public string StorageName { get; private set; }
@@ -19,8 +21,9 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         #endregion
 
 
-        public ThingSupplier()
+        public ThingSupplier(IThingGrader thingGrader)
         {
+            _thingGrader = thingGrader.ThrowIfNull(nameof(thingGrader));
         }
 
         #region IThingSupplier Implementation
@@ -37,25 +40,19 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         #endregion
 
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName,
-            IImageSupplier imageSupplier)
+        public bool SaveResults(ProcessingResponse response, string storageName)
         {
-            imageSupplier.ThrowIfNull(nameof(imageSupplier));
-
             StorageName = storageName;
 
-            if (_things.Count != 0)
+            _thingGrader.ProcessMetaData(response.MetaData);
+
+            if (_things.Count > 0)
             {
                 _things.Clear();
             }
-            foreach (List<RatingDataContainer> rating in results)
+            foreach (List<RatingDataContainer> rating in response.RatingDataContainers)
             {
-                _things.AddRange(rating.Select(r => 
-                    new Thing(
-                        Guid.NewGuid(), r.DataHandler,
-                        imageSupplier.GetImageLink(r.DataHandler, ImageSize.Large))
-                    )
-                );
+                _things.AddRange(_thingGrader.ProcessRatings(rating));
             }
             return true;
         }

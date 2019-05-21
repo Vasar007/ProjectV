@@ -4,19 +4,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ThingAppraiser.Data;
+using ThingAppraiser.Data.Models;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataProducers;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Core.Building;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.IO.Input;
-using ThingAppraiser.Data.Models;
-using ThingAppraiser.Data.Crawlers;
-using ThingAppraiser.DesktopApp.Models;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -25,10 +23,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<MainWindowViewModel>();
 
-        private readonly ThingSupplier _thingSupplier = new ThingSupplier();
-
-        private readonly TmdbImageSupplier _tmdbImageSupplier = 
-            new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
+        private readonly ThingSupplier _thingSupplier = new ThingSupplier(new ThingGrader());
 
         private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
 
@@ -117,9 +112,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             SceneItems = new[]
             {
                 new SceneItem("Start page", new StartControl(dialogIdentifier)),
-                new SceneItem("TMDb", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
-                new SceneItem("OMDb", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
-                new SceneItem("Steam", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+
+                new SceneItem("TMDb",
+                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+
+                new SceneItem("OMDb",
+                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+
+                new SceneItem("Steam",
+                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+
                 new SceneItem("Expert mode", new ProgressDialog())
             };
 
@@ -135,6 +137,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
+        private string FindServiceNameAtStartControl()
+        {
+            int index = _sceneIdentifiers["Start page"];
+            if (SceneItems[index].Content.DataContext is StartControlViewModel startControl)
+            {
+                return startControl.SelectedService;
+            }
+            return string.Empty;
+        }
+
         private void SetCurrentContentToScene(string controlIdentifier)
         {
             int index = _sceneIdentifiers[controlIdentifier];
@@ -144,8 +156,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void SetCurrentContentToSceneAndUpdate(string controlIdentifier)
         {
             int index = _sceneIdentifiers[controlIdentifier];
-            if (SceneItems[index].Content is BrowsingControl browsingControl &&
-                browsingControl.DataContext is BrowsingControlViewModel controlViewModel)
+            if (SceneItems[index].Content.DataContext is BrowsingControlViewModel controlViewModel)
             {
                 controlViewModel.Update();
                 SelectedSceneItem = SceneItems[index];
@@ -172,8 +183,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ExecuteThingAppraiserService()
         {
-            Console.WriteLine($@"SelectedStorageName={SelectedStorageName}, " +
-                              $@"SelectedDataSource={SelectedDataSource}");
+            string message = $"SelectedStorageName={SelectedStorageName}, " +
+                             $"SelectedDataSource={SelectedDataSource}";
+            Console.WriteLine(message);
+            _logger.Debug(message);
+
             CurrentContent = new ProgressDialog();
             Submit.ExecuteAsync(SelectedDataSource);
         }
@@ -182,17 +196,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (response?.MetaData.ResultStatus == ServiceStatus.Ok)
             {
-                if (!TmdbServiceConfiguration.HasValue())
-                {
-                    var serviceConfig = (TmdbServiceConfigurationInfo)
-                        response.MetaData.OptionalData[nameof(TmdbServiceConfiguration)];
-                    TmdbServiceConfiguration.SetServiceConfigurationIfNeed(serviceConfig);
-                }
+                _thingSupplier.SaveResults(response, "Service response");
 
-                _thingSupplier.SaveResults(response.RatingDataContainers, "Service response",
-                                           _tmdbImageSupplier);
-
-                SetCurrentContentToSceneAndUpdate("TMDb");
+                SetCurrentContentToSceneAndUpdate(FindServiceNameAtStartControl());
             }
             else
             {
@@ -259,7 +265,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 default:
                     var ex = new ArgumentOutOfRangeException(
                         nameof(dataSource), dataSource,
-                        @"Couldn't recognize specified data source type."
+                        "Couldn't recognize specified data source type."
                     );
                     _logger.Error(ex, $"Passed incorrect data to method: {dataSource}");
                     throw ex;
@@ -321,11 +327,12 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void CreateBasicRequirements()
         {
+            string serviceName = FindServiceNameAtStartControl();
+            serviceName = ConfigContract.GetProperServiceName(serviceName);
+
             _requirementsCreator.Reset();
-
-            _requirementsCreator.AddServiceRequirement("Tmdb");
-
-            _requirementsCreator.AddAppraisalRequirement("TmdbCommon");
+            _requirementsCreator.AddServiceRequirement(serviceName);
+            _requirementsCreator.AddAppraisalRequirement($"{serviceName}Common");
         }
     }
 }

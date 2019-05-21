@@ -9,6 +9,9 @@ namespace ThingAppraiser.Data
     /// </summary>
     public class SteamGameInfo : GameInfo
     {
+        /// <inheritdoc />
+        public override string Kind { get; } = nameof(SteamGameInfo);
+
         /// <summary>
         /// Price of the game.
         /// </summary>
