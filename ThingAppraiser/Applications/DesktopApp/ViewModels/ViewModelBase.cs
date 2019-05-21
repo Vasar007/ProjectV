@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     /// <summary>
     /// Base class for all view model classes.
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    internal abstract class ViewModelBase : INotifyPropertyChanged
     {
         /// <summary>
         /// Logger instance for current class.

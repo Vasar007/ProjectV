@@ -17,8 +17,8 @@
         </Grid.RowDefinitions>
 
         <ListBox Grid.Column="0" ItemsSource="{Binding Things}"
-                 SelectedItem="{Binding SelectedThing}" 
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                 SelectedItem="{Binding SelectedThing}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Margin="0 0 10 10" Grid.RowSpan="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using DAL.Properties;
+using ThingAppraiser.DAL.Properties;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.Data;
 

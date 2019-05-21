@@ -8,11 +8,11 @@ namespace ThingAppraiser.DesktopApp.Views
     /// </summary>
     public partial class StartControl : UserControl
     {
-        public StartControl()
+        public StartControl(object dialogIdentifier)
         {
             InitializeComponent();
 
-            DataContext = new StartControlViewModel(StartDialogHost.Identifier);
+            DataContext = new StartControlViewModel(dialogIdentifier);
         }
     }
 }

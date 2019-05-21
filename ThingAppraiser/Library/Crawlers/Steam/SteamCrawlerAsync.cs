@@ -98,7 +98,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {response} from {Tag}");
                 }
 
-                response.Name = game; // Temporary fix to avoid different game names.
                 SteamGameInfo extractedInfo = _dataMapper.Transform(response);
                 if (searchResults.Add(extractedInfo))
                 {

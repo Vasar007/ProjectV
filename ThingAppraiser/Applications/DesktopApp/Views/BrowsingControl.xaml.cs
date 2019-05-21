@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using ThingAppraiser.DesktopApp.ViewModels;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -7,9 +8,11 @@ namespace ThingAppraiser.DesktopApp.Views
     /// </summary>
     public partial class BrowsingControl : UserControl
     {
-        public BrowsingControl()
+        public BrowsingControl(ViewModelBase dataContext)
         {
             InitializeComponent();
+
+            DataContext = dataContext;
         }
     }
 }

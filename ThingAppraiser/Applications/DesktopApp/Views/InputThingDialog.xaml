@@ -16,7 +16,7 @@
                 <TextBlock>
                     Add a new Thing.
                 </TextBlock>
-                
+
                 <TextBox wpf:HintAssist.Hint="Name of the Thing"
                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
                          Margin="0 6 0 0" FontSize="18">

@@ -12,6 +12,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RootNamespace>ThingAppraiser.CommunicationWebService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

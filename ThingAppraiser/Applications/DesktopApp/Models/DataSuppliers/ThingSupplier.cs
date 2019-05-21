@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Data;
-using ThingAppraiser.IO.Output;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public class ThingSupplier : IThingSupplier, IOutputter, IOutputterBase, ITagable
+    internal class ThingSupplier : IThingSupplier, ITagable
     {
         private readonly List<Thing> _things = new List<Thing>();
-
-        private readonly IImageSupplier _imageSupplier;
 
         public string StorageName { get; private set; }
 
@@ -22,9 +19,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         #endregion
 
 
-        public ThingSupplier(IImageSupplier imageSupplier)
+        public ThingSupplier()
         {
-            _imageSupplier = imageSupplier.ThrowIfNull(nameof(imageSupplier));
         }
 
         #region IThingSupplier Implementation
@@ -41,10 +37,11 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         #endregion
 
-        #region IOutputter Implementation
-
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName,
+            IImageSupplier imageSupplier)
         {
+            imageSupplier.ThrowIfNull(nameof(imageSupplier));
+
             StorageName = storageName;
 
             if (_things.Count != 0)
@@ -55,14 +52,12 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             {
                 _things.AddRange(rating.Select(r => 
                     new Thing(
-                        Guid.NewGuid(), r.DataHandler, 
-                        _imageSupplier.GetImageLink(r.DataHandler, ImageSize.Large))
+                        Guid.NewGuid(), r.DataHandler,
+                        imageSupplier.GetImageLink(r.DataHandler, ImageSize.Large))
                     )
                 );
             }
             return true;
         }
-
-        #endregion
     }
 }

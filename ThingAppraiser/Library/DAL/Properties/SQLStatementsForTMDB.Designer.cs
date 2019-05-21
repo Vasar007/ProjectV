@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DAL.Properties {
+namespace ThingAppraiser.DAL.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DAL.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DAL.Properties.SQLStatementsForTmdb", typeof(SQLStatementsForTmdb).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThingAppraiser.DAL.Properties.SQLStatementsForTmdb", typeof(SQLStatementsForTmdb).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

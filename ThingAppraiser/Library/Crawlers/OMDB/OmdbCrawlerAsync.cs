@@ -97,7 +97,6 @@ namespace ThingAppraiser.Crawlers
                     GlobalMessageHandler.OutputMessage($"Got {response.Title} from {Tag}");
                 }
 
-                response.Title = movie; // Temporary fix to avoid different movie names.
                 OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
                 if (searchResults.Add(extractedInfo))
                 {

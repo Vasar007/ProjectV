@@ -74,7 +74,6 @@ namespace ThingAppraiser.Crawlers
                 GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from {Tag}");
             }
 
-            searchResult.Title = entity; // Temporary fix to avoid different movie names.
             TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);
 
             if (_searchResults.TryAdd(extractedInfo, default))

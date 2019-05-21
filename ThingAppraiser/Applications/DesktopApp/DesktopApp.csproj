@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2572EE5A-863F-4C5D-9855-85A400920D34}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>DesktopApp</RootNamespace>
+    <RootNamespace>ThingAppraiser.DesktopApp</RootNamespace>
     <AssemblyName>DesktopApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -175,6 +175,7 @@
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -203,10 +204,13 @@
     <Compile Include="Domain\DataSources.cs" />
     <Compile Include="Domain\IErrorHandler.cs" />
     <Compile Include="Domain\NotEmptyValidationRule.cs" />
+    <Compile Include="Domain\NotifyPropertyChangedExtension.cs" />
     <Compile Include="Domain\TaskExtension.cs" />
     <Compile Include="Models\DataSuppliers\IImageSupplier.cs" />
+    <Compile Include="Models\DataSuppliers\ThingGrader.cs" />
     <Compile Include="Models\DataSuppliers\TmdbImageSupplier.cs" />
     <Compile Include="Models\DataSuppliers\PosterSize.cs" />
+    <Compile Include="Models\SceneItem.cs" />
     <Compile Include="Models\ThingProducer.cs" />
     <Compile Include="Models\DataSuppliers\IThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplier.cs" />

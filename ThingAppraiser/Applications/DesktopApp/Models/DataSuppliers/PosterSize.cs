@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public enum ImageSize
+    internal enum ImageSize
     {
         Small,
 

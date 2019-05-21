@@ -5,13 +5,13 @@ using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public class BrowsingControlViewModel : ViewModelBase
+    internal class BrowsingControlViewModel : ViewModelBase
     {
         private readonly IThingSupplier _thingSupplier;
 
         private Thing _selectedThing;
 
-        public ObservableCollection<Thing> Things { get; set; }
+        public ObservableCollection<Thing> Things { get; private set; }
 
         public Thing SelectedThing
         {
@@ -23,10 +23,21 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _thingSupplier = thingSupplier.ThrowIfNull(nameof(thingSupplier));
 
-            Things = new ObservableCollection<Thing>(_thingSupplier.GetAllThings());
+            Things = new ObservableCollection<Thing>();
+            Update();
+        }
+
+        public void Update()
+        {
+            Things.Clear();
+            foreach (Thing thing in _thingSupplier.GetAllThings())
+            {
+                Things.Add(thing);
+            }
+
             if (Things.Count > 0)
             {
-                _selectedThing = _thingSupplier.GetThingById(Things.First().InternalId);
+                SelectedThing = _thingSupplier.GetThingById(Things.First().InternalId);
             }
         }
     }

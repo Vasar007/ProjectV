@@ -8,43 +8,40 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <materialDesign:DialogHost x:Name="StartDialogHost" Identifier="RootDialog"
-                               CloseOnClickAway="False">
-        <StackPanel>
-            <TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Margin="8 8 8 32"
-                       HorizontalAlignment="Center" FontSize="20">
-                Choose one of the option:
-            </TextBlock>
+    <StackPanel>
+        <TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Margin="8 8 8 32"
+                    HorizontalAlignment="Center" FontSize="20">
+            Choose one of the option:
+        </TextBlock>
 
-            <Button Width="256" Command="{Binding InputThingDialogCommand}"
-                    CommandParameter="{Binding .}">
-                Enter The Things
-            </Button>
-            <Button Width="256" Margin="0 32 0 0" Command="{Binding OpenFileDialogCommand}"
-                    CommandParameter="{Binding
-                                       RelativeSource={RelativeSource FindAncestor,
-                                                       AncestorType={x:Type Window}},
-                                       Path=DataContext}">
-                Read from local file
-            </Button>
-            <Button Width="256" Margin="0 32 0 0" Command="{Binding EnterDataDialogCommand}"
-                    CommandParameter="{Binding .}">
-                Read from Google Drive
-            </Button>
-            <!--
-            <ComboBox materialDesign:HintAssist.Hint="(float hint)"
-                      MinWidth="72"
-                      Margin="16 0 0 0"
-                      ItemsSource="{Binding LongListToTestComboVirtualization}"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
-                <ComboBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ComboBox.ItemsPanel>
-            </ComboBox>
-            -->
-        </StackPanel>
-    </materialDesign:DialogHost>
+        <Button Width="256" Command="{Binding InputThingDialogCommand}"
+                CommandParameter="{Binding .}">
+            Enter The Things
+        </Button>
+        <Button Width="256" Margin="0 32 0 0" Command="{Binding OpenFileDialogCommand}"
+                CommandParameter="{Binding
+                                   RelativeSource={RelativeSource FindAncestor,
+                                                   AncestorType={x:Type Window}},
+                                   Path=DataContext}">
+            Read from local file
+        </Button>
+        <Button Width="256" Margin="0 32 0 0" Command="{Binding EnterDataDialogCommand}"
+                CommandParameter="{Binding .}">
+            Read from Google Drive
+        </Button>
+        <!--
+        <ComboBox materialDesign:HintAssist.Hint="(float hint)"
+                    MinWidth="72"
+                    Margin="16 0 0 0"
+                    ItemsSource="{Binding LongListToTestComboVirtualization}"
+                    Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        -->
+    </StackPanel>
 
 </UserControl>

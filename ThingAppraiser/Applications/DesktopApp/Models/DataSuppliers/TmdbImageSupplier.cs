@@ -5,7 +5,7 @@ using ThingAppraiser.Data.Crawlers;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public class TmdbImageSupplier : IImageSupplier
+    internal class TmdbImageSupplier : IImageSupplier
     {
         private TmdbServiceConfigurationInfo _serviceConfigurationInfo;
 

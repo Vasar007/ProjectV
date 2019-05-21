@@ -5,6 +5,7 @@
     <LangVersion>7.1</LangVersion>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Platforms>x64</Platforms>
+    <RootNamespace>ThingAppraiser.TelegramBotWebService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -16,15 +16,27 @@ using ThingAppraiser.Data;
 using ThingAppraiser.IO.Input;
 using ThingAppraiser.Data.Models;
 using ThingAppraiser.Data.Crawlers;
+using ThingAppraiser.DesktopApp.Models;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    internal class MainWindowViewModel : ViewModelBase
     {
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<MainWindowViewModel>();
 
-        private bool _isBusy;
+        private readonly ThingSupplier _thingSupplier = new ThingSupplier();
+
+        private readonly TmdbImageSupplier _tmdbImageSupplier = 
+            new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
+
+        private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
+
+        private readonly ServiceProxy _serviceProxy = new ServiceProxy();
+
+        private readonly Dictionary<string, int> _sceneIdentifiers;
+
+        private bool _isNotBusy = true;
 
         private UserControl _currentContent;
 
@@ -32,22 +44,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private DataSource _selectedDataSource = DataSource.Nothing;
 
+        private SceneItem _selectedSceneItem;
+
         private ThingProducer _thingProducer;
 
-        private readonly ThingSupplier _thingSupplier = 
-            new ThingSupplier(new TmdbImageSupplier(TmdbServiceConfiguration.Configuration));
-
-        private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
-
-        private readonly ServiceProxy _serviceProxy = new ServiceProxy();
-
-        public bool IsBusy
+        public bool IsNotBusy
         {
-            get => _isBusy;
-            private set => SetProperty(ref _isBusy, value);
+            get => _isNotBusy;
+            private set => SetProperty(ref _isNotBusy, value);
         }
 
-        public IAsyncCommand<DataSource> Submit { get; private set; }
+        public IAsyncCommand<DataSource> Submit { get; }
 
         public UserControl CurrentContent
         {
@@ -70,6 +77,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
+        public SceneItem SelectedSceneItem
+        {
+            get => _selectedSceneItem;
+            set
+            {
+                SetProperty(ref _selectedSceneItem, value);
+                CurrentContent = value.Content;
+            }
+        }
+
         public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
                                                             ApplicationCloseCommand.CanExecute);
 
@@ -78,12 +95,36 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand ForceReturnToStartViewCommand => new RelayCommand(ReturnToStartView);
 
+        public SceneItem[] SceneItems { get; }
 
-        public MainWindowViewModel(UserControl currentContent)
+        public object DialogIdentifier { get; }
+
+
+        public MainWindowViewModel(object dialogIdentifier)
         {
-            CurrentContent = currentContent;
             Submit = new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit,
                                                        new CommonErrorHandler());
+
+            _sceneIdentifiers = new Dictionary<string, int>
+            {
+                { "Start page", 0 },
+                { "TMDb", 1 },
+                { "OMDb", 2 },
+                { "Steam", 3 },
+                { "Expert mode", 4 }
+            };
+
+            SceneItems = new[]
+            {
+                new SceneItem("Start page", new StartControl(dialogIdentifier)),
+                new SceneItem("TMDb", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem("OMDb", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem("Steam", new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem("Expert mode", new ProgressDialog())
+            };
+
+            SetCurrentContentToScene("Start page");
+            DialogIdentifier = dialogIdentifier;
         }
 
         private static void ThrowIfInvalidData(List<string> data)
@@ -91,6 +132,23 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (data.IsNullOrEmpty() || data.Count < 2)
             {
                 throw new InvalidOperationException("Insufficient amount of data to be processed.");
+            }
+        }
+
+        private void SetCurrentContentToScene(string controlIdentifier)
+        {
+            int index = _sceneIdentifiers[controlIdentifier];
+            SelectedSceneItem = SceneItems[index];
+        }
+
+        private void SetCurrentContentToSceneAndUpdate(string controlIdentifier)
+        {
+            int index = _sceneIdentifiers[controlIdentifier];
+            if (SceneItems[index].Content is BrowsingControl browsingControl &&
+                browsingControl.DataContext is BrowsingControlViewModel controlViewModel)
+            {
+                controlViewModel.Update();
+                SelectedSceneItem = SceneItems[index];
             }
         }
 
@@ -130,13 +188,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                         response.MetaData.OptionalData[nameof(TmdbServiceConfiguration)];
                     TmdbServiceConfiguration.SetServiceConfigurationIfNeed(serviceConfig);
                 }
-                
-                _thingSupplier.SaveResults(response.RatingDataContainers, "Service response");
 
-                CurrentContent = new BrowsingControl
-                {
-                    DataContext = new BrowsingControlViewModel(_thingSupplier)
-                };
+                _thingSupplier.SaveResults(response.RatingDataContainers, "Service response",
+                                           _tmdbImageSupplier);
+
+                SetCurrentContentToSceneAndUpdate("TMDb");
             }
             else
             {
@@ -150,7 +206,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                IsBusy = true;
+                IsNotBusy = false;
                 RequestParams requestParams = await ConfigureServiceRequest(dataSource);
                 ProcessingResponse response = await _serviceProxy.SendPostRequest(requestParams);
                 ProcessStatusOperation(response);
@@ -164,23 +220,23 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
             finally
             {
-                IsBusy = false;
+                IsNotBusy = true;
             }
         }
 
         private bool CanExecuteSubmit(DataSource dataSource)
         {
-            return !IsBusy;
+            return IsNotBusy;
         }
 
         private void ReturnToStartView(object obj)
         {
-            CurrentContent = new StartControl();
+            SetCurrentContentToScene("Start page");
         }
 
         private bool CanReturnToStartView(object obj)
         {
-            return !(obj is StartControl) && !IsBusy;
+            return !(obj is StartControl) && IsNotBusy;
         }
 
         private async Task<RequestParams> ConfigureServiceRequest(DataSource dataSource)

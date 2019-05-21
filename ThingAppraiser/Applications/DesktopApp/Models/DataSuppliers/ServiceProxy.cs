@@ -8,7 +8,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    public class ServiceProxy : IDisposable
+    internal class ServiceProxy : IDisposable
     {
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<ServiceProxy>();
