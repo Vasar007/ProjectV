@@ -6,6 +6,7 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <Platforms>x64</Platforms>
     <RootNamespace>ThingAppraiser.TelegramBotWebService</RootNamespace>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

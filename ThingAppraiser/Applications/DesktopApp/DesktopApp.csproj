@@ -43,6 +43,9 @@
     <Prefer32Bit>true</Prefer32Bit>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
@@ -290,6 +293,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Resources\ta_thumb.png" />
+    <Resource Include="ta_thumb.ico" />
+    <Resource Include="Resources\ta_thumb.ico" />
+    <Resource Include="Resources\ta_thumb900.jpg" />
     <None Include="games.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

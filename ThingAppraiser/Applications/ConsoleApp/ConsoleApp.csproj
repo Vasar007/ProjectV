@@ -13,6 +13,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.1</LangVersion>
     <RootNamespace>ThingAppraiser.ConsoleApp</RootNamespace>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
