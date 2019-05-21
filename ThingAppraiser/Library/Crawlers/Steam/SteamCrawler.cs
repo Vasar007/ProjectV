@@ -74,14 +74,17 @@ namespace ThingAppraiser.Crawlers
             var searchResults = new HashSet<BasicInfo>();
             foreach (string game in entities)
             {
-                int appId = SteamAppsStorage.GetAppIdByName(game);
-                SteamApp response = _steamApiClient.GetSteamAppAsync(
-                    appId, CountryCode.Russia, Language.English
-                ).Result;
-
-                if (response is null)
+                SteamApp response;
+                try
                 {
-                    _logger.Warn($"{game} wasn't processed.");
+                    int appId = SteamAppsStorage.GetAppIdByName(game);
+                    response = _steamApiClient.GetSteamAppAsync(
+                        appId, CountryCode.Russia, Language.English
+                    ).Result;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{game} wasn't processed.");
                     GlobalMessageHandler.OutputMessage($"{game} wasn't processed.");
                     continue;
                 }

@@ -81,14 +81,17 @@ namespace ThingAppraiser.Crawlers
             {
                 string game = await entitiesQueue.ReceiveAsync();
 
-                int appId = SteamAppsStorage.GetAppIdByName(game);
-                SteamApp response = await _steamApiClient.GetSteamAppAsync(
-                    appId, CountryCode.Russia, Language.English
-                );
-
-                if (response is null)
+                SteamApp response;
+                try
                 {
-                    _logger.Warn($"{game} wasn't processed.");
+                    int appId = SteamAppsStorage.GetAppIdByName(game);
+                    response = await _steamApiClient.GetSteamAppAsync(
+                        appId, CountryCode.Russia, Language.English
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, $"{game} wasn't processed.");
                     GlobalMessageHandler.OutputMessage($"{game} wasn't processed.");
                     continue;
                 }
