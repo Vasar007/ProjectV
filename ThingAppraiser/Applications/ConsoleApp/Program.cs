@@ -10,7 +10,7 @@ namespace ThingAppraiser.ConsoleApp
     /// <summary>
     /// Class which starts service and interact with it through console.
     /// </summary>
-    public static class Program
+    internal static class Program
     {
         /// <summary>
         /// Logger instance for current class.
