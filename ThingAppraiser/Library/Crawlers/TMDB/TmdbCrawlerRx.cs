@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
@@ -30,6 +31,8 @@ namespace ThingAppraiser.Crawlers
 
         private readonly TMDbClient _tmdbClient;
 
+        private int _setConfig;
+
         /// <inheritdoc />
         public override string Tag { get; } = "TmdbCrawlerRx";
 
@@ -52,7 +55,8 @@ namespace ThingAppraiser.Crawlers
 
         public override async Task<BasicInfo> FindResponse(string entity, bool outputResults)
         {
-            if (!TmdbServiceConfiguration.HasValue())
+            if (Interlocked.CompareExchange(ref _setConfig, 1, 0) == 0 &&
+                !TmdbServiceConfiguration.HasValue())
             {
                 TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                     await GetServiceConfiguration(outputResults)

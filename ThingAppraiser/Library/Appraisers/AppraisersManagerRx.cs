@@ -51,14 +51,13 @@ namespace ThingAppraiser.Appraisers
 
         #endregion
 
-        public IDictionary<Type, IObservable<RatingDataContainer>> GetAllRatings(
-            IDictionary<Type, IObservable<BasicInfo>> entitiesInfoQueues)
+        public IList<IObservable<RatingDataContainer>> GetAllRatings(
+            IDictionary<Type, IObservable<BasicInfo>> rawDataQueues)
         {
-            var ratingsQueues = new Dictionary<Type, IObservable<RatingDataContainer>>();
+            var appraisedDataQueues =
+                new List<IObservable<RatingDataContainer>>(rawDataQueues.Count);
 
-            // FIXME: need to split queue to several queues which would be unique for every 
-            // appraiser.
-            foreach (KeyValuePair<Type, IObservable<BasicInfo>> keyValue in entitiesInfoQueues)
+            foreach (KeyValuePair<Type, IObservable<BasicInfo>> keyValue in rawDataQueues)
             {
                 if (!_appraisersRx.TryGetValue(keyValue.Key, out List<AppraiserRx> values))
                 {
@@ -68,17 +67,19 @@ namespace ThingAppraiser.Appraisers
                     continue;
                 }
 
-                var entitiesRatingQueue = values.Select(appraisersRx =>
-                    keyValue.Value.Select(
-                        basicInfo => appraisersRx.GetRatings(basicInfo, _outputResults)
-                    )
-                ).Concat();
+                var temp = keyValue.Value.Publish();
+                foreach (AppraiserRx appraiserRx in values)
+                {
+                    IObservable<RatingDataContainer> appraisedDataQueue = temp
+                        .Select(basicInfo => appraiserRx.GetRatings(basicInfo, _outputResults));
 
-                ratingsQueues.Add(keyValue.Key, entitiesRatingQueue);
+                    appraisedDataQueues.Add(appraisedDataQueue);
+                }
+                temp.Connect();
             }
 
             _logger.Info("Appraisers were configured.");
-            return ratingsQueues;
+            return appraisedDataQueues;
         }
     }
 }

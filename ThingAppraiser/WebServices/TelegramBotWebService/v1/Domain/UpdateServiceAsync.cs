@@ -199,7 +199,9 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Enter data for {serviceName}.",
+                $"Enter data for {serviceName}. Please, use this format:\n" +
+                "thingName1\n" +
+                "thingName2",
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }

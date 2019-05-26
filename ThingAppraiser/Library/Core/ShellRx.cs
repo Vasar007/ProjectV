@@ -53,16 +53,16 @@ namespace ThingAppraiser.Core
                 InputManagerRx.GetNames(storageName);
 
             // Crawlers component work.
-            IDictionary<Type, IObservable<BasicInfo>> responsesQueues =
+            IDictionary<Type, IObservable<BasicInfo>> rawDataQueues =
                 CrawlersManagerRx.CollectAllResponses(inputQueue);
 
             // Appraisers component work.
-            IDictionary<Type, IObservable<RatingDataContainer>> ratingsQueues =
-                AppraisersManagerRx.GetAllRatings(responsesQueues);
+            IList<IObservable<RatingDataContainer>> appraisedDataQueues =
+                AppraisersManagerRx.GetAllRatings(rawDataQueues);
 
             // Output component work.
             bool outputStatus =
-                await OutputManagerRx.SaveResults(ratingsQueues, string.Empty);
+                await OutputManagerRx.SaveResults(appraisedDataQueues, string.Empty);
 
             // FIX ME: if there are error statuses need to create aggregate status which contains
             // more details then simple EStatus.Error value.

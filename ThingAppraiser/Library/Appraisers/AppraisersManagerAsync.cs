@@ -53,12 +53,15 @@ namespace ThingAppraiser.Appraisers
         #endregion
 
         public async Task<bool> GetAllRatings(
-            IDictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
-            IDictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues,
+            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues,
+            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues,
             DataflowBlockOptions options)
         {
-            var producers = new List<Task<bool>>(entitiesInfoQueues.Count);
-            foreach (KeyValuePair<Type, BufferBlock<BasicInfo>> keyValue in entitiesInfoQueues)
+            var producers = new List<Task<bool>>(rawDataQueues.Count);
+            var consumersTasks = new List<Task>(rawDataQueues.Count);
+            var splitQueueTasks = new List<Task>(rawDataQueues.Count);
+
+            foreach (KeyValuePair<Type, BufferBlock<BasicInfo>> keyValue in rawDataQueues)
             {
                 if (!_appraisersAsync.TryGetValue(keyValue.Key, out List<AppraiserAsync> values))
                 {
@@ -68,21 +71,32 @@ namespace ThingAppraiser.Appraisers
                     continue;
                 }
 
-                // FIXME: need to split queue to several queues which would be unique for every 
-                // appraiser.
-                var entitiesRatingQueue = new BufferBlock<RatingDataContainer>(options);
-                entitiesRatingQueues.Add(keyValue.Key, entitiesRatingQueue);
-                producers.AddRange(values.Select(
-                    appraiserAsync => appraiserAsync.GetRatings(keyValue.Value, entitiesRatingQueue,
-                                                                _outputResults))
-                );
+                var consumers = new List<BufferBlock<BasicInfo>>(values.Count);
+                foreach (AppraiserAsync appraiserAsync in values)
+                {
+                    var consumer = new BufferBlock<BasicInfo>(options);
+                    var appraisedDataQueue = new BufferBlock<RatingDataContainer>(options);
+                    appraisedDataQueues.Add(appraisedDataQueue);
+                    producers.Add(
+                        appraiserAsync.GetRatings(consumer, appraisedDataQueue, _outputResults)
+                    );
+                    consumers.Add(consumer);
+                }
+
+                consumersTasks.Add(Task.WhenAll(consumers.Select(consumer => consumer.Completion)));
+                splitQueueTasks.Add(SplitQueue(keyValue.Value, consumers));
             }
 
-            bool[] statuses = await Task.WhenAll(producers);
-            foreach (BufferBlock<RatingDataContainer> entitiesRatingQueue in 
-                     entitiesRatingQueues.Values)
+            Task<bool[]> statusesTask = Task.WhenAll(producers);
+            Task consumersFinalTask = Task.WhenAll(consumersTasks);
+            Task splitQueueFinalTask = Task.WhenAll(splitQueueTasks);
+
+            await Task.WhenAll(splitQueueFinalTask, consumersFinalTask, statusesTask);
+
+            bool[] statuses = await statusesTask;
+            foreach (BufferBlock<RatingDataContainer> appraisedQueue in appraisedDataQueues)
             {
-                entitiesRatingQueue.Complete();
+                appraisedQueue.Complete();
             }
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
@@ -93,6 +107,29 @@ namespace ThingAppraiser.Appraisers
 
             _logger.Info("Appraisers have not processed any data.");
             return false;
+        }
+
+        private async Task SplitQueue(BufferBlock<BasicInfo> rawDataQueue,
+            IList<BufferBlock<BasicInfo>> consumers)
+        {
+            while (await rawDataQueue.OutputAvailableAsync())
+            {
+                BasicInfo entity = await rawDataQueue.ReceiveAsync();
+
+                if (_outputResults)
+                {
+                    GlobalMessageHandler.OutputMessage($"Got {entity}");
+                }
+
+                await Task.WhenAll(
+                    consumers.Select(async consumer => await consumer.SendAsync(entity))
+                );
+            }
+
+            foreach (BufferBlock<BasicInfo> consumer in consumers)
+            {
+                consumer.Complete();
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace ThingAppraiser.Data
 {
     /// <summary>
-    /// Class-aggregator for working with ratings. represents a simple wrapper around
+    /// Class-aggregator for working with ratings. Represents a simple wrapper around
     /// <see cref="List{T}" /> where internal type is <see cref="ResultInfo" />.
     /// </summary>
     public class ResultList : IEnumerable<ResultInfo>

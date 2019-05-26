@@ -48,8 +48,7 @@ namespace ThingAppraiser.IO.Output
         #endregion
         
         public async Task<bool> SaveResults(
-            IDictionary<Type, IObservable<RatingDataContainer>> resultsQueues,
-            string storageName)
+            IList<IObservable<RatingDataContainer>> appraisedDataQueues, string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -58,7 +57,7 @@ namespace ThingAppraiser.IO.Output
                 _logger.Info("Storage name is empty, using the default value.");
             }
 
-            List<bool> statuses = await Consume(resultsQueues, storageName);
+            List<bool> statuses = await Consume(appraisedDataQueues, storageName);
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
@@ -71,38 +70,37 @@ namespace ThingAppraiser.IO.Output
         }
 
         private async Task<List<bool>> Consume(
-            IDictionary<Type, IObservable<RatingDataContainer>> resultsQueues, string storageName)
+            IList<IObservable<RatingDataContainer>> appraisedDataQueues, string storageName)
         {
             var consumed = new ConcurrentBag<ConcurrentBag<RatingDataContainer>>();
             var consumers = new List<Task>();
 
-            foreach (var resultQueue  in resultsQueues.Values)
+            foreach (IObservable<RatingDataContainer> resultQueue  in appraisedDataQueues)
             {
                 var rating = new ConcurrentBag<RatingDataContainer>();
                 consumed.Add(rating);
 
-                Task task = resultQueue.ObserveOn(ThreadPoolScheduler.Instance).ForEachAsync(
-                    dataContainer =>
-                    {
-                        rating.Add(dataContainer);
-                    }
-                );
+                Task task = resultQueue
+                    .ObserveOn(ThreadPoolScheduler.Instance)
+                    .ForEachAsync(dataContainer => rating.Add(dataContainer));
+
                 consumers.Add(task);
             }
 
             await Task.WhenAll(consumers);
 
-            List<List<RatingDataContainer>> results = consumed.Select(
-                x => x.ToList()
-            ).ToList();
+            List<List<RatingDataContainer>> results = consumed
+                .Select(x => x.ToList())
+                .ToList();
 
-            results.AsParallel().ForAll(
-                rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
-            );
+            results
+                .AsParallel()
+                .ForAll(rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue)));
 
-            List<bool> outputterStatuses = _outputtersRx.AsParallel().Select(
-                outputterRx => outputterRx.SaveResults(results, storageName)
-            ).ToList();
+            List<bool> outputterStatuses = _outputtersRx
+                .AsParallel()
+                .Select(outputterRx => outputterRx.SaveResults(results, storageName))
+                .ToList();
 
             _logger.Info("Outputters were configured.");
 

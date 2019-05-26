@@ -75,12 +75,12 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> RequestData(BufferBlock<string> entitiesQueue,
-            IDictionary<Type, BufferBlock<BasicInfo>> responsesQueues)
+            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues)
         {
             try
             {
                 bool status = await CrawlersManagerAsync.CollectAllResponses(
-                    entitiesQueue, responsesQueues, _dataFlowOptions
+                    entitiesQueue, rawDataQueues, _dataFlowOptions
                 );
                 if (status)
                 {
@@ -103,13 +103,13 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> AppraiseThings(
-            IDictionary<Type, BufferBlock<BasicInfo>> entitiesInfoQueues,
-            IDictionary<Type, BufferBlock<RatingDataContainer>> entitiesRatingQueues)
+            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues,
+            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues)
         {
             try
             {
                 bool status = await AppraisersManagerAsync.GetAllRatings(
-                    entitiesInfoQueues, entitiesRatingQueues, _dataFlowOptions
+                    rawDataQueues, appraisedDataQueues, _dataFlowOptions
                 );
                 if (status)
                 {
@@ -132,11 +132,12 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> SaveResults(
-            IDictionary<Type, BufferBlock<RatingDataContainer>> ratings)
+            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues)
         {
             try
             {
-                bool status = await OutputManagerAsync.SaveResults(ratings, string.Empty);
+                bool status = await OutputManagerAsync.SaveResults(appraisedDataQueues,
+                                                                   string.Empty);
                 if (status)
                 {
                     GlobalMessageHandler.OutputMessage("Ratings was saved successfully.");
@@ -160,37 +161,38 @@ namespace ThingAppraiser.Core
 
             var inputQueue = new BufferBlock<string>(_dataFlowOptions);
 
-            var responsesQueues = new Dictionary<Type, BufferBlock<BasicInfo>>();
+            var rawDataQueues = new Dictionary<Type, BufferBlock<BasicInfo>>();
 
-            var ratingsQueues = new Dictionary<Type, BufferBlock<RatingDataContainer>>();
+            var appraisedDataQueues = new List<BufferBlock<RatingDataContainer>>();
 
             // Input component work.
             Task<ServiceStatus> inputStatus = GetThingNames(inputQueue, storageName);
 
             // Crawlers component work.
-            Task<ServiceStatus> crawlersStatus = RequestData(inputQueue, responsesQueues);
+            Task<ServiceStatus> crawlersStatus = RequestData(inputQueue, rawDataQueues);
 
             // Appraisers component work.
-            Task<ServiceStatus> appraisersStatus = AppraiseThings(responsesQueues, ratingsQueues);
+            Task<ServiceStatus> appraisersStatus = AppraiseThings(rawDataQueues,
+                                                                  appraisedDataQueues);
 
             // Output component work.
-            Task<ServiceStatus> outputStatus = SaveResults(ratingsQueues);
+            Task<ServiceStatus> outputStatus = SaveResults(appraisedDataQueues);
 
             Task<ServiceStatus[]> statusesTask = Task.WhenAll(inputStatus, crawlersStatus,
                                                               appraisersStatus, outputStatus);
 
-            Task responsesQueuesTasks = Task.WhenAll(
-                responsesQueues.Values.Select(bufferBlock => bufferBlock.Completion)
+            Task rawDataQueuesTasks = Task.WhenAll(
+                rawDataQueues.Values.Select(bufferBlock => bufferBlock.Completion)
             );
-            Task ratingsQueuesTasks = Task.WhenAll(
-                ratingsQueues.Values.Select(bufferBlock => bufferBlock.Completion)
+            Task appraisedDataQueuesTasks = Task.WhenAll(
+                appraisedDataQueues.Select(bufferBlock => bufferBlock.Completion)
             );
 
-            await Task.WhenAll(statusesTask, inputQueue.Completion, responsesQueuesTasks,
-                               ratingsQueuesTasks);
+            await Task.WhenAll(statusesTask, inputQueue.Completion, rawDataQueuesTasks,
+                               appraisedDataQueuesTasks);
 
             // FIX ME: if there are error statuses need to create aggregate status which contains
-            // more details then simple EStatus.Error value.
+            // more details then simple ServiceStatus.Error value.
             ServiceStatus[] statuses = await statusesTask;
             if (statuses.Any(status => status != ServiceStatus.Ok))
             {

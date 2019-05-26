@@ -45,22 +45,20 @@ namespace ThingAppraiser.Crawlers
         public IDictionary<Type, IObservable<BasicInfo>> CollectAllResponses(
             IObservable<string> entitiesQueue)
         {
-            var responsesQueues = new Dictionary<Type, IObservable<BasicInfo>>();
+            var rawDataQueues = new Dictionary<Type, IObservable<BasicInfo>>();
 
             foreach (CrawlerRx crawlerRx in _crawlersRx)
             {
-                var responseQueue = entitiesQueue.ObserveOn(ThreadPoolScheduler.Instance).Select(
-                    entity => Observable.FromAsync(
-                        async () => await crawlerRx.FindResponse(entity, _outputResults)
-                    )
-                    .Where(x => !(x is null))
-                ).Concat();
+                IObservable<BasicInfo> rawDataQueue = entitiesQueue
+                    .ObserveOn(ThreadPoolScheduler.Instance)
+                    .Select(entity => crawlerRx.FindResponse(entity, _outputResults).Result)
+                    .Where(x => !(x is null));
 
-                responsesQueues.Add(crawlerRx.TypeId, responseQueue);
+                rawDataQueues.Add(crawlerRx.TypeId, rawDataQueue);
             }
 
             _logger.Info("Crawlers were configured.");
-            return responsesQueues;
+            return rawDataQueues;
         }
     }
 }
