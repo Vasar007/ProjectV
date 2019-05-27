@@ -222,46 +222,6 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <summary>
-        /// Creates file reader (Rx) instance depend on parameter value (could be read from config 
-        /// file or XML document).
-        /// </summary>
-        /// <param name="fileReaderName">Name of the file reader (Rx) class to create.</param>
-        /// <returns>Fully initialized instance of file reader (Rx) class.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="fileReaderName" /> isn't specified in method.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="fileReaderName" /> is <c>null</c> or presents empty string.
-        /// </exception>
-        protected IO.Input.IFileReaderRx CreateFileReaderRx(string fileReaderName)
-        {
-            fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
-
-            switch (fileReaderName)
-            {
-                case _simpleFileReaderParameterName:
-                {
-                    return new IO.Input.SimpleFileReaderRx();
-                }
-
-                case _filterFileReaderParameterName:
-                {
-                    throw new NotImplementedException("Now FilterFileReaderRx isn't supported.");
-                }
-
-                default:
-                {
-                    var ex = new ArgumentOutOfRangeException(
-                        nameof(fileReaderName), fileReaderName,
-                        "Couldn't recognize file reader type."
-                    );
-                    _logger.Error(ex, $"Passed incorrect data to method: {fileReaderName}");
-                    throw ex;
-                }
-            }
-        }
-
-        /// <summary>
         /// Creates Google Drive Service instance with default parameters.
         /// </summary>
         /// <returns>Initialized Drive Service instance.</returns>
