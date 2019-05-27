@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -7,6 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Data.Models;
 using ThingAppraiser.Core.Building;
+using ThingAppraiser.TelegramBotWebService.Properties;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
@@ -19,15 +19,15 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         private readonly IServiceProxy _serviceProxy;
 
-        private readonly ConcurrentDictionary<long, RequestParams> _cache;
+        private readonly IUserCache _userCache;
 
 
-        public UpdateServiceAsync(IBotService botService, IServiceProxy serviceProxy)
+        public UpdateServiceAsync(IBotService botService, IServiceProxy serviceProxy,
+            IUserCache userCache)
         {
             _botService = botService.ThrowIfNull(nameof(botService));
             _serviceProxy = serviceProxy.ThrowIfNull(nameof(serviceProxy));
-
-            _cache = new ConcurrentDictionary<long, RequestParams>();
+            _userCache = userCache.ThrowIfNull(nameof(userCache));
         }
 
         #region IUpdateService Implementation
@@ -69,6 +69,12 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
             switch (command)
             {
+                case "/start":
+                {
+                    await SendResponseToStartCommand(message.Chat.Id);
+                    break;
+                }
+
                 case "/services":
                 {
                     await SendResponseToServicesCommand(message.Chat.Id);
@@ -95,7 +101,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    if (!_cache.TryGetValue(message.Chat.Id, out RequestParams requestParams))
+                    if (!_userCache.TryGetValue(message.Chat.Id, out RequestParams requestParams))
                     {
                         await SendResponseToInvalidMessage(message.Chat.Id);
                         return;
@@ -115,20 +121,24 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             }
         }
 
+        private async Task SendResponseToStartCommand(long chatId)
+        {
+            _logger.Info("Processes /start command.");
+
+            await _botService.Client.SendTextMessageAsync(
+                chatId,
+                Messages.HelloMessage,
+                replyMarkup: new ReplyKeyboardRemove()
+            );
+        }
+
         private async Task SendResponseToHelpCommand(long chatId)
         {
             _logger.Info("Processes /help command.");
 
-            const string usage = @"
-Usage:
-/services — send info about available services for processing;
-/request — create a request to service;
-/cancel — cancel the request;
-/help — get help information.";
-
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                usage,
+                Messages.HelpMessage,
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }
@@ -149,7 +159,7 @@ Usage:
             _logger.Info("Processes /request command.");
 
             var requestParams = new RequestParams();
-            _cache.TryAdd(chatId, requestParams);
+            _userCache.TryAddUser(chatId, requestParams);
 
             ReplyKeyboardMarkup replyKeyboard = new[]
             {
@@ -189,7 +199,9 @@ Usage:
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Enter data for {serviceName}.",
+                $"Enter data for {serviceName}. Please, use this format:\n" +
+                "thingName1\n" +
+                "thingName2",
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }
@@ -210,7 +222,7 @@ Usage:
             ProcessingResponseReceiver.ScheduleRequest(_botService, _serviceProxy,
                                                        chatId, requestParams);
 
-            _cache.TryRemove(chatId, out RequestParams _);
+            _userCache.TryRemoveUser(chatId);
         }
 
         private async Task SendResponseToCancelCommand(long chatId)
@@ -218,7 +230,7 @@ Usage:
             _logger.Info("Processes /cancel command.");
 
             string message;
-            if (_cache.TryRemove(chatId, out RequestParams _))
+            if (_userCache.TryRemoveUser(chatId))
             {
                 message = "Cancel the operation.";
             }

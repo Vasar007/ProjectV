@@ -27,6 +27,7 @@ namespace ThingAppraiser.TelegramBotWebService
 
             services.AddSingleton<IUpdateServiceAsync, UpdateServiceAsync>();
             services.AddSingleton<IBotService, BotService>();
+            services.AddTransient<IUserCache, UserCache>();
 
             services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
             services.Configure<ServiceSettings>(Configuration.GetSection("ServiceConfiguration"));

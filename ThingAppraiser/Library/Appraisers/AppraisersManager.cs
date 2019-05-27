@@ -104,10 +104,9 @@ namespace ThingAppraiser.Appraisers
                 if (!_appraisers.TryGetValue(internalData[0].GetType(),
                                              out List<Appraiser> values))
                 {
-                    _logger.Info($"Type {internalData[0].GetType()} wasn't used to appraise!");
-                    GlobalMessageHandler.OutputMessage(
-                        $"Type {internalData[0].GetType()} wasn't used to appraise!"
-                    );
+                    string message = $"Type {internalData[0].GetType()} wasn't used to appraise!";
+                    _logger.Info(message);
+                    GlobalMessageHandler.OutputMessage(message);
                     continue;
                 }
 

@@ -21,9 +21,6 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
                 case ServiceType.TplDataflow:
                     return new ServiceAsyncRequestProcessor();
 
-                case ServiceType.Rx:
-                    return new ServiceRxRequestProcessor();
-
                 default:
                     throw new ArgumentOutOfRangeException(nameof(serviceType),
                                                           "Not known service type");

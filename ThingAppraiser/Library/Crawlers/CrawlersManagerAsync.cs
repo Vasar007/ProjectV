@@ -44,7 +44,7 @@ namespace ThingAppraiser.Crawlers
         #endregion
 
         public async Task<bool> CollectAllResponses(BufferBlock<string> entitiesQueue,
-            IDictionary<Type, BufferBlock<BasicInfo>> responsesQueues, DataflowBlockOptions options)
+            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues, DataflowBlockOptions options)
         {
             var producers = new List<Task<bool>>(_crawlersAsync.Count);
             var consumers = new List<BufferBlock<string>>(_crawlersAsync.Count);
@@ -52,22 +52,22 @@ namespace ThingAppraiser.Crawlers
             foreach (CrawlerAsync crawlerAsync in _crawlersAsync)
             {
                 var consumer = new BufferBlock<string>(options);
-                var responseQueue = new BufferBlock<BasicInfo>(options);
+                var rawDataQueue = new BufferBlock<BasicInfo>(options);
 
-                responsesQueues.Add(crawlerAsync.TypeId, responseQueue);
-                producers.Add(crawlerAsync.GetResponse(consumer, responseQueue, _outputResults));
+                rawDataQueues.Add(crawlerAsync.TypeId, rawDataQueue);
+                producers.Add(crawlerAsync.GetResponse(consumer, rawDataQueue, _outputResults));
                 consumers.Add(consumer);
             }
 
-            Task<bool[]> taskStatuses = Task.WhenAll(producers);
-            Task taskConsumers = Task.WhenAll(consumers.Select(consumer => consumer.Completion));
+            Task<bool[]> statusesTask = Task.WhenAll(producers);
+            Task consumersTasks = Task.WhenAll(consumers.Select(consumer => consumer.Completion));
 
-            await Task.WhenAll(SplitQueue(entitiesQueue, consumers), taskConsumers, taskStatuses);
+            await Task.WhenAll(SplitQueue(entitiesQueue, consumers), consumersTasks, statusesTask);
 
-            bool[] statuses =  await taskStatuses;
-            foreach (BufferBlock<BasicInfo> responseQueue in responsesQueues.Values)
+            bool[] statuses =  await statusesTask;
+            foreach (BufferBlock<BasicInfo> rawDataQueue in rawDataQueues.Values)
             {
-                responseQueue.Complete();
+                rawDataQueue.Complete();
             }
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))

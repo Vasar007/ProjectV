@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -52,7 +51,7 @@ namespace ThingAppraiser.IO.Output
         #endregion
 
         public async Task<bool> SaveResults(
-            IDictionary<Type, BufferBlock<RatingDataContainer>> resultsQueues, string storageName)
+            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues, string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -63,7 +62,7 @@ namespace ThingAppraiser.IO.Output
 
             var consumers = new List<ActionBlock<RatingDataContainer>>();
             var results = new List<List<RatingDataContainer>>();
-            foreach (KeyValuePair<Type, BufferBlock<RatingDataContainer>> keyValue in resultsQueues)
+            foreach (BufferBlock<RatingDataContainer> appraisedDataQueue in appraisedDataQueues)
             {
                 var rating = new List<RatingDataContainer>();
                 results.Add(rating);
@@ -71,7 +70,7 @@ namespace ThingAppraiser.IO.Output
                 var consumer = new ActionBlock<RatingDataContainer>(x => rating.Add(x),
                                                                      _consumerOptions);
                 consumers.Add(consumer);
-                keyValue.Value.LinkTo(consumer, _linkOptions);
+                appraisedDataQueue.LinkTo(consumer, _linkOptions);
             }
 
             await Task.WhenAll(consumers.Select(consumer => consumer.Completion));
