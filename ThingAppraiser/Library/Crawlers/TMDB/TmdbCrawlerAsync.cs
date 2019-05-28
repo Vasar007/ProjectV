@@ -51,7 +51,7 @@ namespace ThingAppraiser.Crawlers
         public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
             BufferBlock<BasicInfo> responsesQueue, bool outputResults)
         {
-            if (!TmdbServiceConfiguration.HasValue())
+            if (!TmdbServiceConfiguration.HasValue)
             {
                 TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                     await GetServiceConfiguration(outputResults)

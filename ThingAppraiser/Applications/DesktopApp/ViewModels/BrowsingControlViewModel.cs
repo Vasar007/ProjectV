@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using ThingAppraiser.Data.Models;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 
@@ -16,7 +17,15 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public Thing SelectedThing
         {
             get => _selectedThing;
-            set => SetProperty(ref _selectedThing, _thingSupplier.GetThingById(value.InternalId));
+            set
+            {
+                if (value is null)
+                {
+                    SetProperty(ref _selectedThing, null);
+                    return;
+                }
+                SetProperty(ref _selectedThing, _thingSupplier.GetThingById(value.InternalId));
+            }
         }
 
         public BrowsingControlViewModel(IThingSupplier thingSupplier)
@@ -42,6 +51,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             {
                 SelectedThing = _thingSupplier.GetThingById(Things.First().InternalId);
             }
+        }
+
+        public void Update(ProcessingResponse response)
+        {
+            _thingSupplier.SaveResults(response, "Service response");
+
+            Update();
         }
     }
 }

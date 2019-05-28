@@ -8,8 +8,11 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              mc:Ignorable="d">
 
-    <materialDesign:DialogHost x:Name="InputThingDialogHost" Identifier="InputThingDialog"
-                               CloseOnClickAway="False" Height="400" Width="300">
+    <materialDesign:DialogHost x:Name="InputThingDialogHost"
+                               Identifier="InputThingDialog"
+                               CloseOnClickAway="False"
+                               Height="400"
+                               Width="300">
         <materialDesign:DialogHost.DialogContent>
             <StackPanel Margin="16">
                 <TextBlock>
@@ -18,22 +21,27 @@
 
                 <TextBox wpf:HintAssist.Hint="Name of the Thing"
                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
-                         Margin="0 6 0 0" FontSize="18">
+                         Margin="0 6 0 0"
+                         FontSize="18">
                     <TextBox.Text>
-                        <Binding Path="ThingName" UpdateSourceTrigger="PropertyChanged"/>
+                        <Binding Path="ThingName"
+                                 UpdateSourceTrigger="PropertyChanged"/>
                     </TextBox.Text>
                 </TextBox>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
                             HorizontalAlignment="Center">
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
-                            IsDefault="True" Margin="0 8 8 0"
+                            IsDefault="True"
+                            Margin="0 8 8 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                             CommandParameter="{Binding .}">
                         ACCEPT
                     </Button>
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
-                            IsCancel="True" Margin="0 8 8 0"
+                            IsCancel="True"
+                            Margin="0 8 8 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
                         <Button.CommandParameter>
                             <system:Boolean>
@@ -46,8 +54,10 @@
             </StackPanel>
         </materialDesign:DialogHost.DialogContent>
 
-        <Border BorderThickness="1" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
-                ClipToBounds="True" HorizontalAlignment="Stretch">
+        <Border BorderThickness="1"
+                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                ClipToBounds="True"
+                HorizontalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -57,7 +67,8 @@
 
                 <ListBox ItemsSource="{Binding ThingList}" />
 
-                    <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="1"
+                    <materialDesign:ColorZone Mode="PrimaryMid"
+                                              Grid.Row="1"
                                               Effect="{DynamicResource MaterialDesignShadowDepth5}">
                     <TextBlock Margin="16">
                         The Things Names
@@ -65,14 +76,19 @@
                 </materialDesign:ColorZone>
 
                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                        VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                        Grid.Row="0" Margin="0 0 28 -20"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Grid.Row="0"
+                        Margin="0 0 28 -20"
                         Command="{Binding EnterThingNameDialogCommand}"
                         CommandParameter="{Binding .}">
-                    <materialDesign:PackIcon Kind="Plus" Height="22" Width="22" />
+                    <materialDesign:PackIcon Kind="Plus"
+                                             Height="22"
+                                             Width="22" />
                 </Button>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="2"
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="2"
                             Margin="0 16 0 16">
                     <Button IsDefault="True" Margin="64 0 0 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
@@ -82,7 +98,8 @@
                                                Path=DataContext}">
                         ACCEPT
                     </Button>
-                    <Button IsCancel="True" Margin="8 0 0 0"
+                    <Button IsCancel="True"
+                            Margin="8 0 0 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
                         <Button.CommandParameter>
                             <system:Boolean>

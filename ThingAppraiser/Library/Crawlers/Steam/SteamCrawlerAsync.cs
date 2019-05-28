@@ -72,8 +72,11 @@ namespace ThingAppraiser.Crawlers
         public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
             BufferBlock<BasicInfo> responsesQueue, bool outputResults)
         {
-            SteamAppBriefInfoList steamAppsList = await _steamApiClient.GetAppListAsync();
-            SteamAppsStorage.FillStorage(steamAppsList);
+            if (SteamAppsStorage.IsEmpty)
+            {
+                SteamAppBriefInfoList steamAppsList = await _steamApiClient.GetAppListAsync();
+                SteamAppsStorage.FillStorage(steamAppsList);
+            }
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

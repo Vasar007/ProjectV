@@ -52,7 +52,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             if (metaData.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
                                                   out IOptionalData optionalData))
             {
-                if (!TmdbServiceConfiguration.HasValue())
+                if (!TmdbServiceConfiguration.HasValue)
                 {
                     var tmdbServiceConfig = (TmdbServiceConfigurationInfo) optionalData;
                     TmdbServiceConfiguration.SetServiceConfigurationIfNeed(tmdbServiceConfig);

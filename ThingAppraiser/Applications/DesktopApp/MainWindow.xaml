@@ -6,7 +6,11 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:models="clr-namespace:ThingAppraiser.DesktopApp.Models"
         mc:Ignorable="d"
-        Title="ThingAppraiser" Height="650" Width="850" MinHeight="550" MinWidth="350"
+        Title="ThingAppraiser"
+        Height="700"
+        Width="850"
+        MinHeight="550"
+        MinWidth="350"
         WindowStartupLocation="CenterScreen"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -17,7 +21,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.CommandBindings>
-        <CommandBinding Command="Copy" Executed="OnCopy"></CommandBinding>
+        <CommandBinding Command="Copy"
+                        Executed="OnCopy" />
     </Window.CommandBindings>
     <Window.Resources>
         <ResourceDictionary>
@@ -29,7 +34,8 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <materialDesign:DialogHost x:Name="MainWindowDialogHost" Identifier="RootDialog"
+    <materialDesign:DialogHost x:Name="MainWindowDialogHost"
+                               Identifier="RootDialog"
                                CloseOnClickAway="False">
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton,
                                                       Path=IsChecked}"
@@ -37,16 +43,21 @@
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="212">
                     <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
-                                  DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="16"
+                                  DockPanel.Dock="Top"
+                                  HorizontalAlignment="Right"
+                                  Margin="16"
                                   IsChecked="{Binding ElementName=MenuToggleButton,
                                               Path=IsChecked, Mode=TwoWay}"/>
-                    <ListBox x:Name="SceneItemsListBox" Margin="0 16 0 16" SelectedIndex="0"                         
+                    <ListBox x:Name="SceneItemsListBox"
+                             Margin="0 16 0 16"
+                             SelectedIndex="0"                         
                              ItemsSource="{Binding SceneItems}"
                              SelectedItem="{Binding SelectedSceneItem}"
                              PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="models:SceneItem">
-                                <TextBlock Text="{Binding Name}" Margin="32 0 32 0" />
+                                <TextBlock Text="{Binding Name}"
+                                           Margin="32 0 32 0" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -54,10 +65,13 @@
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <DockPanel>
-                <materialDesign:ColorZone Mode="Inverted" Padding="16" DockPanel.Dock="Top">
+                <materialDesign:ColorZone Mode="Inverted"
+                                          Padding="16"
+                                          DockPanel.Dock="Top">
                     <DockPanel>
                         <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                                      IsChecked="False" x:Name="MenuToggleButton" />
+                                      IsChecked="False"
+                                      x:Name="MenuToggleButton" />
                         <materialDesign:PopupBox DockPanel.Dock="Right"
                                                  PlacementMode="BottomAndAlignRightEdges"
                                                  StaysOpen="False">
@@ -75,7 +89,8 @@
                                 </Button>
                             </StackPanel>
                         </materialDesign:PopupBox>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
                                    FontSize="22">
                                 The Thing Appraiser
                         </TextBlock>
@@ -96,7 +111,8 @@
                                   Padding="{Binding ElementName=SceneItemsListBox,
                                             Path=SelectedItem.MarginRequirement}">
 
-                        <ContentControl Content="{Binding CurrentContent}" x:Name="ControlView" />
+                        <ContentControl Content="{Binding CurrentContent}"
+                                        x:Name="ControlView" />
                     </ScrollViewer>
                 </Grid>
             </DockPanel>

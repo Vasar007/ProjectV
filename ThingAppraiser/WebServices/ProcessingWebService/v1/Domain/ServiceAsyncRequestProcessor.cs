@@ -55,7 +55,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
         private IReadOnlyDictionary<string, IOptionalData> CreateOptionalData()
         {
             var result = new Dictionary<string, IOptionalData>();
-            if (TmdbServiceConfiguration.HasValue())
+            if (TmdbServiceConfiguration.HasValue)
             {
                 result.Add(nameof(TmdbServiceConfiguration),
                            TmdbServiceConfiguration.Configuration);

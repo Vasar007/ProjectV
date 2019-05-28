@@ -22,10 +22,7 @@ namespace ThingAppraiser.Crawlers
         /// Checks if configuration was initilized before.
         /// </summary>
         /// <returns><c>true</c> if configuration was initilized, <c>false</c> otherwise.</returns>
-        public static bool HasValue()
-        {
-            return !(Configuration is null);
-        }
+        public static bool HasValue => !(Configuration is null);
 
         /// <summary>
         /// Updates configuration if it is <c>null</c>.

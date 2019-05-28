@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using ThingAppraiser.Data;
 using ThingAppraiser.Data.Models;
@@ -35,10 +36,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public Thing GetThingById(Guid thingId)
         {
-            return _things.Find(p => p.InternalId.Equals(thingId));
+            return _things.First(p => p.InternalId.Equals(thingId));
         }
-
-        #endregion
 
         public bool SaveResults(ProcessingResponse response, string storageName)
         {
@@ -56,5 +55,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             }
             return true;
         }
+
+        #endregion
     }
 }

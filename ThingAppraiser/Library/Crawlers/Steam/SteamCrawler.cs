@@ -67,8 +67,11 @@ namespace ThingAppraiser.Crawlers
         /// <inheritdoc />
         public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
         {
-            SteamAppBriefInfoList steamAppsList = _steamApiClient.GetAppListAsync().Result;
-            SteamAppsStorage.FillStorage(steamAppsList);
+            if (SteamAppsStorage.IsEmpty)
+            {
+                SteamAppBriefInfoList steamAppsList = _steamApiClient.GetAppListAsync().Result;
+                SteamAppsStorage.FillStorage(steamAppsList);
+            }
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

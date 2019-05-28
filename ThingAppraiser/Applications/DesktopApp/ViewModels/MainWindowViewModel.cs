@@ -23,8 +23,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<MainWindowViewModel>();
 
-        private readonly ThingSupplier _thingSupplier = new ThingSupplier(new ThingGrader());
-
         private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
 
         private readonly ServiceProxy _serviceProxy = new ServiceProxy();
@@ -113,14 +111,26 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             {
                 new SceneItem("Start page", new StartControl(dialogIdentifier)),
 
-                new SceneItem("TMDb",
-                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem(
+                    "TMDb",
+                    new BrowsingControl(
+                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                    )
+                ),
 
-                new SceneItem("OMDb",
-                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem(
+                    "OMDb",
+                    new BrowsingControl(
+                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                    )
+                ),
 
-                new SceneItem("Steam",
-                              new BrowsingControl(new BrowsingControlViewModel(_thingSupplier))),
+                new SceneItem(
+                    "Steam",
+                    new BrowsingControl(
+                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                    )
+                ),
 
                 new SceneItem("Expert mode", new ProgressDialog())
             };
@@ -153,12 +163,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             SelectedSceneItem = SceneItems[index];
         }
 
-        private void SetCurrentContentToSceneAndUpdate(string controlIdentifier)
+        private void SetCurrentContentToSceneAndUpdate(string controlIdentifier,
+            ProcessingResponse response)
         {
             int index = _sceneIdentifiers[controlIdentifier];
             if (SceneItems[index].Content.DataContext is BrowsingControlViewModel controlViewModel)
             {
-                controlViewModel.Update();
+                controlViewModel.Update(response);
                 SelectedSceneItem = SceneItems[index];
             }
         }
@@ -196,9 +207,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (response?.MetaData.ResultStatus == ServiceStatus.Ok)
             {
-                _thingSupplier.SaveResults(response, "Service response");
-
-                SetCurrentContentToSceneAndUpdate(FindServiceNameAtStartControl());
+                SetCurrentContentToSceneAndUpdate(FindServiceNameAtStartControl(), response);
             }
             else
             {
