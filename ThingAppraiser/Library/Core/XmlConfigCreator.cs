@@ -246,8 +246,7 @@ namespace ThingAppraiser.Core
 
             foreach (var appraisalItem in configRequirements.Appraisals)
             {
-                ConfigContract.CheckAvailability(appraisalItem,
-                                                  ConfigContract.AvailableAppraisals);
+                ConfigContract.CheckAvailability(appraisalItem, ConfigContract.AvailableAppraisals);
 
                 xmlConfigCreator.AddAppraiser(
                     ConfigModule.GetConfigForAppraiser(appraisalItem)
@@ -325,8 +324,8 @@ namespace ThingAppraiser.Core
         }
 
             /// <summary>
-            /// Sets type of message handler. Method knows where this attribute value should place, you
-            /// should only specify name of the message handler.
+            /// Sets type of message handler. Method knows where this attribute value should place,
+            /// you should only specify name of the message handler.
             /// </summary>
             /// <param name="messageHandlerType">Message handler type.</param>
             /// <remarks>
@@ -334,8 +333,8 @@ namespace ThingAppraiser.Core
             /// which can parse XML document with your attributes and elements.
             /// </remarks>
             /// <exception cref="ArgumentException">
-            /// <param name="messageHandlerType">messageHandlerType</param> is null or presents empty 
-            /// string.
+            /// <param name="messageHandlerType">messageHandlerType</param> is null or presents
+            /// empty string.
             /// </exception>
             public void SetMessageHandlerType(string messageHandlerType)
         {
