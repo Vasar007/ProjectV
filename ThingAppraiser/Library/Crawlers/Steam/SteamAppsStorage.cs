@@ -9,6 +9,8 @@ namespace ThingAppraiser.Crawlers
         private static ConcurrentDictionary<string, int> _steamAppsList =
             new ConcurrentDictionary<string, int>();
 
+        public static bool IsEmpty => _steamAppsList.IsEmpty;
+
 
         public static bool AddValue(SteamAppBriefInfo steamApp)
         {

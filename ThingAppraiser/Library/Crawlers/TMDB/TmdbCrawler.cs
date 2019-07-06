@@ -76,7 +76,7 @@ namespace ThingAppraiser.Crawlers
         /// <inheritdoc />
         public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
         {
-            if (!TmdbServiceConfiguration.HasValue())
+            if (!TmdbServiceConfiguration.HasValue)
             {
                 TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                     GetServiceConfiguration(outputResults)

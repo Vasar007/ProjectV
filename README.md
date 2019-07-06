@@ -5,6 +5,20 @@
 
 Evaluate your things (movies, games, books e.t.c.) automatically based on popular databases with ratings.
 
+## Usage examples
+
+| Desktop app                                                                                     |
+|-------------------------------------------------------------------------------------------------|
+| ![Example of usage desktop app](Media/desktop_example.gif "Usage desktop app")                  |
+
+| Telegram bot service                                                                            |
+|-------------------------------------------------------------------------------------------------|
+| ![Example of usage telegram bot servie](Media/telegram_example.gif "Usage telegram bot service")|
+
+| Console app                                                                                     |
+|-------------------------------------------------------------------------------------------------|
+| ![Example of usage console app](Media/console_example.gif "Usage console app")                  |
+
 ## Dependencies
 
 Target .NET Standard is 2.0 for libraries, .NET Core is 2.2 for web services and .NET Framework is 4.7.2 for desktop app. Version of C# is 7.1.
@@ -13,7 +27,7 @@ You can install all dependencies using NuGet package manager.
 
 ## Set up project guide
 
-You can read full instruction in [wiki](https://github.com/Vasar007/ThingAppraiser/wiki/Set-up-project).
+You can read full instruction in project [Wiki](https://github.com/Vasar007/ThingAppraiser/wiki/Set-up-project).
 
 ## License information
 
