@@ -47,8 +47,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             private set => SetProperty(ref _isNotBusy, value);
         }
 
-        public IAsyncCommand<DataSource> Submit { get; }
-
         public UserControl CurrentContent
         {
             get => _currentContent;
@@ -58,16 +56,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public string SelectedStorageName
         {
             get => _selectedStorageName;
-            set => SetProperty(ref _selectedStorageName, value);
+            private set => SetProperty(ref _selectedStorageName, value);
         }
+
         public DataSource SelectedDataSource
         {
             get => _selectedDataSource;
-            set
-            {
-                SetProperty(ref _selectedDataSource, value);
-                ExecuteThingAppraiserService();
-            }
+            private set => SetProperty(ref _selectedDataSource, value);
         }
 
         public SceneItem SelectedSceneItem
@@ -79,6 +74,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 CurrentContent = value.Content;
             }
         }
+
+        public IAsyncCommand<DataSource> Submit { get; }
 
         public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
                                                             ApplicationCloseCommand.CanExecute);
@@ -100,46 +97,49 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             _sceneIdentifiers = new Dictionary<string, int>
             {
-                { "Start page", 0 },
-                { "TMDb", 1 },
-                { "OMDb", 2 },
-                { "Steam", 3 },
-                { "Expert mode", 4 }
+                { DesktopOptions.StartPageName, 0 },
+                { DesktopOptions.TmdbPageName, 1 },
+                { DesktopOptions.OmdbPageName, 2 },
+                { DesktopOptions.SteamPageName, 3 },
+                { DesktopOptions.ExpertModePageName, 4 },
+                { DesktopOptions.TopListEditorPageName, 5 },
             };
 
             SceneItems = new[]
             {
-                new SceneItem("Start page", new StartControl(dialogIdentifier)),
+                new SceneItem(DesktopOptions.StartPageName, new StartControl(dialogIdentifier)),
 
                 new SceneItem(
-                    "TMDb",
+                    DesktopOptions.TmdbPageName,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
-                    "OMDb",
+                    DesktopOptions.OmdbPageName,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
-                    "Steam",
+                    DesktopOptions.SteamPageName,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
-                new SceneItem("Expert mode", new ProgressDialog())
+                new SceneItem(DesktopOptions.ExpertModePageName, new ProgressDialog()),
+
+                new SceneItem(DesktopOptions.TopListEditorPageName, new ProgressDialog())
             };
 
-            SetCurrentContentToScene("Start page");
+            SetCurrentContentToScene(DesktopOptions.StartPageName);
             DialogIdentifier = dialogIdentifier;
         }
 
-        private static void ThrowIfInvalidData(List<string> data)
+        private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
         {
             if (data.IsNullOrEmpty() || data.Count < 2)
             {
@@ -149,7 +149,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private string FindServiceNameAtStartControl()
         {
-            int index = _sceneIdentifiers["Start page"];
+            int index = _sceneIdentifiers[DesktopOptions.StartPageName];
             if (SceneItems[index].Content.DataContext is StartControlViewModel startControl)
             {
                 return startControl.SelectedService;
@@ -180,6 +180,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             SelectedStorageName = storageName;
             SelectedDataSource = dataSource;
+            ExecuteThingAppraiserService();
         }
 
         public void SetDataSourceAndParameters(DataSource dataSource, List<string> thingList)
@@ -190,6 +191,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             SelectedStorageName = "UserInput";
             SelectedDataSource = dataSource;
+            ExecuteThingAppraiserService();
         }
 
         private void ExecuteThingAppraiserService()
@@ -246,7 +248,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ReturnToStartView(object obj)
         {
-            SetCurrentContentToScene("Start page");
+            SetCurrentContentToScene(DesktopOptions.StartPageName);
         }
 
         private bool CanReturnToStartView(object obj)
@@ -320,7 +322,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
-                ConfigModule.GetConfigForInputter("GoogleDriveReaderSimple")
+                ConfigModule.GetConfigForInputter(
+                    ConfigOptions.Inputters.GoogleDriveReaderSimpleName
+                )
             );
             List<string> thingNames = await Task.Run(
                 () => googleDriveReader.ReadThingNames(SelectedStorageName)

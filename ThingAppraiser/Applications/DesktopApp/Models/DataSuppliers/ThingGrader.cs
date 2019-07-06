@@ -14,13 +14,6 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         private static readonly LoggerAbstraction _logger =
             LoggerAbstraction.CreateLoggerInstanceFor<ThingGrader>();
 
-        private readonly IImageSupplier _tmdbImageSupplier =
-            new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
-
-        private readonly IImageSupplier _omdbImageSupplier = new OmdbImageSupplier();
-
-        private readonly IImageSupplier _steamImageSupplier = new SteamImageSupplier();
-
 
         public ThingGrader()
         {
@@ -55,7 +48,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
                 if (!TmdbServiceConfiguration.HasValue)
                 {
                     var tmdbServiceConfig = (TmdbServiceConfigurationInfo) optionalData;
-                    TmdbServiceConfiguration.SetServiceConfigurationIfNeed(tmdbServiceConfig);
+                    TmdbServiceConfiguration.SetServiceConfiguration(tmdbServiceConfig);
                 }
             }
         }
@@ -67,13 +60,13 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             switch (basicInfo)
             {
                 case TmdbMovieInfo _:
-                    return _tmdbImageSupplier;
+                    return new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
 
                 case OmdbMovieInfo _:
-                    return _omdbImageSupplier;
+                    return new OmdbImageSupplier();
 
                 case SteamGameInfo _:
-                    return _steamImageSupplier;
+                    return new SteamImageSupplier();
 
                 default:
                     var ex = new ArgumentOutOfRangeException(nameof(basicInfo),

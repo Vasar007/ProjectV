@@ -76,12 +76,9 @@ namespace ThingAppraiser.Crawlers
         /// <inheritdoc />
         public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
         {
-            if (!TmdbServiceConfiguration.HasValue)
-            {
-                TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
+            TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                     GetServiceConfiguration(outputResults)
-                );
-            }
+            );
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

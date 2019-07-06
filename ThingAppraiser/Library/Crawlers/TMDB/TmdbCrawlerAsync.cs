@@ -51,12 +51,9 @@ namespace ThingAppraiser.Crawlers
         public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
             BufferBlock<BasicInfo> responsesQueue, bool outputResults)
         {
-            if (!TmdbServiceConfiguration.HasValue)
-            {
-                TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
-                    await GetServiceConfiguration(outputResults)
-                );
-            }
+            TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
+                await GetServiceConfiguration(outputResults)
+            );
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

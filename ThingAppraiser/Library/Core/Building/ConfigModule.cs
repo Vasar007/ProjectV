@@ -51,25 +51,37 @@ namespace ThingAppraiser.Core.Building
         private static void RegisterMessageHandlersConfig()
         {
             _serviceConfigRegistry.RegisterMessageHandlerParameter(
-                "ConsoleMessageHandlerSetUnicode",
+                ConfigOptions.MessageHandlerParameters.ConsoleMessageHandlerSetUnicodeName,
                 new XElement("ConsoleMessageHandlerSetUnicode", "true")
             );
         }
 
         private static void RegisterInputtersConfig()
         {
-            _serviceConfigRegistry.RegisterInputter("LocalFileReaderSimple",
-                new XElement("LocalFile", new XAttribute("FileReaderLocalFile", "Simple"))
+            _serviceConfigRegistry.RegisterInputter(
+                ConfigOptions.Inputters.LocalFileReaderSimpleName,
+                new XElement("LocalFile",
+                    new XAttribute("FileReaderLocalFile", "Simple")
+                )
             );
-            _serviceConfigRegistry.RegisterInputter("GoogleDriveReaderSimple",
-                new XElement("GoogleDrive", new XAttribute("FileReaderGoogleDrive", "Simple"))
+            _serviceConfigRegistry.RegisterInputter(
+                ConfigOptions.Inputters.GoogleDriveReaderSimpleName,
+                new XElement("GoogleDrive",
+                    new XAttribute("FileReaderGoogleDrive", "Simple")
+                )
             );
 
-            _serviceConfigRegistry.RegisterInputter("LocalFileReaderFilter",
-                new XElement("LocalFile", new XAttribute("FileReaderLocalFile", "Filter"))
+            _serviceConfigRegistry.RegisterInputter(
+                ConfigOptions.Inputters.LocalFileReaderFilterName,
+                new XElement("LocalFile",
+                    new XAttribute("FileReaderLocalFile", "Filter")
+                )
             );
-            _serviceConfigRegistry.RegisterInputter("GoogleDriveReaderFilter",
-                new XElement("GoogleDrive", new XAttribute("FileReaderGoogleDrive", "Filter"))
+            _serviceConfigRegistry.RegisterInputter(
+                ConfigOptions.Inputters.GoogleDriveReaderFilterName,
+                new XElement("GoogleDrive",
+                    new XAttribute("FileReaderGoogleDrive", "Filter")
+                )
             );
         }
 
@@ -79,20 +91,23 @@ namespace ThingAppraiser.Core.Building
             string omdbApiKey = EnvironmentVariablesParser.GetValue("OmdbApiKey");
             string steamApiKey = EnvironmentVariablesParser.GetValue("SteamApiKey");
 
-            _serviceConfigRegistry.RegisterCrawler("Tmdb",
+            _serviceConfigRegistry.RegisterCrawler(
+                ConfigOptions.Crawlers.TmdbCrawlerName,
                 new XElement("TmdbCrawler",
                     new XAttribute("TmdbApiKey", tmdbApiKey),
                     new XAttribute("TmdbMaxRetryCount", "10")
                 )
             );
 
-            _serviceConfigRegistry.RegisterCrawler("Omdb",
+            _serviceConfigRegistry.RegisterCrawler(
+                ConfigOptions.Crawlers.OmdbCrawlerName,
                 new XElement("OmdbCrawler",
                     new XAttribute("OmdbApiKey", omdbApiKey)
                 )
             );
 
-            _serviceConfigRegistry.RegisterCrawler("Steam",
+            _serviceConfigRegistry.RegisterCrawler(
+                ConfigOptions.Crawlers.SteamCrawlerName,
                 new XElement("SteamCrawler",
                     new XAttribute("SteamApiKey", steamApiKey)
                 )
@@ -101,47 +116,57 @@ namespace ThingAppraiser.Core.Building
 
         private static void RegisterAppraisersConfig()
         {
-            _serviceConfigRegistry.RegisterAppraiser("TmdbCommon",
+            _serviceConfigRegistry.RegisterAppraiser(
+                ConfigOptions.Appraisers.TmdbAppraiserCommonName,
                 new XElement("TmdbAppraiser")
             );
-            _serviceConfigRegistry.RegisterAppraiser("TmdbFuzzy",
+            _serviceConfigRegistry.RegisterAppraiser(
+                ConfigOptions.Appraisers.TmdbAppraiserFuzzyName,
                 new XElement("FuzzyTmdbAppraiser")
             );
 
-            _serviceConfigRegistry.RegisterAppraiser("OmdbCommon",
+            _serviceConfigRegistry.RegisterAppraiser(
+                ConfigOptions.Appraisers.OmdbAppraiserCommonName,
                 new XElement("OmdbAppraiser")
             );
 
-            _serviceConfigRegistry.RegisterAppraiser("SteamCommon",
+            _serviceConfigRegistry.RegisterAppraiser(
+                ConfigOptions.Appraisers.SteamAppraiserCommonName,
                 new XElement("SteamAppraiser")
             );
         }
 
         private static void RegisterOutputtersConfig()
         {
-            _serviceConfigRegistry.RegisterOutputter("LocalFileWriter",
+            _serviceConfigRegistry.RegisterOutputter(
+                ConfigOptions.Outputters.LocalFileWriterName,
                 new XElement("LocalFile")
             );
-            _serviceConfigRegistry.RegisterOutputter("GoogleDriveWriter",
+            _serviceConfigRegistry.RegisterOutputter(
+                ConfigOptions.Outputters.GoogleDriveWriterName,
                 new XElement("GoogleDrive")
             );
         }
 
         private static void RegisterRepositoriesConfig()
         {
-            _serviceConfigRegistry.RegisterRepository("BasicInfo",
+            _serviceConfigRegistry.RegisterRepository(
+                ConfigOptions.Repositories.BasicInfoRepositoryName,
                 new XElement("BasicInfoRepository")
             );
 
-            _serviceConfigRegistry.RegisterRepository("Tmdb",
+            _serviceConfigRegistry.RegisterRepository(
+                ConfigOptions.Repositories.TmdbMovieRepositoryName,
                 new XElement("TmdbMovieRepository")
             );
 
-            _serviceConfigRegistry.RegisterRepository("Omdb",
+            _serviceConfigRegistry.RegisterRepository(
+                ConfigOptions.Repositories.OmdbMovieRepositoryName,
                 new XElement("NotImplemented")
             );
 
-            _serviceConfigRegistry.RegisterRepository("Steam",
+            _serviceConfigRegistry.RegisterRepository(
+                ConfigOptions.Repositories.SteamGameRepositoryName,
                 new XElement("NotImplemented")
             );
         }

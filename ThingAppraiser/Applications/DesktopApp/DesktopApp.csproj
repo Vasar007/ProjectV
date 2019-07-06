@@ -205,6 +205,7 @@
     <Compile Include="Domain\Commands\IAsyncCommand.cs" />
     <Compile Include="Domain\Commands\IAsyncCommandT.cs" />
     <Compile Include="Domain\DataSources.cs" />
+    <Compile Include="Domain\DesktopOptions.cs" />
     <Compile Include="Domain\IErrorHandler.cs" />
     <Compile Include="Domain\NotEmptyValidationRule.cs" />
     <Compile Include="Domain\TaskExtension.cs" />

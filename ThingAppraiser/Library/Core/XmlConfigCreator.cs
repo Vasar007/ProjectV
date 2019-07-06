@@ -116,7 +116,8 @@ namespace ThingAppraiser.Core
                         MessageHandlerParameters = new[]
                         {
                             ConfigModule.GetConfigForMessageHandlerParameter(
-                                "ConsoleMessageHandlerSetUnicode"
+                                ConfigOptions.MessageHandlerParameters
+                                    .ConsoleMessageHandlerSetUnicodeName
                             )
                         }
                     },
@@ -125,7 +126,9 @@ namespace ThingAppraiser.Core
                         DefaultInStorageName = "thing_names.csv",
                         Inputters = new[]
                         {
-                            ConfigModule.GetConfigForInputter("LocalFileReaderSimple"),
+                            ConfigModule.GetConfigForInputter(
+                                ConfigOptions.Inputters.LocalFileReaderSimpleName
+                            ),
                         }
                     },
                     CrawlersManager = new CrawlersManagerConfig
@@ -133,7 +136,9 @@ namespace ThingAppraiser.Core
                         CrawlersOutputFlag = false,
                         Crawlers = new[]
                         {
-                            ConfigModule.GetConfigForCrawler("Tmdb")
+                            ConfigModule.GetConfigForCrawler(
+                                ConfigOptions.Crawlers.TmdbCrawlerName
+                            )
                         }
                     },
                     AppraisersManager = new AppraisersManagerConfig
@@ -141,7 +146,9 @@ namespace ThingAppraiser.Core
                         AppraisersOutputFlag = false,
                         Appraisers = new[]
                         {
-                            ConfigModule.GetConfigForAppraiser("TmdbCommon")
+                            ConfigModule.GetConfigForAppraiser(
+                                ConfigOptions.Appraisers.TmdbAppraiserCommonName
+                            )
                         }
                     },
                     OutputManager = new OutputManagerConfig
@@ -149,7 +156,9 @@ namespace ThingAppraiser.Core
                         DefaultOutStorageName = "appraised_thing.csv",
                         Outputters = new[]
                         {
-                            ConfigModule.GetConfigForOutputter("LocalFileWriter"),
+                            ConfigModule.GetConfigForOutputter(
+                                ConfigOptions.Outputters.LocalFileWriterName
+                            ),
                         }
                     },
                     DataBaseManager = new DataBaseManagerConfig
@@ -157,7 +166,9 @@ namespace ThingAppraiser.Core
                         ConnectionString = ConfigurationManager.AppSettings["ConnectionString"],
                         Repositories = new[]
                         {
-                            ConfigModule.GetConfigForRepository("Tmdb")
+                            ConfigModule.GetConfigForRepository(
+                                ConfigOptions.Repositories.TmdbMovieRepositoryName
+                            )
                         }
                     }
                 },
@@ -220,7 +231,9 @@ namespace ThingAppraiser.Core
                 ConfigurationManager.AppSettings["ConnectionString"]
             );
             xmlConfigCreator.AddRepository(
-                ConfigModule.GetConfigForRepository("BasicInfo")
+                ConfigModule.GetConfigForRepository(
+                    ConfigOptions.Repositories.BasicInfoRepositoryName
+                )
             );
 
             foreach (var inputItem in configRequirements.Input)
