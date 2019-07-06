@@ -7,9 +7,13 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET Standard is 2.0 for libraries, .NET Core is 2.2 for web services and .NET framework is 4.7.2 for desktop app. Version of C# is 7.1.
+Target .NET Standard is 2.0 for libraries, .NET Core is 2.2 for web services and .NET Framework is 4.7.2 for desktop app. Version of C# is 7.1.
 
 You can install all dependencies using NuGet package manager.
+
+## Set up project guide
+
+You can read full instruction in [wiki](https://github.com/Vasar007/ThingAppraiser/wiki/Set-up-project).
 
 ## License information
 
