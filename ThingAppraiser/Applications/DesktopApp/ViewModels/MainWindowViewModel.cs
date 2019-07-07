@@ -102,7 +102,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 { DesktopOptions.PageNames.OmdbPage, 2 },
                 { DesktopOptions.PageNames.SteamPage, 3 },
                 { DesktopOptions.PageNames.ExpertModePage, 4 },
-                { DesktopOptions.PageNames.ToplistEditorPage, 5 },
+                { DesktopOptions.PageNames.ToplistStartPage, 5 },
+                { DesktopOptions.PageNames.ToplistEditorPage, 6 }
             };
 
             SceneItems = new[]
@@ -115,29 +116,34 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 new SceneItem(
                     DesktopOptions.PageNames.TmdbPage,
                     new BrowsingControl(
-                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
                     DesktopOptions.PageNames.OmdbPage,
                     new BrowsingControl(
-                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
                     DesktopOptions.PageNames.SteamPage,
                     new BrowsingControl(
-                        new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
+                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(DesktopOptions.PageNames.ExpertModePage, new ProgressDialog()),
 
                 new SceneItem(
+                    DesktopOptions.PageNames.ToplistStartPage,
+                    new ToplistStartControl(dialogIdentifier)
+                ),
+
+                new SceneItem(
                     DesktopOptions.PageNames.ToplistEditorPage,
-                    new ToplistEditorStartControl(dialogIdentifier)
+                    new ToplistEditorControl()
                 )
             };
 
@@ -153,10 +159,38 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
+        public void SendRequestToService(DataSource dataSource, string storageName)
+        {
+            storageName.ThrowIfNullOrEmpty(nameof(storageName));
+
+            SelectedStorageName = storageName;
+            SelectedDataSource = dataSource;
+            ExecuteSending();
+        }
+
+        public void SendRequestToService(DataSource dataSource, List<string> thingList)
+        {
+            thingList.ThrowIfNull(nameof(thingList));
+
+            _thingProducer = new ThingProducer(thingList);
+
+            SelectedStorageName = "User input";
+            SelectedDataSource = dataSource;
+            ExecuteSending();
+        }
+
+        public void OpenToplistEditorScene(string toplistName, string toplistType,
+            string toplistFormat)
+        {
+            SetCurrentContentToSceneAndUpdateEditor(DesktopOptions.PageNames.ToplistEditorPage,
+                                                    toplistName, toplistType, toplistFormat);
+        }
+
         private string FindServiceNameAtStartControl()
         {
             int index = _sceneIdentifiers[DesktopOptions.PageNames.StartPage];
-            if (SceneItems[index].Content.DataContext is StartControlViewModel startControl)
+            SceneItem sceneItem = SceneItems[index];
+            if (sceneItem.Content.DataContext is StartViewModel startControl)
             {
                 return startControl.SelectedService;
             }
@@ -169,38 +203,31 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             SelectedSceneItem = SceneItems[index];
         }
 
-        private void SetCurrentContentToSceneAndUpdate(string controlIdentifier,
+        private void SetCurrentContentToSceneAndUpdateItems(string controlIdentifier,
             ProcessingResponse response)
         {
             int index = _sceneIdentifiers[controlIdentifier];
-            if (SceneItems[index].Content.DataContext is BrowsingControlViewModel controlViewModel)
+            SceneItem sceneItem = SceneItems[index];
+            if (sceneItem.Content.DataContext is BrowsingViewModel controlViewModel)
             {
                 controlViewModel.Update(response);
-                SelectedSceneItem = SceneItems[index];
+                SelectedSceneItem = sceneItem;
             }
         }
 
-        public void SetDataSourceAndParameters(DataSource dataSource, string storageName)
+        private void SetCurrentContentToSceneAndUpdateEditor(string controlIdentifier,
+            string toplistName, string toplistType, string toplistFormat)
         {
-            storageName.ThrowIfNullOrEmpty(nameof(storageName));
-
-            SelectedStorageName = storageName;
-            SelectedDataSource = dataSource;
-            ExecuteThingAppraiserService();
+            int index = _sceneIdentifiers[controlIdentifier];
+            SceneItem sceneItem = SceneItems[index];
+            if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            {
+                toplistEditorViewModel.Update(toplistName, toplistType, toplistFormat);
+                SelectedSceneItem = sceneItem;
+            }
         }
 
-        public void SetDataSourceAndParameters(DataSource dataSource, List<string> thingList)
-        {
-            thingList.ThrowIfNull(nameof(thingList));
-
-            _thingProducer = new ThingProducer(thingList);
-
-            SelectedStorageName = "UserInput";
-            SelectedDataSource = dataSource;
-            ExecuteThingAppraiserService();
-        }
-
-        private void ExecuteThingAppraiserService()
+        private void ExecuteSending()
         {
             string message = $"SelectedStorageName={SelectedStorageName}, " +
                              $"SelectedDataSource={SelectedDataSource}";
@@ -215,7 +242,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (response?.MetaData.ResultStatus == ServiceStatus.Ok)
             {
-                SetCurrentContentToSceneAndUpdate(FindServiceNameAtStartControl(), response);
+                string serviceName = FindServiceNameAtStartControl();
+                SetCurrentContentToSceneAndUpdateItems(serviceName, response);
             }
             else
             {

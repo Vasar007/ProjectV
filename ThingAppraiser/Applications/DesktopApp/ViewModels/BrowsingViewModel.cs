@@ -6,7 +6,7 @@ using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class BrowsingControlViewModel : ViewModelBase
+    internal class BrowsingViewModel : ViewModelBase
     {
         private readonly IThingSupplier _thingSupplier;
 
@@ -28,7 +28,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        public BrowsingControlViewModel(IThingSupplier thingSupplier)
+        public BrowsingViewModel(IThingSupplier thingSupplier)
         {
             _thingSupplier = thingSupplier.ThrowIfNull(nameof(thingSupplier));
 

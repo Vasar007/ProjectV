@@ -26,7 +26,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataProducers
 
         public List<string> ReadThingNames(string storageName)
         {
-            StorageName = storageName;
+            StorageName = storageName.ThrowIfNull(nameof(storageName));
             return _thingNames;
         }
 

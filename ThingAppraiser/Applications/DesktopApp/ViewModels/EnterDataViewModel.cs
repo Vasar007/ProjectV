@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class EnterDataDialogViewModel : ViewModelBase
+    internal class EnterDataViewModel : ViewModelBase
     {
         private string _name;
 
@@ -13,7 +13,7 @@
         public string HintText { get; }
         
 
-        public EnterDataDialogViewModel(string hintText)
+        public EnterDataViewModel(string hintText)
         {
             HintText = hintText.ThrowIfNullOrEmpty(nameof(hintText));
         }

@@ -6,7 +6,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class StartControlViewModel : ViewModelBase
+    internal class StartViewModel : ViewModelBase
     {
         private string _selectedService;
 
@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             new RelayCommand(ExecutableDialogs.ExecuteEnterDataDialog);
 
 
-        public StartControlViewModel(object dialogIdentifier)
+        public StartViewModel(object dialogIdentifier)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
 

@@ -16,21 +16,21 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteInputThingDialog(object obj)
         {
-            if (!(obj is StartControlViewModel startControlViewModel)) return;
+            if (!(obj is StartViewModel startViewModel)) return;
 
             var view = new InputThingDialog();
 
-            ShowDialog(view, startControlViewModel.DialogIdentifier, InputThingClosingEventHandler)
+            ShowDialog(view, startViewModel.DialogIdentifier, InputThingClosingEventHandler)
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
         public static void ExecuteEnterThingNameDialog(object obj)
         {
-            if (!(obj is InputThingViewModel inputDatViewModel)) return;
+            if (!(obj is InputThingViewModel inputThingViewModel)) return;
 
-            inputDatViewModel.ThingName = string.Empty;
+            inputThingViewModel.ThingName = string.Empty;
 
-            ShowDialog(inputDatViewModel.DialogContent, inputDatViewModel.DialogIdentifier,
+            ShowDialog(inputThingViewModel.DialogContent, inputThingViewModel.DialogIdentifier,
                        EnterThingNameClosingEventHandler)
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
@@ -44,20 +44,41 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
 
             WinForms.DialogResult result = dialog.ShowDialog();
-            if (result == WinForms.DialogResult.OK && obj is MainWindowViewModel viewModel)
+            if (result == WinForms.DialogResult.OK && obj is MainWindowViewModel mainViewModel)
             {
-                viewModel.SetDataSourceAndParameters(DataSource.LocalFile, dialog.FileName);
+                mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
             }
         }
 
         public static void ExecuteEnterDataDialog(object obj)
         {
-            if (!(obj is StartControlViewModel startControlViewModel)) return;
+            if (!(obj is StartViewModel startViewModel)) return;
 
             var view = new EnterDataDialog(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
-            ShowDialogExtended(view, startControlViewModel.DialogIdentifier,
-                               EnterDataOpenedEventHandler, EnterDataClosingEventHandler)
+            ShowDialogExtended(view, startViewModel.DialogIdentifier, EnterDataOpenedEventHandler,
+                               EnterDataClosingEventHandler)
+                .FireAndForgetSafeAsync(new CommonErrorHandler());
+        }
+
+        public static void ExecuteCreateToplistDialog(object obj)
+        {
+            if (!(obj is ToplistStartViewModel toplistStartViewModel)) return;
+
+            var view = new CreateToplistDialog();
+
+            ShowDialog(view, toplistStartViewModel.DialogIdentifier,
+                       CreateToplistClosingEventHandler)
+                .FireAndForgetSafeAsync(new CommonErrorHandler());
+        }
+
+        public static void ExecuteOpenToplistDialog(object obj)
+        {
+            if (!(obj is ToplistStartViewModel toplistStartViewModel)) return;
+
+            var view = new OpenToplistDialog(toplistStartViewModel.DialogIdentifier);
+
+            ShowDialog(view, toplistStartViewModel.DialogIdentifier, OpenToplistClosingEventHandler)
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
@@ -90,12 +111,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
             if (!(eventArgs.Session.Content is InputThingDialog inputThingDialog)) return;
-            if (!(inputThingDialog.DataContext is InputThingViewModel inputDatViewModel)) return;
-            if (inputDatViewModel.ThingList.IsNullOrEmpty()) return;
+            if (!(inputThingDialog.DataContext is InputThingViewModel inputThingViewModel)) return;
+            if (inputThingViewModel.ThingList.IsNullOrEmpty()) return;
 
-            mainWindowViewModel.SetDataSourceAndParameters(
-                DataSource.InputThing,
-                inputDatViewModel.ThingList.ToList()
+            mainWindowViewModel.SendRequestToService(
+                DataSource.InputThing, inputThingViewModel.ThingList.ToList()
             );
         }
 
@@ -104,11 +124,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is InputThingViewModel inputDatViewModel)) return;
+            if (!(eventArgs.Parameter is InputThingViewModel inputThingViewModel)) return;
 
-            if (string.IsNullOrWhiteSpace(inputDatViewModel.ThingName)) return;
+            if (string.IsNullOrWhiteSpace(inputThingViewModel.ThingName)) return;
 
-            inputDatViewModel.ThingList.Add(inputDatViewModel.ThingName.Trim());
+            inputThingViewModel.ThingList.Add(inputThingViewModel.ThingName.Trim());
         }
 
         private static void EnterDataOpenedEventHandler(object sender,
@@ -124,16 +144,51 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
             if (!(eventArgs.Session.Content is EnterDataDialog enterDataDialog)) return;
-            if (!(enterDataDialog.DataContext is EnterDataDialogViewModel enterDataViewModel))
+            if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel))
             {
                 return;
             }
             if (string.IsNullOrWhiteSpace(enterDataViewModel.Name)) return;
 
-            mainWindowViewModel.SetDataSourceAndParameters(
-                DataSource.GoogleDrive,
-                enterDataViewModel.Name
+            mainWindowViewModel.SendRequestToService(
+                DataSource.GoogleDrive, enterDataViewModel.Name
             );
+        }
+
+        private static void CreateToplistClosingEventHandler(object sender,
+            DialogClosingEventArgs eventArgs)
+        {
+            if (Equals(eventArgs.Parameter, false)) return;
+
+            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
+            if (!(eventArgs.Session.Content is CreateToplistDialog createToplistDialog)) return;
+            if (!(createToplistDialog.DataContext is CreateToplistViewModel createToplistViewModel))
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(createToplistViewModel.ToplistName)) return;
+            if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistType)) return;
+            if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistFormat)) return;
+
+            mainWindowViewModel.OpenToplistEditorScene(createToplistViewModel.ToplistName,
+                                                       createToplistViewModel.SelectedToplistType,
+                                                       createToplistViewModel.SelectedToplistFormat);
+        }
+
+        private static void OpenToplistClosingEventHandler(object sender,
+            DialogClosingEventArgs eventArgs)
+        {
+            if (Equals(eventArgs.Parameter, false)) return;
+
+            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
+            if (!(eventArgs.Session.Content is OpenToplistDialog openToplistDialog)) return;
+            if (!(openToplistDialog.DataContext is OpenToplistViewModel openToplistViewModel))
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(openToplistViewModel.ToString())) return;
+
+            //openToplistViewModel.ThingList.Add(openToplistViewModel.ThingName.Trim());
         }
     }
 }

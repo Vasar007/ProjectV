@@ -4,17 +4,17 @@ using ThingAppraiser.DesktopApp.ViewModels;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for StartView.xaml
+    /// Interaction logic for OpenToplistDialog.xaml
     /// </summary>
-    public partial class StartControl : UserControl
+    public partial class OpenToplistDialog : UserControl
     {
-        public StartControl(object dialogIdentifier)
+        public OpenToplistDialog(object dialogIdentifier)
         {
             dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
 
             InitializeComponent();
 
-            DataContext = new StartViewModel(dialogIdentifier);
+            DataContext = new OpenToplistViewModel(dialogIdentifier);
         }
     }
 }

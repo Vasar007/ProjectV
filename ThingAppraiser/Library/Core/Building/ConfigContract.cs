@@ -19,6 +19,12 @@ namespace ThingAppraiser.Core.Building
             ConfigOptions.Inputters.GoogleDriveReaderFilterName
         };
 
+        /// <summary>
+        /// Service names list with which ThingAppraiser can be interact.
+        /// </summary>
+        /// <remarks>
+        /// There are contract that service names (not beautified) must be equal to crawler name.
+        /// </remarks>
         public static IReadOnlyList<string> AvailableServices { get; } = new List<string>
         {
             ConfigOptions.Crawlers.TmdbCrawlerName,
@@ -42,9 +48,9 @@ namespace ThingAppraiser.Core.Building
 
         public static IReadOnlyList<string> AvailableBeautifiedServices { get; } = new List<string>
         {
-            "TMDb",
-            "OMDb",
-            "Steam"
+            ConfigOptions.BeautifiedServices.TmdbServiceName,
+            ConfigOptions.BeautifiedServices.OmdbServiceName,
+            ConfigOptions.BeautifiedServices.SteamServiceName
         };
 
         public static IReadOnlyList<string> AvailableServicesToLower { get; } =

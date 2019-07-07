@@ -223,17 +223,23 @@
     <Compile Include="Models\DataSuppliers\ThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplierMock.cs" />
     <Compile Include="Models\DataSuppliers\ServiceProxy.cs" />
-    <Compile Include="ViewModels\BrowsingControlViewModel.cs" />
+    <Compile Include="ViewModels\BrowsingViewModel.cs" />
+    <Compile Include="ViewModels\CreateToplistViewModel.cs" />
     <Compile Include="ViewModels\ExecutableDialogs.cs" />
-    <Compile Include="ViewModels\EnterDataDialogViewModel.cs" />
+    <Compile Include="ViewModels\EnterDataViewModel.cs" />
     <Compile Include="ViewModels\InputThingViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ProgressDialogViewModel.cs" />
     <Compile Include="ViewModels\ToplistEditorViewModel.cs" />
-    <Compile Include="ViewModels\StartViewViewModel.cs" />
+    <Compile Include="ViewModels\ProgressViewModel.cs" />
+    <Compile Include="ViewModels\OpenToplistViewModel.cs" />
+    <Compile Include="ViewModels\ToplistStartViewModel.cs" />
+    <Compile Include="ViewModels\StartViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\BrowsingControl.xaml.cs">
       <DependentUpon>BrowsingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateToplistDialog.xaml.cs">
+      <DependentUpon>CreateToplistDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EnterDataDialog.xaml.cs">
       <DependentUpon>EnterDataDialog.xaml</DependentUpon>
@@ -241,11 +247,17 @@
     <Compile Include="Views\InputThingDialog.xaml.cs">
       <DependentUpon>InputThingDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ToplistEditorControl.xaml.cs">
+      <DependentUpon>ToplistEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProgressDialog.xaml.cs">
       <DependentUpon>ProgressDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ToplistEditorStartControl.xaml.cs">
-      <DependentUpon>ToplistEditorStartControl.xaml</DependentUpon>
+    <Compile Include="Views\OpenToplistDialog.xaml.cs">
+      <DependentUpon>OpenToplistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToplistStartControl.xaml.cs">
+      <DependentUpon>ToplistStartControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartControl.xaml.cs">
       <DependentUpon>StartControl.xaml</DependentUpon>
@@ -266,6 +278,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CreateToplistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\EnterDataDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -274,11 +290,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ToplistEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ProgressDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ToplistEditorStartControl.xaml">
+    <Page Include="Views\OpenToplistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ToplistStartControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

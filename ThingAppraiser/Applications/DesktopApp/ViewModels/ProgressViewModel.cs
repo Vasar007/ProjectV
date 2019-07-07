@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class ProgressDialogViewModel : ViewModelBase
+    internal class ProgressViewModel : ViewModelBase
     {
         private int _progressBarSize;
 
@@ -11,12 +11,12 @@
         }
 
 
-        public ProgressDialogViewModel(int progressBarSize)
+        public ProgressViewModel(int progressBarSize)
         {
             ProgressBarSize = progressBarSize;
         }
 
-        public ProgressDialogViewModel()
+        public ProgressViewModel()
             : this(64)
         {
         }

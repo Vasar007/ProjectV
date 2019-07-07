@@ -1,41 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using ThingAppraiser.Core.Building;
-using ThingAppraiser.DesktopApp.Domain.Commands;
+﻿using System;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal class ToplistEditorViewModel : ViewModelBase
     {
-        private string _selectedService;
+        private int _progressBarSize;
 
-        public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
-            ConfigContract.AvailableBeautifiedServices;
-
-        public string SelectedService
+        public int ProgressBarSize
         {
-            get => _selectedService;
-            set => SetProperty(ref _selectedService, value);
+            get => _progressBarSize;
+            set => SetProperty(ref _progressBarSize, value);
         }
 
-        public object DialogIdentifier { get; }
 
-        public ICommand InputThingDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteInputThingDialog);
-
-        public ICommand OpenFileDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteOpenFileDialog);
-
-        public ICommand EnterDataDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteEnterDataDialog);
-
-
-        public ToplistEditorViewModel(object dialogIdentifier)
+        public ToplistEditorViewModel(int progressBarSize)
         {
-            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            ProgressBarSize = progressBarSize;
+        }
 
-            SelectedService = AvailableBeautifiedServices.First();
+        public ToplistEditorViewModel()
+            : this(64)
+        {
+        }
+
+        public void Update(string toplistName, string toplistType, string toplistFormat)
+        {
+            Console.WriteLine(toplistName);
+            Console.WriteLine(toplistType);
+            Console.WriteLine(toplistFormat);
         }
     }
 }

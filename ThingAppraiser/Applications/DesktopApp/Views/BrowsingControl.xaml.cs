@@ -12,7 +12,7 @@ namespace ThingAppraiser.DesktopApp.Views
         {
             InitializeComponent();
 
-            DataContext = dataContext;
+            DataContext = dataContext.ThrowIfNull(nameof(dataContext));
         }
     }
 }

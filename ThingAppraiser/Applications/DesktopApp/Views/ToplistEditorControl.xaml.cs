@@ -4,15 +4,15 @@ using ThingAppraiser.DesktopApp.ViewModels;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for ProgressDialog.xaml
+    /// Interaction logic for ToplistEditorControl.xaml
     /// </summary>
-    public partial class ProgressDialog : UserControl
+    public partial class ToplistEditorControl : UserControl
     {
-        public ProgressDialog()
+        public ToplistEditorControl()
         {
             InitializeComponent();
 
-            DataContext = new ProgressViewModel();
+            DataContext = new ToplistEditorViewModel();
         }
     }
 }

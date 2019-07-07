@@ -14,7 +14,7 @@ namespace ThingAppraiser.DesktopApp.Views
 
             InitializeComponent();
 
-            DataContext = new EnterDataDialogViewModel(hintText);
+            DataContext = new EnterDataViewModel(hintText);
         }
     }
 }
