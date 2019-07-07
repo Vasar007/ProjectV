@@ -2,6 +2,11 @@
 {
     public static class ConfigOptions
     {
+        public static class MessageHandlers
+        {
+            public static string ConsoleMessageHandlerName { get; } = "ConsoleMessageHandler";
+        }
+
         public static class MessageHandlerParameters
         {
             public static string ConsoleMessageHandlerSetUnicodeName { get; } =

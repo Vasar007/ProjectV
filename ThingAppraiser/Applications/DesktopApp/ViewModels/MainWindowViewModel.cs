@@ -97,45 +97,51 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             _sceneIdentifiers = new Dictionary<string, int>
             {
-                { DesktopOptions.StartPageName, 0 },
-                { DesktopOptions.TmdbPageName, 1 },
-                { DesktopOptions.OmdbPageName, 2 },
-                { DesktopOptions.SteamPageName, 3 },
-                { DesktopOptions.ExpertModePageName, 4 },
-                { DesktopOptions.TopListEditorPageName, 5 },
+                { DesktopOptions.PageNames.StartPage, 0 },
+                { DesktopOptions.PageNames.TmdbPage, 1 },
+                { DesktopOptions.PageNames.OmdbPage, 2 },
+                { DesktopOptions.PageNames.SteamPage, 3 },
+                { DesktopOptions.PageNames.ExpertModePage, 4 },
+                { DesktopOptions.PageNames.ToplistEditorPage, 5 },
             };
 
             SceneItems = new[]
             {
-                new SceneItem(DesktopOptions.StartPageName, new StartControl(dialogIdentifier)),
+                new SceneItem(
+                    DesktopOptions.PageNames.StartPage,
+                    new StartControl(dialogIdentifier)
+                ),
 
                 new SceneItem(
-                    DesktopOptions.TmdbPageName,
+                    DesktopOptions.PageNames.TmdbPage,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
-                    DesktopOptions.OmdbPageName,
+                    DesktopOptions.PageNames.OmdbPage,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
                 new SceneItem(
-                    DesktopOptions.SteamPageName,
+                    DesktopOptions.PageNames.SteamPage,
                     new BrowsingControl(
                         new BrowsingControlViewModel(new ThingSupplier(new ThingGrader()))
                     )
                 ),
 
-                new SceneItem(DesktopOptions.ExpertModePageName, new ProgressDialog()),
+                new SceneItem(DesktopOptions.PageNames.ExpertModePage, new ProgressDialog()),
 
-                new SceneItem(DesktopOptions.TopListEditorPageName, new ProgressDialog())
+                new SceneItem(
+                    DesktopOptions.PageNames.ToplistEditorPage,
+                    new ToplistEditorStartControl(dialogIdentifier)
+                )
             };
 
-            SetCurrentContentToScene(DesktopOptions.StartPageName);
+            SetCurrentContentToScene(DesktopOptions.PageNames.StartPage);
             DialogIdentifier = dialogIdentifier;
         }
 
@@ -149,7 +155,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private string FindServiceNameAtStartControl()
         {
-            int index = _sceneIdentifiers[DesktopOptions.StartPageName];
+            int index = _sceneIdentifiers[DesktopOptions.PageNames.StartPage];
             if (SceneItems[index].Content.DataContext is StartControlViewModel startControl)
             {
                 return startControl.SelectedService;
@@ -248,7 +254,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ReturnToStartView(object obj)
         {
-            SetCurrentContentToScene(DesktopOptions.StartPageName);
+            SetCurrentContentToScene(DesktopOptions.PageNames.StartPage);
         }
 
         private bool CanReturnToStartView(object obj)

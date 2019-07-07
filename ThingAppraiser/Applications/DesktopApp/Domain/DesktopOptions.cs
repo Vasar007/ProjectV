@@ -2,16 +2,24 @@
 {
     internal static class DesktopOptions
     {
-        public static string StartPageName { get; } = "Start page";
+        public static class PageNames
+        {
+            public static string StartPage { get; } = "Start page";
 
-        public static string TmdbPageName { get; } = "TMDb";
+            public static string TmdbPage { get; } = "TMDb";
 
-        public static string OmdbPageName { get; } = "OMDb";
+            public static string OmdbPage { get; } = "OMDb";
 
-        public static string SteamPageName { get; } = "Steam";
+            public static string SteamPage { get; } = "Steam";
 
-        public static string ExpertModePageName { get; } = "Expert mode";
+            public static string ExpertModePage { get; } = "Expert mode";
 
-        public static string TopListEditorPageName { get; } = "Top list editor";
+            public static string ToplistEditorPage { get; } = "Toplist editor";
+        }
+
+        public static class HintTexts
+        {
+            public static string HintTextForGoogleDriveDialog { get; } = "Filename on Google Drive";
+        }
     }
 }

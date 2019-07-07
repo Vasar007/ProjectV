@@ -54,7 +54,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (!(obj is StartControlViewModel startControlViewModel)) return;
 
-            var view = new EnterDataDialog();
+            var view = new EnterDataDialog(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
             ShowDialogExtended(view, startControlViewModel.DialogIdentifier,
                                EnterDataOpenedEventHandler, EnterDataClosingEventHandler)
@@ -106,10 +106,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (!(eventArgs.Parameter is InputThingViewModel inputDatViewModel)) return;
 
-            if (!string.IsNullOrWhiteSpace(inputDatViewModel.ThingName))
-            {
-                inputDatViewModel.ThingList.Add(inputDatViewModel.ThingName.Trim());
-            }
+            if (string.IsNullOrWhiteSpace(inputDatViewModel.ThingName)) return;
+
+            inputDatViewModel.ThingList.Add(inputDatViewModel.ThingName.Trim());
         }
 
         private static void EnterDataOpenedEventHandler(object sender,

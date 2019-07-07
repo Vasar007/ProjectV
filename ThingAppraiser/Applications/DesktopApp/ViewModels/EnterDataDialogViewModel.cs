@@ -10,9 +10,12 @@
             set => SetProperty(ref _name, value);
         }
 
+        public string HintText { get; }
+        
 
-        public EnterDataDialogViewModel()
+        public EnterDataDialogViewModel(string hintText)
         {
+            HintText = hintText.ThrowIfNullOrEmpty(nameof(hintText));
         }
     }
 }

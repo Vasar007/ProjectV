@@ -2,42 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ThingAppraiser.Data.Models
+namespace ThingAppraiser.Core.Building
 {
     public static class ConfigContract
     {
         public static IReadOnlyList<string> AvailableMessageHandlers { get; } = new List<string>
         {
-            "ConsoleMessageHandler"
+            ConfigOptions.MessageHandlers.ConsoleMessageHandlerName
         };
 
         public static IReadOnlyList<string> AvailableInput { get; } = new List<string>
         {
-            "LocalFileReaderSimple",
-            "LocalFileReaderFilter",
-            "GoogleDriveReaderSimple",
-            "GoogleDriveReaderFilter"
+            ConfigOptions.Inputters.LocalFileReaderSimpleName,
+            ConfigOptions.Inputters.LocalFileReaderFilterName,
+            ConfigOptions.Inputters.GoogleDriveReaderSimpleName,
+            ConfigOptions.Inputters.GoogleDriveReaderFilterName
         };
 
         public static IReadOnlyList<string> AvailableServices { get; } = new List<string>
         {
-            "Tmdb",
-            "Omdb",
-            "Steam"
+            ConfigOptions.Crawlers.TmdbCrawlerName,
+            ConfigOptions.Crawlers.OmdbCrawlerName,
+            ConfigOptions.Crawlers.SteamCrawlerName
         };
 
         public static IReadOnlyList<string> AvailableAppraisals { get; } = new List<string>
         {
-            "TmdbCommon",
-            "TmdbFuzzy",
-            "OmdbCommon",
-            "SteamCommon"
+            ConfigOptions.Appraisers.TmdbAppraiserCommonName,
+            ConfigOptions.Appraisers.TmdbAppraiserFuzzyName,
+            ConfigOptions.Appraisers.OmdbAppraiserCommonName,
+            ConfigOptions.Appraisers.SteamAppraiserCommonName
         };
 
         public static IReadOnlyList<string> AvailableOutput { get; } = new List<string>
         {
-            "LocalFileWriter",
-            "GoogleDriveWriter"
+            ConfigOptions.Outputters.LocalFileWriterName,
+            ConfigOptions.Outputters.GoogleDriveWriterName
         };
 
         public static IReadOnlyList<string> AvailableBeautifiedServices { get; } = new List<string>
@@ -64,10 +64,11 @@ namespace ThingAppraiser.Data.Models
         public static void CheckAvailability(string item, IReadOnlyList<string> availableList)
         {
             item.ThrowIfNullOrEmpty(nameof(item));
+            
             if (!availableList.Contains(item))
             {
                 throw new ArgumentException(
-                    $"Config data contains invalid items: {item}.", "configData"
+                    $"Config data contains invalid items: {item}.", nameof(item)
                 );
             }
         }
