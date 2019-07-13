@@ -87,14 +87,10 @@ namespace ThingAppraiser.Core.Building
 
         private static void RegisterCrawlersConfig()
         {
-            string tmdbApiKey = EnvironmentVariablesParser.GetValue("TmdbApiKey");
-            string omdbApiKey = EnvironmentVariablesParser.GetValue("OmdbApiKey");
-            string steamApiKey = EnvironmentVariablesParser.GetValue("SteamApiKey");
-
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigOptions.Crawlers.TmdbCrawlerName,
                 new XElement("TmdbCrawler",
-                    new XAttribute("TmdbApiKey", tmdbApiKey),
+                    new XAttribute("TmdbApiKey", Options.TmdbApiKey),
                     new XAttribute("TmdbMaxRetryCount", "10")
                 )
             );
@@ -102,14 +98,14 @@ namespace ThingAppraiser.Core.Building
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigOptions.Crawlers.OmdbCrawlerName,
                 new XElement("OmdbCrawler",
-                    new XAttribute("OmdbApiKey", omdbApiKey)
+                    new XAttribute("OmdbApiKey", Options.OmdbApiKey)
                 )
             );
 
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigOptions.Crawlers.SteamCrawlerName,
                 new XElement("SteamCrawler",
-                    new XAttribute("SteamApiKey", steamApiKey)
+                    new XAttribute("SteamApiKey", Options.SteamApiKey)
                 )
             );
         }

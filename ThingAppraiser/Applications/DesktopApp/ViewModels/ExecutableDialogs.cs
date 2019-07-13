@@ -180,15 +180,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
+            if (!(eventArgs.Parameter is MainWindowViewModel _)) return;
             if (!(eventArgs.Session.Content is OpenToplistDialog openToplistDialog)) return;
-            if (!(openToplistDialog.DataContext is OpenToplistViewModel openToplistViewModel))
+            if (!(openToplistDialog.DataContext is OpenToplistViewModel _))
             {
                 return;
             }
-            if (string.IsNullOrWhiteSpace(openToplistViewModel.ToString())) return;
 
-            //openToplistViewModel.ThingList.Add(openToplistViewModel.ThingName.Trim());
+            // TODO: add open toplist logic.
         }
     }
 }

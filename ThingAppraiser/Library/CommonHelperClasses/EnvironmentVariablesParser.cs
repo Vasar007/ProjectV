@@ -24,8 +24,7 @@ namespace ThingAppraiser
         /// <summary>
         /// Stores parsed values from environment variable.
         /// </summary>
-        private static readonly Dictionary<string, string> _values;
-            
+        private static readonly Dictionary<string, string> _values;            
 
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace ThingAppraiser
         /// </summary>
         static EnvironmentVariablesParser()
         {
-            var environmentVariableValue = Environment.GetEnvironmentVariable(
+            string environmentVariableValue = Environment.GetEnvironmentVariable(
                 EnvironmentVariableName, DefaultVariableTarget
             );
             _values = ParseEnvironmentVariableValue(environmentVariableValue);
@@ -70,8 +69,7 @@ namespace ThingAppraiser
         /// <returns>Converted value of specified key.</returns>
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> isn't contained in the dictionary -or-
-        /// <paramref name="variableName" /> is <c>null</c>, presents empty string or contains only
-        /// whitespaces.
+        /// <paramref name="variableName" /> is <c>null</c> or presents empty.
         /// </exception>
         /// <exception cref="InvalidCastException">
         /// This conversion is not supported. -or- value is null and conversionType is a
@@ -92,24 +90,49 @@ namespace ThingAppraiser
         }
 
         /// <summary>
+        /// Tries to get value from dictionary and converts it to specified type or return default
+        /// value.
+        /// </summary>
+        /// <typeparam name="T">Type to convert.</typeparam>
+        /// <param name="variableName">Variable name to get value.</param>
+        /// <returns>Converted value of specified key.</returns>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="variableName" /> is <c>null</c> or presents empty string.
+        /// </exception>
+        public static T GetValueOrDefault<T>(string variableName, T defaultValue = default)
+            where T : IConvertible
+        {
+            variableName.ThrowIfNullOrEmpty(nameof(variableName));
+
+            try
+            {
+                string stringValue = GetValue(variableName);
+                return (T) Convert.ChangeType(stringValue, typeof(T));
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
         /// Parses environment variable value and converts it to dictionary of key-value pairs.
         /// </summary>
         /// <param name="environmentVariableValue">Raw value of environment variable.</param>
         /// <returns>Dictionary with parsed values.</returns>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="environmentVariableValue" /> isn't contained in the dictionary -or-
-        /// <paramref name="environmentVariableValue" /> is <c>null</c> or presents empty string.
-        /// </exception>
         private static Dictionary<string, string> ParseEnvironmentVariableValue(
             string environmentVariableValue)
         {
-            environmentVariableValue.ThrowIfNullOrEmpty(nameof(environmentVariableValue));
+            if (string.IsNullOrEmpty(environmentVariableValue))
+            {
+                return new Dictionary<string, string>();
+            }
 
             string[] keyValuePairsRaw = environmentVariableValue.Split(';');
 
             Dictionary<string, string> result = keyValuePairsRaw
                 .Select(kv => ProcessKeyValuePair(kv))
-                .ToDictionary(kv => kv.key, x => x.value);
+                .ToDictionary(kv => kv.key, kv => kv.value);
 
             return result;
         }
