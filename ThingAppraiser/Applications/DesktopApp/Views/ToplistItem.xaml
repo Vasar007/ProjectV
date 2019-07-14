@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ToplistItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d">
+
+    <TextBox Style="{StaticResource TextBox}"
+                    VerticalAlignment="Top"
+                    AcceptsReturn="True"
+                    TextWrapping="Wrap"
+                    MaxWidth="400"
+                    materialDesign:HintAssist.Hint="Top list item" />
+</UserControl>

@@ -1,26 +1,23 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using ThingAppraiser.DesktopApp.Models;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal class ToplistEditorViewModel : ViewModelBase
     {
-        private int _progressBarSize;
+        public ObservableCollection<ToplistItem> ToplistItems { get; private set; }
 
-        public int ProgressBarSize
-        {
-            get => _progressBarSize;
-            set => SetProperty(ref _progressBarSize, value);
-        }
-
-
-        public ToplistEditorViewModel(int progressBarSize)
-        {
-            ProgressBarSize = progressBarSize;
-        }
 
         public ToplistEditorViewModel()
-            : this(64)
         {
+            ToplistItems = new ObservableCollection<ToplistItem>();
+
+            ToplistItems.Add(new ToplistItem("Name1", 1));
+            ToplistItems.Add(new ToplistItem("Name2", 2));
+            ToplistItems.Add(new ToplistItem("Name3", 3));
+            ToplistItems.Add(new ToplistItem("Name4", 4));
+            ToplistItems.Add(new ToplistItem("Name5", 5));
         }
 
         public void Update(string toplistName, string toplistType, string toplistFormat)

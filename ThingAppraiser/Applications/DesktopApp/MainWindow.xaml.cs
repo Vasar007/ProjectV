@@ -26,7 +26,8 @@ namespace ThingAppraiser.DesktopApp
             _logger.Info("Client application started.");
         }
 
-        private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void UIElement_OnPreviewMouseLeftButtonUp(object sender,
+            MouseButtonEventArgs eventArgs)
         {
             // Until we had a StaysOpen glag to Drawer, this will help with scroll bars.
             var dependencyObject = Mouse.Captured as DependencyObject;
@@ -39,9 +40,9 @@ namespace ThingAppraiser.DesktopApp
             MenuToggleButton.IsChecked = false;
         }
 
-        private void OnCopy(object sender, ExecutedRoutedEventArgs e)
+        private void OnCopy(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (e.Parameter is string stringValue)
+            if (eventArgs.Parameter is string stringValue)
             {
                 try
                 {

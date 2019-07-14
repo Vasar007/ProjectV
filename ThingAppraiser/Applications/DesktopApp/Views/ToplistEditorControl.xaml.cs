@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 using ThingAppraiser.DesktopApp.ViewModels;
 
 namespace ThingAppraiser.DesktopApp.Views
@@ -13,6 +15,11 @@ namespace ThingAppraiser.DesktopApp.Views
             InitializeComponent();
 
             DataContext = new ToplistEditorViewModel();
+        }
+
+        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs eventArgs)
+        {
+            Process.Start(eventArgs.Uri.AbsoluteUri);
         }
     }
 }
