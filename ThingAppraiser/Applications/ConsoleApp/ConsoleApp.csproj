@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Library\CommonHelperClasses\CommonHelperClasses.csproj" />
     <ProjectReference Include="..\..\Library\Core\Core.csproj" />
   </ItemGroup>
 
