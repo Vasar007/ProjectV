@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace ThingAppraiser.Data.Models
 {
-    public class ResponseMetaData
+    public class ResponseMetadata
     {
         public int CommonResultsNumber { get; set; }
 
@@ -16,7 +16,7 @@ namespace ThingAppraiser.Data.Models
         public IReadOnlyDictionary<string, IOptionalData> OptionalData { get; set; }
 
 
-        public ResponseMetaData()
+        public ResponseMetadata()
         {
         }
     }

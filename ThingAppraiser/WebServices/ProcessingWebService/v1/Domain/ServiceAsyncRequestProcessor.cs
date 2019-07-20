@@ -36,7 +36,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
             var results = outputTransmitter.GetResults();
             var response = new ProcessingResponse
             {
-                MetaData = new ResponseMetaData
+                Metadata = new ResponseMetadata
                 {
                     CommonResultsNumber = results.Aggregate(
                         0, (counter, rating) => counter + rating.Count

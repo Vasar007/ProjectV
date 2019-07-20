@@ -240,7 +240,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ProcessStatusOperation(ProcessingResponse response)
         {
-            if (response?.MetaData.ResultStatus == ServiceStatus.Ok)
+            if (response?.Metadata.ResultStatus == ServiceStatus.Ok)
             {
                 string serviceName = FindServiceNameAtStartControl();
                 ChangeSceneAndUpdateItems(serviceName, response);

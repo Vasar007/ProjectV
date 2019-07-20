@@ -44,7 +44,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         {
             StorageName = storageName;
 
-            _thingGrader.ProcessMetaData(response.MetaData);
+            _thingGrader.ProcessMetadata(response.Metadata);
 
             if (_things.Count > 0)
             {

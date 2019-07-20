@@ -81,6 +81,8 @@
     <Compile Include="Domain\DesktopOptions.cs" />
     <Compile Include="Domain\IErrorHandler.cs" />
     <Compile Include="Domain\NotEmptyValidationRule.cs" />
+    <Compile Include="Domain\ObservableDictionary.cs" />
+    <Compile Include="Domain\ObservableSet.cs" />
     <Compile Include="Domain\TaskExtension.cs" />
     <Compile Include="Models\DataSuppliers\IImageSupplier.cs" />
     <Compile Include="Models\DataSuppliers\IThingGrader.cs" />
@@ -96,7 +98,9 @@
     <Compile Include="Models\DataSuppliers\ThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplierMock.cs" />
     <Compile Include="Models\DataSuppliers\ServiceProxy.cs" />
-    <Compile Include="Models\Toplists\Toplist.cs" />
+    <Compile Include="Models\Toplists\ScoreToplist.cs" />
+    <Compile Include="Models\Toplists\SimpleToplist.cs" />
+    <Compile Include="Models\Toplists\ToplistBase.cs" />
     <Compile Include="Models\Toplists\ToplistItem.cs" />
     <Compile Include="ViewModels\BrowsingViewModel.cs" />
     <Compile Include="ViewModels\CreateToplistViewModel.cs" />

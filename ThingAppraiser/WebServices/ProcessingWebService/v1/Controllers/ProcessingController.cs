@@ -40,7 +40,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Controllers
                 );
 
                 ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
-                if (response.MetaData.ResultStatus != ServiceStatus.Ok)
+                if (response.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
                     return BadRequest(response);
                 }

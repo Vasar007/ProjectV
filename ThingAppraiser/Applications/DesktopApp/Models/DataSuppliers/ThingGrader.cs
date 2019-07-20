@@ -41,11 +41,11 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             return result;
         }
 
-        public void ProcessMetaData(ResponseMetaData metaData)
+        public void ProcessMetadata(ResponseMetadata metadata)
         {
-            metaData.ThrowIfNull(nameof(metaData));
+            metadata.ThrowIfNull(nameof(metadata));
 
-            if (metaData.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
+            if (metadata.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
                                                   out IOptionalData optionalData))
             {
                 if (!TmdbServiceConfiguration.HasValue)

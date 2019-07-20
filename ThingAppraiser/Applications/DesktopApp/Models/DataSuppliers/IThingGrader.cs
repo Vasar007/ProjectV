@@ -9,6 +9,6 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
     {
         List<Thing> ProcessRatings(List<RatingDataContainer> rating);
 
-        void ProcessMetaData(ResponseMetaData metaData);
+        void ProcessMetadata(ResponseMetadata metadata);
     }
 }
