@@ -33,9 +33,12 @@ namespace ThingAppraiser.IO.Output
         /// Initializes instance according to parameter values.
         /// </summary>
         /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="defaultStorageName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultStorageName">defaultStorageName</param> is <c>null</c>, presents 
-        /// empty strings or contains only whitespaces.
+        /// <paramref name="defaultStorageName" /> presents empty strings or contains only
+        /// whitespaces.
         /// </exception>
         public OutputManager(string defaultStorageName)
         {

@@ -43,9 +43,12 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="variableName">Variable name to get value.</param>
         /// <returns>Raw value of specified key.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="variableName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> isn't contained in the dictionary -or-
-        /// <paramref name="variableName" /> is <c>null</c> or presents empty string.
+        /// <paramref name="variableName" /> presents empty string.
         /// </exception>
         public static string GetValue(string variableName)
         {
@@ -72,7 +75,7 @@ namespace ThingAppraiser
         /// <paramref name="variableName" /> is <c>null</c> or presents empty.
         /// </exception>
         /// <exception cref="InvalidCastException">
-        /// This conversion is not supported. -or- value is null and conversionType is a
+        /// This conversion is not supported. -or- value is <c>null</c> and conversionType is a
         /// value type. -or- value does not implement the System.IConvertible interface.
         /// </exception>
         /// <exception cref="FormatException">
@@ -81,7 +84,7 @@ namespace ThingAppraiser
         /// <exception cref="OverflowException">
         /// Value represents a number that is out of the range of conversionType.
         /// </exception>
-        /// <exception cref="ArgumentNullException">ConversionType is null.</exception>
+        /// <exception cref="ArgumentNullException">ConversionType is <c>null</c>.</exception>
         public static T GetValue<T>(string variableName)
             where T : IConvertible
         {
@@ -96,8 +99,11 @@ namespace ThingAppraiser
         /// <typeparam name="T">Type to convert.</typeparam>
         /// <param name="variableName">Variable name to get value.</param>
         /// <returns>Converted value of specified key.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="variableName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="variableName" /> is <c>null</c> or presents empty string.
+        /// <paramref name="variableName" /> presents empty string.
         /// </exception>
         public static T GetValueOrDefault<T>(string variableName, T defaultValue = default)
             where T : IConvertible
@@ -142,8 +148,11 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="rawKeyValuePair">String value of pair.</param>
         /// <returns>Parsed key and value packed in a tuple.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="paramName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="rawKeyValuePair" /> is <c>null</c> or presents empty string.
+        /// <paramref name="rawKeyValuePair" /> presents empty string.
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// <paramref name="rawKeyValuePair" /> has invalid format. -or-

@@ -14,9 +14,12 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="key">Name of the key to read.</param>
         /// <returns>Value of the key.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="key" /> isn't contained in the dictionary -or-
-        /// <paramref name="key" /> is <c>null</c> or presents empty string.
+        /// <paramref name="key" /> presents empty string.
         /// </exception>
         public static string GetValueByParameterKey(string key)
         {
@@ -31,8 +34,12 @@ namespace ThingAppraiser.Core
         /// <param name="key">Name of the key to read.</param>
         /// <returns>Value of the key which is converted to T.</returns>
         /// <remarks>Method doesn't catch any possible exceptions.</remarks>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="key" /> isn't contained in the dictionary.
+        /// <paramref name="key" /> isn't contained in the dictionary -or-
+        /// <paramref name="key" /> presents empty string.
         /// </exception>
         ///  <exception cref="InvalidCastException">
         /// This conversion is not supported. -or- value is null and conversionType is a

@@ -147,7 +147,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 )
             };
 
-            SetCurrentContentToScene(DesktopOptions.PageNames.StartPage);
+            ChangeScene(DesktopOptions.PageNames.StartPage);
             DialogIdentifier = dialogIdentifier;
         }
 
@@ -182,8 +182,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public void OpenToplistEditorScene(string toplistName, string toplistType,
             string toplistFormat)
         {
-            SetCurrentContentToSceneAndUpdateEditor(DesktopOptions.PageNames.ToplistEditorPage,
-                                                    toplistName, toplistType, toplistFormat);
+            ChangeSceneAndConstructNewToplist(DesktopOptions.PageNames.ToplistEditorPage,
+                                              toplistName, toplistType, toplistFormat);
         }
 
         private string FindServiceNameAtStartControl()
@@ -197,13 +197,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return string.Empty;
         }
 
-        private void SetCurrentContentToScene(string controlIdentifier)
+        private void ChangeScene(string controlIdentifier)
         {
             int index = _sceneIdentifiers[controlIdentifier];
             SelectedSceneItem = SceneItems[index];
         }
 
-        private void SetCurrentContentToSceneAndUpdateItems(string controlIdentifier,
+        private void ChangeSceneAndUpdateItems(string controlIdentifier,
             ProcessingResponse response)
         {
             int index = _sceneIdentifiers[controlIdentifier];
@@ -215,14 +215,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        private void SetCurrentContentToSceneAndUpdateEditor(string controlIdentifier,
+        private void ChangeSceneAndConstructNewToplist(string controlIdentifier,
             string toplistName, string toplistType, string toplistFormat)
         {
             int index = _sceneIdentifiers[controlIdentifier];
             SceneItem sceneItem = SceneItems[index];
             if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
             {
-                toplistEditorViewModel.Update(toplistName, toplistType, toplistFormat);
+                toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
                 SelectedSceneItem = sceneItem;
             }
         }
@@ -243,7 +243,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (response?.MetaData.ResultStatus == ServiceStatus.Ok)
             {
                 string serviceName = FindServiceNameAtStartControl();
-                SetCurrentContentToSceneAndUpdateItems(serviceName, response);
+                ChangeSceneAndUpdateItems(serviceName, response);
             }
             else
             {
@@ -282,7 +282,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ReturnToStartView(object obj)
         {
-            SetCurrentContentToScene(DesktopOptions.PageNames.StartPage);
+            ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
         private bool CanReturnToStartView(object obj)

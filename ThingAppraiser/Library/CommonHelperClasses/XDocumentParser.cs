@@ -36,10 +36,11 @@ namespace ThingAppraiser
         /// <param name="attribute">Name of the attribute.</param>
         /// <returns>string value if found attribute, otherwise empty string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
+        /// <paramref name="attribute" /> presents empty string.
         /// </exception>
         public static string GetAttributeValue(XElement element, string attribute)
         {
@@ -60,10 +61,11 @@ namespace ThingAppraiser
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
+        /// <paramref name="attribute" /> presents empty string.
         /// </exception>
         public static T GetAttributeValue<T>(XElement element, string attribute)
             where T : IConvertible
@@ -112,10 +114,11 @@ namespace ThingAppraiser
         /// <param name="subelement">Name of the subelement to find.</param>
         /// <returns>First found subelement which can be <c>null</c>.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c>.
+        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="subelement" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="subelement" /> is <c>null</c> or presents empty
+        /// <paramref name="subelement" /> presents empty
         /// string.
         /// </exception>
         public static XElement FindSubelement(XElement element, string subelement)
@@ -132,9 +135,12 @@ namespace ThingAppraiser
         /// <param name="element">Name of the element to find.</param>
         /// <param name="attribute">Name of the attribute.</param>
         /// <returns>string value if found attribute, otherwise empty string.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="attribute" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element" /> or
-        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> or <paramref name="attribute" /> presents empty string.
         /// </exception>
         public string GetAttributeValue(string element, string attribute)
         {
@@ -154,9 +160,12 @@ namespace ThingAppraiser
         /// <returns>
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="attribute" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element" /> or
-        /// <paramref name="attribute" /> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> or <paramref name="attribute" /> presents empty string.
         /// </exception>
         public T GetAttributeValue<T>(string element, string attribute)
             where T : IConvertible
@@ -170,8 +179,11 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="element">Name of the element to find.</param>
         /// <returns>First found element which can be <c>null</c>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="element" /> is <c>null</c> or presents empty string.
+        /// <paramref name="element" /> presents empty string.
         /// </exception>
         public XElement FindElement(string element)
         {

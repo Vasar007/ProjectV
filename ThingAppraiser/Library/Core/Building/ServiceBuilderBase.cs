@@ -147,11 +147,14 @@ namespace ThingAppraiser.Core.Building
         /// Name of the file reader (sequential) class to create.
         /// </param>
         /// <returns>Fully initialized instance of file reader (sequential) class.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="fileReaderName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="fileReaderName" /> isn't specified in method.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="fileReaderName" /> is <c>null</c> or presents empty string.
+        /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
         protected IO.Input.IFileReader CreateFileReader(string fileReaderName)
         {
@@ -187,11 +190,14 @@ namespace ThingAppraiser.Core.Building
         /// </summary>
         /// <param name="fileReaderName">Name of the file reader (async) class to create.</param>
         /// <returns>Fully initialized instance of file reader (async) class.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="fileReaderName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="fileReaderName" /> isn't specified in method.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="fileReaderName" /> is <c>null</c> or presents empty string.
+        /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
         protected IO.Input.IFileReaderAsync CreateFileReaderAsync(string fileReaderName)
         {

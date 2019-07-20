@@ -13,18 +13,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ObservableCollection<string> ThingList
         {
             get => _thingList;
-            set => SetProperty(ref _thingList, value);
+            set => SetProperty(ref _thingList, value.ThrowIfNull(nameof(value)));
         }
 
         public string ThingName
         {
             get => _thingName;
-            set => SetProperty(ref _thingName, value);
+            set => SetProperty(ref _thingName, value.ThrowIfNull(nameof(value)));
         }
 
         public object DialogIdentifier { get; }
 
-        public object DialogContent { get; set; }
+        public object DialogContent { get; }
 
         public ICommand EnterThingNameDialogCommand =>
             new RelayCommand(ExecutableDialogs.ExecuteEnterThingNameDialog);

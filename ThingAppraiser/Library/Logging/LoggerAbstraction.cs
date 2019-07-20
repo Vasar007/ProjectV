@@ -33,7 +33,7 @@ namespace ThingAppraiser.Logging
         /// <typeparam name="T">Type for which instance is created.</typeparam>
         /// <returns>Created logger instance.</returns>
         /// <exception cref="ArgumentException">
-        /// Cannot get full name of type <see cref="T"/>
+        /// Cannot get full name of type <see cref="T" />
         /// </exception>
         public static LoggerAbstraction CreateLoggerInstanceFor<T>()
         {
@@ -49,8 +49,10 @@ namespace ThingAppraiser.Logging
         /// <param name="className">Class name. Try to pass it with nameof operator.</param>
         /// <returns>Created logger instance.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="className" /> is <c>null</c> or presents empty
-        /// string.
+        /// <paramref name="className" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="className" /> presents empty string.
         /// </exception>
         public static LoggerAbstraction CreateLoggerInstanceWithName(string className)
         {

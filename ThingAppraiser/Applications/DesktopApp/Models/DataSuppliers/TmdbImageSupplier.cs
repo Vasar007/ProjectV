@@ -12,13 +12,16 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public TmdbImageSupplier(TmdbServiceConfigurationInfo serviceConfigurationInfo)
         {
-            _serviceConfigurationInfo = serviceConfigurationInfo;
+            _serviceConfigurationInfo =
+                serviceConfigurationInfo.ThrowIfNull(nameof(serviceConfigurationInfo));
         }
 
         #region IImageSupplier Implamentation
 
         public string GetImageLink(BasicInfo data, ImageSize imageSize)
         {
+            data.ThrowIfNull(nameof(data));
+
             if (_serviceConfigurationInfo is null)
             {
                 _serviceConfigurationInfo = TmdbServiceConfiguration.Configuration;

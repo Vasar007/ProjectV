@@ -91,12 +91,13 @@
     <Compile Include="Models\DataSuppliers\PosterSize.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\SceneItem.cs" />
-    <Compile Include="Models\ThingProducer.cs" />
+    <Compile Include="Models\Data Producers\ThingProducer.cs" />
     <Compile Include="Models\DataSuppliers\IThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplierMock.cs" />
     <Compile Include="Models\DataSuppliers\ServiceProxy.cs" />
-    <Compile Include="Models\ToplistItem.cs" />
+    <Compile Include="Models\Toplists\Toplist.cs" />
+    <Compile Include="Models\Toplists\ToplistItem.cs" />
     <Compile Include="ViewModels\BrowsingViewModel.cs" />
     <Compile Include="ViewModels\CreateToplistViewModel.cs" />
     <Compile Include="ViewModels\ExecutableDialogs.cs" />
@@ -193,7 +194,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Thing.cs" />
+    <Compile Include="Models\Things\Thing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

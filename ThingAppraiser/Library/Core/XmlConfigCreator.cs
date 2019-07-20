@@ -336,20 +336,22 @@ namespace ThingAppraiser.Core
             _repositories.Clear();
         }
 
-            /// <summary>
-            /// Sets type of message handler. Method knows where this attribute value should place,
-            /// you should only specify name of the message handler.
-            /// </summary>
-            /// <param name="messageHandlerType">Message handler type.</param>
-            /// <remarks>
-            /// If you add your own message handler, make sure that you provide appropriate builder
-            /// which can parse XML document with your attributes and elements.
-            /// </remarks>
-            /// <exception cref="ArgumentException">
-            /// <param name="messageHandlerType">messageHandlerType</param> is null or presents
-            /// empty string.
-            /// </exception>
-            public void SetMessageHandlerType(string messageHandlerType)
+        /// <summary>
+        /// Sets type of message handler. Method knows where this attribute value should place,
+        /// you should only specify name of the message handler.
+        /// </summary>
+        /// <param name="messageHandlerType">Message handler type.</param>
+        /// <remarks>
+        /// If you add your own message handler, make sure that you provide appropriate builder
+        /// which can parse XML document with your attributes and elements.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="messageHandlerType" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="messageHandlerType" /> presents empty string.
+        /// </exception>
+        public void SetMessageHandlerType(string messageHandlerType)
         {
             messageHandlerType.ThrowIfNullOrEmpty(nameof(messageHandlerType));
 
@@ -365,7 +367,7 @@ namespace ThingAppraiser.Core
         /// <see cref="SetMessageHandlerType" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="messageHandlerParameter">messageHandlerParameter</param> is null.
+        /// <paramref name="messageHandlerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddMessageHandlerParameter(XElement messageHandlerParameter)
         {
@@ -379,9 +381,11 @@ namespace ThingAppraiser.Core
         /// should place, you should only specify value of the storage name.
         /// </summary>
         /// <param name="defaultInStorageName">Default storage name flag for input manager.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="defaultInStorageName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultInStorageName">defaultInStorageName</param> is null or presents 
-        /// empty string.
+        /// <paramref name="defaultInStorageName" /> presents empty string.
         /// </exception>
         public void SetDefaultInStorageName(string defaultInStorageName)
         {
@@ -397,7 +401,7 @@ namespace ThingAppraiser.Core
         /// XML element which represents parameter for <see cref="IO.Input.InputManager" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="inputManagerParameter">inputManagerParameter</param> is null.
+        /// <paramref name="inputManagerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddInputManagerParameter(XElement inputManagerParameter)
         {
@@ -411,7 +415,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="inputter">XML element to add.</param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="inputter">inputter</param> is null.
+        /// <paramref name="inputter" /> is <c>null</c>.
         /// </exception>
         public void AddInputter(XElement inputter)
         {
@@ -437,7 +441,7 @@ namespace ThingAppraiser.Core
         /// XML element which represents parameter for <see cref="Crawlers.CrawlersManager" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="crawlersManagerParameter">crawlersManagerParameter</param> is null.
+        /// <paramref name="crawlersManagerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddCrawlersManagerParameter(XElement crawlersManagerParameter)
         {
@@ -451,7 +455,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="crawler">XML element to add.</param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="crawler">crawler</param> is null.
+        /// <paramref name="crawler" /> is <c>null</c>.
         /// </exception>
         public void AddCrawler(XElement crawler)
         {
@@ -464,7 +468,7 @@ namespace ThingAppraiser.Core
         /// Sets verbose flag for appraisers. Method knows where this attribute value should place, 
         /// you should only specify value of the flag.
         /// </summary>
-        /// <param name="crawlersOutputFlag">Verbose flag for appraisers manager.</param>
+        /// <param name="appraisersOutputFlag">Verbose flag for appraisers manager.</param>
         public void SetAppraisersOutputFlag(bool appraisersOutputFlag)
         {
             _result.ShellConfig.AppraisersManager.AppraisersOutputFlag = appraisersOutputFlag;
@@ -478,7 +482,7 @@ namespace ThingAppraiser.Core
         /// <see cref="Appraisers.AppraisersManager" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="appraisersManagerParameter">appraisersManagerParameter</param> is null.
+        /// <paramref name="appraisersManagerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddAppraisersManagerParameter(XElement appraisersManagerParameter)
         {
@@ -492,7 +496,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="appraiser">XML element to add.</param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="appraiser">appraiser</param> is null.
+        /// <paramref name="appraiser" /> is <c>null</c>.
         /// </exception>
         public void AddAppraiser(XElement appraiser)
         {
@@ -508,9 +512,11 @@ namespace ThingAppraiser.Core
         /// <param name="defaultOutStorageName">
         /// Default storage name flag for output manager.
         /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="defaultOutStorageName" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <param name="defaultOutStorageName">defaultOutStorageName</param> is null or presents 
-        /// empty string.
+        /// <paramref name="defaultOutStorageName" /> presents empty string.
         /// </exception>
         public void SetDefaultOutStorageName(string defaultOutStorageName)
         {
@@ -526,7 +532,7 @@ namespace ThingAppraiser.Core
         /// XML element which represents parameter for <see cref="IO.Output.OutputManager" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="outputManagerParameter">outputManagerParameter</param> is null.
+        /// <paramref name="outputManagerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddOutputManagerParameter(XElement outputManagerParameter)
         {
@@ -540,7 +546,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="outputter">XML element to add.</param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="outputter">outputter</param> is null.
+        /// <paramref name="outputter" /> is <c>null</c>.
         /// </exception>
         public void AddOutputter(XElement outputter)
         {
@@ -554,9 +560,11 @@ namespace ThingAppraiser.Core
         /// should place, you should only specify value of the connection string.
         /// </summary>
         /// <param name="connectionString">Connection string for data base manager.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="connectionString" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <param name="connectionString">connectionString</param> is null or presents empty 
-        /// string.
+        /// <paramref name="connectionString" /> presents empty string.
         /// </exception>
         public void SetConnectionString(string connectionString)
         {
@@ -572,7 +580,7 @@ namespace ThingAppraiser.Core
         /// XML element which represents parameter for <see cref="DAL.DataBaseManager" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="dataBaseManagerParameter">dataBaseManagerParameter</param> is null.
+        /// <paramref name="dataBaseManagerParameter" /> is <c>null</c>.
         /// </exception>
         public void AddDataBaseManagerParameter(XElement dataBaseManagerParameter)
         {
@@ -586,7 +594,7 @@ namespace ThingAppraiser.Core
         /// </summary>
         /// <param name="repository">XML element to add.</param>
         /// <exception cref="ArgumentNullException">
-        /// <param name="repository">repository</param> is null.
+        /// <paramref name="repository" /> is <c>null</c>.
         /// </exception>
         public void AddRepository(XElement repository)
         {

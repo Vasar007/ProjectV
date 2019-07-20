@@ -7,7 +7,7 @@
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value);
+            set => SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
         }
 
         public string HintText { get; }

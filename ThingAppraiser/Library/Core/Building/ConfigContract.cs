@@ -63,9 +63,12 @@ namespace ThingAppraiser.Core.Building
         /// </summary>
         /// <param name="item">Value to check.</param>
         /// <param name="availableList">Available list from <see cref="ConfigContract" />.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// <see cref="ConfigContract" /> list doesn't contain passed <paramref name="item" />. -or-
-        /// <paramref name="item" /> is <c>null</c> or presents empty string.
+        /// <paramref name="item" /> presents empty string.
         /// </exception>
         public static void CheckAvailability(string item, IReadOnlyList<string> availableList)
         {

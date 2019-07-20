@@ -5,6 +5,7 @@ using ThingAppraiser.Crawlers;
 using ThingAppraiser.Data;
 using ThingAppraiser.Data.Crawlers;
 using ThingAppraiser.Data.Models;
+using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
@@ -42,6 +43,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public void ProcessMetaData(ResponseMetaData metaData)
         {
+            metaData.ThrowIfNull(nameof(metaData));
+
             if (metaData.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
                                                   out IOptionalData optionalData))
             {
@@ -57,6 +60,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         private IImageSupplier DetermineImageSupplier(BasicInfo basicInfo)
         {
+            basicInfo.ThrowIfNull(nameof(basicInfo));
+
             switch (basicInfo)
             {
                 case TmdbMovieInfo _:

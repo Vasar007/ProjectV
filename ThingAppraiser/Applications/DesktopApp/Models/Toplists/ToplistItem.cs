@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser.DesktopApp.Models
+﻿namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal class ToplistItem : ModelBase
     {
@@ -9,7 +9,7 @@
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value);
+            set => SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
         }
 
         public int Position

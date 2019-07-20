@@ -16,7 +16,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public string SelectedService
         {
             get => _selectedService;
-            set => SetProperty(ref _selectedService, value);
+            set => SetProperty(ref _selectedService, value.ThrowIfNull(nameof(value)));
         }
 
         public object DialogIdentifier { get; }

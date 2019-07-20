@@ -112,6 +112,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
             if (!(eventArgs.Session.Content is InputThingDialog inputThingDialog)) return;
             if (!(inputThingDialog.DataContext is InputThingViewModel inputThingViewModel)) return;
+
             if (inputThingViewModel.ThingList.IsNullOrEmpty()) return;
 
             mainWindowViewModel.SendRequestToService(
@@ -144,10 +145,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
             if (!(eventArgs.Session.Content is EnterDataDialog enterDataDialog)) return;
-            if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel))
-            {
-                return;
-            }
+            if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel)) return;
+
             if (string.IsNullOrWhiteSpace(enterDataViewModel.Name)) return;
 
             mainWindowViewModel.SendRequestToService(
@@ -166,13 +165,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             {
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(createToplistViewModel.ToplistName)) return;
             if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistType)) return;
             if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistFormat)) return;
 
-            mainWindowViewModel.OpenToplistEditorScene(createToplistViewModel.ToplistName,
-                                                       createToplistViewModel.SelectedToplistType,
-                                                       createToplistViewModel.SelectedToplistFormat);
+            mainWindowViewModel.OpenToplistEditorScene(
+                createToplistViewModel.ToplistName,
+                createToplistViewModel.SelectedToplistType,
+                createToplistViewModel.SelectedToplistFormat
+            );
         }
 
         private static void OpenToplistClosingEventHandler(object sender,
@@ -182,10 +184,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (!(eventArgs.Parameter is MainWindowViewModel _)) return;
             if (!(eventArgs.Session.Content is OpenToplistDialog openToplistDialog)) return;
-            if (!(openToplistDialog.DataContext is OpenToplistViewModel _))
-            {
-                return;
-            }
+            if (!(openToplistDialog.DataContext is OpenToplistViewModel _)) return;
 
             // TODO: add open toplist logic.
         }

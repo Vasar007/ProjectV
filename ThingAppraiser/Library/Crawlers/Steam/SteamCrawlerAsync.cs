@@ -50,9 +50,11 @@ namespace ThingAppraiser.Crawlers
         /// Initializes instance according to parameter values.
         /// </summary>
         /// <param name="apiKey">Key to get access to Steam service.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="apiKey" /> is <c>null</c>.
+        /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="apiKey" /> is <c>null</c>, presents empty strings or contains only 
-        /// whitespaces.
+        /// <paramref name="apiKey" /> presents empty strings or contains only whitespaces.
         /// </exception>
         public SteamCrawlerAsync(string apiKey)
         {

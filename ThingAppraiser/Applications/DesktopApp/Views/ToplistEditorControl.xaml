@@ -14,9 +14,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBox Text="{Binding Name}"
                                  VerticalAlignment="Top"
-                                 AcceptsReturn="True"
-                                 TextWrapping="Wrap"
-                                 MaxLength="100"
+                                 MaxLength="80"
                                  Width="600"
                                  materialDesign:HintAssist.Hint="Top list item" />
                     </StackPanel>

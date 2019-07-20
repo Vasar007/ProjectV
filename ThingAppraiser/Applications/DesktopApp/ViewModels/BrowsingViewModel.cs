@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using ThingAppraiser.Data.Models;
-using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
+using ThingAppraiser.DesktopApp.Models.Things;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -55,6 +55,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public void Update(ProcessingResponse response)
         {
+            response.ThrowIfNull(nameof(response));
+
             _thingSupplier.SaveResults(response, "Service response");
 
             Update();

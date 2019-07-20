@@ -6,6 +6,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
+    // TODO: implement open toplist logic.
     internal class OpenToplistViewModel : ViewModelBase
     {
         private string _selectedService;
@@ -16,7 +17,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public string SelectedService
         {
             get => _selectedService;
-            set => SetProperty(ref _selectedService, value);
+            set => SetProperty(ref _selectedService, value.ThrowIfNull(nameof(value)));
         }
 
         public object DialogIdentifier { get; }

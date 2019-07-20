@@ -38,7 +38,9 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public async Task<ProcessingResponse> SendPostRequest(RequestParams requestParams)
         {
-            _logger.Info("Service method 'PostInitialRequest' is called.");
+            requestParams.ThrowIfNull(nameof(requestParams));
+
+            _logger.Info($"Service method '{nameof(SendPostRequest)}' is called.");
 
             using (var response = await _client.PostAsJsonAsync(_apiUrl, requestParams))
             {

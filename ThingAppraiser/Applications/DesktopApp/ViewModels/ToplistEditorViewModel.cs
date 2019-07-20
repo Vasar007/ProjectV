@@ -1,30 +1,37 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using ThingAppraiser.DesktopApp.Models;
+﻿using System.Collections.ObjectModel;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal class ToplistEditorViewModel : ViewModelBase
     {
-        public ObservableCollection<ToplistItem> ToplistItems { get; private set; }
+        private Toplist _toplist;
+
+        private ObservableCollection<ToplistItem> _toplistItems =
+            new ObservableCollection<ToplistItem>();
+
+        public ObservableCollection<ToplistItem> ToplistItems
+        {
+            get => _toplistItems;
+            set => SetProperty(ref _toplistItems, value.ThrowIfNull(nameof(value)));
+        }
 
 
         public ToplistEditorViewModel()
         {
-            ToplistItems = new ObservableCollection<ToplistItem>();
-
-            ToplistItems.Add(new ToplistItem("Name1", 1));
-            ToplistItems.Add(new ToplistItem("Name2", 2));
-            ToplistItems.Add(new ToplistItem("Name3", 3));
-            ToplistItems.Add(new ToplistItem("Name4", 4));
-            ToplistItems.Add(new ToplistItem("Name5", 5));
+            //_toplist = new Toplist("Default", "Default", "Default");
         }
 
-        public void Update(string toplistName, string toplistType, string toplistFormat)
+        public void ConstructNewToplist(string toplistName, string toplistType,
+            string toplistFormat)
         {
-            Console.WriteLine(toplistName);
-            Console.WriteLine(toplistType);
-            Console.WriteLine(toplistFormat);
+            _toplist = new Toplist(toplistName, toplistType, toplistFormat);
+            ToplistItems = _toplist.Items;
+        }
+
+        public void UpdateToplist()
+        {
+            // TODO: add/remove elements from toplist items.
         }
     }
 }

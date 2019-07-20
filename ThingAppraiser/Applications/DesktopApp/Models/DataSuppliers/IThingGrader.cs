@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ThingAppraiser.Data;
 using ThingAppraiser.Data.Models;
+using ThingAppraiser.DesktopApp.Models.Things;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
