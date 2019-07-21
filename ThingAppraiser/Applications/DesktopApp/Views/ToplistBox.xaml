@@ -6,9 +6,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal">
+    <StackPanel Orientation="Horizontal"
+                x:Name="ToplistBoxItem">
+
         <TextBox Text="{Binding Path=Name}"
-                 x:Name="ItemNameTextBox"
                  VerticalAlignment="Top"
                  MaxLength="80"
                  Width="560"
@@ -18,13 +19,48 @@
         <Button Content="{materialDesign:PackIcon Floppy}"
                 ToolTip="Save changes"
                 Margin="0 0 8 0"
-                Command="{Binding Path=AddOrUpdateCommand}"
-                CommandParameter="{Binding Path=.}" />
+                x:Name="SaveButton"
+                Command="{Binding Path=AddOrUpdateCommand}">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                Value="1"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
+                                 Value="False">
+                            <Setter Property="Opacity"
+                                Value="0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+        </Button>
 
         <Button Content="{materialDesign:PackIcon Delete}"
                 ToolTip="Delete item"
-                Command="{Binding Path=RemoveCommand}"
-                CommandParameter="{Binding Path=.}" />
+                x:Name="DeleteButton"
+                Command="{Binding Path=RemoveCommand}">
+            <Button.Resources>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                Value="1"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
+                                 Value="False">
+                            <Setter Property="Opacity"
+                                Value="0"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+        </Button>
     </StackPanel>
 
 </UserControl>
+

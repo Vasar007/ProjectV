@@ -15,7 +15,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             get => _toplistBlocks;
             set => SetProperty(ref _toplistBlocks, value.ThrowIfNull(nameof(value)));
         }
-       
 
         public ToplistEditorViewModel()
         {

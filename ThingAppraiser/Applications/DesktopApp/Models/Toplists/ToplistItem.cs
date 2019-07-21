@@ -5,8 +5,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal class ToplistItem : ModelBase
     {
-        private readonly ToplistBlock _parentBlock;
-
         private int? _position;
 
         private string _name;
@@ -23,7 +21,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set
             {
                 SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
-                _parentBlock.DeleteItemIfNeed(this);
+                ParentBlock.DeleteItemIfNeed(this);
             }
         }
 
@@ -31,40 +29,35 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         public ICommand RemoveCommand => new RelayCommand(Remove);
 
+        public ToplistBlock ParentBlock { get; }
+
 
         public ToplistItem(int? position, string name, ToplistBlock parentBlock)
         {
             // Need to initialize parent block first.
-            _parentBlock = parentBlock.ThrowIfNull(nameof(parentBlock));
+            ParentBlock = parentBlock.ThrowIfNull(nameof(parentBlock));
             Position = position;
             Name = name;
         }
 
         public ToplistItem Clone()
         {
-            return new ToplistItem(Position, Name, _parentBlock);
+            return new ToplistItem(Position, Name, ParentBlock);
         }
 
-        // Methods with cast instead of passing this because I want to refactor this sometimes.
-        private static void AddOrUpdate(object obj)
+        private void AddOrUpdate(object obj)
         {
-            if (obj is ToplistItem toplistItem)
+            if (ParentBlock.AddOrUpdateItem(this))
             {
-                if (toplistItem._parentBlock.AddOrUpdateItem(toplistItem))
-                {
-                    toplistItem.Name = string.Empty;
-                }
+                Name = string.Empty;
             }
         }
 
-        private static void Remove(object obj)
+        private void Remove(object obj)
         {
-            if (obj is ToplistItem toplistItem)
+            if (!ParentBlock.RemoveItem(this))
             {
-                if (!toplistItem._parentBlock.RemoveItem(toplistItem))
-                {
-                    toplistItem.Name = string.Empty;
-                }
+                Name = string.Empty;
             }
         }
     }

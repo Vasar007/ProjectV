@@ -7,8 +7,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
     {
         private string _title;
 
-        private ToplistItem _creationToplistItem;
-
         private ToplistBox _creationToplistBox;
 
         public string Title
@@ -17,20 +15,14 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set => SetProperty(ref _title, value.ThrowIfNull(nameof(value)));
         }
 
-        public ObservableCollection<ToplistItem> Items { get; }
-           = new ObservableCollection<ToplistItem>();
-
         public ToplistBox CreationToplistBox
         {
             get => _creationToplistBox;
             set => SetProperty(ref _creationToplistBox, value.ThrowIfNull(nameof(value)));
         }
 
-        public ToplistItem CreationToplistItem
-        {
-            get => _creationToplistItem;
-            set => SetProperty(ref _creationToplistItem, value.ThrowIfNull(nameof(value)));
-        }
+        public ObservableCollection<ToplistItem> Items { get; }
+           = new ObservableCollection<ToplistItem>();
 
 
         public ToplistBlock(string title)
@@ -73,11 +65,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             toplistItem.ThrowIfNull(nameof(toplistItem));
 
-            // TODO: refactor this.
-            if (ReferenceEquals(CreationToplistItem, toplistItem)) return false;
-
-            if (Items.Contains(toplistItem) &&
-                string.IsNullOrWhiteSpace(toplistItem.Name))
+            if (string.IsNullOrWhiteSpace(toplistItem.Name) &&
+                Items.Contains(toplistItem))
             {
                 RemoveItem(toplistItem);
                 return true;
