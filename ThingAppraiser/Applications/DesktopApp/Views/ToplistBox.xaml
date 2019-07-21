@@ -14,52 +14,20 @@
                  MaxLength="80"
                  Width="560"
                  Margin="0 0 16 0"
+                 x:Name="ItemName"
                  materialDesign:HintAssist.Hint="Top list item" />
 
         <Button Content="{materialDesign:PackIcon Floppy}"
                 ToolTip="Save changes"
                 Margin="0 0 8 0"
                 x:Name="SaveButton"
-                Command="{Binding Path=AddOrUpdateCommand}">
-            <Button.Resources>
-                <Style TargetType="Button">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
-                                 Value="True">
-                            <Setter Property="Opacity"
-                                Value="1"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
-                                 Value="False">
-                            <Setter Property="Opacity"
-                                Value="0"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Resources>
-        </Button>
+                Command="{Binding Path=AddOrUpdateCommand}" />
+
 
         <Button Content="{materialDesign:PackIcon Delete}"
                 ToolTip="Delete item"
                 x:Name="DeleteButton"
-                Command="{Binding Path=RemoveCommand}">
-            <Button.Resources>
-                <Style TargetType="Button">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
-                                 Value="True">
-                            <Setter Property="Opacity"
-                                Value="1"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=ToplistBoxItem}"
-                                 Value="False">
-                            <Setter Property="Opacity"
-                                Value="0"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Resources>
-        </Button>
+                Command="{Binding Path=RemoveCommand}" />
     </StackPanel>
 
 </UserControl>
