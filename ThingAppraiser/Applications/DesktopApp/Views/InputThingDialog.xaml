@@ -20,7 +20,7 @@
                 </TextBlock>
 
                 <TextBox wpf:HintAssist.Hint="Name of the Thing"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
+                         Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"                 
                          Margin="0 6 0 0"
                          FontSize="18">
                     <TextBox.Text>
@@ -32,14 +32,14 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"
                             IsDefault="True"
                             Margin="0 8 8 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                            CommandParameter="{Binding .}">
+                            CommandParameter="{Binding Path=.}">
                         ACCEPT
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"
                             IsCancel="True"
                             Margin="0 8 8 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
@@ -55,7 +55,7 @@
         </materialDesign:DialogHost.DialogContent>
 
         <Border BorderThickness="1"
-                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                BorderBrush="{DynamicResource ResourceKey=PrimaryHueMidBrush}"
                 ClipToBounds="True"
                 HorizontalAlignment="Stretch">
             <Grid>
@@ -65,23 +65,23 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ListBox ItemsSource="{Binding ThingList}" />
+                <ListBox ItemsSource="{Binding Path=ThingList}" />
 
                     <materialDesign:ColorZone Mode="PrimaryMid"
                                               Grid.Row="1"
-                                              Effect="{DynamicResource MaterialDesignShadowDepth5}">
+                                              Effect="{DynamicResource ResourceKey=MaterialDesignShadowDepth5}">
                     <TextBlock Margin="16">
                         The Things Names
                     </TextBlock>
                 </materialDesign:ColorZone>
 
-                <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                <Button Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Grid.Row="0"
                         Margin="0 0 28 -20"
-                        Command="{Binding EnterThingNameDialogCommand}"
-                        CommandParameter="{Binding .}">
+                        Command="{Binding Path=EnterThingNameDialogCommand}"
+                        CommandParameter="{Binding Path=.}">
                     <materialDesign:PackIcon Kind="Plus"
                                              Height="22"
                                              Width="22" />
@@ -93,7 +93,7 @@
                     <Button IsDefault="True" Margin="64 0 0 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                             CommandParameter="{Binding
-                                               RelativeSource={RelativeSource FindAncestor,
+                                               RelativeSource={RelativeSource Mode=FindAncestor,
                                                                AncestorType={x:Type Window}},
                                                Path=DataContext}">
                         ACCEPT

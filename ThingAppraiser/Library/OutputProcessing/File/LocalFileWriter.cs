@@ -42,6 +42,32 @@ namespace ThingAppraiser.IO.Output
             return File.Exists(path);
         }
 
+        #region IOutputter Implementation
+
+        /// <summary>
+        /// Saves results to local file.
+        /// </summary>
+        /// <param name="results">Results to save.</param>
+        /// <param name="storageName">Filename to write.</param>
+        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        {
+            if (string.IsNullOrEmpty(storageName)) return false;
+
+            try
+            {
+                return WriteFile(results, storageName);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Couldn't write to the storage.");
+                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
+                return false;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Processes results and writes them to local file.
         /// </summary>
@@ -52,15 +78,15 @@ namespace ThingAppraiser.IO.Output
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
-            var engine = new FileHelperAsyncEngine<COuputFileData>
+            var engine = new FileHelperAsyncEngine<OuputFileData>
             {
-                HeaderText = typeof(COuputFileData).GetCsvHeader()
+                HeaderText = typeof(OuputFileData).GetCsvHeader()
             };
 
             using (engine.BeginWriteFile(filename))
             {
                 Dictionary<string, List<double>> converted = ConvertResultsToDict(results);
-                engine.WriteNexts(converted.Select(result => new COuputFileData
+                engine.WriteNexts(converted.Select(result => new OuputFileData
                 {
                     thingName = $"\"{result.Key}\"", // Escape Thing names.
                     ratingValue = result.Value
@@ -91,7 +117,7 @@ namespace ThingAppraiser.IO.Output
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                        out List<double> ratingValues))
+                                              out List<double> ratingValues))
                     {
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }
@@ -104,31 +130,5 @@ namespace ThingAppraiser.IO.Output
             }
             return converted;
         }
-
-        #region IOutputter Implementation
-
-        /// <summary>
-        /// Saves results to local file.
-        /// </summary>
-        /// <param name="results">Results to save.</param>
-        /// <param name="storageName">Filename to write.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
-        {
-            if (string.IsNullOrEmpty(storageName)) return false;
-
-            try
-            {
-                return WriteFile(results, storageName);
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Couldn't write to the storage.");
-                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
-                return false;
-            }
-        }
-        
-        #endregion
     }
 }

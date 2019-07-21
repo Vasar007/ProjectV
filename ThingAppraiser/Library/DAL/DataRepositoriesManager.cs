@@ -20,20 +20,6 @@ namespace ThingAppraiser.DAL
         {
         }
 
-        private static MinMaxDenominator GetAdditionalInfoDouble(IDataRepository repository,
-            string infoToRequest)
-        {
-            var (min, max) = repository.GetMinMax<double>(infoToRequest);
-            return new MinMaxDenominator(min, max);
-        }
-
-        private static MinMaxDenominator GetAdditionalInfoInt32(IDataRepository repository,
-            string infoToRequest)
-        {
-            var (min, max) = repository.GetMinMax<int>(infoToRequest);
-            return new MinMaxDenominator(min, max);
-        }
-
         #region IManager<IRepository> Implementation
 
         public void Add(IDataRepository item)
@@ -124,6 +110,20 @@ namespace ThingAppraiser.DAL
             {
                 repository.DeleteAllData();
             }
+        }
+
+        private static MinMaxDenominator GetAdditionalInfoDouble(IDataRepository repository,
+            string infoToRequest)
+        {
+            var (min, max) = repository.GetMinMax<double>(infoToRequest);
+            return new MinMaxDenominator(min, max);
+        }
+
+        private static MinMaxDenominator GetAdditionalInfoInt32(IDataRepository repository,
+            string infoToRequest)
+        {
+            var (min, max) = repository.GetMinMax<int>(infoToRequest);
+            return new MinMaxDenominator(min, max);
         }
 
         private RawDataContainer AddAdditionalParameters(List<BasicInfo> data)

@@ -50,13 +50,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public UserControl CurrentContent
         {
             get => _currentContent;
-            set => SetProperty(ref _currentContent, value);
+            set => SetProperty(ref _currentContent, value.ThrowIfNull(nameof(value)));
         }
 
         public string SelectedStorageName
         {
             get => _selectedStorageName;
-            private set => SetProperty(ref _selectedStorageName, value);
+            private set => SetProperty(ref _selectedStorageName, value.ThrowIfNull(nameof(value)));
         }
 
         public DataSource SelectedDataSource
@@ -70,12 +70,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             get => _selectedSceneItem;
             set
             {
-                SetProperty(ref _selectedSceneItem, value);
+                SetProperty(ref _selectedSceneItem, value.ThrowIfNull(nameof(value)));
                 CurrentContent = value.Content;
             }
         }
 
-        public IAsyncCommand<DataSource> Submit { get; }
+        public IAsyncCommand<DataSource> Submit =>
+            new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit,
+                                              new CommonErrorHandler());
 
         public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
                                                             ApplicationCloseCommand.CanExecute);
@@ -92,9 +94,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public MainWindowViewModel(object dialogIdentifier)
         {
-            Submit = new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit,
-                                                       new CommonErrorHandler());
-
             _sceneIdentifiers = new Dictionary<string, int>
             {
                 { DesktopOptions.PageNames.StartPage, 0 },
@@ -151,14 +150,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             DialogIdentifier = dialogIdentifier;
         }
 
-        private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
-        {
-            if (data.IsNullOrEmpty() || data.Count < 2)
-            {
-                throw new InvalidOperationException("Insufficient amount of data to be processed.");
-            }
-        }
-
         public void SendRequestToService(DataSource dataSource, string storageName)
         {
             storageName.ThrowIfNullOrEmpty(nameof(storageName));
@@ -184,6 +175,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             ChangeSceneAndConstructNewToplist(DesktopOptions.PageNames.ToplistEditorPage,
                                               toplistName, toplistType, toplistFormat);
+        }
+
+        private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
+        {
+            if (data.IsNullOrEmpty() || data.Count < 2)
+            {
+                throw new InvalidOperationException("Insufficient amount of data to be processed.");
+            }
         }
 
         private string FindServiceNameAtStartControl()

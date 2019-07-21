@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.ObjectModel;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
@@ -27,6 +27,9 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             get => _format;
             set => SetProperty(ref _format, value.ThrowIfNull(nameof(value)));
         }
+
+        public ObservableCollection<ToplistBlock> Blocks { get; }
+            = new ObservableCollection<ToplistBlock>();
 
 
         public ToplistBase(string name, string type, string format)

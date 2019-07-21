@@ -22,7 +22,7 @@
         </TextBlock>
 
         <TextBox wpf:HintAssist.Hint="Toplist name"
-                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                 Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"
                  Margin="0 6 0 0"
                  FontSize="18"
                  Grid.Row="1">
@@ -45,9 +45,9 @@
                       MinWidth="72"
                       Margin="32"
                       SelectedIndex="0"
-                      ItemsSource="{Binding ToplistType}"
-                      SelectedItem="{Binding SelectedToplistType}"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                      ItemsSource="{Binding Path=ToplistType}"
+                      SelectedItem="{Binding Path=SelectedToplistType}"
+                      Style="{StaticResource ResourceKey=MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel />
@@ -59,9 +59,9 @@
                       MinWidth="72"
                       Margin="32"
                       SelectedIndex="0"
-                      ItemsSource="{Binding ToplistFormat}"
-                      SelectedItem="{Binding SelectedToplistFormat}"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                      ItemsSource="{Binding Path=ToplistFormat}"
+                      SelectedItem="{Binding Path=SelectedToplistFormat}"
+                      Style="{StaticResource ResourceKey=MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel />
@@ -76,17 +76,17 @@
                     Grid.Row="3"
                     Margin="0 16 0 0">
             <Button IsDefault="True"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                     CommandParameter="{Binding
-                                       RelativeSource={RelativeSource FindAncestor,
+                                       RelativeSource={RelativeSource Mode=FindAncestor,
                                                        AncestorType={x:Type Window}},
                                        Path=DataContext}">
                 CREATE
             </Button>
             <Button IsCancel="True"
                     Margin="8 0 0 0"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:Boolean>

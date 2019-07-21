@@ -8,8 +8,8 @@
     <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}"
                  HorizontalAlignment="Center"
                  Margin="16"
-                 Height="{Binding ProgressBarSize}"
-                 Width="{Binding ProgressBarSize}"
+                 Height="{Binding Path=ProgressBarSize}"
+                 Width="{Binding Path=ProgressBarSize}"
                  IsIndeterminate="True"
                  Value="0" />
 

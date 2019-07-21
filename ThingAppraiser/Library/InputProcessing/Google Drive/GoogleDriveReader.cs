@@ -41,6 +41,43 @@ namespace ThingAppraiser.IO.Input
             _localFileReader = new LocalFileReader(fileReader);
         }
 
+        #region IInputter Implementation
+
+        /// <summary>
+        /// Sends request to Google Drive API, downloads file and reads it.
+        /// </summary>
+        /// <param name="storageName">Storage name on Google Drive with Things names.</param>
+        /// <returns>Processed collection of Things names as strings.</returns>
+        public List<string> ReadThingNames(string storageName)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(storageName)) return result;
+
+            // Get info from API, download file and read it.
+            IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
+                { Q = $"name contains '{storageName}'" }).Files;
+
+            if (!files.IsNullOrEmpty())
+            {
+                foreach (GoogleDriveData.File file in files)
+                {
+                    if (storageName.IsEqualWithInvariantCulture(file.Name))
+                    {
+                        result = DownloadAndReadFile(storageName, file.Id);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                _logger.Info($"No files found. Tried to find \"{storageName}\".");
+            }
+
+            return result;
+        }
+
+        #endregion
+
         /// <summary>
         /// Separate callback which is used in response processing when progress changed.
         /// </summary>
@@ -89,43 +126,6 @@ namespace ThingAppraiser.IO.Input
                     throw ex;
             }
         }
-
-        #region IInputter Implementation
-
-        /// <summary>
-        /// Sends request to Google Drive API, downloads file and reads it.
-        /// </summary>
-        /// <param name="storageName">Storage name on Google Drive with Things names.</param>
-        /// <returns>Processed collection of Things names as strings.</returns>
-        public List<string> ReadThingNames(string storageName)
-        {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(storageName)) return result;
-
-            // Get info from API, download file and read it.
-            IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
-                { Q = $"name contains '{storageName}'" }).Files;
-
-            if (!files.IsNullOrEmpty())
-            {
-                foreach (GoogleDriveData.File file in files)
-                {
-                    if (storageName.IsEqualWithInvariantCulture(file.Name))
-                    {
-                        result = DownloadAndReadFile(storageName, file.Id);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                _logger.Info($"No files found. Tried to find \"{storageName}\".");
-            }
-
-            return result;
-        }
-
-        #endregion
 
         /// <summary>
         /// Downloads file from Google Drive.

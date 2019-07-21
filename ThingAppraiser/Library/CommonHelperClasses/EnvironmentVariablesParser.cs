@@ -11,6 +11,11 @@ namespace ThingAppraiser
     public static class EnvironmentVariablesParser
     {
         /// <summary>
+        /// Stores parsed values from environment variable.
+        /// </summary>
+        private static readonly Dictionary<string, string> _values;
+
+        /// <summary>
         /// Name of the environment variable to read.
         /// </summary>
         private static string EnvironmentVariableName { get; } = "ThingAppraiser";
@@ -20,11 +25,6 @@ namespace ThingAppraiser
         /// </summary>
         private static EnvironmentVariableTarget DefaultVariableTarget { get; } =
             EnvironmentVariableTarget.User;
-
-        /// <summary>
-        /// Stores parsed values from environment variable.
-        /// </summary>
-        private static readonly Dictionary<string, string> _values;            
 
 
         /// <summary>

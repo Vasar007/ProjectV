@@ -119,7 +119,7 @@ namespace ThingAppraiser.IO.Input
         /// <returns>
         /// <c>true</c> if read method doesn't throw any exceptions, <c>false</c> otherwise.
         /// </returns>
-        private bool TryReadThingNames(IInputter inputter, string storageName,
+        private static bool TryReadThingNames(IInputter inputter, string storageName,
             out List<string> result)
         {
             try

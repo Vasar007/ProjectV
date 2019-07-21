@@ -17,14 +17,14 @@
         </TextBlock>
 
         <Button Width="256"
-                Command="{Binding CreateToplistDialogCommand}"
-                CommandParameter="{Binding .}">
+                Command="{Binding Path=CreateToplistDialogCommand}"
+                CommandParameter="{Binding Path=.}">
             Create Toplist
         </Button>
         <Button Width="256"
                 Margin="0 32 0 0"
-                Command="{Binding OpenToplistDialogCommand}"
-                CommandParameter="{Binding .}">
+                Command="{Binding Path=OpenToplistDialogCommand}"
+                CommandParameter="{Binding Path=.}">
             Open Toplist
         </Button>
 

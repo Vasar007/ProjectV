@@ -25,7 +25,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
             );
             var shell = builderDirector.MakeShell();
 
-            var inputTransmitter = new CInputTransmitterAsync(requestData.ThingNames);
+            var inputTransmitter = new InputTransmitterAsync(requestData.ThingNames);
             shell.InputManagerAsync.Add(inputTransmitter);
 
             var outputTransmitter = new OutputTransmitterAsync();

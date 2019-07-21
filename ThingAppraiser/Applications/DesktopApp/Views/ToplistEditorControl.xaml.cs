@@ -16,10 +16,5 @@ namespace ThingAppraiser.DesktopApp.Views
 
             DataContext = new ToplistEditorViewModel();
         }
-
-        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs eventArgs)
-        {
-            Process.Start(eventArgs.Uri.AbsoluteUri);
-        }
     }
 }

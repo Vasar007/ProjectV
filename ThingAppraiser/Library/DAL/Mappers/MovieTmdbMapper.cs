@@ -33,7 +33,7 @@ namespace ThingAppraiser.DAL.Mappers
                 releaseDate: (DateTime) reader["release_date"],
                 popularity:  (double)   reader["popularity"],
                 adult:       (bool)     reader["adult"],
-                genreIds:    genreIds,
+                genreIds:               genreIds,
                 posterPath:  (string)   reader["poster_path"]
             );
             return item;

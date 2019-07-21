@@ -24,5 +24,12 @@ namespace ThingAppraiser.IO.Input
         [FieldOrder(2), FieldTitle("Thing Name")]
         public string thingName = default; // Default assignment to remove warning.
 
+
+        /// <summary>
+        /// Creates instance with default values.
+        /// </summary>
+        public FilterInputFileData()
+        {
+        }
     }
 }

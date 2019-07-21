@@ -1,23 +1,36 @@
-﻿using ThingAppraiser.DesktopApp.Domain;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    // TODO: implement add, remove and other methods to wotrk with items.
+    // TODO: implement add, remove and other methods to work with items.
     internal class ScoreToplist : ToplistBase
     {
-        public ObservableDictionary<int, ToplistItem> Items { get; private set; }
+        private readonly Dictionary<int, ToplistBlock> _blocks =
+            new Dictionary<int, ToplistBlock>();
 
 
         public ScoreToplist(string name, string type, string format)
             : base(name, type, format)
         {
-            Items = new ObservableDictionary<int, ToplistItem>();
+            FillData();
+        }
 
-            Items.Add(1, new ToplistItem("Name1", 1));
-            Items.Add(2, new ToplistItem("Name2", 2));
-            Items.Add(3, new ToplistItem("Name3", 3));
-            Items.Add(4, new ToplistItem("Name4", 4));
-            Items.Add(5, new ToplistItem("Name5", 5));
+        private void FillData()
+        {
+            var block = new ToplistBlock("Block1");
+
+            Blocks.Add(block);
+            _blocks.Add(1, block);
+
+            block = new ToplistBlock("Block2");
+
+            Blocks.Add(block);
+            _blocks.Add(2, block);
+
+            block = new ToplistBlock("Block3");
+
+            Blocks.Add(block);
+            _blocks.Add(3, block);
         }
     }
 }

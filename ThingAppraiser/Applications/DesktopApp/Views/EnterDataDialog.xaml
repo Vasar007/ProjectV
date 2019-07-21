@@ -19,8 +19,8 @@
             New appraisal request:
         </TextBlock>
 
-        <TextBox wpf:HintAssist.Hint="{Binding HintText}"
-                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+        <TextBox wpf:HintAssist.Hint="{Binding Path=HintText}"
+                 Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"
                  Margin="0 6 0 0"
                  FontSize="18"
                  Grid.Row="1">
@@ -40,17 +40,17 @@
                     Grid.Row="2"
                     Margin="0 16 0 0">
             <Button IsDefault="True"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                     CommandParameter="{Binding
-                                       RelativeSource={RelativeSource FindAncestor,
+                                       RelativeSource={RelativeSource Mode=FindAncestor,
                                                        AncestorType={x:Type Window}},
                                        Path=DataContext}">
                 ACCEPT
             </Button>
             <Button IsCancel="True"
                     Margin="8 0 0 0"
-                    Style="{DynamicResource MaterialDesignFlatButton}"
+                    Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:Boolean>

@@ -10,7 +10,7 @@ namespace ThingAppraiser.IO.Output
     /// FileHelper doesn't support properties. That's why this data class contains public field.
     /// </remarks>
     [DelimitedRecord(","), IgnoreEmptyLines(true)]
-    public class COuputFileData
+    public class OuputFileData
     {
         /// <summary>
         /// Name of appraised Thing.
@@ -23,5 +23,13 @@ namespace ThingAppraiser.IO.Output
         /// </summary>
         [FieldOrder(2), FieldTitle("Rating Value"), FieldConverter(typeof(RatingValueConverter))]
         public List<double> ratingValue = default; // Default assignment to remove warning.
+
+
+        /// <summary>
+        /// Creates instance with default values.
+        /// </summary>
+        public OuputFileData()
+        {
+        }
     }
 }

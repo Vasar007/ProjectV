@@ -39,7 +39,7 @@
                                CloseOnClickAway="False">
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton,
                                                       Path=IsChecked}"
-                                   IsEnabled="{Binding IsNotBusy}">
+                                   IsEnabled="{Binding Path=IsNotBusy}">
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="212">
                     <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
@@ -50,13 +50,13 @@
                                               Path=IsChecked, Mode=TwoWay}"/>
                     <ListBox x:Name="SceneItemsListBox"
                              Margin="0 16 0 16"
-                             SelectedIndex="0"                         
-                             ItemsSource="{Binding SceneItems}"
-                             SelectedItem="{Binding SelectedSceneItem}"
+                             SelectedIndex="0"                
+                             ItemsSource="{Binding Path=SceneItems}"
+                             SelectedItem="{Binding Path=SelectedSceneItem}"
                              PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="models:SceneItem">
-                                <TextBlock Text="{Binding Name}"
+                            <DataTemplate DataType="{x:Type models:SceneItem}">
+                                <TextBlock Text="{Binding Path=Name}"
                                            Margin="32 0 32 0" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -76,15 +76,15 @@
                                                  PlacementMode="BottomAndAlignRightEdges"
                                                  StaysOpen="False">
                             <StackPanel>
-                                <Button Command="{Binding ReturnToStartViewCommand}"
-                                        CommandParameter="{Binding CurrentContent}">
+                                <Button Command="{Binding Path=ReturnToStartViewCommand}"
+                                        CommandParameter="{Binding Path=CurrentContent}">
                                     Return to start page
                                 </Button>
                                 <Button IsEnabled="False">
                                     Settings
                                 </Button>
                                 <Separator />
-                                <Button Command="{Binding AppCloseCommand}">
+                                <Button Command="{Binding Path=AppCloseCommand}">
                                     Exit
                                 </Button>
                             </StackPanel>
@@ -111,8 +111,7 @@
                                   Padding="{Binding ElementName=SceneItemsListBox,
                                             Path=SelectedItem.MarginRequirement}">
 
-                        <ContentControl Content="{Binding CurrentContent}"
-                                        x:Name="ControlView" />
+                        <ContentControl Content="{Binding Path=CurrentContent}" />
                     </ScrollViewer>
                 </Grid>
             </DockPanel>

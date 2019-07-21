@@ -47,26 +47,6 @@ namespace ThingAppraiser.IO.Output
         {
         }
 
-        /// <summary>
-        /// Separate callback which is used in response processing when progress changed.
-        /// </summary>
-        /// <param name="progress">Reporting upload progress.</param>
-        private static void Upload_ProgressChanged(IUploadProgress progress)
-        {
-            _logger.Info($"{progress.Status} {progress.BytesSent}");
-            GlobalMessageHandler.OutputMessage($"{progress.Status} {progress.BytesSent}");
-        }
-
-        /// <summary>
-        /// Separate callback which is used in response processing when response received.
-        /// </summary>
-        /// <param name="file">The meta data for file.</param>
-        private static void Upload_ResponseReceived(GoogleDriveData.File file)
-        {
-            _logger.Info($"\"{file.Name}\" was uploaded successfully.");
-            GlobalMessageHandler.OutputMessage($"\"{file.Name}\" was uploaded successfully.");
-        }
-
         #region IOutputter Implementation
 
         /// <summary>
@@ -113,6 +93,26 @@ namespace ThingAppraiser.IO.Output
         }
 
         #endregion
+
+        /// <summary>
+        /// Separate callback which is used in response processing when progress changed.
+        /// </summary>
+        /// <param name="progress">Reporting upload progress.</param>
+        private static void Upload_ProgressChanged(IUploadProgress progress)
+        {
+            _logger.Info($"{progress.Status} {progress.BytesSent}");
+            GlobalMessageHandler.OutputMessage($"{progress.Status} {progress.BytesSent}");
+        }
+
+        /// <summary>
+        /// Separate callback which is used in response processing when response received.
+        /// </summary>
+        /// <param name="file">The meta data for file.</param>
+        private static void Upload_ResponseReceived(GoogleDriveData.File file)
+        {
+            _logger.Info($"\"{file.Name}\" was uploaded successfully.");
+            GlobalMessageHandler.OutputMessage($"\"{file.Name}\" was uploaded successfully.");
+        }
 
         /// <summary>
         /// Uploads file to the Google Drive, overrides file if such exists.
@@ -254,6 +254,7 @@ namespace ThingAppraiser.IO.Output
             {
                 result = UploadFile(path, storageName);
             }
+
             return result;
         }
     }
