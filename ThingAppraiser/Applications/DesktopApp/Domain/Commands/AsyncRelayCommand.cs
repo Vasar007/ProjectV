@@ -38,6 +38,11 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public void Refresh()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
         #region IAsyncCommand Implementation
 
         public bool CanExecute()

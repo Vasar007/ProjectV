@@ -6,9 +6,9 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
     {
         private string _name;
 
-        private string _type;
+        private ToplistType _type;
 
-        private string _format;
+        private ToplistFormat _format;
 
         public string Name
         {
@@ -16,27 +16,31 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set => SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
         }
 
-        public string Type
+        public ToplistType Type
         {
             get => _type;
-            set => SetProperty(ref _type, value.ThrowIfNull(nameof(value)));
+            set => SetProperty(ref _type, value);
         }
 
-        public string Format
+        public ToplistFormat Format
         {
             get => _format;
-            set => SetProperty(ref _format, value.ThrowIfNull(nameof(value)));
+            set => SetProperty(ref _format, value);
         }
 
         public ObservableCollection<ToplistBlock> Blocks { get; }
             = new ObservableCollection<ToplistBlock>();
 
 
-        public ToplistBase(string name, string type, string format)
+        protected ToplistBase(string name, ToplistType type, ToplistFormat format)
         {
             Name = name;
             Type = type;
             Format = format;
         }
+
+        public abstract bool AddBlock(ToplistBlock block);
+
+        public abstract bool RemoveBlock(ToplistBlock block);
     }
 }

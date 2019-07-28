@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Communication\Communication.csproj" />
-    <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\IOHelperClasses\IOHelperClasses.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>

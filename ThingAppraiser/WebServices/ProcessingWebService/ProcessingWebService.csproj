@@ -37,7 +37,7 @@
     <ProjectReference Include="..\..\Library\CommonHelperClasses\CommonHelperClasses.csproj" />
     <ProjectReference Include="..\..\Library\Core\Core.csproj" />
     <ProjectReference Include="..\..\Library\Crawlers\Crawlers.csproj" />
-    <ProjectReference Include="..\..\Library\DTO\DTO.csproj" />
+    <ProjectReference Include="..\..\Library\Models\Models.csproj" />
     <ProjectReference Include="..\..\Library\InputProcessing\InputProcessing.csproj" />
     <ProjectReference Include="..\..\Library\Logging\Logging.csproj" />
     <ProjectReference Include="..\..\Library\OutputProcessing\OutputProcessing.csproj" />

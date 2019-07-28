@@ -45,7 +45,7 @@
                       MinWidth="72"
                       Margin="32"
                       SelectedIndex="0"
-                      ItemsSource="{Binding Path=ToplistType}"
+                      ItemsSource="{Binding Path=ToplistTypes}"
                       SelectedItem="{Binding Path=SelectedToplistType}"
                       Style="{StaticResource ResourceKey=MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemsPanel>
@@ -59,7 +59,7 @@
                       MinWidth="72"
                       Margin="32"
                       SelectedIndex="0"
-                      ItemsSource="{Binding Path=ToplistFormat}"
+                      ItemsSource="{Binding Path=ToplistFormats}"
                       SelectedItem="{Binding Path=SelectedToplistFormat}"
                       Style="{StaticResource ResourceKey=MaterialDesignFloatingHintComboBox}">
                 <ComboBox.ItemsPanel>

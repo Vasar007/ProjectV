@@ -1,36 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    // TODO: implement add, remove and other methods to work with items.
     internal class ScoreToplist : ToplistBase
     {
         private readonly Dictionary<int, ToplistBlock> _blocks =
             new Dictionary<int, ToplistBlock>();
 
 
-        public ScoreToplist(string name, string type, string format)
-            : base(name, type, format)
+        public ScoreToplist(string name, ToplistFormat format)
+            : base(name, ToplistType.Score, format)
         {
-            FillData();
         }
 
-        private void FillData()
+        #region ToplistBase Overriden Methods
+
+        public override bool AddBlock(ToplistBlock block)
         {
-            var block = new ToplistBlock("Block1");
+            block.ThrowIfNull(nameof(block));
 
             Blocks.Add(block);
-            _blocks.Add(1, block);
+            _blocks.Add(block.Number, block);
 
-            block = new ToplistBlock("Block2");
-
-            Blocks.Add(block);
-            _blocks.Add(2, block);
-
-            block = new ToplistBlock("Block3");
-
-            Blocks.Add(block);
-            _blocks.Add(3, block);
+            return true;
         }
+
+        public override bool RemoveBlock(ToplistBlock block)
+        {
+            block.ThrowIfNull(nameof(block));
+
+            bool internalRemove = _blocks.Remove(block.Number);
+            bool baseRemove = Blocks.Remove(block);
+
+            if (internalRemove == baseRemove) return internalRemove;
+
+            throw new InvalidOperationException("Removal operation in this and base class has " +
+                                                "different results.");
+        }
+
+        #endregion
     }
 }

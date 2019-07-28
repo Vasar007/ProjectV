@@ -38,6 +38,11 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        public void Refresh()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
         #region IAsyncCommand<T> Implementation
 
         public bool CanExecute(T parameter)
@@ -78,7 +83,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
         {
             ExecuteAsync((T) parameter).FireAndForgetSafeAsync(_errorHandler);
         }
-        
+
         #endregion
     }
 }

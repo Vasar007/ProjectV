@@ -24,7 +24,7 @@
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\Crawlers\Crawlers.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
-    <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\InputProcessing\InputProcessing.csproj" />
     <ProjectReference Include="..\IOHelperClasses\IOHelperClasses.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />

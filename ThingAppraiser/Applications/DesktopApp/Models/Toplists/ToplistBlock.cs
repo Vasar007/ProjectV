@@ -7,12 +7,20 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
     {
         private string _title;
 
+        private int _number;
+
         private ToplistBox _creationToplistBox;
 
         public string Title
         {
             get => _title;
             set => SetProperty(ref _title, value.ThrowIfNull(nameof(value)));
+        }
+
+        public int Number
+        {
+            get => _number;
+            set => SetProperty(ref _number, value);
         }
 
         public ToplistBox CreationToplistBox
@@ -25,11 +33,12 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
            = new ObservableCollection<ToplistItem>();
 
 
-        public ToplistBlock(string title)
+        public ToplistBlock(string title, int number)
         {
             Title = title;
+            Number = number;
 
-            _creationToplistBox = new ToplistBox(new ToplistItem(null, string.Empty, this));
+            _creationToplistBox = new ToplistBox(new ToplistItem(string.Empty, null, this));
         }
 
         public bool AddOrUpdateItem(ToplistItem toplistItem)

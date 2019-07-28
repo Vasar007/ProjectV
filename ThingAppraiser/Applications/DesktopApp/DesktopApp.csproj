@@ -73,6 +73,7 @@
     <Compile Include="Domain\Commands\ApplicationCloseCommand.cs" />
     <Compile Include="Domain\Commands\AsyncRelayCommand.cs" />
     <Compile Include="Domain\Commands\AsyncRelayCommandT.cs" />
+    <Compile Include="Domain\Commands\RelayCommandT.cs" />
     <Compile Include="Domain\Commands\RelayCommand.cs" />
     <Compile Include="Domain\CommonErrorHandler.cs" />
     <Compile Include="Domain\Commands\IAsyncCommand.cs" />
@@ -102,7 +103,10 @@
     <Compile Include="Models\Toplists\SimpleToplist.cs" />
     <Compile Include="Models\Toplists\ToplistBase.cs" />
     <Compile Include="Models\Toplists\ToplistBlock.cs" />
+    <Compile Include="Models\Toplists\ToplistFactory.cs" />
+    <Compile Include="Models\Toplists\ToplistFormat.cs" />
     <Compile Include="Models\Toplists\ToplistItem.cs" />
+    <Compile Include="Models\Toplists\ToplistType.cs" />
     <Compile Include="ViewModels\BrowsingViewModel.cs" />
     <Compile Include="ViewModels\CreateToplistViewModel.cs" />
     <Compile Include="ViewModels\ExecutableDialogs.cs" />
@@ -254,9 +258,9 @@
       <Project>{5cc51bce-a503-4614-bddb-5a66c177d41d}</Project>
       <Name>Crawlers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\DTO\DTO.csproj">
+    <ProjectReference Include="..\..\Library\Models\Models.csproj">
       <Project>{3cce9023-b85d-4450-83d6-3d652007900a}</Project>
-      <Name>DTO</Name>
+      <Name>Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Library\InputProcessing\InputProcessing.csproj">
       <Project>{5228b7ab-6ad0-4988-bf96-2b1a1ccc9ae7}</Project>
@@ -272,6 +276,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MaterialDesignColors">
+      <Version>1.2.0</Version>
+    </PackageReference>
     <PackageReference Include="MaterialDesignThemes">
       <Version>2.6.0</Version>
     </PackageReference>

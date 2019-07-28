@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommonHelperClasses\CommonHelperClasses.csproj" />
-    <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>
 

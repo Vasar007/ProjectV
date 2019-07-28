@@ -15,9 +15,19 @@
                  Width="560"
                  Margin="0 0 16 0"
                  x:Name="ItemName"
-                 materialDesign:HintAssist.Hint="Top list item" />
+                 materialDesign:HintAssist.Hint="Top list item">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter"
+                            Command="{Binding Path=AddOrUpdateByEnterHitCommand}"
+                            CommandParameter="{Binding ElementName=ItemName, Path=Text}" />
+                <KeyBinding Key="Return"
+                            Command="{Binding Path=AddOrUpdateByEnterHitCommand}"
+                            CommandParameter="{Binding ElementName=ItemName, Path=Text}" />
+            </TextBox.InputBindings>
+        </TextBox>
 
         <Button Content="{materialDesign:PackIcon Floppy}"
+                Style="{StaticResource ResourceKey=MaterialDesignFlatAccentBgButton}"
                 ToolTip="Save changes"
                 Margin="0 0 8 0"
                 x:Name="SaveButton"
@@ -25,6 +35,7 @@
 
 
         <Button Content="{materialDesign:PackIcon Delete}"
+                Style="{StaticResource ResourceKey=MaterialDesignFlatDarkBgButton}"
                 ToolTip="Delete item"
                 x:Name="DeleteButton"
                 Command="{Binding Path=RemoveCommand}" />

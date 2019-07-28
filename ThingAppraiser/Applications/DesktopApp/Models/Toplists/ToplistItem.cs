@@ -5,15 +5,9 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal class ToplistItem : ModelBase
     {
-        private int? _position;
-
         private string _name;
 
-        public int? Position
-        {
-            get => _position;
-            set => SetProperty(ref _position, value);
-        }
+        private int? _position;
 
         public string Name
         {
@@ -25,27 +19,36 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             }
         }
 
+        public int? Position
+        {
+            get => _position;
+            set => SetProperty(ref _position, value);
+        }
+
         public ICommand AddOrUpdateCommand => new RelayCommand(AddOrUpdate);
 
         public ICommand RemoveCommand => new RelayCommand(Remove);
 
+        public ICommand AddOrUpdateByEnterHitCommand =>
+            new RelayCommand<string>(AddOrUpdateByEnterHit);
+
         public ToplistBlock ParentBlock { get; }
 
 
-        public ToplistItem(int? position, string name, ToplistBlock parentBlock)
+        public ToplistItem(string name, int? position,ToplistBlock parentBlock)
         {
             // Need to initialize parent block first.
             ParentBlock = parentBlock.ThrowIfNull(nameof(parentBlock));
-            Position = position;
             Name = name;
+            Position = position;
         }
 
         public ToplistItem Clone()
         {
-            return new ToplistItem(Position, Name, ParentBlock);
+            return new ToplistItem(Name, Position, ParentBlock);
         }
 
-        private void AddOrUpdate(object obj)
+        private void AddOrUpdate()
         {
             if (ParentBlock.AddOrUpdateItem(this))
             {
@@ -53,12 +56,23 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             }
         }
 
-        private void Remove(object obj)
+        private void Remove()
         {
             if (!ParentBlock.RemoveItem(this))
             {
                 Name = string.Empty;
             }
+        }
+
+        private void AddOrUpdateByEnterHit(string newName)
+        {
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                Remove();
+            }
+
+            Name = newName;
+            AddOrUpdate();
         }
     }
 }

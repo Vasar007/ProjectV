@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -7,22 +8,20 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     {
         private string _toplistName;
 
-        private string _selectedToplistType;
+        private ToplistType _selectedToplistType;
 
-        private string _selectedToplistFormat;
+        private ToplistFormat _selectedToplistFormat;
 
-        // TODO: transform this strings to enum type.
-        public IReadOnlyList<string> ToplistType { get; } = new List<string>
+        public IReadOnlyList<ToplistType> ToplistTypes { get; } = new List<ToplistType>
         {
-            "Score",
-            "Simple"
+            ToplistType.Score,
+            ToplistType.Simple
         };
 
-        // TODO: transform this strings to enum type.
-        public IReadOnlyList<string> ToplistFormat { get; } = new List<string>
+        public IReadOnlyList<ToplistFormat> ToplistFormats { get; } = new List<ToplistFormat>
         {
-            "Forward",
-            "Reverse"
+            ToplistFormat.Forward,
+            ToplistFormat.Reverse
         };
 
         public string ToplistName
@@ -31,23 +30,23 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             set => SetProperty(ref _toplistName, value.ThrowIfNull(nameof(value)));
         }
 
-        public string SelectedToplistType
+        public ToplistType SelectedToplistType
         {
             get => _selectedToplistType;
-            set => SetProperty(ref _selectedToplistType, value.ThrowIfNull(nameof(value)));
+            set => SetProperty(ref _selectedToplistType, value);
         }
 
-        public string SelectedToplistFormat
+        public ToplistFormat SelectedToplistFormat
         {
             get => _selectedToplistFormat;
-            set => SetProperty(ref _selectedToplistFormat, value.ThrowIfNull(nameof(value)));
+            set => SetProperty(ref _selectedToplistFormat, value);
         }
 
 
         public CreateToplistViewModel()
         {
-            SelectedToplistType = ToplistType.First();
-            SelectedToplistFormat = ToplistFormat.First();
+            SelectedToplistType = ToplistTypes.First();
+            SelectedToplistFormat = ToplistFormats.First();
         }
     }
 }

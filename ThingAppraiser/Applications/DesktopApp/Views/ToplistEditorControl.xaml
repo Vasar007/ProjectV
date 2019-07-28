@@ -5,45 +5,56 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
 
     <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ScrollViewer.CanContentScroll="False">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.CanContentScroll="False">
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type modelsToplists:ToplistBlock}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type modelsToplists:ToplistBlock}">
 
-                    <Border Visibility="Visible"
-                            BorderThickness="2"
-                            CornerRadius="8"
-                            Margin="8"
-                            BorderBrush="Gray" >
-                        <StackPanel Margin="4"
+                        <Border Visibility="Visible"
+                                BorderThickness="2"
+                                CornerRadius="8"
+                                Margin="8"
+                                BorderBrush="Gray" >
+                            <StackPanel Margin="4"
                                     Orientation="Vertical">
 
-                            <Label Height="25"
-                                   Content="{Binding Path=Title}" />
-                            <Separator Height="5" />
+                                <TextBox Height="25"
+                                         Text="{Binding Path=Title}" />
+                                <Separator Height="5" />
 
-                            <ItemsControl ItemsSource="{Binding Path=Items}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type modelsToplists:ToplistItem}">
-                                        <views:ToplistBox Margin="4" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding Path=Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type modelsToplists:ToplistItem}">
+                                            <views:ToplistBox Margin="4" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
 
-                            <ContentControl Content="{Binding Path=CreationToplistBox}"
-                                            Margin="4" />
+                                <ContentControl Content="{Binding Path=CreationToplistBox}"
+                                                Margin="4" />
 
-                        </StackPanel>
-                    </Border>
+                            </StackPanel>
+                        </Border>
 
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button Content="{materialDesign:PackIcon Plus}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    ToolTip="Add new block"
+                    Margin="16"
+                    HorizontalAlignment="Center"
+                    x:Name="AddNewBlockButton"
+                    Command="{Binding Path=AddOrUpdateCommand}" />
+        </StackPanel>
     </ScrollViewer>
 
 </UserControl>

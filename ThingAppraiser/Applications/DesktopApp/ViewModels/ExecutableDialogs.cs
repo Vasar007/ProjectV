@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WinForms = System.Windows.Forms;
 using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Logging;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -14,20 +16,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             LoggerAbstraction.CreateLoggerInstanceWithName(nameof(ExecutableDialogs));
 
 
-        public static void ExecuteInputThingDialog(object obj)
+        public static void ExecuteInputThingDialog(StartViewModel startViewModel)
         {
-            if (!(obj is StartViewModel startViewModel)) return;
-
             var view = new InputThingDialog();
 
             ShowDialog(view, startViewModel.DialogIdentifier, InputThingClosingEventHandler)
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
-        public static void ExecuteEnterThingNameDialog(object obj)
+        public static void ExecuteEnterThingNameDialog(InputThingViewModel inputThingViewModel)
         {
-            if (!(obj is InputThingViewModel inputThingViewModel)) return;
-
             inputThingViewModel.ThingName = string.Empty;
 
             ShowDialog(inputThingViewModel.DialogContent, inputThingViewModel.DialogIdentifier,
@@ -35,25 +33,25 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
-        public static void ExecuteOpenFileDialog(object obj)
+        public static void ExecuteOpenFileDialog(MainWindowViewModel mainViewModel)
         {
-            var dialog = new WinForms.OpenFileDialog
+            using (var dialog = new WinForms.OpenFileDialog
             {
                 DefaultExt = ".csv",
                 Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
-            };
-
-            WinForms.DialogResult result = dialog.ShowDialog();
-            if (result == WinForms.DialogResult.OK && obj is MainWindowViewModel mainViewModel)
+            })
             {
-                mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
+
+                WinForms.DialogResult result = dialog.ShowDialog();
+                if (result == WinForms.DialogResult.OK)
+                {
+                    mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
+                }
             }
         }
 
-        public static void ExecuteEnterDataDialog(object obj)
+        public static void ExecuteEnterDataDialog(StartViewModel startViewModel)
         {
-            if (!(obj is StartViewModel startViewModel)) return;
-
             var view = new EnterDataDialog(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
             ShowDialogExtended(view, startViewModel.DialogIdentifier, EnterDataOpenedEventHandler,
@@ -61,10 +59,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
-        public static void ExecuteCreateToplistDialog(object obj)
+        public static void ExecuteCreateToplistDialog(ToplistStartViewModel toplistStartViewModel)
         {
-            if (!(obj is ToplistStartViewModel toplistStartViewModel)) return;
-
             var view = new CreateToplistDialog();
 
             ShowDialog(view, toplistStartViewModel.DialogIdentifier,
@@ -72,10 +68,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
-        public static void ExecuteOpenToplistDialog(object obj)
+        public static void ExecuteOpenToplistDialog(ToplistStartViewModel toplistStartViewModel)
         {
-            if (!(obj is ToplistStartViewModel toplistStartViewModel)) return;
-
             var view = new OpenToplistDialog(toplistStartViewModel.DialogIdentifier);
 
             ShowDialog(view, toplistStartViewModel.DialogIdentifier, OpenToplistClosingEventHandler)
@@ -167,8 +161,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
 
             if (string.IsNullOrWhiteSpace(createToplistViewModel.ToplistName)) return;
-            if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistType)) return;
-            if (string.IsNullOrWhiteSpace(createToplistViewModel.SelectedToplistFormat)) return;
 
             mainWindowViewModel.OpenToplistEditorScene(
                 createToplistViewModel.ToplistName,

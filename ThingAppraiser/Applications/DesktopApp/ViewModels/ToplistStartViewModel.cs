@@ -8,10 +8,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public object DialogIdentifier { get; }
 
         public ICommand CreateToplistDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteCreateToplistDialog);
+            new RelayCommand<ToplistStartViewModel>(ExecutableDialogs.ExecuteCreateToplistDialog);
 
         public ICommand OpenToplistDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteOpenToplistDialog);
+            new RelayCommand<ToplistStartViewModel>(ExecutableDialogs.ExecuteOpenToplistDialog);
 
 
         public ToplistStartViewModel(object dialogIdentifier)

@@ -22,13 +22,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public object DialogIdentifier { get; }
 
         public ICommand InputThingDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteInputThingDialog);
+            new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
 
         public ICommand OpenFileDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteOpenFileDialog);
+            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteOpenFileDialog);
 
         public ICommand EnterDataDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteEnterDataDialog);
+            new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);
 
 
         public StartViewModel(object dialogIdentifier)

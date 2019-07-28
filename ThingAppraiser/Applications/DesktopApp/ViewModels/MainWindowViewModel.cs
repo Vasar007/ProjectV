@@ -15,6 +15,7 @@ using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Core.Building;
 using ThingAppraiser.IO.Input;
 using ThingAppraiser.Logging;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -82,10 +83,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
                                                             ApplicationCloseCommand.CanExecute);
 
-        public ICommand ReturnToStartViewCommand => new RelayCommand(ReturnToStartView,
-                                                                     CanReturnToStartView);
+        public ICommand ReturnToStartViewCommand =>
+            new RelayCommand<UserControl>(ReturnToStartView, CanReturnToStartView);
 
-        public ICommand ForceReturnToStartViewCommand => new RelayCommand(ReturnToStartView);
+        public ICommand ForceReturnToStartViewCommand =>
+            new RelayCommand<UserControl>(ReturnToStartView);
 
         public SceneItem[] SceneItems { get; }
 
@@ -170,8 +172,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ExecuteSending();
         }
 
-        public void OpenToplistEditorScene(string toplistName, string toplistType,
-            string toplistFormat)
+        public void OpenToplistEditorScene(string toplistName, ToplistType toplistType,
+            ToplistFormat toplistFormat)
         {
             ChangeSceneAndConstructNewToplist(DesktopOptions.PageNames.ToplistEditorPage,
                                               toplistName, toplistType, toplistFormat);
@@ -215,7 +217,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         }
 
         private void ChangeSceneAndConstructNewToplist(string controlIdentifier,
-            string toplistName, string toplistType, string toplistFormat)
+            string toplistName, ToplistType toplistType, ToplistFormat toplistFormat)
         {
             int index = _sceneIdentifiers[controlIdentifier];
             SceneItem sceneItem = SceneItems[index];
@@ -279,14 +281,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return IsNotBusy;
         }
 
-        private void ReturnToStartView(object obj)
+        private void ReturnToStartView(UserControl currentContent)
         {
             ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
-        private bool CanReturnToStartView(object obj)
+        private bool CanReturnToStartView(UserControl currentContent)
         {
-            return !(obj is StartControl) && IsNotBusy;
+            return !(currentContent is StartControl) && IsNotBusy;
         }
 
         private async Task<RequestParams> ConfigureServiceRequest(DataSource dataSource)

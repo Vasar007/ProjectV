@@ -1,19 +1,30 @@
 ﻿namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    // TODO: implement add, remove and other methods to work with items.
     internal class SimpleToplist : ToplistBase
     {
-        public SimpleToplist(string name, string type, string format)
-            : base(name, type, format)
+        public SimpleToplist(string name, ToplistFormat format)
+            : base(name, ToplistType.Simple, format)
         {
-            FillData();
         }
 
-        private void FillData()
+        #region ToplistBase Overriden Methods
+
+        public override bool AddBlock(ToplistBlock block)
         {
-            Blocks.Add(new ToplistBlock("Block1"));
-            Blocks.Add(new ToplistBlock("Block2"));
-            Blocks.Add(new ToplistBlock("Block3"));
+            block.ThrowIfNull(nameof(block));
+
+            Blocks.Add(block);
+
+            return true;
         }
+
+        public override bool RemoveBlock(ToplistBlock block)
+        {
+            block.ThrowIfNull(nameof(block));
+
+            return Blocks.Remove(block);
+        }
+
+        #endregion
     }
 }

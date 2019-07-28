@@ -27,7 +27,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public object DialogContent { get; }
 
         public ICommand EnterThingNameDialogCommand =>
-            new RelayCommand(ExecutableDialogs.ExecuteEnterThingNameDialog);
+            new RelayCommand<InputThingViewModel>(ExecutableDialogs.ExecuteEnterThingNameDialog);
 
 
         public InputThingViewModel(object dialogIdentifier, object dialogContent)
