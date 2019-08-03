@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal class ScoreToplist : ToplistBase
     {
-        private readonly Dictionary<int, ToplistBlock> _blocks =
-            new Dictionary<int, ToplistBlock>();
+        private Dictionary<int, ToplistBlock> _blocks = new Dictionary<int, ToplistBlock>();
 
 
         public ScoreToplist(string name, ToplistFormat format)
@@ -37,6 +37,15 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
             throw new InvalidOperationException("Removal operation in this and base class has " +
                                                 "different results.");
+        }
+
+        public override void UpdateBlocks(IEnumerable<ToplistBlock> blocks)
+        {
+            blocks.ThrowIfNull(nameof(blocks));
+
+            base.UpdateBlocks(blocks);
+
+            _blocks = blocks.ToDictionary(block => block.Number, block => block);
         }
 
         #endregion

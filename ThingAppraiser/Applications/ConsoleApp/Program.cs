@@ -79,5 +79,5 @@ namespace ThingAppraiser.ConsoleApp
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
             }
         }
-    }    
+    }
 }

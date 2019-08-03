@@ -1,8 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ThingAppraiser.Data.Configuration
 {
+    [Serializable]
     public class CrawlersManagerConfig
     {
         [XmlAttribute(DataType = "boolean")]

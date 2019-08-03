@@ -1,10 +1,12 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace ThingAppraiser.Data.Configuration
 {
-    [XmlRoot(ElementName = "document", Namespace = "")]
+    [Serializable]
+    [XmlRoot(ElementName = "Configuration", Namespace = "")]
     public class ConfigurationXml
     {
         [XmlElement]

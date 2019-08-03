@@ -25,7 +25,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
 
         public ICommand OpenFileDialogCommand =>
-            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteOpenFileDialog);
+            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteOpenThingsFileDialog);
 
         public ICommand EnterDataDialogCommand =>
             new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);

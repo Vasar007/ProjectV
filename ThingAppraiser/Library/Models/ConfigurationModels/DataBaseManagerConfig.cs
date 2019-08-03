@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using System.Xml.Linq;
 
 namespace ThingAppraiser.Data.Configuration
 {
+    [Serializable]
     public class DataBaseManagerConfig
     {
         [XmlAttribute(DataType = "string")]

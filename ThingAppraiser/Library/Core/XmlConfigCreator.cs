@@ -198,7 +198,7 @@ namespace ThingAppraiser.Core
         /// </remarks>
         public static XDocument TransformConfigToXDocument(ConfigurationXml xmlConfig)
         {
-            var stringXml = SerializeToStringXml(xmlConfig);
+            var stringXml = XmlHelper.SerializeToStringXml(xmlConfig);
             return XDocument.Parse(stringXml);
         }
 
@@ -278,26 +278,6 @@ namespace ThingAppraiser.Core
             xmlConfigCreator.SetServiceType(ServiceType.TplDataflow);
 
             return xmlConfigCreator.GetResult();
-        }
-
-        /// <summary>
-        /// Serializes config class to XML as string value.
-        /// </summary>
-        /// <param name="xmlConfig">Config class instance to serialize.</param>
-        /// <returns>Serialized value of passed config class.</returns>
-        private static string SerializeToStringXml(ConfigurationXml xmlConfig)
-        {
-            var xmlSerializer = new XmlSerializer(typeof(ConfigurationXml));
-
-            string stringXml = string.Empty;
-
-            using (var sww = new StringWriter())
-            using (XmlWriter writer = XmlWriter.Create(sww))
-            {
-                xmlSerializer.Serialize(writer, xmlConfig);
-                stringXml = sww.ToString();
-            }
-            return stringXml;
         }
 
         /// <summary>

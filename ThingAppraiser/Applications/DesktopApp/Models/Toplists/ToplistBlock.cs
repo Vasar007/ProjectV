@@ -1,6 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using ThingAppraiser.DesktopApp.Domain.Commands;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ThingAppraiser.DesktopApp.Views;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
@@ -31,7 +30,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set => SetProperty(ref _creationToplistBox, value.ThrowIfNull(nameof(value)));
         }
 
-        public ObservableCollection<ToplistItem> Items { get; }
+        public ObservableCollection<ToplistItem> Items { get; private set; }
            = new ObservableCollection<ToplistItem>();
 
 
@@ -41,6 +40,13 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             Number = number;
 
             _creationToplistBox = new ToplistBox(new ToplistItem(string.Empty, null, this));
+        }
+
+        public void UpdateItems(IEnumerable<ToplistItem> items)
+        {
+            items.ThrowIfNull(nameof(items));
+
+            Items = new ObservableCollection<ToplistItem>(items);
         }
 
         public bool AddOrUpdateItem(ToplistItem toplistItem)

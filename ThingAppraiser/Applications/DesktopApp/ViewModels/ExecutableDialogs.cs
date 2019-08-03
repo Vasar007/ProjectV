@@ -33,19 +33,34 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync(new CommonErrorHandler());
         }
 
-        public static void ExecuteOpenFileDialog(MainWindowViewModel mainViewModel)
+        public static void ExecuteOpenThingsFileDialog(MainWindowViewModel mainViewModel)
         {
             using (var dialog = new WinForms.OpenFileDialog
+                   {
+                       DefaultExt = ".csv",
+                       Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
+                   })
             {
-                DefaultExt = ".csv",
-                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
-            })
-            {
-
                 WinForms.DialogResult result = dialog.ShowDialog();
                 if (result == WinForms.DialogResult.OK)
                 {
                     mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
+                }
+            }
+        }
+
+        public static void ExecuteOpenToplistFileDialog(MainWindowViewModel mainViewModel)
+        {
+            using (var dialog = new WinForms.OpenFileDialog
+                   {
+                       DefaultExt = ".txt",
+                       Filter = "Text Files (*.txt)|*.txt"
+                   })
+            {
+                WinForms.DialogResult result = dialog.ShowDialog();
+                if (result == WinForms.DialogResult.OK)
+                {
+                    mainViewModel.OpenToplistEditorScene(dialog.FileName);
                 }
             }
         }
@@ -174,11 +189,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is MainWindowViewModel _)) return;
+            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
             if (!(eventArgs.Session.Content is OpenToplistDialog openToplistDialog)) return;
             if (!(openToplistDialog.DataContext is OpenToplistViewModel _)) return;
 
-            // TODO: add open toplist logic.
+            ExecuteOpenToplistFileDialog(mainWindowViewModel);
         }
     }
 }

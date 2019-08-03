@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace ThingAppraiser
@@ -108,7 +109,7 @@ namespace ThingAppraiser
         }
 
         /// <summary>
-        /// Finds subelement in specified element.
+        /// Finds subelement (child element) in specified element.
         /// </summary>
         /// <param name="element">Element to process.</param>
         /// <param name="subelement">Name of the subelement to find.</param>
@@ -127,6 +128,21 @@ namespace ThingAppraiser
             subelement.ThrowIfNullOrEmpty(subelement);
 
             return element.Element(subelement);
+        }
+
+        /// <summary>
+        /// Finds subelements (child elements) in specified element.
+        /// </summary>
+        /// <param name="element">Element to process.</param>
+        /// <returns>Returns collection of the child elements of passed element.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="element" /> is <c>null</c>.
+        /// </exception>
+        public static IEnumerable<XElement> FindSubelements(XElement element)
+        {
+            element.ThrowIfNull(nameof(element));
+
+            return element.Elements();
         }
 
         /// <summary>

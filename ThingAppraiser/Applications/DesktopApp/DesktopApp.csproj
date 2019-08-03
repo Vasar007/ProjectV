@@ -107,6 +107,7 @@
     <Compile Include="Models\Toplists\ToplistFormat.cs" />
     <Compile Include="Models\Toplists\ToplistItem.cs" />
     <Compile Include="Models\Toplists\ToplistType.cs" />
+    <Compile Include="Models\Toplists\ToplistXml.cs" />
     <Compile Include="ViewModels\BrowsingViewModel.cs" />
     <Compile Include="ViewModels\CreateToplistViewModel.cs" />
     <Compile Include="ViewModels\ExecutableDialogs.cs" />

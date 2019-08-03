@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -24,6 +25,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand RemoveBlockCommand => new RelayCommand<ToplistBlock>(RemoveBlock);
 
+        public ICommand SaveToplistCommand => new RelayCommand(SaveToplist);
+
 
         public ToplistEditorViewModel()
         {
@@ -32,14 +35,26 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public void ConstructNewToplist(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
+            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+
             _toplist = ToplistFactory.Create(toplistName, toplistType, toplistFormat);
             ToplistBlocks = _toplist.Blocks;
 
             AddNewBlock();
         }
 
+        public void LoadToplist(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            _toplist = ToplistFactory.LoadFromFile(toplistFilename);
+            ToplistBlocks = _toplist.Blocks;
+        }
+
         private void AddNewBlock()
         {
+            if (_toplist is null) return;
+
             // Find first inconsistent block number in sorted sequence and select it as block number
             // to add.
 
@@ -69,6 +84,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             block.ThrowIfNull(nameof(block));
 
             _toplist.RemoveBlock(block);
+        }
+
+        private void SaveToplist()
+        {
+            string toplistData = ToplistBase.Serialize(_toplist);
+
+            // TODO: implement saving logic to specified path by user.
+            File.WriteAllText("Toplist.txt", toplistData);
         }
     }
 }

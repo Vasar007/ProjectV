@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
@@ -11,6 +12,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         public static ToplistBase Create(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
+            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+
             switch (toplistType)
             {
                 case ToplistType.Score:
@@ -26,6 +29,19 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
                                   $"'{toplistType.ToString()}'.");
                     throw ex;
             }
+        }
+
+        public static ToplistBase LoadFromFile(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            string fileContent = File.ReadAllText(toplistFilename);
+            ToplistXml toplistXml = ToplistBase.Desirialize(fileContent);
+
+            ToplistBase toplist = Create(toplistXml.Name, (ToplistType) toplistXml.Type,
+                                         (ToplistFormat) toplistXml.Format);
+            toplist.UpdateBlocks(toplistXml.ConvertXElementsToBlocks());
+            return toplist;
         }
     }
 }

@@ -107,6 +107,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 { DesktopOptions.PageNames.ToplistEditorPage, 6 }
             };
 
+            // TODO: create new scenes for needed views dynamically in separate tabs.
             SceneItems = new[]
             {
                 new SceneItem(
@@ -175,8 +176,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public void OpenToplistEditorScene(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
+            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+
             ChangeSceneAndConstructNewToplist(DesktopOptions.PageNames.ToplistEditorPage,
                                               toplistName, toplistType, toplistFormat);
+        }
+
+        public void OpenToplistEditorScene(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            ChangeSceneAndLoadToplist(DesktopOptions.PageNames.ToplistEditorPage, toplistFilename);
         }
 
         private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
@@ -224,6 +234,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
             {
                 toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
+                SelectedSceneItem = sceneItem;
+            }
+        }
+
+        private void ChangeSceneAndLoadToplist(string controlIdentifier,
+            string toplistFilename)
+        {
+            int index = _sceneIdentifiers[controlIdentifier];
+            SceneItem sceneItem = SceneItems[index];
+            if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            {
+                toplistEditorViewModel.LoadToplist(toplistFilename);
                 SelectedSceneItem = sceneItem;
             }
         }

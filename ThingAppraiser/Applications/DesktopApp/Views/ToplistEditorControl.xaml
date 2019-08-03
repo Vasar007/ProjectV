@@ -10,6 +10,14 @@
 
     <ScrollViewer>
         <StackPanel>
+            <Button Content="{materialDesign:PackIcon Floppy}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    ToolTip="Save toplist to file"
+                    Margin="16"
+                    HorizontalAlignment="Center"
+                    x:Name="SaveToplistButton"
+                    Command="{Binding Path=SaveToplistCommand}" />
+            
             <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.CanContentScroll="False">
