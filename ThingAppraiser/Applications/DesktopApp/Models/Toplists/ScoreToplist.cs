@@ -20,7 +20,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             block.ThrowIfNull(nameof(block));
 
-            Blocks.Add(block);
+            Blocks.Insert(block.Number - 1, block);
             _blocks.Add(block.Number, block);
 
             return true;

@@ -95,7 +95,7 @@ namespace ThingAppraiser.Core.Building
             serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
 
             serviceName = serviceName.ToLowerInvariant();
-            int index = AvailableServicesToLower.FindIndex(
+            int index = AvailableServicesToLower.IndexOf(
                 service => service.IsEqualWithInvariantCulture(serviceName)
             );
 

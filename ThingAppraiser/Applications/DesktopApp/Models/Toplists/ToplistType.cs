@@ -3,6 +3,7 @@
     internal enum ToplistType
     {
         Simple,
+
         Score
     }
 }

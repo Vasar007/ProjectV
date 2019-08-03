@@ -3,6 +3,7 @@
     internal enum ToplistFormat
     {
         Forward,
+
         Reverse
     }
 }

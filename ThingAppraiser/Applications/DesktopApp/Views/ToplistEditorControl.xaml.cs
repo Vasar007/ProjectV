@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+﻿using System.Windows.Controls;
 using ThingAppraiser.DesktopApp.ViewModels;
 
 namespace ThingAppraiser.DesktopApp.Views

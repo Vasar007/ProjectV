@@ -25,12 +25,12 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set => SetProperty(ref _position, value);
         }
 
-        public ICommand AddOrUpdateCommand => new RelayCommand(AddOrUpdate);
+        public ICommand AddOrUpdateItemCommand => new RelayCommand(AddOrUpdateItem);
 
-        public ICommand RemoveCommand => new RelayCommand(Remove);
+        public ICommand RemoveItemCommand => new RelayCommand(RemoveItem);
 
-        public ICommand AddOrUpdateByEnterHitCommand =>
-            new RelayCommand<string>(AddOrUpdateByEnterHit);
+        public ICommand AddOrUpdateItemByEnterHitCommand =>
+            new RelayCommand<string>(AddOrUpdateItemByEnterHit);
 
         public ToplistBlock ParentBlock { get; }
 
@@ -48,7 +48,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             return new ToplistItem(Name, Position, ParentBlock);
         }
 
-        private void AddOrUpdate()
+        private void AddOrUpdateItem()
         {
             if (ParentBlock.AddOrUpdateItem(this))
             {
@@ -56,7 +56,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             }
         }
 
-        private void Remove()
+        private void RemoveItem()
         {
             if (!ParentBlock.RemoveItem(this))
             {
@@ -64,15 +64,15 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             }
         }
 
-        private void AddOrUpdateByEnterHit(string newName)
+        private void AddOrUpdateItemByEnterHit(string newName)
         {
             if (string.IsNullOrWhiteSpace(newName))
             {
-                Remove();
+                RemoveItem();
             }
 
             Name = newName;
-            AddOrUpdate();
+            AddOrUpdateItem();
         }
     }
 }

@@ -21,12 +21,31 @@
                                 BorderThickness="2"
                                 CornerRadius="8"
                                 Margin="8"
-                                BorderBrush="Gray" >
+                                BorderBrush="Gray">
                             <StackPanel Margin="4"
-                                    Orientation="Vertical">
+                                        Orientation="Vertical">
 
-                                <TextBox Height="25"
-                                         Text="{Binding Path=Title}" />
+                                <StackPanel Margin="4"
+                                            Orientation="Horizontal">
+                                
+                                    <TextBox Height="25"
+                                             Width="560"
+                                             MaxLength="80"
+                                             Margin="0 0 16 0"
+                                             VerticalAlignment="Top"
+                                             Text="{Binding Path=Title}" />
+
+                                    <Button Content="{materialDesign:PackIcon Delete}"
+                                            Style="{StaticResource ResourceKey=MaterialDesignFlatDarkBgButton}"
+                                            Margin="0 0 8 0"
+                                            ToolTip="Delete block"
+                                            x:Name="DeleteBlockButton"
+                                            Command="{Binding Path=DataContext.RemoveBlockCommand,
+                                                      RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                      AncestorType={x:Type UserControl}}}" 
+                                            CommandParameter="{Binding Path=.}" />
+                                </StackPanel>
+
                                 <Separator Height="5" />
 
                                 <ItemsControl ItemsSource="{Binding Path=Items}">
@@ -53,7 +72,7 @@
                     Margin="16"
                     HorizontalAlignment="Center"
                     x:Name="AddNewBlockButton"
-                    Command="{Binding Path=AddOrUpdateCommand}" />
+                    Command="{Binding Path=AddOrUpdateBlockCommand}" />
         </StackPanel>
     </ScrollViewer>
 

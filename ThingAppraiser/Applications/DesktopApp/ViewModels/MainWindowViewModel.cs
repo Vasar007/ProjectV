@@ -231,7 +231,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void ExecuteSending()
         {
             string message = $"SelectedStorageName={SelectedStorageName}, " +
-                             $"SelectedDataSource={SelectedDataSource}";
+                             $"SelectedDataSource={SelectedDataSource.ToString()}";
             Console.WriteLine(message);
             _logger.Debug(message);
 
@@ -313,7 +313,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                         nameof(dataSource), dataSource,
                         "Couldn't recognize specified data source type."
                     );
-                    _logger.Error(ex, $"Passed incorrect data to method: {dataSource}");
+                    _logger.Error(ex, $"Passed incorrect data to method: {dataSource.ToString()}");
                     throw ex;
             }
         }

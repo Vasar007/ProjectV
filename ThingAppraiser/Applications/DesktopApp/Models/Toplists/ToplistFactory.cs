@@ -22,7 +22,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
                 default:
                     var ex = new ArgumentOutOfRangeException(nameof(toplistType), toplistType,
                                                              "Could not recognize toplist type.");
-                    _logger.Error(ex, $"Passed incorrect data to method: '{toplistType}'.");
+                    _logger.Error(ex, "Passed incorrect data to method: " +
+                                  $"'{toplistType.ToString()}'.");
                     throw ex;
             }
         }
