@@ -25,7 +25,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand RemoveBlockCommand => new RelayCommand<ToplistBlock>(RemoveBlock);
 
-        public ICommand SaveToplistCommand => new RelayCommand(SaveToplist);
+        public ICommand SaveToplistCommand =>
+            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteSaveToplistFileDialog);
 
 
         public ToplistEditorViewModel()
@@ -49,6 +50,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             _toplist = ToplistFactory.LoadFromFile(toplistFilename);
             ToplistBlocks = _toplist.Blocks;
+        }
+
+        public void SaveToplist(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            string toplistData = ToplistBase.Serialize(_toplist);
+            File.WriteAllText(toplistFilename, toplistData);
         }
 
         private void AddNewBlock()
@@ -84,14 +93,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             block.ThrowIfNull(nameof(block));
 
             _toplist.RemoveBlock(block);
-        }
-
-        private void SaveToplist()
-        {
-            string toplistData = ToplistBase.Serialize(_toplist);
-
-            // TODO: implement saving logic to specified path by user.
-            File.WriteAllText("Toplist.txt", toplistData);
         }
     }
 }

@@ -145,7 +145,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
                 new SceneItem(
                     DesktopOptions.PageNames.ToplistEditorPage,
-                    new ToplistEditorControl()
+                    new ProgressDialog()
                 )
             };
 
@@ -187,6 +187,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
             ChangeSceneAndLoadToplist(DesktopOptions.PageNames.ToplistEditorPage, toplistFilename);
+        }
+
+        public void SaveToplistToFile(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            ProcessToplistSaving(toplistFilename);
         }
 
         private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
@@ -231,6 +238,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             int index = _sceneIdentifiers[controlIdentifier];
             SceneItem sceneItem = SceneItems[index];
+            sceneItem.Content = new ToplistEditorControl();
             if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
             {
                 toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
@@ -243,11 +251,24 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             int index = _sceneIdentifiers[controlIdentifier];
             SceneItem sceneItem = SceneItems[index];
+            sceneItem.Content = new ToplistEditorControl();
             if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
             {
                 toplistEditorViewModel.LoadToplist(toplistFilename);
                 SelectedSceneItem = sceneItem;
             }
+        }
+
+        private void ProcessToplistSaving(string toplistFilename)
+        {
+            if (CurrentContent.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            {
+                toplistEditorViewModel.SaveToplist(toplistFilename);
+
+                MessageBox.Show("Toplist was saved successfully.", "ThingAppraiser",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+           
         }
 
         private void ExecuteSending()

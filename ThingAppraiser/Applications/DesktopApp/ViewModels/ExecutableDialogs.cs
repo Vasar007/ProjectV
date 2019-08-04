@@ -6,7 +6,6 @@ using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Logging;
-using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -18,6 +17,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteInputThingDialog(StartViewModel startViewModel)
         {
+            startViewModel.ThrowIfNull(nameof(startViewModel));
+
             var view = new InputThingDialog();
 
             ShowDialog(view, startViewModel.DialogIdentifier, InputThingClosingEventHandler)
@@ -26,6 +27,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteEnterThingNameDialog(InputThingViewModel inputThingViewModel)
         {
+            inputThingViewModel.ThrowIfNull(nameof(inputThingViewModel));
+
             inputThingViewModel.ThingName = string.Empty;
 
             ShowDialog(inputThingViewModel.DialogContent, inputThingViewModel.DialogIdentifier,
@@ -35,8 +38,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteOpenThingsFileDialog(MainWindowViewModel mainViewModel)
         {
+            mainViewModel.ThrowIfNull(nameof(mainViewModel));
+
             using (var dialog = new WinForms.OpenFileDialog
                    {
+                       FileName = "things.txt",
                        DefaultExt = ".csv",
                        Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
                    })
@@ -51,8 +57,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteOpenToplistFileDialog(MainWindowViewModel mainViewModel)
         {
+            mainViewModel.ThrowIfNull(nameof(mainViewModel));
+
             using (var dialog = new WinForms.OpenFileDialog
                    {
+                       FileName = "toplist.txt",
                        DefaultExt = ".txt",
                        Filter = "Text Files (*.txt)|*.txt"
                    })
@@ -65,8 +74,29 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
+        public static void ExecuteSaveToplistFileDialog(MainWindowViewModel mainViewModel)
+        {
+            mainViewModel.ThrowIfNull(nameof(mainViewModel));
+
+            using (var dialog = new WinForms.SaveFileDialog
+                   {
+                       FileName = "toplist.txt",
+                       DefaultExt = ".txt",
+                       Filter = "Text Files (*.txt)|*.txt"
+                   })
+            {
+                WinForms.DialogResult result = dialog.ShowDialog();
+                if (result == WinForms.DialogResult.OK)
+                {
+                    mainViewModel.SaveToplistToFile(dialog.FileName);
+                }
+            }
+        }
+
         public static void ExecuteEnterDataDialog(StartViewModel startViewModel)
         {
+            startViewModel.ThrowIfNull(nameof(startViewModel));
+
             var view = new EnterDataDialog(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
             ShowDialogExtended(view, startViewModel.DialogIdentifier, EnterDataOpenedEventHandler,
@@ -76,6 +106,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteCreateToplistDialog(ToplistStartViewModel toplistStartViewModel)
         {
+            toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
+
             var view = new CreateToplistDialog();
 
             ShowDialog(view, toplistStartViewModel.DialogIdentifier,
@@ -85,6 +117,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static void ExecuteOpenToplistDialog(ToplistStartViewModel toplistStartViewModel)
         {
+            toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
+
             var view = new OpenToplistDialog(toplistStartViewModel.DialogIdentifier);
 
             ShowDialog(view, toplistStartViewModel.DialogIdentifier, OpenToplistClosingEventHandler)
