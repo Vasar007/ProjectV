@@ -13,7 +13,7 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 | Telegram bot service                                                                            |
 |-------------------------------------------------------------------------------------------------|
-| ![Example of usage telegram bot servie](Media/telegram_example.gif "Usage telegram bot service")|
+| ![Example of usage telegram bot service](Media/telegram_example.gif "Usage telegram bot service")|
 
 | Console app                                                                                     |
 |-------------------------------------------------------------------------------------------------|
