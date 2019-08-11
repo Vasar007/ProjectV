@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.DesktopApp.Models.Toplists
+﻿using System;
+
+namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal class SimpleToplist : ToplistBase
     {
@@ -13,7 +15,8 @@
         {
             block.ThrowIfNull(nameof(block));
 
-            Blocks.Add(block);
+            int insertIndex = CalculateInsertIndex(block.Number);
+            Blocks.Insert(insertIndex, block);
 
             return true;
         }
@@ -26,5 +29,31 @@
         }
 
         #endregion
+
+        private int CalculateInsertIndex(int blockNumber)
+        {
+            int insertIndex;
+            switch (Format)
+            {
+                case ToplistFormat.Forward:
+                {
+                    insertIndex = Blocks.Count;
+                    break;
+                }
+
+                case ToplistFormat.Reverse:
+                {
+                    insertIndex = 0;
+                    break;
+                }
+
+                default:
+                {
+                    throw new Exception($"Unknown toplist format: '{Format.ToString()}'.");
+                }
+            }
+
+            return insertIndex;
+        }
     }
 }

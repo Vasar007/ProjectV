@@ -20,7 +20,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             block.ThrowIfNull(nameof(block));
 
-            Blocks.Insert(block.Number - 1, block);
+            int insertIndex = CalculateInsertIndex(block.Number);
+            Blocks.Insert(insertIndex, block);
             _blocks.Add(block.Number, block);
 
             return true;
@@ -49,5 +50,41 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         }
 
         #endregion
+
+        private int CalculateInsertIndex(int blockNumber)
+        {
+            int insertIndex;
+            switch (Format)
+            {
+                case ToplistFormat.Forward:
+                {
+                    insertIndex = blockNumber - 1;
+                    break;
+                }
+
+                case ToplistFormat.Reverse:
+                {
+                    insertIndex = Blocks.Count - blockNumber + 1;
+                    break;
+                }
+
+                default:
+                {
+                    throw new Exception($"Unknown toplist format: '{Format.ToString()}'.");
+                }
+            }
+
+            // Additional checks to be sure that index is not out of range.
+            if (insertIndex < 0)
+            {
+                insertIndex = 0;
+            }
+            if (insertIndex > Blocks.Count)
+            {
+                insertIndex = Blocks.Count;
+            }
+
+            return insertIndex;
+        }
     }
 }
