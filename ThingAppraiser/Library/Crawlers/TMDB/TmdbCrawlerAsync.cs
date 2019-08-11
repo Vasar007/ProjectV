@@ -91,7 +91,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
         {
             var config = await _tmdbClient.GetConfigAsync();
 
-            if (_tmdbClient.Config.Images is null)
+            if (config.Images is null)
             {
                 _logger.Warn("Image configuration cannot be obtained.");
                 GlobalMessageHandler.OutputMessage("Image configuration cannot be obtained.");
