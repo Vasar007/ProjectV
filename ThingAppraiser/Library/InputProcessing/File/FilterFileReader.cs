@@ -5,7 +5,7 @@ using FileHelpers;
 using CsvHelper;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     /// <summary>
     /// Provides reading data from files with some filtering. Now this class filters by value of

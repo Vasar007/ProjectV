@@ -1,7 +1,7 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.GameRating
 {
     /// <summary>
     /// Expands appraiser behavior and lets process game data objects asynchronously.
@@ -9,7 +9,7 @@ namespace ThingAppraiser.Appraisers
     public abstract class GameAppraiserAsync : AppraiserAsync
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "GameAppraiserAsync";
+        public override string Tag { get; } = nameof(GameAppraiserAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(GameInfo);

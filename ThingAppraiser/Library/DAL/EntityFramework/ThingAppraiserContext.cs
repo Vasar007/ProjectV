@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.EntityFramework
 {
-    public class CThingAppraiserContext : DbContext
+    public class ThingAppraiserContext : DbContext
     {
         private readonly DataStorageSettings _storageSettings;
 
@@ -12,7 +12,7 @@ namespace ThingAppraiser.DAL.EntityFramework
         public DbSet<TmdbMovieInfo> TmdbMovies { get; set; }
 
 
-        public CThingAppraiserContext(DataStorageSettings storageSettings)
+        public ThingAppraiserContext(DataStorageSettings storageSettings)
         {
             _storageSettings = storageSettings.ThrowIfNull(nameof(storageSettings));
         }

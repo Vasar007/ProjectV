@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.GameRating.Steam
 {
     /// <summary>
     /// Concrete appraiser for Steam data.
@@ -12,7 +13,7 @@ namespace ThingAppraiser.Appraisers
     public class SteamAppraiser : GameAppraiser
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "SteamAppraiser";
+        public override string Tag { get; } = nameof(SteamAppraiser);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(SteamGameInfo);

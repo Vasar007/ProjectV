@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
@@ -13,7 +13,7 @@ namespace ThingAppraiser.Crawlers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public virtual string Tag { get; } = "CrawlerBase";
+        public virtual string Tag { get; } = nameof(CrawlerBase);
 
         #endregion
 

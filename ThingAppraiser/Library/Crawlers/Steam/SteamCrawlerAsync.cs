@@ -6,11 +6,10 @@ using SteamWebApiLib;
 using SteamWebApiLib.Models.AppDetails;
 using SteamWebApiLib.Models.BriefInfo;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Crawlers.Mappers;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Steam
 {
     /// <summary>
     /// Provides async version of Steam crawler.
@@ -40,7 +39,7 @@ namespace ThingAppraiser.Crawlers
         private readonly SteamApiClient _steamApiClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "SteamCrawlerAsync";
+        public override string Tag { get; } = nameof(SteamCrawlerAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(SteamGameInfo);

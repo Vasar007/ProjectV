@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output.WebService
 {
@@ -13,7 +13,7 @@ namespace ThingAppraiser.IO.Output.WebService
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "OutputTransmitter";
+        public string Tag { get; } = nameof(OutputTransmitter);
 
         #endregion
 

@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Data;
+﻿using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {

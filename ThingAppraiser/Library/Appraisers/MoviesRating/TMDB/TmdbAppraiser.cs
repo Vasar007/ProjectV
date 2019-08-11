@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
 {
     /// <summary>
     /// Concrete appraiser for TMDb data.
@@ -12,7 +13,7 @@ namespace ThingAppraiser.Appraisers
     public class TmdbAppraiser : MoviesAppraiser
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "TmdbAppraiser";
+        public override string Tag { get; } = nameof(TmdbAppraiser);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(TmdbMovieInfo);
@@ -65,9 +66,15 @@ namespace ThingAppraiser.Appraisers
                 );
             }
 
-            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");
-            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter("VoteAverage");
-            MinMaxDenominator popularityMMD = rawDataContainer.GetParameter("Popularity");
+            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter(
+                nameof(TmdbMovieInfo.VoteCount)
+            );
+            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter(
+                nameof(TmdbMovieInfo.VoteAverage)
+            );
+            MinMaxDenominator popularityMMD = rawDataContainer.GetParameter(
+                nameof(TmdbMovieInfo.Popularity)
+            );
 
             var converted = rawData.Select(e => (TmdbMovieInfo) e);
             foreach (TmdbMovieInfo entityInfo in converted)

@@ -10,7 +10,7 @@ namespace ThingAppraiser.IO.Input.WebService
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "InputTransmitter";
+        public string Tag { get; } = nameof(InputTransmitter);
 
         #endregion
 

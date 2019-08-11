@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output
 {

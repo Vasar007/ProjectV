@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     /// <summary>
     /// Represents common necessary methods to work with files.

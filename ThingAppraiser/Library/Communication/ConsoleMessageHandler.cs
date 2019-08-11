@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Communication
 {

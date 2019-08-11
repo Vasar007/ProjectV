@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
@@ -12,7 +12,7 @@ namespace ThingAppraiser.Crawlers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public override string Tag { get; } = "Crawler";
+        public override string Tag { get; } = nameof(Crawler);
 
         #endregion
 

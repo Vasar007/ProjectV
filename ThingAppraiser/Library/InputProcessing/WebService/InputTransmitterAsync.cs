@@ -11,7 +11,7 @@ namespace ThingAppraiser.IO.Input.WebService
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "InputTransmitterAsync";
+        public string Tag { get; } = nameof(InputTransmitterAsync);
 
         #endregion
 

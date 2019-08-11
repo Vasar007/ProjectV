@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Crawlers;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Crawlers.Tmdb;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Logging;
 

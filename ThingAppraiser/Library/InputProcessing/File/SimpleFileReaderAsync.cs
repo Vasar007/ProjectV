@@ -6,7 +6,7 @@ using CsvHelper;
 using FileHelpers;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     public class SimpleFileReaderAsync : IFileReaderAsync
     {

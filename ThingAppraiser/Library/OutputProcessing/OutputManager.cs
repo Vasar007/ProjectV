@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output
 {

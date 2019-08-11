@@ -1,5 +1,5 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.Things
 {

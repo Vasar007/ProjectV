@@ -1,5 +1,5 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Repositories
 {

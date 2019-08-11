@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.DAL.Repositories;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL
 {

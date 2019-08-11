@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.IO.Output
+namespace ThingAppraiser.IO.Output.File
 {
-    public class CLocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
+    public class LocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
         private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<CLocalFileWriterAsync>();
+            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileWriterAsync>();
 
         private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "LocalFileWriterAsync";
+        public string Tag { get; } = nameof(LocalFileWriterAsync);
 
         #endregion
 
 
-        public CLocalFileWriterAsync()
+        public LocalFileWriterAsync()
         {
         }
 

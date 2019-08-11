@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Core
 {

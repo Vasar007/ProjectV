@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {
@@ -14,7 +15,7 @@ namespace ThingAppraiser.Appraisers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public override string Tag { get; } = "Appraiser";
+        public override string Tag { get; } = nameof(Appraiser);
 
         #endregion
 

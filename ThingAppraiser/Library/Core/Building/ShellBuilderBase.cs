@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Data.Configuration;
+﻿using ThingAppraiser.Models.Configuration;
 
 namespace ThingAppraiser.Core.Building
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using ThingAppraiser.Data;
 using SteamWebApiLib.Models.AppDetails;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers.Mappers
+namespace ThingAppraiser.Crawlers.Steam
 {
     public class DataMapperSteamGame : IDataMapper<SteamApp, SteamGameInfo>
     {

@@ -2,17 +2,18 @@
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
 using ThingAppraiser.FuzzyLogicSystem;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
 {
     public class FuzzyTmdbAppraiserAsync : MoviesAppraiserAsync
     {
         private readonly IFuzzyController _fuzzyController = new FuzzyControllerIFuzzyController();
 
         /// <inheritdoc />
-        public override string Tag { get; } = "FuzzyTmdbAppraiserAsync";
+        public override string Tag { get; } = nameof(FuzzyTmdbAppraiserAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(TmdbMovieInfo);

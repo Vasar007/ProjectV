@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {

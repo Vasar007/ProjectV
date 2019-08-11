@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using SteamWebApiLib.Models.BriefInfo;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Steam
 {
     public static class SteamAppsStorage
     {

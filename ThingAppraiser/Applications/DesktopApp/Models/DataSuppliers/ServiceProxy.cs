@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers

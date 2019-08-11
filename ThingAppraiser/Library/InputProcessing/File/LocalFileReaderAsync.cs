@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     public class LocalFileReaderAsync : IInputterAsync, IInputterBase, ITagable
     {
@@ -15,7 +15,7 @@ namespace ThingAppraiser.IO.Input
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "LocalFileReaderAsync";
+        public string Tag { get; } = nameof(LocalFileReaderAsync);
 
         #endregion
 

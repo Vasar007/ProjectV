@@ -1,7 +1,7 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating
 {
     /// <summary>
     /// Expands appraiser behavior and lets process movie data objects.
@@ -9,7 +9,7 @@ namespace ThingAppraiser.Appraisers
     public abstract class MoviesAppraiser : Appraiser
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "MoviesAppraiser";
+        public override string Tag { get; } = nameof(MoviesAppraiser);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(MovieInfo);

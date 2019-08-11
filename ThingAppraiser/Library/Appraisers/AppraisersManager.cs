@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {

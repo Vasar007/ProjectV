@@ -7,12 +7,11 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Crawlers.Mappers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Crawlers;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Tmdb
 {
     public class TmdbCrawlerAsync : CrawlerAsync
     {
@@ -30,7 +29,7 @@ namespace ThingAppraiser.Crawlers
         private readonly TMDbClient _tmdbClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "TmdbCrawlerAsync";
+        public override string Tag { get; } = nameof(TmdbCrawlerAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(TmdbMovieInfo);

@@ -1,8 +1,8 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 using TMDbLib.Objects.Search;
 
-namespace ThingAppraiser.Crawlers.Mappers
+namespace ThingAppraiser.Crawlers.Tmdb
 {
     public class DataMapperTmdbMovie : IDataMapper<SearchMovie, TmdbMovieInfo>
     {

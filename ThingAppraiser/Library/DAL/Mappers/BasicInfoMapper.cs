@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Mappers
 {

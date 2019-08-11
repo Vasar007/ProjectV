@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {
@@ -10,7 +11,7 @@ namespace ThingAppraiser.Appraisers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public override string Tag { get; } = "AppraiserAsync";
+        public override string Tag { get; } = nameof(AppraiserAsync);
 
         #endregion
 

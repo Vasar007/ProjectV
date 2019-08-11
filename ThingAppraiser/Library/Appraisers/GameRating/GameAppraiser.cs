@@ -1,7 +1,7 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.GameRating
 {
     /// <summary>
     /// Expands appraiser behavior and lets process game data objects.
@@ -9,7 +9,7 @@ namespace ThingAppraiser.Appraisers
     public abstract class GameAppraiser : Appraiser
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "GameAppraiser";
+        public override string Tag { get; } = nameof(GameAppraiser);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(GameInfo);

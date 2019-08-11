@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using ThingAppraiser.Data;
 using OMDbApiNet.Model;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers.Mappers
+namespace ThingAppraiser.Crawlers.Omdb
 {
     public class DataMapperOmdbMovie : IDataMapper<Item, OmdbMovieInfo>
     {

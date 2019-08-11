@@ -1,12 +1,12 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating
 {
     public abstract class MoviesAppraiserAsync : AppraiserAsync
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "MoviesAppraiserAsync";
+        public override string Tag { get; } = nameof(MoviesAppraiserAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(MovieInfo);

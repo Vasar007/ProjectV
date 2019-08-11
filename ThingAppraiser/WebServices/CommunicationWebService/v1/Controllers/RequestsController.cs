@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 using ThingAppraiser.CommunicationWebService.v1.Domain;
 

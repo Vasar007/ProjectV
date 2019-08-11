@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FileHelpers;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.IO.Output
+namespace ThingAppraiser.IO.Output.File
 {
     /// <summary>
     /// Class which can write to files and process output content. Uses FileHelpers library to
@@ -36,10 +35,10 @@ namespace ThingAppraiser.IO.Output
         {
         }
 
-        /// <inheritdoc cref="File.Exists" />
+        /// <inheritdoc cref="System.IO.File..Exists" />
         public static bool DoesExistFile(string path)
         {
-            return File.Exists(path);
+            return System.IO.File.Exists(path);
         }
 
         #region IOutputter Implementation

@@ -93,9 +93,10 @@ namespace ThingAppraiser.Core.Building
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.IFileReaderAsync fileReader = CreateFileReaderAsync(fileReaderName);
+                    IO.Input.File.IFileReaderAsync fileReader =
+                        CreateFileReaderAsync(fileReaderName);
 
-                    return new IO.Input.LocalFileReaderAsync(fileReader);
+                    return new IO.Input.File.LocalFileReaderAsync(fileReader);
                 }
 
                 case _googleDriveParameterName:
@@ -142,7 +143,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _tmdbMaxRetryCountParameterName
                     );
 
-                    return new Crawlers.TmdbCrawlerAsync(apiKey, maxRetryCount);
+                    return new Crawlers.Tmdb.TmdbCrawlerAsync(apiKey, maxRetryCount);
                 }
 
                 case _omdbCrawlerParameterName:
@@ -151,7 +152,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _omdbApiKeyParameterName
                     );
 
-                    return new Crawlers.OmdbCrawlerAsync(apiKey);
+                    return new Crawlers.Omdb.OmdbCrawlerAsync(apiKey);
                 }
 
                 case _steamCrawlerParameterName:
@@ -160,7 +161,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _steamApiKeyParameterName
                     );
 
-                    return new Crawlers.SteamCrawlerAsync(apiKey);
+                    return new Crawlers.Steam.SteamCrawlerAsync(apiKey);
                 }
 
                 default:
@@ -195,22 +196,22 @@ namespace ThingAppraiser.Core.Building
             {
                 case _appraiserTmdbParameterName:
                 {
-                    return new Appraisers.TmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiserAsync();
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:
                 {
-                    return new Appraisers.FuzzyTmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiserAsync();
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    return new Appraisers.OmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiserAsync();
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    return new Appraisers.SteamAppraiserAsync();
+                    return new Appraisers.GameRating.Steam.SteamAppraiserAsync();
                 }
 
                 default:
@@ -245,7 +246,7 @@ namespace ThingAppraiser.Core.Building
             {
                 case _localFileParameterName:
                 {
-                    return new IO.Output.CLocalFileWriterAsync();
+                    return new IO.Output.File.LocalFileWriterAsync();
                 }
 
                 case _googleDriveParameterName:

@@ -94,9 +94,9 @@ namespace ThingAppraiser.Core.Building
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
 
-                    return new IO.Input.LocalFileReader(fileReader);
+                    return new IO.Input.File.LocalFileReader(fileReader);
                 }
 
                 case _googleDriveParameterName:
@@ -105,9 +105,9 @@ namespace ThingAppraiser.Core.Building
                         inputterElement, _fileReaderParameterName + _googleDriveParameterName
                     );
 
-                    IO.Input.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
 
-                    return new IO.Input.GoogleDriveReader(_driveService, fileReader);
+                    return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
                 }
 
                 default:
@@ -150,7 +150,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _tmdbMaxRetryCountParameterName
                     );
 
-                    return new Crawlers.TmdbCrawler(apiKey, maxRetryCount);
+                    return new Crawlers.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
                 }
 
                 case _omdbCrawlerParameterName:
@@ -159,7 +159,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _omdbApiKeyParameterName
                     );
 
-                    return new Crawlers.OmdbCrawler(apiKey);
+                    return new Crawlers.Omdb.OmdbCrawler(apiKey);
                 }
 
                 case _steamCrawlerParameterName:
@@ -168,7 +168,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _steamApiKeyParameterName
                     );
 
-                    return new Crawlers.SteamCrawler(apiKey);
+                    return new Crawlers.Steam.SteamCrawler(apiKey);
                 }
 
                 default:
@@ -204,22 +204,22 @@ namespace ThingAppraiser.Core.Building
             {
                 case _appraiserTmdbParameterName:
                 {
-                    return new Appraisers.TmdbAppraiser();
+                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiser();
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:
                 {
-                    return new Appraisers.FuzzyTmdbAppraiser();
+                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiser();
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    return new Appraisers.OmdbAppraiser();
+                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiser();
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    return new Appraisers.SteamAppraiser();
+                    return new Appraisers.GameRating.Steam.SteamAppraiser();
                 }
 
                 default:
@@ -255,12 +255,12 @@ namespace ThingAppraiser.Core.Building
             {
                 case _localFileParameterName:
                 {
-                    return new IO.Output.LocalFileWriter();
+                    return new IO.Output.File.LocalFileWriter();
                 }
 
                 case _googleDriveParameterName:
                 {
-                    return new IO.Output.GoogleDriveWriter(_driveService);
+                    return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
                 }
 
                 default:

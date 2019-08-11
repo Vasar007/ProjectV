@@ -1,7 +1,7 @@
-﻿using ThingAppraiser.Data.Crawlers;
+﻿using ThingAppraiser.Models.Internal;
 using TMDbLib.Objects.General;
 
-namespace ThingAppraiser.Crawlers.Mappers
+namespace ThingAppraiser.Crawlers.Tmdb
 {
     public class DataMapperTmdbConfig : IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo>
     {

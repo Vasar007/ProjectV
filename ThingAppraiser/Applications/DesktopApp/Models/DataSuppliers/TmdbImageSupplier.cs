@@ -1,7 +1,7 @@
 ﻿using System;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Crawlers;
+using ThingAppraiser.Crawlers.Tmdb;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {

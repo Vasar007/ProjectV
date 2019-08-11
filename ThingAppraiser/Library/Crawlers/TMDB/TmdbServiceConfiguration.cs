@@ -1,6 +1,6 @@
-﻿using ThingAppraiser.Data.Crawlers;
+﻿using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Tmdb
 {
     /// <summary>
     /// Provides global thread-safe access to TMDb service configuration.

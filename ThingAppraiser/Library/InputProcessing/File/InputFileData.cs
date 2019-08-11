@@ -1,6 +1,6 @@
 ﻿using FileHelpers;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     /// <summary>
     /// Represents record which could be used by FileHelper reader.

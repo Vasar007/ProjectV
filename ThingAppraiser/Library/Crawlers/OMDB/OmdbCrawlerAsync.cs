@@ -5,11 +5,10 @@ using System.Threading.Tasks.Dataflow;
 using OMDbApiNet;
 using OMDbApiNet.Model;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Crawlers.Mappers;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Omdb
 {
     /// <summary>
     /// Provides async version of OMDb crawler.
@@ -39,7 +38,7 @@ namespace ThingAppraiser.Crawlers
         private readonly AsyncOmdbClient _omdbClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "OmdbCrawlerAsync";
+        public override string Tag { get; } = nameof(OmdbCrawlerAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(OmdbMovieInfo);

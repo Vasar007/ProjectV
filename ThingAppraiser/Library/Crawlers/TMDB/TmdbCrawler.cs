@@ -5,12 +5,11 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Crawlers.Mappers;
-using ThingAppraiser.Data.Crawlers;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Tmdb
 {
     /// <summary>
     /// Concrete crawler for The Movie Database service.
@@ -46,7 +45,7 @@ namespace ThingAppraiser.Crawlers
         private readonly TMDbClient _tmdbClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "TmdbCrawler";
+        public override string Tag { get; } = nameof(TmdbCrawler);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(TmdbMovieInfo);

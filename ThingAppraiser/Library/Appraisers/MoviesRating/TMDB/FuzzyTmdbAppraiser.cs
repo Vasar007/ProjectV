@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
 using ThingAppraiser.FuzzyLogicSystem;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
 {
     /// <summary>
     /// Represents class which uses Fuzzy Logic Controller to calculate rating.
@@ -18,7 +19,7 @@ namespace ThingAppraiser.Appraisers
         private readonly IFuzzyController _fuzzyController = new FuzzyControllerIFuzzyController();
 
         /// <inheritdoc />
-        public override string Tag { get; } = "FuzzyTmdbAppraiser";
+        public override string Tag { get; } = nameof(FuzzyTmdbAppraiser);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(TmdbMovieInfo);

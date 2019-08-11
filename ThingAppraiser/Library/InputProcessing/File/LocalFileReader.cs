@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     /// <summary>
     /// Class which can read from files and parse it.
@@ -23,7 +23,7 @@ namespace ThingAppraiser.IO.Input
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "LocalFileReader";
+        public string Tag { get; } = nameof(LocalFileReader);
 
         #endregion
 

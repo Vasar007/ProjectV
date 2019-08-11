@@ -4,11 +4,10 @@ using System.Linq;
 using OMDbApiNet;
 using OMDbApiNet.Model;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Crawlers.Mappers;
+using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers
+namespace ThingAppraiser.Crawlers.Omdb
 {
     /// <summary>
     /// Concrete crawler for Open Movie Database service.
@@ -38,7 +37,7 @@ namespace ThingAppraiser.Crawlers
         private readonly OmdbClient _omdbClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = "OmdbCrawler";
+        public override string Tag { get; } = nameof(OmdbCrawler);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(OmdbMovieInfo);

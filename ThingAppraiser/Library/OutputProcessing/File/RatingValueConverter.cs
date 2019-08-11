@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FileHelpers;
 
-namespace ThingAppraiser.IO.Output
+namespace ThingAppraiser.IO.Output.File
 {
     /// <summary>
     /// Class which is used to convert list to string for FileHelpers library.

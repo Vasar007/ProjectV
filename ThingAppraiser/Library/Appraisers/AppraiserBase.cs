@@ -1,5 +1,5 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Appraisers
 {
@@ -11,7 +11,7 @@ namespace ThingAppraiser.Appraisers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public virtual string Tag { get; } = "AppraiserBase";
+        public virtual string Tag { get; } = nameof(AppraiserBase);
 
         #endregion
 

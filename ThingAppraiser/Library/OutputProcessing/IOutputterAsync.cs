@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output
 {

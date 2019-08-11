@@ -156,7 +156,7 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentException">
         /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
-        protected IO.Input.IFileReader CreateFileReader(string fileReaderName)
+        protected IO.Input.File.IFileReader CreateFileReader(string fileReaderName)
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
@@ -164,12 +164,12 @@ namespace ThingAppraiser.Core.Building
             {
                 case _simpleFileReaderParameterName:
                 {
-                    return new IO.Input.SimpleFileReader();
+                    return new IO.Input.File.SimpleFileReader();
                 }
 
                 case _filterFileReaderParameterName:
                 {
-                    return new IO.Input.FilterFileReader();
+                    return new IO.Input.File.FilterFileReader();
                 }
 
                 default:
@@ -199,7 +199,7 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentException">
         /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
-        protected IO.Input.IFileReaderAsync CreateFileReaderAsync(string fileReaderName)
+        protected IO.Input.File.IFileReaderAsync CreateFileReaderAsync(string fileReaderName)
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
@@ -207,7 +207,7 @@ namespace ThingAppraiser.Core.Building
             {
                 case _simpleFileReaderParameterName:
                 {
-                    return new IO.Input.SimpleFileReaderAsync();
+                    return new IO.Input.File.SimpleFileReaderAsync();
                 }
 
                 case _filterFileReaderParameterName:

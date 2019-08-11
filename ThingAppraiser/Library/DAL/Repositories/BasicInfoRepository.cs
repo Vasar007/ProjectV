@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using ThingAppraiser.DAL.Properties;
 using ThingAppraiser.DAL.Mappers;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {
@@ -25,7 +25,7 @@ namespace ThingAppraiser.DAL.Repositories
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "BasicInfoRepository";
+        public string Tag { get; } = nameof(BasicInfoRepository);
 
         #endregion
 

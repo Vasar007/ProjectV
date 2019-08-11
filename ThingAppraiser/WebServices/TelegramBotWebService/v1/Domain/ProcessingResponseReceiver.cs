@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {

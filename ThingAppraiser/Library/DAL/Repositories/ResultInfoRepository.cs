@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using ThingAppraiser.DAL.Properties;
-using ThingAppraiser.Data;
 using ThingAppraiser.DAL.Mappers;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Repositories
 {
@@ -22,7 +22,7 @@ namespace ThingAppraiser.DAL.Repositories
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "ResultInfoRepository";
+        public string Tag { get; } = nameof(ResultInfoRepository);
 
         #endregion
 

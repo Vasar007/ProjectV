@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FileHelpers;
 
-namespace ThingAppraiser.IO.Output
+namespace ThingAppraiser.IO.Output.File
 {
     /// <summary>
     /// Represents record which could be used by FileHelper writer.

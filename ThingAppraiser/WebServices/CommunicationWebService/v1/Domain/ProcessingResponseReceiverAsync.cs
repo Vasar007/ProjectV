@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {

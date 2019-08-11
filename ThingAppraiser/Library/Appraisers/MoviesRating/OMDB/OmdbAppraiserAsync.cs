@@ -2,14 +2,15 @@
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers
+namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
 {
     public class OmdbAppraiserAsync : MoviesAppraiserAsync
     {
         /// <inheritdoc />
-        public override string Tag { get; } = "OmdbAppraiserAsync";
+        public override string Tag { get; } = nameof(OmdbAppraiserAsync);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(OmdbMovieInfo);

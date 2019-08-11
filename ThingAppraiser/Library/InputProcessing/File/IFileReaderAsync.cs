@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
-namespace ThingAppraiser.IO.Input
+namespace ThingAppraiser.IO.Input.File
 {
     public interface IFileReaderAsync
     {

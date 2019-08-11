@@ -1,5 +1,5 @@
 ﻿using System;
-using ThingAppraiser.Data.Configuration;
+using ThingAppraiser.Models.Configuration;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Domain
 {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
@@ -9,7 +9,7 @@ namespace ThingAppraiser.Crawlers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public override string Tag => "CrawlerAsync";
+        public override string Tag { get; } = nameof(CrawlerAsync);
 
         #endregion
 

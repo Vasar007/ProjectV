@@ -6,9 +6,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data.Configuration;
+using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Core.Building;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.Core
 {

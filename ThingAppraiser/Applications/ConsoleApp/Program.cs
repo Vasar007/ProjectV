@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.ConsoleApp
 {
