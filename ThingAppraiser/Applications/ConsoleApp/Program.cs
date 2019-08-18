@@ -71,11 +71,17 @@ namespace ThingAppraiser.ConsoleApp
         {
             try
             {
+                _logger.PrintHeader("Console client application started.");
+
                 MainXDocument(args);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+            }
+            finally
+            {
+                _logger.Info("Console client application stopped.");
             }
         }
     }

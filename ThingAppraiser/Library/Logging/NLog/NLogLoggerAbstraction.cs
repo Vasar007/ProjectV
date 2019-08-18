@@ -6,7 +6,7 @@ namespace ThingAppraiser.Logging
     /// <summary>
     /// Additional abstraction to avoid direct link with logger library.
     /// </summary>
-    internal sealed class LoggerAbstraction : ILogger
+    internal sealed class NLogLoggerAbstraction : ILogger
     {
         /// <summary>
         /// Concrete logger instance.
@@ -18,16 +18,33 @@ namespace ThingAppraiser.Logging
         /// <summary>
         /// Private constructor which could be called by create methods.
         /// </summary>
-        /// <param name="loggerInstance">Concrete logger instance.</param>
+        /// <param name="loggerName">Logger name to create.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="loggerInstance" /> is <c>null</c>.
+        /// <paramref name="loggerName" /> is <c>null</c>.
         /// </exception>
-        internal LoggerAbstraction(Logger loggerInstance)
+        /// <exception cref="ArgumentException">
+        /// <paramref name="loggerName" /> presents empty string.
+        /// </exception>
+        internal NLogLoggerAbstraction(string loggerName)
         {
-            _logger = loggerInstance.ThrowIfNull(nameof(loggerInstance));
+            loggerName.ThrowIfNullOrEmpty(nameof(loggerName));
+
+            _logger = LogManager.GetLogger(loggerName);
         }
 
         #region ILogger Implementation
+
+        /// <summary>
+        /// Prints header info.
+        /// </summary>
+        /// <param name="starterMessage">Additional message to print.</param>
+        public void PrintHeader(string starterMessage)
+        {
+            TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+            _logger.Info($"UTC offset is {offset}.");
+
+            _logger.Info(starterMessage);
+        }
 
         /// <inheritdoc cref="Logger.Debug(string)" />
         public void Debug(string message)

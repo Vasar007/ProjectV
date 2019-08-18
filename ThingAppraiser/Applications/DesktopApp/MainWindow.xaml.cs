@@ -22,7 +22,7 @@ namespace ThingAppraiser.DesktopApp
 
             DataContext = new MainWindowViewModel(MainWindowDialogHost.Identifier);
 
-            _logger.Info("Client application started.");
+            _logger.Info("Main window was created.");
         }
 
         private void UIElement_OnPreviewMouseLeftButtonUp(object sender,

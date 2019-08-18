@@ -25,6 +25,8 @@ namespace ThingAppraiser.ConfigurationWebService
         {
             try
             {
+                _logger.PrintHeader("Configuration web service started.");
+
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Run the WebHost, and start accepting requests.
@@ -34,6 +36,10 @@ namespace ThingAppraiser.ConfigurationWebService
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+            }
+            finally
+            {
+                _logger.Info("Configuration web service stopped.");
             }
         }
     }

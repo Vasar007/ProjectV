@@ -27,6 +27,8 @@ namespace ThingAppraiser.TelegramBotWebService
         {
             try
             {
+                _logger.PrintHeader("Telegram bot web service started.");
+
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Set web hook to get messages from Telegram Bot.
@@ -42,6 +44,10 @@ namespace ThingAppraiser.TelegramBotWebService
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+            }
+            finally
+            {
+                _logger.Info("Telegram bot web service stopped.");
             }
         }
     }

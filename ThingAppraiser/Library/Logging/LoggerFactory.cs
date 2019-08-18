@@ -1,5 +1,4 @@
 ﻿using System;
-using NLog;
 
 namespace ThingAppraiser.Logging
 {
@@ -19,7 +18,7 @@ namespace ThingAppraiser.Logging
             string fullName = type.FullName ?? throw new ArgumentException(
                 $"Could not get full name of class {type}."
             );
-            return new LoggerAbstraction(LogManager.GetLogger(fullName));
+            return new NLogLoggerAbstraction(fullName);
         }
 
         /// <summary>
@@ -40,8 +39,7 @@ namespace ThingAppraiser.Logging
             string fullName = type.FullName ?? throw new ArgumentException(
                 $"Could not get full name of class {nameof(type)}"
             );
-
-            return new LoggerAbstraction(LogManager.GetLogger(fullName));
+            return new NLogLoggerAbstraction(fullName);
         }
     }
 }

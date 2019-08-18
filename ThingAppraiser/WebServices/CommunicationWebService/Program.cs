@@ -25,6 +25,8 @@ namespace ThingAppraiser.CommunicationWebService
         {
             try
             {
+                _logger.PrintHeader("Communication web service started.");
+
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Run the WebHost, and start accepting requests.
@@ -34,6 +36,10 @@ namespace ThingAppraiser.CommunicationWebService
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+            }
+            finally
+            {
+                _logger.Info("Communication web service stopped.");
             }
         }
     }

@@ -33,7 +33,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         public static ToplistBase LoadFromFile(string toplistFilename)
         {
-            toplistFilename = null;
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
             string fileContent = File.ReadAllText(toplistFilename);

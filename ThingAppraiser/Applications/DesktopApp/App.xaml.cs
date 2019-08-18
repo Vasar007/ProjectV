@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp
 {
@@ -10,6 +11,9 @@ namespace ThingAppraiser.DesktopApp
     /// </summary>
     public partial class App : Application
     {
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<App>();
+
+
         public App()
         {
             // Set current culture for app globally.
@@ -21,6 +25,13 @@ namespace ThingAppraiser.DesktopApp
                     XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.Name)
                 )
             );
+
+            _logger.PrintHeader("Desktop client application started.");
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            _logger.Info("Desktop client application stopped.");
         }
     }
 }
