@@ -48,14 +48,19 @@ namespace NLog.Extention
         public string AfterType { get; set; } = "";
 
         /// <summary>
-        /// Separator between exception type and message.
+        /// Separator between exception type and message (default: 1 space character).
         /// </summary>
         public string Separator { get; set; } = " ";
 
         /// <summary>
-        /// Log stack trace or not (e.g. for console logger).
+        /// Log stack trace or not e.g. for console logger (default: true).
         /// </summary>
         public bool LogStack { get; set; } = true;
+
+        /// <summary>
+        /// Is replaced newline characters in exception message or not (default: true).
+        /// </summary>
+        public bool ReplaceNewlinesInMessage { get; set; } = true;
 
         /// <summary>
         /// Holds logged already exceptions just to skip stack logging.
@@ -86,7 +91,12 @@ namespace NLog.Extention
                 builder.Append(
                     $"{Indent}{BeforeType}{ex.GetType().FullName}{AfterType}{Separator}"
                 );
-                builder.Append(ex.Message.Replace(Environment.NewLine, " "));
+
+                string exMessage = ReplaceNewlinesInMessage
+                    ? ex.Message.Replace(Environment.NewLine, " ")
+                    : ex.Message.Replace(Environment.NewLine, $"{Environment.NewLine}{Indent}");
+
+                builder.Append(exMessage);
 
                 if (LogStack)
                 {
