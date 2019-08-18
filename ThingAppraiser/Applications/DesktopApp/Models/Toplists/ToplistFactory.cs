@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
     internal static class ToplistFactory
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerWithName(nameof(ToplistFactory));
+            LoggerFactory.CreateLoggerFor(typeof(ToplistFactory));
 
         public static ToplistBase Create(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
@@ -33,6 +33,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         public static ToplistBase LoadFromFile(string toplistFilename)
         {
+            toplistFilename = null;
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
             string fileContent = File.ReadAllText(toplistFilename);

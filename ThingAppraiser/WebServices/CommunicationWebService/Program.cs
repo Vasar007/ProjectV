@@ -12,7 +12,7 @@ namespace ThingAppraiser.CommunicationWebService
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerWithName(nameof(Program));
+            LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)

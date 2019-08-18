@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using WinForms = System.Windows.Forms;
 using MaterialDesignThemes.Wpf;
@@ -12,7 +11,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     internal static class ExecutableDialogs
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerWithName(nameof(ExecutableDialogs));
+            LoggerFactory.CreateLoggerFor(typeof(ExecutableDialogs));
 
 
         public static void ExecuteInputThingDialog(StartViewModel startViewModel)

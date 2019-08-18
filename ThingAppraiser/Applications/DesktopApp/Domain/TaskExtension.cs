@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.Domain
     public static class TaskExtension
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerWithName(nameof(TaskExtension));
+            LoggerFactory.CreateLoggerFor(typeof(TaskExtension));
 
         public static async void FireAndForgetSafeAsync(this Task task,
             IErrorHandler handler = null)

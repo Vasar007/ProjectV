@@ -236,26 +236,44 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void ChangeSceneAndConstructNewToplist(string controlIdentifier,
             string toplistName, ToplistType toplistType, ToplistFormat toplistFormat)
         {
-            int index = _sceneIdentifiers[controlIdentifier];
-            SceneItem sceneItem = SceneItems[index];
-            sceneItem.Content = new ToplistEditorControl();
-            if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            try
             {
-                toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
-                SelectedSceneItem = sceneItem;
+                int index = _sceneIdentifiers[controlIdentifier];
+                SceneItem sceneItem = SceneItems[index];
+                sceneItem.Content = new ToplistEditorControl();
+                if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+                {
+                    toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
+                    SelectedSceneItem = sceneItem;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist creation.");
+                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
         }
 
         private void ChangeSceneAndLoadToplist(string controlIdentifier,
             string toplistFilename)
         {
-            int index = _sceneIdentifiers[controlIdentifier];
-            SceneItem sceneItem = SceneItems[index];
-            sceneItem.Content = new ToplistEditorControl();
-            if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            try
             {
-                toplistEditorViewModel.LoadToplist(toplistFilename);
-                SelectedSceneItem = sceneItem;
+                int index = _sceneIdentifiers[controlIdentifier];
+                SceneItem sceneItem = SceneItems[index];
+                sceneItem.Content = new ToplistEditorControl();
+                if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+                {
+                    toplistEditorViewModel.LoadToplist(toplistFilename);
+                    SelectedSceneItem = sceneItem;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist loading.");
+                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
         }
 
