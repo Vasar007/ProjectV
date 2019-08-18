@@ -4,7 +4,8 @@ namespace ThingAppraiser.Logging
 {
     public interface ILogger
     {
-        void PrintHeader(string starterMessage);
+        void PrintHeader(string message);
+        void PrintFooter(string message);
         void Debug(string message);
         void Info(string message);
         void Warn(string message);

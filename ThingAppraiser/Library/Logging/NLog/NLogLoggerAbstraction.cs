@@ -37,13 +37,22 @@ namespace ThingAppraiser.Logging
         /// <summary>
         /// Prints header info.
         /// </summary>
-        /// <param name="starterMessage">Additional message to print.</param>
-        public void PrintHeader(string starterMessage)
+        /// <param name="message">Additional message to print.</param>
+        public void PrintHeader(string message)
         {
             TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
             _logger.Info($"UTC offset is {offset}.");
 
-            _logger.Info(starterMessage);
+            _logger.Info(message);
+        }
+
+        /// <summary>
+        /// Prints footer info.
+        /// </summary>
+        /// <param name="message">Additional message to print.</param>
+        public void PrintFooter(string message)
+        {
+            _logger.Info(message);
         }
 
         /// <inheritdoc cref="Logger.Debug(string)" />

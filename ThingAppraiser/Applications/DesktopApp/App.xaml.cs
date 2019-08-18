@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            _logger.Info("Desktop client application stopped.");
+            _logger.PrintFooter("Desktop client application stopped.");
         }
     }
 }

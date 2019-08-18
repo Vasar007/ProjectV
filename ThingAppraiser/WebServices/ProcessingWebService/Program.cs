@@ -39,7 +39,7 @@ namespace ThingAppraiser.ProcessingWebService
             }
             finally
             {
-                _logger.Info("Processing web service stopped.");
+                _logger.PrintFooter("Processing web service stopped.");
             }
         }
     }

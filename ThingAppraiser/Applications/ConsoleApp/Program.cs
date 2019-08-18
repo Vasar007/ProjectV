@@ -81,7 +81,7 @@ namespace ThingAppraiser.ConsoleApp
             }
             finally
             {
-                _logger.Info("Console client application stopped.");
+                _logger.PrintFooter("Console client application stopped.");
             }
         }
     }

@@ -47,7 +47,7 @@ namespace ThingAppraiser.TelegramBotWebService
             }
             finally
             {
-                _logger.Info("Telegram bot web service stopped.");
+                _logger.PrintFooter("Telegram bot web service stopped.");
             }
         }
     }

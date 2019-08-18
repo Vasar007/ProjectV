@@ -39,7 +39,7 @@ namespace ThingAppraiser.CommunicationWebService
             }
             finally
             {
-                _logger.Info("Communication web service stopped.");
+                _logger.PrintFooter("Communication web service stopped.");
             }
         }
     }

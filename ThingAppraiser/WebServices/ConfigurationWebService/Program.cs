@@ -39,7 +39,7 @@ namespace ThingAppraiser.ConfigurationWebService
             }
             finally
             {
-                _logger.Info("Configuration web service stopped.");
+                _logger.PrintFooter("Configuration web service stopped.");
             }
         }
     }
