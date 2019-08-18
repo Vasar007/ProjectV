@@ -17,8 +17,8 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveReader>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<GoogleDriveReader>();
 
         /// <summary>
         /// Used to read downloaded file from Google Drive.

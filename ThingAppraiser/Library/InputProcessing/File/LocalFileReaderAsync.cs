@@ -7,8 +7,8 @@ namespace ThingAppraiser.IO.Input.File
 {
     public class LocalFileReaderAsync : IInputterAsync, IInputterBase, ITagable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileReaderAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<LocalFileReaderAsync>();
 
         private readonly IFileReaderAsync _fileReaderAsync;
 

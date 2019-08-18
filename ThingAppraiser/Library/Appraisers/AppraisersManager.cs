@@ -16,8 +16,8 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<AppraisersManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<AppraisersManager>();
 
         /// <summary>
         /// Represents relations one-to-many for every type of the potential data.

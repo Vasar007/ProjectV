@@ -17,8 +17,8 @@ namespace ThingAppraiser.Core.Building
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ServiceBuilderBase>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ServiceBuilderBase>();
 
         /// <summary>
         /// Attribute value for console message handler.

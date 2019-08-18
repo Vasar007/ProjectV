@@ -15,8 +15,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
 {
     public class TmdbCrawlerAsync : CrawlerAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<TmdbCrawlerAsync>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawlerAsync>();
 
         private readonly IDataMapper<SearchMovie, TmdbMovieInfo> _dataMapper =
             new DataMapperTmdbMovie();

@@ -13,8 +13,8 @@ namespace ThingAppraiser.Core.Building
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ServiceBuilderForXmlConfig>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ServiceBuilderForXmlConfig>();
 
 
         /// <summary>

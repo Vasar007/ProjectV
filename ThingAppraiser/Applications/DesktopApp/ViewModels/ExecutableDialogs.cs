@@ -11,8 +11,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal static class ExecutableDialogs
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(ExecutableDialogs));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerWithName(nameof(ExecutableDialogs));
 
 
         public static void ExecuteInputThingDialog(StartViewModel startViewModel)

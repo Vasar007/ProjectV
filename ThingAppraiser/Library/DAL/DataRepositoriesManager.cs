@@ -10,8 +10,8 @@ namespace ThingAppraiser.DAL
 {
     public sealed class DataRepositoriesManager : IManager<IDataRepository>
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<DataBaseManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<DataBaseManager>();
 
         private readonly Dictionary<Type, IDataRepository> _repositories =
             new Dictionary<Type, IDataRepository>();

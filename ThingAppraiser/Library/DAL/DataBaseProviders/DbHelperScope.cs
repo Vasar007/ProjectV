@@ -11,8 +11,8 @@ namespace ThingAppraiser.DAL
     // TODO: add command creation method (important).
     public class DbHelperScope : IDisposable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<DbHelperScope>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<DbHelperScope>();
 
         private readonly SqlConnection _connection;
 

@@ -16,8 +16,7 @@ namespace ThingAppraiser.Core
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<Shell>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<Shell>();
 
         /// <summary>
         /// Represents current status of data processing.

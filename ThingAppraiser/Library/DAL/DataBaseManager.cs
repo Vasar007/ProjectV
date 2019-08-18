@@ -9,8 +9,8 @@ namespace ThingAppraiser.DAL
 {
     public sealed class DataBaseManager
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<DataBaseManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<DataBaseManager>();
 
         private readonly IResultRepository _resultRepository;
 

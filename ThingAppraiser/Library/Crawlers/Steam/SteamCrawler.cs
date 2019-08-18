@@ -18,8 +18,8 @@ namespace ThingAppraiser.Crawlers.Steam
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<SteamCrawler>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<SteamCrawler>();
 
         /// <summary>
         /// Helper class to transform raw DTO objects to concrete object without extra data.

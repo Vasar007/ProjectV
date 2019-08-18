@@ -21,8 +21,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal class MainWindowViewModel : ViewModelBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<MainWindowViewModel>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
 
         private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
 

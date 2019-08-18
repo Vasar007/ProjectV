@@ -13,8 +13,7 @@ namespace ThingAppraiser.DesktopApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<MainWindow>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<MainWindow>();
 
 
         public MainWindow()

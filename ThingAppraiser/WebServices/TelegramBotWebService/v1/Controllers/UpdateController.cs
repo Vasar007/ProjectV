@@ -11,8 +11,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Controllers
     [ApiController]
     public class UpdateController : Controller
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateController>();
 
         private readonly IUpdateServiceAsync _updateService;
 

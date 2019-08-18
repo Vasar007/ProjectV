@@ -13,8 +13,8 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<CrawlersManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<CrawlersManager>();
 
         /// <summary>
         /// Collection of concrete crawler implementations.

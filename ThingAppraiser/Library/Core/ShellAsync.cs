@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Models;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -14,8 +13,7 @@ namespace ThingAppraiser.Core
 {
     public sealed class ShellAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ShellAsync>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ShellAsync>();
 
         private readonly int _boundedCapacity;
 

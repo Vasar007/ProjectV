@@ -9,8 +9,8 @@ namespace ThingAppraiser.IO.Output.File
 {
     public class LocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileWriterAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<LocalFileWriterAsync>();
 
         private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
 

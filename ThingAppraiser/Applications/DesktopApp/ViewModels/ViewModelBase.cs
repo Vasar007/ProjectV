@@ -12,8 +12,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ViewModelBase>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ViewModelBase>();
 
 
         /// <summary>

@@ -11,8 +11,8 @@ namespace ThingAppraiser.Crawlers
 {
     public sealed class CrawlersManagerAsync : IManager<CrawlerAsync>
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<CrawlersManagerAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<CrawlersManagerAsync>();
 
         private readonly List<CrawlerAsync> _crawlersAsync = new List<CrawlerAsync>();
 

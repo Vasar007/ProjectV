@@ -9,8 +9,8 @@ namespace ThingAppraiser.IO.Output
 {
     public sealed class OutputManagerAsync : IManager<IOutputterAsync>
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<OutputManagerAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<OutputManagerAsync>();
 
         private readonly string _defaultStorageName;
 

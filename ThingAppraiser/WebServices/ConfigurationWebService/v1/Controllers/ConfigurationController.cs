@@ -11,8 +11,8 @@ namespace ThingAppraiser.ConfigurationWebService.v1.Controllers
     [ApiController]
     public class ConfigurationController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ConfigurationController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ConfigurationController>();
 
         private readonly IConfigCreator _configCreator;
 

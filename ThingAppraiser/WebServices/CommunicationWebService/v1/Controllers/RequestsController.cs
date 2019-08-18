@@ -11,8 +11,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Controllers
     [ApiController]
     public class RequestsController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<RequestsController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<RequestsController>();
 
         private readonly IConfigurationReceiverAsync _configurationReceiver;
 

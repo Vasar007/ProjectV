@@ -13,8 +13,8 @@ namespace ThingAppraiser.TelegramBotWebService
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(Program));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerWithName(nameof(Program));
 
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)

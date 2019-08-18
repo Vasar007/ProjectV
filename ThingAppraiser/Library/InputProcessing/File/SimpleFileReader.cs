@@ -16,8 +16,8 @@ namespace ThingAppraiser.IO.Input.File
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<SimpleFileReader>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<SimpleFileReader>();
 
         /// <summary>
         /// Name of the column with Thing name.

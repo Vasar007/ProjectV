@@ -17,8 +17,8 @@ namespace ThingAppraiser.Core.Building
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<CShellBuilderFromXDocument>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<CShellBuilderFromXDocument>();
 
         /// <summary>
         /// Provides methods to create instances of service classes.

@@ -10,8 +10,8 @@ namespace ThingAppraiser.IO.Input.File
 {
     public class SimpleFileReaderAsync : IFileReaderAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<SimpleFileReaderAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<SimpleFileReaderAsync>();
 
         private readonly string _thingNameHeader;
 

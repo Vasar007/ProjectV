@@ -13,8 +13,8 @@ namespace ThingAppraiser.IO.Input
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<InputManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.

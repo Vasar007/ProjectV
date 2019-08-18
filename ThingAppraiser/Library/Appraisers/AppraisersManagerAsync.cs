@@ -12,8 +12,8 @@ namespace ThingAppraiser.Appraisers
 {
     public sealed class AppraisersManagerAsync : IManager<AppraiserAsync>
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<AppraisersManagerAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<AppraisersManagerAsync>();
 
         private readonly Dictionary<Type, List<AppraiserAsync>> _appraisersAsync =
             new Dictionary<Type, List<AppraiserAsync>>();

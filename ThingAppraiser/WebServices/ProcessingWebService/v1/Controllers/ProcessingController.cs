@@ -12,8 +12,8 @@ namespace ThingAppraiser.ProcessingWebService.v1.Controllers
     [ApiController]
     public class ProcessingController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ProcessingController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ProcessingController>();
 
         private readonly ITargetServiceCreator _serviceCreator;
 

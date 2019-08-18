@@ -17,8 +17,8 @@ namespace ThingAppraiser.IO
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveWorker>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<GoogleDriveWorker>();
 
         /// <summary>
         /// Available OAuth scopes to use with the Drive API.

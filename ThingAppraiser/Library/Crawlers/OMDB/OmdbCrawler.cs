@@ -17,8 +17,8 @@ namespace ThingAppraiser.Crawlers.Omdb
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<OmdbCrawler>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<OmdbCrawler>();
 
         /// <summary>
         /// Helper class to transform raw DTO objects to concrete object without extra data.

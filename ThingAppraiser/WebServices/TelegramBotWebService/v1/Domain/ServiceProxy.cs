@@ -10,8 +10,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public class ServiceProxy : IServiceProxy, IDisposable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ServiceProxy>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
         private readonly ServiceSettings _settings;
 

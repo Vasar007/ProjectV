@@ -6,7 +6,7 @@ namespace ThingAppraiser.Logging
     /// <summary>
     /// Additional abstraction to avoid direct link with logger library.
     /// </summary>
-    public class LoggerAbstraction
+    internal sealed class LoggerAbstraction : ILogger
     {
         /// <summary>
         /// Concrete logger instance.
@@ -22,43 +22,12 @@ namespace ThingAppraiser.Logging
         /// <exception cref="ArgumentNullException">
         /// <paramref name="loggerInstance" /> is <c>null</c>.
         /// </exception>
-        private LoggerAbstraction(Logger loggerInstance)
+        internal LoggerAbstraction(Logger loggerInstance)
         {
             _logger = loggerInstance.ThrowIfNull(nameof(loggerInstance));
         }
 
-        /// <summary>
-        /// Creates logger instance for passed type.
-        /// </summary>
-        /// <typeparam name="T">Type for which instance is created.</typeparam>
-        /// <returns>Created logger instance.</returns>
-        /// <exception cref="ArgumentException">
-        /// Cannot get full name of type <see cref="T" />
-        /// </exception>
-        public static LoggerAbstraction CreateLoggerInstanceFor<T>()
-        {
-            string fullName = typeof(T).FullName ?? throw new ArgumentException(
-                $"Could not get full name of class {nameof(T)}"
-            );
-            return new LoggerAbstraction(LogManager.GetLogger(fullName));
-        }
-
-        /// <summary>
-        /// Creates logger instance for passed class name.
-        /// </summary>
-        /// <param name="className">Class name. Try to pass it with nameof operator.</param>
-        /// <returns>Created logger instance.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="className" /> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="className" /> presents empty string.
-        /// </exception>
-        public static LoggerAbstraction CreateLoggerInstanceWithName(string className)
-        {
-            className.ThrowIfNullOrEmpty(nameof(className));
-            return new LoggerAbstraction(LogManager.GetLogger(className));
-        }
+        #region ILogger Implementation
 
         /// <inheritdoc cref="Logger.Debug(string)" />
         public void Debug(string message)
@@ -95,5 +64,7 @@ namespace ThingAppraiser.Logging
         {
             _logger.Error(ex, message);
         }
+
+        #endregion
     }
 }

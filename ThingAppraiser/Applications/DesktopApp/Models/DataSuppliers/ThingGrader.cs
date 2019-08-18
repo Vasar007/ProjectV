@@ -12,8 +12,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
     internal class ThingGrader : IThingGrader
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ThingGrader>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ThingGrader>();
 
 
         public ThingGrader()

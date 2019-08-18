@@ -8,10 +8,10 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain.Examples
 {
+    // TODO: remove this class later!
     public class Examples
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<Examples>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<Examples>();
 
         private readonly IBotService _botService;
 

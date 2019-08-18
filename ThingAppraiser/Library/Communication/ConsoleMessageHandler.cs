@@ -17,8 +17,8 @@ namespace ThingAppraiser.Communication
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ConsoleMessageHandler>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ConsoleMessageHandler>();
 
 
         /// <summary>

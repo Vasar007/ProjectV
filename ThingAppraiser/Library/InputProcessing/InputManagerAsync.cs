@@ -10,8 +10,8 @@ namespace ThingAppraiser.IO.Input
 {
     public sealed class InputManagerAsync : IManager<IInputterAsync>
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<InputManagerAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<InputManagerAsync>();
 
         private readonly string _defaultStorageName;
 

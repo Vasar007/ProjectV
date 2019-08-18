@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
@@ -15,8 +14,8 @@ namespace ThingAppraiser.ConsoleApp
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(Program));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerWithName(nameof(Program));
 
 
         /// <summary>

@@ -17,8 +17,8 @@ namespace ThingAppraiser.IO.Output.File
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<LocalFileWriter>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<LocalFileWriter>();
 
         #region ITagable Implementation
 

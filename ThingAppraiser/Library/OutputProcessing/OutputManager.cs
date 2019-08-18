@@ -15,8 +15,8 @@ namespace ThingAppraiser.IO.Output
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<OutputManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<OutputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.

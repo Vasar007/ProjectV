@@ -3,10 +3,10 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    public class CommonErrorHandler : IErrorHandler
+    public sealed class CommonErrorHandler : IErrorHandler
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<CommonErrorHandler>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<CommonErrorHandler>();
 
 
         public CommonErrorHandler()

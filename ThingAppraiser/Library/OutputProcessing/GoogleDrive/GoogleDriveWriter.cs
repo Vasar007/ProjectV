@@ -19,8 +19,8 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<GoogleDriveWriter>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<GoogleDriveWriter>();
 
         /// <summary>
         /// The default chunk size is 10MB for Google Drive API uploading methods.

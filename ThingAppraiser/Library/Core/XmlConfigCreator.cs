@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Core.Building;
@@ -27,8 +24,8 @@ namespace ThingAppraiser.Core
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<XmlConfigCreator>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<XmlConfigCreator>();
 
         /// <summary>
         /// Inner array to hold collection of message handler parameters.

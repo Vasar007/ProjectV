@@ -12,8 +12,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public class UpdateServiceAsync : IUpdateServiceAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
 
         private readonly IBotService _botService;
 

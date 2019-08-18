@@ -11,8 +11,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public static class ProcessingResponseReceiver
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
 
 
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,

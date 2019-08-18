@@ -6,8 +6,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal static class ToplistFactory
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(ToplistFactory));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerWithName(nameof(ToplistFactory));
 
         public static ToplistBase Create(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
