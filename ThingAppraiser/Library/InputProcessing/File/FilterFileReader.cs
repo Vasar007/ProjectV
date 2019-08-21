@@ -11,7 +11,7 @@ namespace ThingAppraiser.IO.Input.File
     /// Provides reading data from files with some filtering. Now this class filters by value of
     /// status field.
     /// </summary>
-    public class FilterFileReader : IFileReader
+    public sealed class FilterFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.

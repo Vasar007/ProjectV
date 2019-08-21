@@ -7,7 +7,7 @@ namespace ThingAppraiser.Models.Data
     /// <summary>
     /// Concrete data object for TMDb service <see href="https://www.themoviedb.org" />.
     /// </summary>
-    public class TmdbMovieInfo : MovieInfo
+    public sealed class TmdbMovieInfo : MovieInfo
     {
         /// <inheritdoc />
         public override string Kind { get; } = nameof(TmdbMovieInfo);

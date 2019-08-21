@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.Models.Internal
 {
-    public class Rating
+    public sealed class Rating
     {
         public Guid RatingId { get; }
 

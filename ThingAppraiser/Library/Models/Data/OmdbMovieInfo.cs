@@ -7,7 +7,7 @@ namespace ThingAppraiser.Models.Data
     /// <summary>
     /// Concrete data object for OMDb service <see href="http://www.omdbapi.com/" />.
     /// </summary>
-    public class OmdbMovieInfo : MovieInfo
+    public sealed class OmdbMovieInfo : MovieInfo
     {
         /// <inheritdoc />
         public override string Kind { get; } = nameof(OmdbMovieInfo);

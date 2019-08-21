@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class TwoValuesMapper<T> : IMapper<(T, T)>
+    public sealed class TwoValuesMapper<T> : IMapper<(T, T)>
     {
         public TwoValuesMapper()
         {

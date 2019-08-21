@@ -12,7 +12,7 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
     /// <summary>
     /// Concrete implementation of reader part for Google Drive API.
     /// </summary>
-    public class GoogleDriveReader : GoogleDriveWorker, IInputter, IInputterBase, ITagable
+    public sealed class GoogleDriveReader : GoogleDriveWorker, IInputter, IInputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.

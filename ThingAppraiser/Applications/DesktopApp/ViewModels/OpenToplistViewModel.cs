@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class OpenToplistViewModel : ViewModelBase
+    internal sealed class OpenToplistViewModel : ViewModelBase
     {
         public object DialogIdentifier { get; }
 

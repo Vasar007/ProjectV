@@ -10,7 +10,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/processing")]
     [ApiController]
-    public class ProcessingController : ControllerBase
+    public sealed class ProcessingController : ControllerBase
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<ProcessingController>();

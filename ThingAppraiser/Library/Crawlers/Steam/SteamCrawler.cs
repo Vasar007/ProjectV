@@ -13,7 +13,7 @@ namespace ThingAppraiser.Crawlers.Steam
     /// <summary>
     /// Concrete crawler for Steam service.
     /// </summary>
-    public class SteamCrawler : Crawler
+    public sealed class SteamCrawler : Crawler
     {
         /// <summary>
         /// Logger instance for current class.

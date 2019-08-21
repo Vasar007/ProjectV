@@ -7,7 +7,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output.File
 {
-    public class LocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
+    public sealed class LocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<LocalFileWriterAsync>();

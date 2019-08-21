@@ -3,8 +3,12 @@ using System.Collections.ObjectModel;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    internal class ObservableSet<T> : ObservableCollection<T>
+    internal sealed class ObservableSet<T> : ObservableCollection<T>
     {
+        public ObservableSet()
+        {
+        }
+
         protected override void InsertItem(int index, T item)
         {
             if (Contains(item))

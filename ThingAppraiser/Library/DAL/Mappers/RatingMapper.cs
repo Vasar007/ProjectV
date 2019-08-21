@@ -4,7 +4,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class RatingMapper : IMapper<Rating>
+    public sealed class RatingMapper : IMapper<Rating>
     {
         public RatingMapper()
         {

@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal class SimpleToplist : ToplistBase
+    internal sealed class SimpleToplist : ToplistBase
     {
         public SimpleToplist(string name, ToplistFormat format)
             : base(name, ToplistType.Simple, format)

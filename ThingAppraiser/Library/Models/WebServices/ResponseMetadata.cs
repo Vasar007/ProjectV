@@ -5,7 +5,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Models.WebService
 {
-    public class ResponseMetadata
+    public sealed class ResponseMetadata
     {
         public int CommonResultsNumber { get; set; }
 

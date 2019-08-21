@@ -3,7 +3,7 @@ using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.Core.Building
 {
-    public class RequirementsCreator : IRequirementsCreator
+    public sealed class RequirementsCreator : IRequirementsCreator
     {
         private ConfigRequirements _configRequirements;
 

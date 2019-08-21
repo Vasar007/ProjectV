@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
     /// <summary>
     /// No WPF project is complete without it's own version of this.
     /// </summary>
-    internal class RelayCommand<T> : ICommand
+    internal sealed class RelayCommand<T> : ICommand
     {
         private readonly Action<T> _execute;
 

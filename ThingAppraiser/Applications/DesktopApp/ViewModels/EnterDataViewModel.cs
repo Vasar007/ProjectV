@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class EnterDataViewModel : ViewModelBase
+    internal sealed class EnterDataViewModel : ViewModelBase
     {
         private string _name;
 

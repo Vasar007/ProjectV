@@ -6,7 +6,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers.Omdb
 {
-    public class DataMapperOmdbMovie : IDataMapper<Item, OmdbMovieInfo>
+    public sealed class DataMapperOmdbMovie : IDataMapper<Item, OmdbMovieInfo>
     {
         public DataMapperOmdbMovie()
         {

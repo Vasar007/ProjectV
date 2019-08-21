@@ -4,7 +4,7 @@ using TMDbLib.Objects.Search;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
-    public class DataMapperTmdbMovie : IDataMapper<SearchMovie, TmdbMovieInfo>
+    public sealed class DataMapperTmdbMovie : IDataMapper<SearchMovie, TmdbMovieInfo>
     {
         public DataMapperTmdbMovie()
         {

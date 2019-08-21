@@ -12,7 +12,7 @@ namespace ThingAppraiser.Communication
     /// <summary>
     /// Message handler to interact with console.
     /// </summary>
-    public class ConsoleMessageHandler : IMessageHandler
+    public sealed class ConsoleMessageHandler : IMessageHandler
     {
         /// <summary>
         /// Logger instance for current class.

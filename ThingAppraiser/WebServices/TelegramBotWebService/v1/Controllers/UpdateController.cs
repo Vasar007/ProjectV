@@ -9,7 +9,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/update")]
     [ApiController]
-    public class UpdateController : Controller
+    public sealed class UpdateController : Controller
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<UpdateController>();

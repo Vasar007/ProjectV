@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.Models.WebService
 {
-    public class RequestParams
+    public sealed class RequestParams
     {
         public List<string> ThingNames { get; set; }
 

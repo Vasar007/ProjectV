@@ -10,7 +10,7 @@ namespace ThingAppraiser.IO.Output.File
     /// FileHelper doesn't support properties. That's why this data class contains public field.
     /// </remarks>
     [DelimitedRecord(","), IgnoreEmptyLines(true)]
-    public class OuputFileData
+    public sealed class OuputFileData
     {
         /// <summary>
         /// Name of appraised Thing.

@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class AppraisersManagerConfig
+    public sealed class AppraisersManagerConfig
     {
         [XmlAttribute(DataType = "boolean")]
         public bool AppraisersOutputFlag { get; set; }

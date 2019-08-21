@@ -8,7 +8,7 @@ namespace ThingAppraiser.Models.Internal
     /// Class-aggregator for working with ratings. Represents a simple wrapper around
     /// <see cref="List{T}" /> where internal type is <see cref="ResultInfo" />.
     /// </summary>
-    public class ResultList : IEnumerable<ResultInfo>
+    public sealed class ResultList : IEnumerable<ResultInfo>
     {
         /// <summary>
         /// Data container.

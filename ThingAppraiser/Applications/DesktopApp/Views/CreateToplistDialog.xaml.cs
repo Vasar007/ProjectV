@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for CreateToplistDialog.xaml
     /// </summary>
-    public partial class CreateToplistDialog : UserControl
+    public sealed partial class CreateToplistDialog : UserControl
     {
         public CreateToplistDialog()
         {

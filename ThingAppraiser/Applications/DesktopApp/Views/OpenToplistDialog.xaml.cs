@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for OpenToplistDialog.xaml
     /// </summary>
-    public partial class OpenToplistDialog : UserControl
+    public sealed partial class OpenToplistDialog : UserControl
     {
         public OpenToplistDialog(object dialogIdentifier)
         {

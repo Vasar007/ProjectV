@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ThingAppraiser.IO.Input.WebService
 {
-    public class InputTransmitter : IInputter, IInputterBase, ITagable
+    public sealed class InputTransmitter : IInputter, IInputterBase, ITagable
     {
         private readonly List<string> _thingNames;
 

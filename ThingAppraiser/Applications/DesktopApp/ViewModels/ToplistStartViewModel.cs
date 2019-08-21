@@ -3,7 +3,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class ToplistStartViewModel : ViewModelBase
+    internal sealed class ToplistStartViewModel : ViewModelBase
     {
         public object DialogIdentifier { get; }
 

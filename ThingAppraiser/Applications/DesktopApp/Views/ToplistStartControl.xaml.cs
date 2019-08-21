@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for ToplistStartControl.xaml
     /// </summary>
-    public partial class ToplistStartControl : UserControl
+    public sealed partial class ToplistStartControl : UserControl
     {
         public ToplistStartControl(object dialogIdentifier)
         {

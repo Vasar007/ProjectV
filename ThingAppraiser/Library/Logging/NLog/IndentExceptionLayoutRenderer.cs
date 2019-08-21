@@ -14,7 +14,7 @@ namespace NLog.Extention
     /// is not written.
     /// </summary>
     /// <remarks>
-    /// Original source: https://stackoverflow.com/questions/46565639/nlog-exception-layout-to-format-exception-type-message-and-stack-trace?rq=1
+    /// Original source: <see href="https://stackoverflow.com/questions/46565639/nlog-exception-layout-to-format-exception-type-message-and-stack-trace?rq=1" />
     /// (there is link to GitHub repository too).
     /// </remarks>
     [LayoutRenderer("indent-exception")]

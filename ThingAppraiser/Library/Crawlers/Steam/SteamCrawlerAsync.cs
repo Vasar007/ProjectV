@@ -14,7 +14,7 @@ namespace ThingAppraiser.Crawlers.Steam
     /// <summary>
     /// Provides async version of Steam crawler.
     /// </summary>
-    public class SteamCrawlerAsync : CrawlerAsync
+    public sealed class SteamCrawlerAsync : CrawlerAsync
     {
         /// <summary>
         /// Logger instance for current class.

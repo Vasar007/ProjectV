@@ -8,7 +8,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class TmdbMovieRepository : IDataRepository, IRepository<BasicInfo, int>, 
+    public sealed class TmdbMovieRepository : IDataRepository, IRepository<BasicInfo, int>, 
         IRepositoryBase, ITagable, ITypeId
     {
         private readonly DataStorageSettings _dbSettings;

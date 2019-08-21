@@ -7,7 +7,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ThingSupplier : IThingSupplier, ITagable
+    internal sealed class ThingSupplier : IThingSupplier, ITagable
     {
         private readonly IThingGrader _thingGrader;
 

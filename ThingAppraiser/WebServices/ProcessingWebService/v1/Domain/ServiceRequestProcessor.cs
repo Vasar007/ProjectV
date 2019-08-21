@@ -10,7 +10,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Domain
 {
-    public class ServiceRequestProcessor : IServiceRequestProcessor
+    public sealed class ServiceRequestProcessor : IServiceRequestProcessor
     {
         public ServiceRequestProcessor()
         {

@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class OutputManagerConfig
+    public sealed class OutputManagerConfig
     {
         [XmlAttribute(DataType = "string")]
         public string DefaultOutStorageName { get; set; }

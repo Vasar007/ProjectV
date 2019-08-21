@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.Things
 {
-    internal class Thing : ModelBase
+    internal sealed class Thing : ModelBase
     {
         private string _name;
 

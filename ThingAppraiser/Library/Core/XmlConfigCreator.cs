@@ -19,7 +19,7 @@ namespace ThingAppraiser.Core
     /// If you add your own message handler, make sure that you provide appropriate builder
     /// which can parse XML document with your attributes and elements.
     /// </remarks>
-    public class XmlConfigCreator
+    public sealed class XmlConfigCreator
     {
         /// <summary>
         /// Logger instance for current class.

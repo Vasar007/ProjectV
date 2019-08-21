@@ -8,7 +8,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input.File
 {
-    public class SimpleFileReaderAsync : IFileReaderAsync
+    public sealed class SimpleFileReaderAsync : IFileReaderAsync
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<SimpleFileReaderAsync>();

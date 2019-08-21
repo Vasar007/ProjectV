@@ -3,7 +3,7 @@ using ThingAppraiser.IO.Input;
 
 namespace ThingAppraiser.DesktopApp.Models.DataProducers
 {
-    internal class ThingProducer : IInputter, ITagable
+    internal sealed class ThingProducer : IInputter, ITagable
     {
         private readonly List<string> _thingNames;
 

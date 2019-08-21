@@ -7,7 +7,7 @@ namespace ThingAppraiser.IO.Input.File
     /// <summary>
     /// Class which can read from files and parse it.
     /// </summary>
-    public class LocalFileReader : IInputter, IInputterBase, ITagable
+    public sealed class LocalFileReader : IInputter, IInputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.

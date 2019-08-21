@@ -11,7 +11,7 @@ namespace ThingAppraiser.DesktopApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public sealed partial class MainWindow : Window
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<MainWindow>();
 

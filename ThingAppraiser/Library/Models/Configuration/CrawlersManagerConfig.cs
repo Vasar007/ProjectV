@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class CrawlersManagerConfig
+    public sealed class CrawlersManagerConfig
     {
         [XmlAttribute(DataType = "boolean")]
         public bool CrawlersOutputFlag { get; set; }

@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output.WebService
 {
-    public class OutputTransmitter : IOutputter, IOutputterBase, ITagable
+    public sealed class OutputTransmitter : IOutputter, IOutputterBase, ITagable
     {
         private List<List<RatingDataContainer>> _transmittingResults;
 

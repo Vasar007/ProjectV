@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    internal class AsyncRelayCommand : IAsyncCommand
+    internal sealed class AsyncRelayCommand : IAsyncCommand
     {
         private readonly Func<Task> _execute;
 

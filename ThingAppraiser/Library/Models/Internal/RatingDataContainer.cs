@@ -6,7 +6,7 @@ namespace ThingAppraiser.Models.Internal
     /// <summary>
     /// Represent result of internal calculations and data processing.
     /// </summary>
-    public class RatingDataContainer
+    public sealed class RatingDataContainer
     {
         /// <summary>
         /// Contains all data about appraised Thing.

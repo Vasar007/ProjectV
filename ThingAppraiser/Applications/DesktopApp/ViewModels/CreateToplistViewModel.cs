@@ -4,7 +4,7 @@ using ThingAppraiser.DesktopApp.Models.Toplists;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class CreateToplistViewModel : ViewModelBase
+    internal sealed class CreateToplistViewModel : ViewModelBase
     {
         private string _toplistName;
 

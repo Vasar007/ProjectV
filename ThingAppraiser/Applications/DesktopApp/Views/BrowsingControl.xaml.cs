@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for BrowsingControl.xaml
     /// </summary>
-    public partial class BrowsingControl : UserControl
+    public sealed partial class BrowsingControl : UserControl
     {
         public BrowsingControl(ViewModelBase dataContext)
         {

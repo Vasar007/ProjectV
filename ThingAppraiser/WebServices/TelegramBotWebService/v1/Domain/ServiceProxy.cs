@@ -8,7 +8,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class ServiceProxy : IServiceProxy, IDisposable
+    public sealed class ServiceProxy : IServiceProxy, IDisposable
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 

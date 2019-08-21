@@ -6,7 +6,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class StartViewModel : ViewModelBase
+    internal sealed class StartViewModel : ViewModelBase
     {
         private string _selectedService;
 

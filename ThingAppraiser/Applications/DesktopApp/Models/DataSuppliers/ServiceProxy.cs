@@ -8,10 +8,9 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ServiceProxy : IDisposable
+    internal sealed class ServiceProxy : IDisposable
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ServiceProxy>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
         private readonly string _baseAddress;
 

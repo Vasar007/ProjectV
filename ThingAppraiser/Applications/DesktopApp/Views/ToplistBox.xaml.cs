@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for ToplistBox.xaml
     /// </summary>
-    public partial class ToplistBox : UserControl
+    public sealed partial class ToplistBox : UserControl
     {
         public ToplistBox()
         {

@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class BasicInfoMapper : IMapper<BasicInfo>
+    public sealed class BasicInfoMapper : IMapper<BasicInfo>
     {
         public BasicInfoMapper()
         {

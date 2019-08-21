@@ -7,7 +7,7 @@ namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
     [XmlRoot(ElementName = "Configuration", Namespace = "")]
-    public class ConfigurationXml
+    public sealed class ConfigurationXml
     {
         [XmlElement]
         public ShellConfig ShellConfig { get; set; }

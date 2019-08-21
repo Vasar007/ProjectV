@@ -9,7 +9,7 @@ namespace ThingAppraiser.ConfigurationWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/configuration")]
     [ApiController]
-    public class ConfigurationController : ControllerBase
+    public sealed class ConfigurationController : ControllerBase
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<ConfigurationController>();

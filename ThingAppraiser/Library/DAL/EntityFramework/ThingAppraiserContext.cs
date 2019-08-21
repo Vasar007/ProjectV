@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.EntityFramework
 {
-    public class ThingAppraiserContext : DbContext
+    public sealed class ThingAppraiserContext : DbContext
     {
         private readonly DataStorageSettings _storageSettings;
 

@@ -3,8 +3,12 @@ using System.Windows.Controls;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    internal class NotEmptyValidationRule : ValidationRule
+    internal sealed class NotEmptyValidationRule : ValidationRule
     {
+        public NotEmptyValidationRule()
+        {
+        }
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             return string.IsNullOrWhiteSpace((value ?? string.Empty).ToString())

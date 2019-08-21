@@ -4,7 +4,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ThingAppraiser.IO.Input.WebService
 {
-    public class InputTransmitterAsync : IInputterAsync, IInputterBase, ITagable
+    public sealed class InputTransmitterAsync : IInputterAsync, IInputterBase, ITagable
     {
         private readonly List<string> _thingNames;
 

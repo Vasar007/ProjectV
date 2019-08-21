@@ -12,7 +12,7 @@ namespace ThingAppraiser.Crawlers.Omdb
     /// <summary>
     /// Concrete crawler for Open Movie Database service.
     /// </summary>
-    public class OmdbCrawler : Crawler
+    public sealed class OmdbCrawler : Crawler
     {
         /// <summary>
         /// Logger instance for current class.

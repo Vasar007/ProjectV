@@ -11,7 +11,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
     /// <summary>
     /// Represents class which uses Fuzzy Logic Controller to calculate rating.
     /// </summary>
-    public class FuzzyTmdbAppraiser : MoviesAppraiser
+    public sealed class FuzzyTmdbAppraiser : MoviesAppraiser
     {
         /// <summary>
         /// Fuzzy Controller which binds .NET interface with MATLAB module.

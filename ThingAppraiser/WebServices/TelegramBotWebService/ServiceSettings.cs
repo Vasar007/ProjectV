@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.TelegramBotWebService
 {
-    public class ServiceSettings
+    public sealed class ServiceSettings
     {
         public string NgrokUrl { get; set; }
 

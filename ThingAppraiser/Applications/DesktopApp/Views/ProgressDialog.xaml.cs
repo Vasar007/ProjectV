@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for ProgressDialog.xaml
     /// </summary>
-    public partial class ProgressDialog : UserControl
+    public sealed partial class ProgressDialog : UserControl
     {
         public ProgressDialog()
         {

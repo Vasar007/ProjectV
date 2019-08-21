@@ -4,7 +4,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Models.Internal
 {
-    public class RawDataContainer
+    public sealed class RawDataContainer
     {
         private readonly List<BasicInfo> _rawData;
 

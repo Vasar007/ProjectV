@@ -4,7 +4,7 @@
     /// Represents pair of three numbers: minimum, maximum and their subtraction. Used for data 
     /// processing.
     /// </summary>
-    public class MinMaxDenominator
+    public sealed class MinMaxDenominator
     {
         /// <summary>
         /// Minimum value.

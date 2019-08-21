@@ -14,7 +14,7 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
     /// <summary>
     /// Concrete implementation of writer part for Google Drive API.
     /// </summary>
-    public class GoogleDriveWriter : GoogleDriveWorker, IOutputter, IOutputterBase, ITagable
+    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputter, IOutputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.

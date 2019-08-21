@@ -10,7 +10,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
     /// <summary>
     /// Concrete appraiser for OMDb data.
     /// </summary>
-    public class OmdbAppraiser : MoviesAppraiser
+    public sealed class OmdbAppraiser : MoviesAppraiser
     {
         /// <inheritdoc />
         public override string Tag { get; } = nameof(OmdbAppraiser);

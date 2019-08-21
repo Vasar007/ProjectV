@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for ToplistEditorControl.xaml
     /// </summary>
-    public partial class ToplistEditorControl : UserControl
+    public sealed partial class ToplistEditorControl : UserControl
     {
         public ToplistEditorControl()
         {

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace ThingAppraiser.Models.Internal
+﻿namespace ThingAppraiser.Models.Internal
 {
-    public class ThingIdWithRating
+    public sealed class ThingIdWithRating
     {
         public int ThingId { get; }
 

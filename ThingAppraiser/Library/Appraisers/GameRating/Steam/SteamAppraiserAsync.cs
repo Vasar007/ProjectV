@@ -7,7 +7,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers.GameRating.Steam
 {
-    public class SteamAppraiserAsync : GameAppraiserAsync
+    public sealed class SteamAppraiserAsync : GameAppraiserAsync
     {
         /// <inheritdoc />
         public override string Tag { get; } = nameof(SteamAppraiserAsync);

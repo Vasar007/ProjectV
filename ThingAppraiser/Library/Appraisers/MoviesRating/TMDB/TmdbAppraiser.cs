@@ -10,7 +10,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
     /// <summary>
     /// Concrete appraiser for TMDb data.
     /// </summary>
-    public class TmdbAppraiser : MoviesAppraiser
+    public sealed class TmdbAppraiser : MoviesAppraiser
     {
         /// <inheritdoc />
         public override string Tag { get; } = nameof(TmdbAppraiser);

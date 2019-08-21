@@ -10,7 +10,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ThingGrader : IThingGrader
+    internal sealed class ThingGrader : IThingGrader
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ThingGrader>();
 

@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.Models.Internal
 {
-    public class ProcessedDataContainer
+    public sealed class ProcessedDataContainer
     {
         private readonly List<ResultList> _processedData;
 

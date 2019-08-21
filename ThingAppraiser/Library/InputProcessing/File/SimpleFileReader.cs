@@ -11,7 +11,7 @@ namespace ThingAppraiser.IO.Input.File
     /// <summary>
     /// Provides simple and common methods to read data from files.
     /// </summary>
-    public class SimpleFileReader : IFileReader
+    public sealed class SimpleFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.

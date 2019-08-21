@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class OmdbImageSupplier : IImageSupplier
+    internal sealed class OmdbImageSupplier : IImageSupplier
     {
         public OmdbImageSupplier()
         {

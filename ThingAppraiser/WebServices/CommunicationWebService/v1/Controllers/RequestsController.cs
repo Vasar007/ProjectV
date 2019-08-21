@@ -9,7 +9,7 @@ namespace ThingAppraiser.CommunicationWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/requests")]
     [ApiController]
-    public class RequestsController : ControllerBase
+    public sealed class RequestsController : ControllerBase
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<RequestsController>();

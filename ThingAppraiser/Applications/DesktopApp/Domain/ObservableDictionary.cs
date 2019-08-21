@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,
+    public sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,
         INotifyCollectionChanged, INotifyPropertyChanged
     {
         private const string CountString = "Count";
@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Domain
 
         private const string ValuesName = "Values";
 
-        protected IDictionary<TKey, TValue> Dictionary { get; private set; }
+        private IDictionary<TKey, TValue> Dictionary { get; set; }
 
 
         #region Constructors
@@ -242,7 +242,7 @@ namespace ThingAppraiser.DesktopApp.Domain
             OnPropertyChanged(ValuesName);
         }
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

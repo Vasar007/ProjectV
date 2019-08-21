@@ -8,7 +8,7 @@ namespace ThingAppraiser.IO.Output.File
     /// <summary>
     /// Class which is used to convert list to string for FileHelpers library.
     /// </summary>
-    public class RatingValueConverter : ConverterBase
+    public sealed class RatingValueConverter : ConverterBase
     {
         private static readonly char _separator = '|';
 

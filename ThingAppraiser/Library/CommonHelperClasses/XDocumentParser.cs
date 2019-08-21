@@ -7,7 +7,7 @@ namespace ThingAppraiser
     /// <summary>
     /// XML config parser which provides methods with deferred execution to work with it.
     /// </summary>
-    public class XDocumentParser
+    public sealed class XDocumentParser
     {
         /// <summary>
         /// Keeps passed document inside instance.

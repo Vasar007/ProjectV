@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Models.WebService
 {
-    public class ProcessingResponse
+    public sealed class ProcessingResponse
     {
         public ResponseMetadata Metadata { get; set; }
 

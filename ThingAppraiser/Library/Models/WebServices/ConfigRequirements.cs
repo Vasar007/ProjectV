@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.Models.WebService
 {
-    public class ConfigRequirements
+    public sealed class ConfigRequirements
     {
         public List<string> Input { get; set; }
 

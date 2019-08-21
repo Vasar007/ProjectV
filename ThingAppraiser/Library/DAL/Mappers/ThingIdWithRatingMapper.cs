@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Mappers
 {
-    public class ThingIdWithRatingMapper : IMapper<ThingIdWithRating>
+    public sealed class ThingIdWithRatingMapper : IMapper<ThingIdWithRating>
     {
         public ThingIdWithRatingMapper()
         {

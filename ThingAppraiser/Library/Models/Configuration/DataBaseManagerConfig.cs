@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class DataBaseManagerConfig
+    public sealed class DataBaseManagerConfig
     {
         [XmlAttribute(DataType = "string")]
         public string ConnectionString { get; set; }

@@ -13,7 +13,7 @@ namespace ThingAppraiser.Crawlers.Omdb
     /// <summary>
     /// Provides async version of OMDb crawler.
     /// </summary>
-    public class OmdbCrawlerAsync : CrawlerAsync
+    public sealed class OmdbCrawlerAsync : CrawlerAsync
     {
         /// <summary>
         /// Logger instance for current class.

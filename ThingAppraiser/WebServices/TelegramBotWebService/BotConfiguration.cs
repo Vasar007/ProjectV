@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.TelegramBotWebService
 {
-    public class BotConfiguration
+    public sealed class BotConfiguration
     {
         private static readonly string _defaultBotToken = "BOT_TOKEN";
 

@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for EnterDataDialog.xaml
     /// </summary>
-    public partial class EnterDataDialog : UserControl
+    public sealed partial class EnterDataDialog : UserControl
     {
         public EnterDataDialog(string hintText)
         {

@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ThingAppraiser;
 
 namespace FileHelpers
 {
-    /// <see cref="http://stackoverflow.com/questions/3975741/column-headers-in-csv-using-filehelpers-library/8258420#8258420" />
+    /// <see href="http://stackoverflow.com/questions/3975741/column-headers-in-csv-using-filehelpers-library/8258420#8258420" />
     /// <remarks>
     /// It is unofficial extension of FileHelper library to process CSV files with headers
     /// conveniently.
     /// </remarks>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class FieldTitleAttribute : Attribute
+    public sealed class FieldTitleAttribute : Attribute
     {
         public FieldTitleAttribute(string name)
         {
-            Name = name ?? throw new ArgumentNullException("name");
+            Name = name.ThrowIfNull(nameof(name));
         }
 
         public string Name { get; private set; }

@@ -7,7 +7,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
 {
-    public class OmdbAppraiserAsync : MoviesAppraiserAsync
+    public sealed class OmdbAppraiserAsync : MoviesAppraiserAsync
     {
         /// <inheritdoc />
         public override string Tag { get; } = nameof(OmdbAppraiserAsync);

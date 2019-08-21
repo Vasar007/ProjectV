@@ -13,7 +13,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
-    public class TmdbCrawlerAsync : CrawlerAsync
+    public sealed class TmdbCrawlerAsync : CrawlerAsync
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawlerAsync>();
 

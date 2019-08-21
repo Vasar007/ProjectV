@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.DAL
 {
-    public class DataStorageSettings
+    public sealed class DataStorageSettings
     {
         public string DbConnectionString { get; }
 

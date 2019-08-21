@@ -3,7 +3,7 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal class ToplistItem : ModelBase
+    internal sealed class ToplistItem : ModelBase
     {
         private string _name;
 

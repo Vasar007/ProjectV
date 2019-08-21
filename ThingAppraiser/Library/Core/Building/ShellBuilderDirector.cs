@@ -4,7 +4,7 @@
     /// Builder director which controls of <see cref="Shell" /> creating process with the help of
     /// specified builder.
     /// </summary>
-    public class ShellBuilderDirector
+    public sealed class ShellBuilderDirector
     {
         /// <summary>
         /// Builder which create step by step <see cref="Shell" /> class.

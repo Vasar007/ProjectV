@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal class ScoreToplist : ToplistBase
+    internal sealed class ScoreToplist : ToplistBase
     {
         private Dictionary<int, ToplistBlock> _blocks = new Dictionary<int, ToplistBlock>();
 

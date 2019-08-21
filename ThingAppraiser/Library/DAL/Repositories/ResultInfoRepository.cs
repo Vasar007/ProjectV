@@ -7,7 +7,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class ResultInfoRepository : IResultRepository, IRepository<ResultInfo, Guid>,
+    public sealed class ResultInfoRepository : IResultRepository, IRepository<ResultInfo, Guid>,
         IRepositoryBase, ITagable, ITypeId
     {
         private readonly DataStorageSettings _dbSettings;

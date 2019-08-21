@@ -8,7 +8,7 @@ using NLog.Layouts;
 namespace NLog.Extention
 {
     /// <remarks>
-    /// https://stackoverflow.com/questions/34333794/print-a-multi-line-message-with-nlog
+    /// <see href="https://stackoverflow.com/questions/34333794/print-a-multi-line-message-with-nlog" />
     /// </remarks>
     [LayoutRenderer("replace-newlines-withlayout")]
     [ThreadAgnostic]

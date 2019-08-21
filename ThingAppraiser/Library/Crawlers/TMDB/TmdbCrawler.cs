@@ -14,7 +14,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
     /// <summary>
     /// Concrete crawler for The Movie Database service.
     /// </summary>
-    public class TmdbCrawler : Crawler
+    public sealed class TmdbCrawler : Crawler
     {
         /// <summary>
         /// Logger instance for current class.

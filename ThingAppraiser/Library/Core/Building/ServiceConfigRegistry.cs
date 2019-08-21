@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace ThingAppraiser.Core.Building
 {
-    public class ServiceConfigRegistry
+    public sealed class ServiceConfigRegistry
     {
         private readonly Dictionary<string, XElement> _messageHandlerRegistry = 
             new Dictionary<string, XElement>();

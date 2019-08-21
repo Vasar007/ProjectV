@@ -10,7 +10,7 @@ namespace ThingAppraiser.IO.Input.File
     /// FileHelper doesn't support properties. That's why this data class contains public field.
     /// </remarks>
     [DelimitedRecord(","), IgnoreEmptyLines(true), IgnoreFirst(1)]
-    public class FilterInputFileData
+    public sealed class FilterInputFileData
     {
         /// <summary>
         /// Finds in header "Status" column and try to read its values.

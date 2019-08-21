@@ -5,7 +5,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers.Steam
 {
-    public class DataMapperSteamGame : IDataMapper<SteamApp, SteamGameInfo>
+    public sealed class DataMapperSteamGame : IDataMapper<SteamApp, SteamGameInfo>
     {
         public DataMapperSteamGame()
         {

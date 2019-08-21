@@ -3,7 +3,7 @@
     /// <summary>
     /// Helper class to work with Google Drive parameters.
     /// </summary>
-    public class GoogleDriveFilesListOptionalParams
+    public sealed class GoogleDriveFilesListOptionalParams
     {
         /// <summary>
         /// The source of files to list.

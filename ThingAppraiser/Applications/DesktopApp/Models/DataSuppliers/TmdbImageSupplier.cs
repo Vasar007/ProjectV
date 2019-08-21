@@ -5,7 +5,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class TmdbImageSupplier : IImageSupplier
+    internal sealed class TmdbImageSupplier : IImageSupplier
     {
         private TmdbServiceConfigurationInfo _serviceConfigurationInfo;
 

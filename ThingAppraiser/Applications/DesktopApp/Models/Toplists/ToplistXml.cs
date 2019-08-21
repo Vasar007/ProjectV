@@ -8,7 +8,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     [Serializable]
     [XmlRoot(ElementName = "Toplist", Namespace = "")]
-    public class ToplistXml
+    public sealed class ToplistXml
     {
         [XmlAttribute(DataType = "string")]
         public string Name { get; set; }

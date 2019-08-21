@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class InputManagerConfig
+    public sealed class InputManagerConfig
     {
         [XmlAttribute(DataType = "string")]
         public string DefaultInStorageName { get; set; }

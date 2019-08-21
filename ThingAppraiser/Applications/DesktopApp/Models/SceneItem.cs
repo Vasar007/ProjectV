@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace ThingAppraiser.DesktopApp.Models
 {
-    internal class SceneItem : ModelBase
+    internal sealed class SceneItem : ModelBase
     {
         private string _name;
 

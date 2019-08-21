@@ -10,7 +10,7 @@ using ThingAppraiser.TelegramBotWebService.Properties;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class UpdateServiceAsync : IUpdateServiceAsync
+    public sealed class UpdateServiceAsync : IUpdateServiceAsync
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();

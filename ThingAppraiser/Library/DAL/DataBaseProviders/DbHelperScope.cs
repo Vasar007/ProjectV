@@ -9,7 +9,7 @@ using ThingAppraiser.Logging;
 namespace ThingAppraiser.DAL
 {
     // TODO: add command creation method (important).
-    public class DbHelperScope : IDisposable
+    public sealed class DbHelperScope : IDisposable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<DbHelperScope>();

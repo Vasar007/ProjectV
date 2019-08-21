@@ -11,7 +11,7 @@ namespace ThingAppraiser.DAL.Mappers
     /// <see cref="IMapper{TmdbMovieInfo}" />  because we must correspond
     /// <see cref="Repositories.IRepository" /> interface.
     /// </remarks>
-    public class TmdbMovieMapper : IMapper<BasicInfo>
+    public sealed class TmdbMovieMapper : IMapper<BasicInfo>
     {
         public TmdbMovieMapper()
         {

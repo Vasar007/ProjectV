@@ -19,7 +19,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class MainWindowViewModel : ViewModelBase
+    internal sealed class MainWindowViewModel : ViewModelBase
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();

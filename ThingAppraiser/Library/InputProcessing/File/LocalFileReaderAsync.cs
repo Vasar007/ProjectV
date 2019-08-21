@@ -5,7 +5,7 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input.File
 {
-    public class LocalFileReaderAsync : IInputterAsync, IInputterBase, ITagable
+    public sealed class LocalFileReaderAsync : IInputterAsync, IInputterBase, ITagable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<LocalFileReaderAsync>();

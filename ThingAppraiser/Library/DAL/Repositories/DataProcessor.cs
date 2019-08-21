@@ -3,7 +3,7 @@ using ThingAppraiser.DAL.Mappers;
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public class DataProcessor : IDataProcessor
+    public sealed class DataProcessor : IDataProcessor
     {
         private readonly DataStorageSettings _dbSettings;
 

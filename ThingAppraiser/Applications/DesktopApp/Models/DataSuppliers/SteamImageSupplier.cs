@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class SteamImageSupplier : IImageSupplier
+    internal sealed class SteamImageSupplier : IImageSupplier
     {
         public SteamImageSupplier()
         {

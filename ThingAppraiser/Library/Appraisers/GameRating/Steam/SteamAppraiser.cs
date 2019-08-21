@@ -10,7 +10,7 @@ namespace ThingAppraiser.Appraisers.GameRating.Steam
     /// <summary>
     /// Concrete appraiser for Steam data.
     /// </summary>
-    public class SteamAppraiser : GameAppraiser
+    public sealed class SteamAppraiser : GameAppraiser
     {
         /// <inheritdoc />
         public override string Tag { get; } = nameof(SteamAppraiser);

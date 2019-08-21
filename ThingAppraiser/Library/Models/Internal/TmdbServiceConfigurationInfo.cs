@@ -12,7 +12,7 @@ namespace ThingAppraiser.Models.Internal
     /// JSON.
     /// </remarks>
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class TmdbServiceConfigurationInfo : IOptionalData
+    public sealed class TmdbServiceConfigurationInfo : IOptionalData
     {
         /// <summary>
         /// Provides base url to image server.

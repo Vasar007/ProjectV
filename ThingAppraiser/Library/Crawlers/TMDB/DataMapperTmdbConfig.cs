@@ -3,7 +3,7 @@ using TMDbLib.Objects.General;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
-    public class DataMapperTmdbConfig : IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo>
+    public sealed class DataMapperTmdbConfig : IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo>
     {
         public DataMapperTmdbConfig()
         {

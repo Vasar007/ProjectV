@@ -4,7 +4,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.IO.Output.WebService
 {
-    public class OutputTransmitterAsync : IOutputterAsync, IOutputterBase, ITagable
+    public sealed class OutputTransmitterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
         private List<List<RatingDataContainer>> _transmittingResults;
 

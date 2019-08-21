@@ -8,7 +8,7 @@ using System.IO;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class ToplistEditorViewModel : ViewModelBase
+    internal sealed class ToplistEditorViewModel : ViewModelBase
     {
         private ToplistBase _toplist;
 

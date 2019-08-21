@@ -12,7 +12,7 @@ namespace ThingAppraiser.IO.Output.File
     /// Class which can write to files and process output content. Uses FileHelpers library to
     /// delegate all routine work.
     /// </summary>
-    public class LocalFileWriter : IOutputter, IOutputterBase, ITagable
+    public sealed class LocalFileWriter : IOutputter, IOutputterBase, ITagable
     {
         /// <summary>
         /// Logger instance for current class.

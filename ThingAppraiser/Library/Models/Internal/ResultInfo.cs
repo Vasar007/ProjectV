@@ -5,7 +5,7 @@ namespace ThingAppraiser.Models.Internal
     /// <summary>
     /// Represent result of internal calculations and data processing.
     /// </summary>
-    public class ResultInfo
+    public sealed class ResultInfo
     {
         /// <summary>
         /// Thing ID.

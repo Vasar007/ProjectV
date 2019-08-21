@@ -7,7 +7,7 @@ using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {
-    public class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync, IDisposable
+    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync, IDisposable
     {
         private readonly ServiceSettings _settings;
 

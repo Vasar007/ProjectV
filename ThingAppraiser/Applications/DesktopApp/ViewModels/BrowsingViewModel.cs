@@ -6,7 +6,7 @@ using ThingAppraiser.DesktopApp.Models.Things;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal class BrowsingViewModel : ViewModelBase
+    internal sealed class BrowsingViewModel : ViewModelBase
     {
         private readonly IThingSupplier _thingSupplier;
 

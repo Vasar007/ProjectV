@@ -9,7 +9,7 @@ using ThingAppraiser.Logging;
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain.Examples
 {
     // TODO: remove this class later!
-    public class Examples
+    public sealed class Examples
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<Examples>();
 

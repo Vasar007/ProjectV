@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace ThingAppraiser.Models.Configuration
 {
     [Serializable]
-    public class ShellConfig
+    public sealed class ShellConfig
     {
         [XmlElement]
         public MessageHandlerConfig MessageHandler { get; set; }

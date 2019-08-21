@@ -3,7 +3,7 @@ using ThingAppraiser.Models.Configuration;
 
 namespace ThingAppraiser.Models.WebService
 {
-    public class RequestData
+    public sealed class RequestData
     {
         public List<string> ThingNames { get; set; }
 

@@ -7,7 +7,7 @@ namespace ThingAppraiser.Models.Data
     /// <summary>
     /// Concrete data object for Steam service <see href="https://store.steampowered.com/" />.
     /// </summary>
-    public class SteamGameInfo : GameInfo
+    public sealed class SteamGameInfo : GameInfo
     {
         /// <inheritdoc />
         public override string Kind { get; } = nameof(SteamGameInfo);

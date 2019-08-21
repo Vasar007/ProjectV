@@ -4,7 +4,7 @@ using ThingAppraiser.DesktopApp.Views;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal class ToplistBlock : ModelBase
+    internal sealed class ToplistBlock : ModelBase
     {
         private string _title;
 

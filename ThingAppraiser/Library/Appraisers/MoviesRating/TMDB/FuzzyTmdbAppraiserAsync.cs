@@ -8,7 +8,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
 {
-    public class FuzzyTmdbAppraiserAsync : MoviesAppraiserAsync
+    public sealed class FuzzyTmdbAppraiserAsync : MoviesAppraiserAsync
     {
         private readonly IFuzzyController _fuzzyController = new FuzzyControllerIFuzzyController();
 
