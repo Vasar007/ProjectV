@@ -29,11 +29,11 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         {
         }
 
-        protected static double CalculateRating(TmdbMovieInfo entity, 
+        private static double CalculateRating(TmdbMovieInfo entity, 
             MinMaxDenominator voteCountMMD, MinMaxDenominator voteAverageMMD, 
             MinMaxDenominator popularityMMD)
         {
-            double baseValue = CalculateRating(entity, voteCountMMD, voteAverageMMD);
+            double baseValue = Appraiser.CalculateRating(entity, voteCountMMD, voteAverageMMD);
             double popValue = (entity.Popularity - popularityMMD.MinValue) / 
                               popularityMMD.Denominator;
 
