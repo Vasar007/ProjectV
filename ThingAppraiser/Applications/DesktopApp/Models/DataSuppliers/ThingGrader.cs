@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Crawlers.Tmdb;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.WebService;
 using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Logging;
+using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {

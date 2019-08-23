@@ -254,6 +254,10 @@
       <Project>{5cc51bce-a503-4614-bddb-5a66c177d41d}</Project>
       <Name>Crawlers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\ExternalServices\TmdbService\TmdbService.csproj">
+      <Project>{1C03E557-5126-406D-BEA2-4BDC1CCFEEFB}</Project>
+      <Name>TmdbService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Models\Models.csproj">
       <Project>{3cce9023-b85d-4450-83d6-3d652007900a}</Project>
       <Name>Models</Name>

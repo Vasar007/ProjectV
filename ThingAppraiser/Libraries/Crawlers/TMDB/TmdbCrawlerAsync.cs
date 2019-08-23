@@ -10,6 +10,8 @@ using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.TmdbService;
+using ThingAppraiser.TmdbService.Mappers;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
@@ -71,7 +73,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
                 SearchMovie searchResult = response.Results.First();
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
                 }
 
                 TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);

@@ -1,7 +1,7 @@
 ﻿using System;
-using ThingAppraiser.Crawlers.Tmdb;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
@@ -57,20 +57,30 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             switch (imageSize)
             {
                 case ImageSize.Small:
+                {
                     return 0;
+                }
 
                 case ImageSize.Middle:
+                {
                     return length / 3;
+                }
 
                 case ImageSize.Large:
+                {
                     return length * 2 / 3;
+                }
 
                 case ImageSize.Origin:
+                {
                     return length - 1;
+                }
 
                 default:
+                {
                     throw new ArgumentOutOfRangeException(nameof(imageSize), imageSize,
                                                           "Invalid image size value.");
+                }
             }
         }
     }

@@ -8,6 +8,8 @@ using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.TmdbService;
+using ThingAppraiser.TmdbService.Mappers;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {

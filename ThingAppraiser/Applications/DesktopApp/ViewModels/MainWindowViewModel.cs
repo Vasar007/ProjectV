@@ -243,7 +243,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 sceneItem.Content = new ToplistEditorControl();
                 if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
                 {
-                    toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType, toplistFormat);
+                    toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType,
+                                                               toplistFormat);
                     SelectedSceneItem = sceneItem;
                 }
             }

@@ -18,16 +18,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\CommonHelperClasses\CommonHelperClasses.csproj" />
-    <ProjectReference Include="..\..\Library\Core\Core.csproj" />
-    <ProjectReference Include="..\..\Library\Models\Models.csproj" />
-    <ProjectReference Include="..\..\Library\Logging\Logging.csproj" />
+    <ProjectReference Include="..\..\Libraries\CommonHelperClasses\CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\..\Libraries\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Models\Models.csproj" />
+    <ProjectReference Include="..\..\Libraries\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

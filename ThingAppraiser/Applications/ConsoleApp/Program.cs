@@ -33,7 +33,8 @@ namespace ThingAppraiser.ConsoleApp
         }
 
         /// <summary>
-        /// Method with logic of execution the Console Application which created shell to process data.
+        /// Method with logic of execution the Console Application which created shell to process
+        /// data.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>

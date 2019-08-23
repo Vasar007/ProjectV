@@ -14,17 +14,26 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
 
+            _logger.Info($"Creating toplist [Name: {toplistName}, Type: {toplistType.ToString()} " +
+                         $"Format: {toplistFormat.ToString()}].");
+
             switch (toplistType)
             {
                 case ToplistType.Score:
+                {
                     return new ScoreToplist(toplistName, toplistFormat);
+                }
 
                 case ToplistType.Simple:
+                {
                     return new SimpleToplist(toplistName, toplistFormat);
+                }
 
                 default:
+                {
                     throw new ArgumentOutOfRangeException(nameof(toplistType), toplistType,
                                                           "Could not recognize toplist type.");
+                }
             }
         }
 
@@ -32,11 +41,14 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
+            _logger.Info($"Loading toplist from file \"{toplistFilename}\".");
+
             string fileContent = File.ReadAllText(toplistFilename);
             ToplistXml toplistXml = ToplistBase.Desirialize(fileContent);
 
-            ToplistBase toplist = Create(toplistXml.Name, (ToplistType) toplistXml.Type,
-                                         (ToplistFormat) toplistXml.Format);
+            ToplistBase toplist = Create(
+                toplistXml.Name, (ToplistType) toplistXml.Type, (ToplistFormat) toplistXml.Format
+            );
             toplist.UpdateBlocks(toplistXml.ConvertXElementsToBlocks());
             return toplist;
         }

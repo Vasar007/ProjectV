@@ -1,7 +1,7 @@
 ﻿using ThingAppraiser.Models.Internal;
 using TMDbLib.Objects.General;
 
-namespace ThingAppraiser.Crawlers.Tmdb
+namespace ThingAppraiser.TmdbService.Mappers
 {
     public sealed class DataMapperTmdbConfig : IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo>
     {
@@ -9,7 +9,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
         {
         }
 
-        #region IDataMapper<SearchMovie, MovieInfo> Implementation
+        #region IDataMapper<SearchMovie, TmdbServiceConfigurationInfo> Implementation
 
         public TmdbServiceConfigurationInfo Transform(TMDbConfig dataObject)
         {
