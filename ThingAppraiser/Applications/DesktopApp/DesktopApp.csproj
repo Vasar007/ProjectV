@@ -242,31 +242,31 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\CommonHelperClasses\CommonHelperClasses.csproj">
+    <ProjectReference Include="..\..\Libraries\CommonHelperClasses\CommonHelperClasses.csproj">
       <Project>{6e425cf6-a8a7-49a2-a679-6d97e8a0f1b9}</Project>
       <Name>CommonHelperClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\Core\Core.csproj">
+    <ProjectReference Include="..\..\Libraries\Core\Core.csproj">
       <Project>{cc0ef513-e29d-4cb0-a2ba-767bad540ec5}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\Crawlers\Crawlers.csproj">
+    <ProjectReference Include="..\..\Libraries\Crawlers\Crawlers.csproj">
       <Project>{5cc51bce-a503-4614-bddb-5a66c177d41d}</Project>
       <Name>Crawlers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\Models\Models.csproj">
+    <ProjectReference Include="..\..\Libraries\Models\Models.csproj">
       <Project>{3cce9023-b85d-4450-83d6-3d652007900a}</Project>
       <Name>Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\InputProcessing\InputProcessing.csproj">
+    <ProjectReference Include="..\..\Libraries\InputProcessing\InputProcessing.csproj">
       <Project>{5228b7ab-6ad0-4988-bf96-2b1a1ccc9ae7}</Project>
       <Name>InputProcessing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\Logging\Logging.csproj">
+    <ProjectReference Include="..\..\Libraries\Logging\Logging.csproj">
       <Project>{691ef706-60f9-4092-a0b9-529de966443c}</Project>
       <Name>Logging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\OutputProcessing\OutputProcessing.csproj">
+    <ProjectReference Include="..\..\Libraries\OutputProcessing\OutputProcessing.csproj">
       <Project>{6d9824d8-3429-4b40-b999-4b690437677a}</Project>
       <Name>OutputProcessing</Name>
     </ProjectReference>

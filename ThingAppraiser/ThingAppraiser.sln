@@ -3,33 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Library\Models\Models.csproj", "{3CCE9023-B85D-4450-83D6-3D652007900A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Libraries\Models\Models.csproj", "{3CCE9023-B85D-4450-83D6-3D652007900A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Library\Logging\Logging.csproj", "{691EF706-60F9-4092-A0B9-529DE966443C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Libraries\Logging\Logging.csproj", "{691EF706-60F9-4092-A0B9-529DE966443C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOHelperClasses", "Library\IOHelperClasses\IOHelperClasses.csproj", "{30383659-A566-4FF3-94EE-C53B9DF64FEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOHelperClasses", "Libraries\IOHelperClasses\IOHelperClasses.csproj", "{30383659-A566-4FF3-94EE-C53B9DF64FEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputProcessing", "Library\InputProcessing\InputProcessing.csproj", "{5228B7AB-6AD0-4988-BF96-2B1A1CCC9AE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputProcessing", "Libraries\InputProcessing\InputProcessing.csproj", "{5228B7AB-6AD0-4988-BF96-2B1A1CCC9AE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutputProcessing", "Library\OutputProcessing\OutputProcessing.csproj", "{6D9824D8-3429-4B40-B999-4B690437677A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutputProcessing", "Libraries\OutputProcessing\OutputProcessing.csproj", "{6D9824D8-3429-4B40-B999-4B690437677A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawlers", "Library\Crawlers\Crawlers.csproj", "{5CC51BCE-A503-4614-BDDB-5A66C177D41D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawlers", "Libraries\Crawlers\Crawlers.csproj", "{5CC51BCE-A503-4614-BDDB-5A66C177D41D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appraisers", "Library\Appraisers\Appraisers.csproj", "{A3E7BDF8-B64E-4435-8CE3-471B8CAA6F6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appraisers", "Libraries\Appraisers\Appraisers.csproj", "{A3E7BDF8-B64E-4435-8CE3-471B8CAA6F6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Library\Core\Core.csproj", "{CC0EF513-E29D-4CB0-A2BA-767BAD540EC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Libraries\Core\Core.csproj", "{CC0EF513-E29D-4CB0-A2BA-767BAD540EC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Library\Communication\Communication.csproj", "{CCFB8CA9-6597-413D-9E04-1FAA5AF4F24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Libraries\Communication\Communication.csproj", "{CCFB8CA9-6597-413D-9E04-1FAA5AF4F24B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelperClasses", "Library\CommonHelperClasses\CommonHelperClasses.csproj", "{6E425CF6-A8A7-49A2-A679-6D97E8A0F1B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelperClasses", "Libraries\CommonHelperClasses\CommonHelperClasses.csproj", "{6E425CF6-A8A7-49A2-A679-6D97E8A0F1B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Applications\ConsoleApp\ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp", "Applications\DesktopApp\DesktopApp.csproj", "{2572EE5A-863F-4C5D-9855-85A400920D34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyLogicSystem", "Library\FuzzyLogicSystem\FuzzyLogicSystem.csproj", "{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyLogicSystem", "Libraries\FuzzyLogicSystem\FuzzyLogicSystem.csproj", "{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "Library\DAL\DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "Libraries\DAL\DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebServices", "WebServices", "{178A5A26-091E-4A8D-A385-171C3644A7D4}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessingWebService", "Web
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A7284513-CE2B-43D7-833E-99752D705D26}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{A3BD6BDE-F139-4D02-93C8-F006CF96016D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A3BD6BDE-F139-4D02-93C8-F006CF96016D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramBotWebService", "WebServices\TelegramBotWebService\TelegramBotWebService.csproj", "{A3D3F035-6372-422B-8066-769D9251982A}"
 EndProject

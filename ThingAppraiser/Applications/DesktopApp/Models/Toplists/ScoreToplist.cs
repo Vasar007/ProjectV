@@ -6,6 +6,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal sealed class ScoreToplist : ToplistBase
     {
+        // TODO: may be need to delete this dictionary later.
         private Dictionary<int, ToplistBlock> _blocks = new Dictionary<int, ToplistBlock>();
 
 
@@ -70,7 +71,9 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
                 default:
                 {
-                    throw new Exception($"Unknown toplist format: '{Format.ToString()}'.");
+                    throw new InvalidOperationException(
+                       $"Unknown toplist format: '{Format.ToString()}'."
+                   );
                 }
             }
 
