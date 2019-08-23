@@ -102,14 +102,12 @@ namespace ThingAppraiser.Core.Building
             XElement inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
             if (inputManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_inputManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build InputManager.");
-                throw ex;
             }
 
-            String defaultStorageName = XDocumentParser.GetAttributeValue(
+            string defaultStorageName = XDocumentParser.GetAttributeValue(
                 inputManagerElement, _defaultInStorageNameParameterName
             );
             _inputManager = new IO.Input.InputManager(defaultStorageName);
@@ -132,11 +130,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (crawlerManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_crawlersManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build CrawlersManager.");
-                throw ex;
             }
 
             var crawlersOutput = XDocumentParser.GetAttributeValue<Boolean>(
@@ -162,11 +158,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (appraiserManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_appraisersManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build AppraisersManager.");
-                throw ex;
             }
 
             var appraisersOutput = XDocumentParser.GetAttributeValue<Boolean>(
@@ -192,14 +186,12 @@ namespace ThingAppraiser.Core.Building
             );
             if (outputManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_outputManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build OutputManager.");
-                throw ex;
             }
 
-            String defaultStorageName = XDocumentParser.GetAttributeValue(
+            string defaultStorageName = XDocumentParser.GetAttributeValue(
                 outputManagerElement, _defaultOutStorageNameParameterName
             );
             _outputManager = new IO.Output.OutputManager(defaultStorageName);
@@ -222,11 +214,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (dataBaseManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_dataBaseManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build DataBaseManager.");
-                throw ex;
             }
 
             string connectionString = XDocumentParser.GetAttributeValue(

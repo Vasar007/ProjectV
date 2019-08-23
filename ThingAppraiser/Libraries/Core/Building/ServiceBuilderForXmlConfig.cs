@@ -40,6 +40,9 @@ namespace ThingAppraiser.Core.Building
         public Communication.IMessageHandler CreateMessageHandler(XElement messageHandlerElement)
         {
             messageHandlerElement.ThrowIfNull(nameof(messageHandlerElement));
+
+            _logger.Info("Creating message handler.");
+
             var handlerElement = messageHandlerElement.Attribute(_messageHandlerTypeParameterName);
             handlerElement.ThrowIfNull(nameof(handlerElement));
 
@@ -59,13 +62,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(messageHandlerElement), messageHandlerElement,
                         "Couldn't recognize message handler type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{handlerElement.Value}");
-                    throw ex;
                 }
             }
         }
@@ -85,6 +85,8 @@ namespace ThingAppraiser.Core.Building
         public IO.Input.IInputter CreateInputter(XElement inputterElement)
         {
             inputterElement.ThrowIfNull(nameof(inputterElement));
+
+            _logger.Info("Creating inputter.");
 
             switch (inputterElement.Name.LocalName)
             {
@@ -112,13 +114,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(inputterElement), inputterElement,
                         "Couldn't recognize input type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{inputterElement.Name.LocalName}");
-                    throw ex;
                 }
             }
         }
@@ -138,6 +137,8 @@ namespace ThingAppraiser.Core.Building
         public Crawlers.Crawler CreateCrawler(XElement crawlerElement)
         {
             crawlerElement.ThrowIfNull(nameof(crawlerElement));
+
+            _logger.Info("Creating crawler.");
 
             switch (crawlerElement.Name.LocalName)
             {
@@ -173,13 +174,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(crawlerElement), crawlerElement,
                         "Couldn't recognize crawler type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{crawlerElement.Name.LocalName}");
-                    throw ex;
                 }
             }
         }
@@ -199,6 +197,8 @@ namespace ThingAppraiser.Core.Building
         public Appraisers.Appraiser CreateAppraiser(XElement appraiserElement)
         {
             appraiserElement.ThrowIfNull(nameof(appraiserElement));
+
+            _logger.Info("Creating appraiser.");
 
             switch (appraiserElement.Name.LocalName)
             {
@@ -224,13 +224,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(appraiserElement), appraiserElement,
                         "Couldn't recognize appraiser type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{appraiserElement.Name.LocalName}");
-                    throw ex;
                 }
             }
         }
@@ -251,6 +248,8 @@ namespace ThingAppraiser.Core.Building
         {
             outputterElement.ThrowIfNull(nameof(outputterElement));
 
+            _logger.Info("Creating outputter.");
+
             switch (outputterElement.Name.LocalName)
             {
                 case _localFileParameterName:
@@ -265,13 +264,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(outputterElement), outputterElement,
                         "Couldn't recognize output type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{outputterElement.Name.LocalName}");
-                    throw ex;
                 }
             }
         }
@@ -298,6 +294,8 @@ namespace ThingAppraiser.Core.Building
             repositoryElement.ThrowIfNull(nameof(repositoryElement));
             storageSettings.ThrowIfNull(nameof(storageSettings));
 
+            _logger.Info("Creating reppository.");
+
             switch (repositoryElement.Name.LocalName)
             {
                 case _basicInfoRepositoryParameterName:
@@ -312,13 +310,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(repositoryElement), repositoryElement,
                         "Couldn't recognize output type specified in XML config."
                     );
-                    _logger.Error(ex, "Passed incorrect data to method: " +
-                                       $"{repositoryElement.Name.LocalName}");
-                    throw ex;
                 }
             }
         }

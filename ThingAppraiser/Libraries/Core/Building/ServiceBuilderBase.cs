@@ -160,6 +160,8 @@ namespace ThingAppraiser.Core.Building
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
+            _logger.Info("Creating file reader.");
+
             switch (fileReaderName)
             {
                 case _simpleFileReaderParameterName:
@@ -174,12 +176,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(fileReaderName), fileReaderName,
                         "Couldn't recognize file reader type."
                     );
-                    _logger.Error(ex, $"Passed incorrect data to method: {fileReaderName}");
-                    throw ex;
                 }
             }
         }
@@ -203,6 +203,8 @@ namespace ThingAppraiser.Core.Building
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
+            _logger.Info("Creating async file reader.");
+
             switch (fileReaderName)
             {
                 case _simpleFileReaderParameterName:
@@ -217,12 +219,10 @@ namespace ThingAppraiser.Core.Building
 
                 default:
                 {
-                    var ex = new ArgumentOutOfRangeException(
+                    throw new ArgumentOutOfRangeException(
                         nameof(fileReaderName), fileReaderName,
                         "Couldn't recognize file reader type."
                     );
-                    _logger.Error(ex, $"Passed incorrect data to method: {fileReaderName}");
-                    throw ex;
                 }
             }
         }
@@ -236,6 +236,8 @@ namespace ThingAppraiser.Core.Building
         /// </remarks>
         private static DriveService CreateDriveService()
         {
+            _logger.Info("Creating Google Drive service.");
+
             UserCredential credential;
             using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {

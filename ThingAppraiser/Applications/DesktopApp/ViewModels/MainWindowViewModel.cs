@@ -357,25 +357,33 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             switch (dataSource)
             {
                 case DataSource.Nothing:
+                {
                     _logger.Error("Data source wasn't set.");
                     throw new InvalidOperationException("Data source wasn't set.");
+                }
 
                 case DataSource.InputThing:
+                {
                     return await CreateRequestWithUserInputData();
+                }
 
                 case DataSource.LocalFile:
+                {
                     return await CreateRequestWithLocalFileData();
+                }
 
                 case DataSource.GoogleDrive:
+                {
                     return await CreateGoogleDriveRequest();
+                }
 
                 default:
-                    var ex = new ArgumentOutOfRangeException(
+                {
+                    throw new ArgumentOutOfRangeException(
                         nameof(dataSource), dataSource,
                         "Couldn't recognize specified data source type."
                     );
-                    _logger.Error(ex, $"Passed incorrect data to method: {dataSource.ToString()}");
-                    throw ex;
+                }
             }
         }
 

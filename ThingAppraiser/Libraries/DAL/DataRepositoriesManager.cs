@@ -66,11 +66,9 @@ namespace ThingAppraiser.DAL
         {
             if (!_repositories.TryGetValue(dataHandlerType, out IDataRepository repository))
             {
-                var ex = new ArgumentException(
+                throw new ArgumentException(
                     $"Type {dataHandlerType} didn't exist in repositories!", nameof(dataHandlerType)
                 );
-                _logger.Error(ex, "Tried to get invalid thing data handler.");
-                throw ex;
             }
             return repository.GetItemById(thingId);
         }
@@ -166,8 +164,10 @@ namespace ThingAppraiser.DAL
                 }
 
                 default:
+                {
                     _logger.Warn($"Unregornized data type: {data[0].GetType().FullName}");
                     break;
+                }
             }
             return container;
         }

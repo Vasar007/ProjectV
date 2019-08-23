@@ -103,11 +103,9 @@ namespace ThingAppraiser.Core.Building
             XElement inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
             if (inputManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_inputManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build InputManager.");
-                throw ex;
             }
 
             string defaultStorageName = XDocumentParser.GetAttributeValue(
@@ -133,11 +131,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (crawlerManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_crawlersManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build CrawlersManager.");
-                throw ex;
             }
 
             var crawlersOutput = XDocumentParser.GetAttributeValue<bool>(
@@ -163,11 +159,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (appraiserManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_appraisersManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build AppraisersManager.");
-                throw ex;
             }
 
             var appraisersOutput = XDocumentParser.GetAttributeValue<bool>(
@@ -193,11 +187,9 @@ namespace ThingAppraiser.Core.Building
             );
             if (outputManagerElement is null)
             {
-                var ex = new InvalidOperationException(
+                throw new InvalidOperationException(
                     $"XML document hasn't value for {_outputManagerParameterName}."
                 );
-                _logger.Error(ex, "Cannot build OutputManager.");
-                throw ex;
             }
 
             string defaultStorageName = XDocumentParser.GetAttributeValue(

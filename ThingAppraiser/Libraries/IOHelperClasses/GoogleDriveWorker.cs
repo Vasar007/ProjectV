@@ -106,22 +106,38 @@ namespace ThingAppraiser.IO
             switch (mimeType)
             {
                 case "text/plain":
+                {
                     return ".txt";
+                }
+
                 case "text/csv":
+                {
                     return ".csv";
+                }
+
                 case "text/html":
+                {
                     return ".html";
+                }
+
                 case "application/rtf":
+                {
                     return ".rtf";
+                }
+
                 case "application/pdf":
+                {
                     return ".pdf";
+                }
 
                 default:
+                {
                     _logger.Warn($"Not found extension for MIME type: {mimeType}");
                     GlobalMessageHandler.OutputMessage(
                         $"Not found extension for MIME type: {mimeType}"
                     );
                     return string.Empty;
+                }
             }
         }
 
@@ -137,33 +153,46 @@ namespace ThingAppraiser.IO
         {
             if (!HasExtenstionSafe(filename))
             {
-                var ex = new ArgumentException($"Filename \"{filename}\" isn't contain extension.",
-                                               nameof(filename));
-
-                _logger.Error(ex, "Got filename without extension.");
-                throw ex;
+                throw new ArgumentException($"Filename \"{filename}\" isn't contain extension.",
+                                            nameof(filename));
             }
 
             string extension = Path.GetExtension(filename);
             switch (extension)
             {
                 case ".txt":
+                {
                     return "text/plain";
+                }
+
                 case ".csv":
+                {
                     return "text/csv";
+                }
+
                 case ".html":
+                {
                     return "text/html";
+                }
+
                 case ".rtf":
+                {
                     return "application/rtf";
+                }
+
                 case ".pdf":
+                {
                     return "application/pdf";
+                }
 
                 default:
+                {
                     _logger.Warn($"Not found MIME type for extension: {extension}");
                     GlobalMessageHandler.OutputMessage(
                         $"Not found MIME type for extension: {extension}"
                     );
                     return string.Empty;
+                }
             }
         }
 

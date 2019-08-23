@@ -43,6 +43,8 @@ namespace ThingAppraiser.IO.Input.File
         /// <remarks>File must contain "Status" and "Thing Name" columns.</remarks>
         public List<string> ReadFile(string filename)
         {
+            _logger.Info($"Reading file \"{filename}\".");
+
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
             var engine = new FileHelperAsyncEngine<FilterInputFileData>();
@@ -50,9 +52,10 @@ namespace ThingAppraiser.IO.Input.File
             using (engine.BeginReadFile(filename))
             {
                 // The engine is IEnumerable.
-                result.UnionWith(engine
-                                    .Where(data => string.IsNullOrEmpty(data.status))
-                                    .Select(data => data.thingName)
+                result.UnionWith(
+                    engine
+                        .Where(data => string.IsNullOrEmpty(data.status))
+                        .Select(data => data.thingName)
                 );
             }
             return result.ToList();
@@ -63,19 +66,20 @@ namespace ThingAppraiser.IO.Input.File
         /// <exception cref="InvalidDataException">CSV file doesn't contain header.</exception>
         public List<string> ReadCsvFile(string filename)
         {
+            _logger.Info($"Reading CSV file \"{filename}\".");
+
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
 
             using (var reader = new StreamReader(filename))
             using (var csv = new CsvReader(
                        reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-                   ))
+                  )
+            )
             {
                 if (!csv.Read() || !csv.ReadHeader())
                 {
-                    var ex = new InvalidDataException("CSV file doesn't contain header!");
-                    _logger.Error(ex, "Got CSV file without header.");
-                    throw ex;
+                    throw new InvalidDataException("CSV file doesn't contain header!");
                 }
                 while (csv.Read())
                 {

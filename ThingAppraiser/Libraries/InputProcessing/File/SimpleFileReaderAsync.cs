@@ -25,9 +25,11 @@ namespace ThingAppraiser.IO.Input.File
 
         public async Task ReadFile(BufferBlock<string> queue, string filename)
         {
+            _logger.Info($"Reading file \"{filename}\".");
+
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
-            var engine = new FileHelperAsyncEngine<InputFileData>();
+            using (var engine = new FileHelperAsyncEngine<InputFileData>())
             using (engine.BeginReadFile(filename))
             {
                 foreach (var record in engine)
@@ -42,19 +44,20 @@ namespace ThingAppraiser.IO.Input.File
 
         public async Task ReadCsvFile(BufferBlock<string> queue, string filename)
         {
+            _logger.Info($"Reading CSV file \"{filename}\".");
+
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
-            using (var reader = new StreamReader(filename))
-            {
-                var csv = new CsvReader(
-                    reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-                );
 
+            using (var reader = new StreamReader(filename))
+            using (var csv = new CsvReader(
+                       reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
+                  )
+            )
+            {
                 if (!csv.Read() || !csv.ReadHeader())
                 {
-                    var ex = new InvalidDataException("CSV file doesn't contain header!");
-                    _logger.Error(ex, "Got CSV file without header.");
-                    throw ex;
+                    throw new InvalidDataException("CSV file doesn't contain header!");
                 }
                 while (csv.Read())
                 {

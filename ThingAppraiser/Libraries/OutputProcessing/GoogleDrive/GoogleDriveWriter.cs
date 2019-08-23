@@ -188,11 +188,9 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
             {
                 if (stream.Length > _maxFileLength)
                 {
-                    var ex = new ArgumentOutOfRangeException(nameof(stream), stream.Length,
+                    throw new ArgumentOutOfRangeException(nameof(stream), stream.Length,
                         $"File size {stream.Length} is greater than maximum for uploading (10MB)."
                     );
-                    _logger.Error(ex, "Maximum uploading file size exceeded.");
-                    throw ex;
                 }
 
                 // Send the request to the API.

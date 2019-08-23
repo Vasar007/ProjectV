@@ -97,10 +97,13 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
             switch (progress.Status)
             {
                 case DownloadStatus.Downloading:
+                {
                     _logger.Info($"Downloading: {progress.BytesDownloaded}");
                     break;
+                }
 
                 case DownloadStatus.Completed:
+                {
                     _logger.Info("Download completed.");
                     if (string.IsNullOrEmpty(mimeType))
                     {
@@ -111,20 +114,25 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
                         SaveStream(stream, saveTo + GetExtension(mimeType));
                     }
                     break;
+                }
 
                 case DownloadStatus.Failed:
+                {
                     _logger.Warn("Download failed.");
                     break;
+                }
 
                 case DownloadStatus.NotStarted:
+                {
                     break;
+                }
 
                 default:
-                    var ex = new ArgumentOutOfRangeException(
+                {
+                    throw new ArgumentOutOfRangeException(
                         nameof(progress), progress.Status, "Not caught switch statement!"
                     );
-                    _logger.Error(ex, $"Not caught value {progress.Status}!");
-                    throw ex;
+                }
             }
         }
 

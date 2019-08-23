@@ -64,19 +64,25 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             switch (basicInfo)
             {
                 case TmdbMovieInfo _:
+                {
                     return new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
+                }
 
                 case OmdbMovieInfo _:
+                {
                     return new OmdbImageSupplier();
+                }
 
                 case SteamGameInfo _:
+                {
                     return new SteamImageSupplier();
+                }
 
                 default:
-                    var ex = new ArgumentOutOfRangeException(nameof(basicInfo),
-                                                             "Got unknown type to process.");
-                    _logger.Error(ex, "Got unknown type.");
-                    throw ex;
+                {
+                    throw new ArgumentOutOfRangeException(nameof(basicInfo), basicInfo,
+                                                          "Got unknown type to process.");
+                }
             }
         }
     }
