@@ -4,15 +4,17 @@ using ThingAppraiser.DesktopApp.ViewModels;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for InputDataDialog.xaml
+    /// Interaction logic for EnterDataDialog.xaml
     /// </summary>
-    public partial class EnterDataDialog : UserControl
+    public sealed partial class EnterDataDialog : UserControl
     {
-        public EnterDataDialog()
+        public EnterDataDialog(string hintText)
         {
+            hintText.ThrowIfNullOrEmpty(nameof(hintText));
+
             InitializeComponent();
 
-            DataContext = new EnterDataDialogViewModel();
+            DataContext = new EnterDataViewModel(hintText);
         }
     }
 }

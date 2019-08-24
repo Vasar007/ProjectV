@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.ProcessingWebService.v1.Domain;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/processing")]
     [ApiController]
-    public class ProcessingController : ControllerBase
+    public sealed class ProcessingController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ProcessingController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ProcessingController>();
 
         private readonly ITargetServiceCreator _serviceCreator;
 
@@ -40,7 +40,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Controllers
                 );
 
                 ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
-                if (response.MetaData.ResultStatus != ServiceStatus.Ok)
+                if (response.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
                     return BadRequest(response);
                 }

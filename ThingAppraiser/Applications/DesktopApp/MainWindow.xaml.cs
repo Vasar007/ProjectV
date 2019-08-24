@@ -11,10 +11,9 @@ namespace ThingAppraiser.DesktopApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public sealed partial class MainWindow : Window
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<MainWindow>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<MainWindow>();
 
 
         public MainWindow()
@@ -23,10 +22,11 @@ namespace ThingAppraiser.DesktopApp
 
             DataContext = new MainWindowViewModel(MainWindowDialogHost.Identifier);
 
-            _logger.Info("Client application started.");
+            _logger.Info("Main window was created.");
         }
 
-        private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void UIElement_OnPreviewMouseLeftButtonUp(object sender,
+            MouseButtonEventArgs eventArgs)
         {
             // Until we had a StaysOpen glag to Drawer, this will help with scroll bars.
             var dependencyObject = Mouse.Captured as DependencyObject;
@@ -39,9 +39,9 @@ namespace ThingAppraiser.DesktopApp
             MenuToggleButton.IsChecked = false;
         }
 
-        private void OnCopy(object sender, ExecutedRoutedEventArgs e)
+        private void OnCopy(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (e.Parameter is string stringValue)
+            if (eventArgs.Parameter is string stringValue)
             {
                 try
                 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 using ThingAppraiser.CommunicationWebService.v1.Domain;
 
@@ -9,10 +9,10 @@ namespace ThingAppraiser.CommunicationWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/requests")]
     [ApiController]
-    public class RequestsController : ControllerBase
+    public sealed class RequestsController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<RequestsController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<RequestsController>();
 
         private readonly IConfigurationReceiverAsync _configurationReceiver;
 

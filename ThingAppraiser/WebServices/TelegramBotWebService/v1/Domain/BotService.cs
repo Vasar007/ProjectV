@@ -4,7 +4,7 @@ using Telegram.Bot;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class BotService : IBotService
+    public sealed class BotService : IBotService
     {
         private readonly BotConfiguration _config;
 

@@ -3,18 +3,18 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using ThingAppraiser.Data.Configuration;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.Configuration;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {
-    public class ConfigurationReceiverAsync : IConfigurationReceiverAsync, IDisposable
+    public sealed class ConfigurationReceiverAsync : IConfigurationReceiverAsync, IDisposable
     {
         private readonly ServiceSettings _settings;
 
         private readonly HttpClient _client;
 
-        private bool _disposedValue;
+        private bool _isDisposed;
 
 
         public ConfigurationReceiverAsync(IOptions<ServiceSettings> settingsOptions)
@@ -62,12 +62,10 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 
         public void Dispose()
         {
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
+            if (_isDisposed) return;
+            _isDisposed = true;
 
-                _client.Dispose();
-            }
+            _client.Dispose();
         }
 
         #endregion

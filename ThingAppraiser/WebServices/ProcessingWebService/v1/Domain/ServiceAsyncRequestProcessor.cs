@@ -2,15 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ThingAppraiser.Core;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.IO.Input.WebService;
 using ThingAppraiser.IO.Output.WebService;
+using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Domain
 {
-    public class ServiceAsyncRequestProcessor : IServiceRequestProcessor
+    public sealed class ServiceAsyncRequestProcessor : IServiceRequestProcessor
     {
         public ServiceAsyncRequestProcessor()
         {
@@ -25,7 +25,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
             );
             var shell = builderDirector.MakeShell();
 
-            var inputTransmitter = new CInputTransmitterAsync(requestData.ThingNames);
+            var inputTransmitter = new InputTransmitterAsync(requestData.ThingNames);
             shell.InputManagerAsync.Add(inputTransmitter);
 
             var outputTransmitter = new OutputTransmitterAsync();
@@ -36,7 +36,7 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
             var results = outputTransmitter.GetResults();
             var response = new ProcessingResponse
             {
-                MetaData = new ResponseMetaData
+                Metadata = new ResponseMetadata
                 {
                     CommonResultsNumber = results.Aggregate(
                         0, (counter, rating) => counter + rating.Count

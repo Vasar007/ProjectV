@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Data;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.ConsoleApp
 {
@@ -15,8 +14,8 @@ namespace ThingAppraiser.ConsoleApp
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(Program));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         /// <summary>
@@ -34,7 +33,8 @@ namespace ThingAppraiser.ConsoleApp
         }
 
         /// <summary>
-        /// Method with logic of execution the Console Application which created shell to process data.
+        /// Method with logic of execution the Console Application which created shell to process
+        /// data.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
@@ -72,12 +72,18 @@ namespace ThingAppraiser.ConsoleApp
         {
             try
             {
+                _logger.PrintHeader("Console client application started.");
+
                 MainXDocument(args);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
             }
+            finally
+            {
+                _logger.PrintFooter("Console client application stopped.");
+            }
         }
-    }    
+    }
 }

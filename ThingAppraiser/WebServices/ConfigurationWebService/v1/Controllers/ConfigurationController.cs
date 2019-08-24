@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Data.Configuration;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.Configuration;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 using ThingAppraiser.ConfigurationWebService.v1.Domain;
 
@@ -9,10 +9,10 @@ namespace ThingAppraiser.ConfigurationWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/configuration")]
     [ApiController]
-    public class ConfigurationController : ControllerBase
+    public sealed class ConfigurationController : ControllerBase
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ConfigurationController>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ConfigurationController>();
 
         private readonly IConfigCreator _configCreator;
 

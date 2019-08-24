@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ToplistEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
+             xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel>
+            <Button Content="{materialDesign:PackIcon Floppy}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    ToolTip="Save toplist to file"
+                    Margin="16"
+                    HorizontalAlignment="Center"
+                    x:Name="SaveToplistButton"
+                    Command="{Binding Path=SaveToplistCommand}"
+                    CommandParameter="{Binding Path=DataContext,
+                                       RelativeSource={RelativeSource Mode=FindAncestor,
+                                                       AncestorType={x:Type Window}}}" />
+            
+            <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.CanContentScroll="False">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type modelsToplists:ToplistBlock}">
+
+                        <Border Visibility="Visible"
+                                BorderThickness="2"
+                                CornerRadius="8"
+                                Margin="8"
+                                BorderBrush="Gray">
+                            <StackPanel Margin="4"
+                                        Orientation="Vertical">
+
+                                <StackPanel Margin="4"
+                                            Orientation="Horizontal">
+                                
+                                    <TextBox Height="25"
+                                             Width="560"
+                                             MaxLength="80"
+                                             Margin="0 0 16 0"
+                                             VerticalAlignment="Top"
+                                             Text="{Binding Path=Title}" />
+
+                                    <Button Content="{materialDesign:PackIcon Delete}"
+                                            Style="{StaticResource ResourceKey=MaterialDesignFlatDarkBgButton}"
+                                            Margin="0 0 8 0"
+                                            ToolTip="Delete block"
+                                            x:Name="DeleteBlockButton"
+                                            Command="{Binding Path=DataContext.RemoveBlockCommand,
+                                                      RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                      AncestorType={x:Type UserControl}}}" 
+                                            CommandParameter="{Binding Path=.}" />
+                                </StackPanel>
+
+                                <Separator Height="5" />
+
+                                <ItemsControl ItemsSource="{Binding Path=Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type modelsToplists:ToplistItem}">
+                                            <views:ToplistBox Margin="4" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ContentControl Content="{Binding Path=CreationToplistBox}"
+                                                Margin="4" />
+
+                            </StackPanel>
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button Content="{materialDesign:PackIcon Plus}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    ToolTip="Add new block"
+                    Margin="16"
+                    HorizontalAlignment="Center"
+                    x:Name="AddNewBlockButton"
+                    Command="{Binding Path=AddOrUpdateBlockCommand}" />
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

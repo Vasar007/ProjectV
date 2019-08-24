@@ -4,16 +4,16 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Core.Building;
 using ThingAppraiser.TelegramBotWebService.Properties;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class UpdateServiceAsync : IUpdateServiceAsync
+    public sealed class UpdateServiceAsync : IUpdateServiceAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
 
         private readonly IBotService _botService;
 

@@ -3,15 +3,14 @@ using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ServiceProxy : IDisposable
+    internal sealed class ServiceProxy : IDisposable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ServiceProxy>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
         private readonly string _baseAddress;
 
@@ -19,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         private readonly HttpClient _client;
 
-        private bool _disposedValue;
+        private bool _isDisposed;
 
 
         public ServiceProxy()
@@ -38,7 +37,9 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public async Task<ProcessingResponse> SendPostRequest(RequestParams requestParams)
         {
-            _logger.Info("Service method 'PostInitialRequest' is called.");
+            requestParams.ThrowIfNull(nameof(requestParams));
+
+            _logger.Info($"Service method '{nameof(SendPostRequest)}' is called.");
 
             using (var response = await _client.PostAsJsonAsync(_apiUrl, requestParams))
             {
@@ -55,12 +56,10 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public void Dispose()
         {
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
+            if (_isDisposed) return;
+            _isDisposed = true;
 
-                _client.Dispose();
-            }
+            _client.Dispose();
         }
 
         #endregion

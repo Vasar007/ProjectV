@@ -11,8 +11,8 @@ namespace ThingAppraiser.ProcessingWebService
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceWithName(nameof(Program));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
@@ -25,6 +25,8 @@ namespace ThingAppraiser.ProcessingWebService
         {
             try
             {
+                _logger.PrintHeader("Processing web service started.");
+
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Run the WebHost, and start accepting requests.
@@ -34,6 +36,10 @@ namespace ThingAppraiser.ProcessingWebService
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+            }
+            finally
+            {
+                _logger.PrintFooter("Processing web service stopped.");
             }
         }
     }

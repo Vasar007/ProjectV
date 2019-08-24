@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
+using ThingAppraiser.DesktopApp.Models.Things;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {

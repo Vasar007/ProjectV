@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class UserCache : IUserCache
+    public sealed class UserCache : IUserCache
     {
         private readonly ConcurrentDictionary<long, RequestParams> _cache;
 

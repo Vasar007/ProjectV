@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
-    internal class AsyncRelayCommand<T> : IAsyncCommand<T>
+    internal sealed class AsyncRelayCommand<T> : IAsyncCommand<T>
     {
         private bool _isExecuting;
 
@@ -36,6 +36,11 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Refresh()
+        {
+            CommandManager.InvalidateRequerySuggested();
         }
 
         #region IAsyncCommand<T> Implementation
@@ -78,7 +83,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
         {
             ExecuteAsync((T) parameter).FireAndForgetSafeAsync(_errorHandler);
         }
-        
+
         #endregion
     }
 }

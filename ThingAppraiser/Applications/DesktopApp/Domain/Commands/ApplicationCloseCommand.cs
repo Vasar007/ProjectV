@@ -4,12 +4,12 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
     internal static class ApplicationCloseCommand
     {
-        public static bool CanExecute(object parameter)
+        public static bool CanExecute()
         {
             return !(Application.Current is null) && !(Application.Current.MainWindow is null);
         }
 
-        public static void Execute(object parameter)
+        public static void Execute()
         {
             Application.Current.MainWindow.Close();
 

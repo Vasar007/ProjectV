@@ -1,9 +1,9 @@
 ﻿using System;
-using ThingAppraiser.Data;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class SteamImageSupplier : IImageSupplier
+    internal sealed class SteamImageSupplier : IImageSupplier
     {
         public SteamImageSupplier()
         {
@@ -13,6 +13,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public string GetImageLink(BasicInfo data, ImageSize imageSize)
         {
+            data.ThrowIfNull(nameof(data));
+
             if (!(data is SteamGameInfo gameInfo))
             {
                 throw new ArgumentException("Data handler has invalid type.", nameof(data));

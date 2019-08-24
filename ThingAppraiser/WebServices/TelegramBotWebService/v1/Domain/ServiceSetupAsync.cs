@@ -4,10 +4,10 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class ServiceSetupAsync : IServiceSetupAsync
+    public sealed class ServiceSetupAsync : IServiceSetupAsync
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
 
         private readonly ServiceSettings _settings;
 

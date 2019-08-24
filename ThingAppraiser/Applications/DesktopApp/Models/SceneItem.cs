@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace ThingAppraiser.DesktopApp.Models
 {
-    internal class SceneItem : ModelBase
+    internal sealed class SceneItem : ModelBase
     {
         private string _name;
 
@@ -18,13 +18,13 @@ namespace ThingAppraiser.DesktopApp.Models
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value);
+            set => SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
         }
 
         public UserControl Content
         {
             get => _content;
-            set => SetProperty(ref _content, value);
+            set => SetProperty(ref _content, value.ThrowIfNull(nameof(value)));
         }
 
         public ScrollBarVisibility HorizontalScrollBarVisibilityRequirement

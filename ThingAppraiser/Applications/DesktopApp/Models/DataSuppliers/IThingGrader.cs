@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
+using ThingAppraiser.DesktopApp.Models.Things;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
@@ -8,6 +9,6 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
     {
         List<Thing> ProcessRatings(List<RatingDataContainer> rating);
 
-        void ProcessMetaData(ResponseMetaData metaData);
+        void ProcessMetadata(ResponseMetadata metadata);
     }
 }

@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public static class ProcessingResponseReceiver
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
 
 
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,

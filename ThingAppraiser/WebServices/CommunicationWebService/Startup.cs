@@ -9,7 +9,7 @@ using ThingAppraiser.CommunicationWebService.v1.Domain;
 
 namespace ThingAppraiser.CommunicationWebService
 {
-    public class Startup
+    public sealed class Startup
     {
         public IConfiguration Configuration { get; }
 

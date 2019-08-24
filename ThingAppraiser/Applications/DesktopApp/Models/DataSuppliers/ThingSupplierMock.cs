@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.DesktopApp.Models.Things;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ThingSupplierMock : IThingSupplier, ITagable
+    internal sealed class ThingSupplierMock : IThingSupplier, ITagable
     {
         private readonly List<Thing> _things;
 

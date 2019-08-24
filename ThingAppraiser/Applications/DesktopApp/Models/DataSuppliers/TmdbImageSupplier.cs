@@ -1,24 +1,27 @@
 ﻿using System;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Crawlers;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class TmdbImageSupplier : IImageSupplier
+    internal sealed class TmdbImageSupplier : IImageSupplier
     {
         private TmdbServiceConfigurationInfo _serviceConfigurationInfo;
 
 
         public TmdbImageSupplier(TmdbServiceConfigurationInfo serviceConfigurationInfo)
         {
-            _serviceConfigurationInfo = serviceConfigurationInfo;
+            _serviceConfigurationInfo =
+                serviceConfigurationInfo.ThrowIfNull(nameof(serviceConfigurationInfo));
         }
 
         #region IImageSupplier Implamentation
 
         public string GetImageLink(BasicInfo data, ImageSize imageSize)
         {
+            data.ThrowIfNull(nameof(data));
+
             if (_serviceConfigurationInfo is null)
             {
                 _serviceConfigurationInfo = TmdbServiceConfiguration.Configuration;
@@ -54,20 +57,30 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             switch (imageSize)
             {
                 case ImageSize.Small:
+                {
                     return 0;
+                }
 
                 case ImageSize.Middle:
+                {
                     return length / 3;
+                }
 
                 case ImageSize.Large:
+                {
                     return length * 2 / 3;
+                }
 
                 case ImageSize.Origin:
+                {
                     return length - 1;
+                }
 
                 default:
+                {
                     throw new ArgumentOutOfRangeException(nameof(imageSize), imageSize,
                                                           "Invalid image size value.");
+                }
             }
         }
     }

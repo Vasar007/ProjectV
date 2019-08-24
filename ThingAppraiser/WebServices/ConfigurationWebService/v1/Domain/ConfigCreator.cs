@@ -1,10 +1,10 @@
 ﻿using ThingAppraiser.Core;
-using ThingAppraiser.Data.Configuration;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.Configuration;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.ConfigurationWebService.v1.Domain
 {
-    public class ConfigCreator : IConfigCreator
+    public sealed class ConfigCreator : IConfigCreator
     {
         public ConfigCreator()
         {

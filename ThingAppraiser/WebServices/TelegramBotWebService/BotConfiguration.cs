@@ -1,8 +1,11 @@
 ﻿namespace ThingAppraiser.TelegramBotWebService
 {
-    public class BotConfiguration
+    public sealed class BotConfiguration
     {
-        public string BotToken { get; } = EnvironmentVariablesParser.GetValue("BotToken");
+        private static readonly string _defaultBotToken = "BOT_TOKEN";
+
+        public string BotToken { get; } =
+            EnvironmentVariablesParser.GetValueOrDefault("BotToken", _defaultBotToken);
 
         public bool UseProxy { get; set; }
 

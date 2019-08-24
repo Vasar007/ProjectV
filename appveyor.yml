@@ -9,6 +9,16 @@ branches:
     - master
     - develop
 
+platform:
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+matrix:
+  fast_finish: true
+
 nuget:  
     disable_publish_on_pr: true
 

@@ -3,21 +3,20 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
-    public class ServiceProxy : IServiceProxy, IDisposable
+    public sealed class ServiceProxy : IServiceProxy, IDisposable
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ServiceProxy>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
         private readonly ServiceSettings _settings;
 
         private readonly HttpClient _client;
 
-        private bool _disposedValue;
+        private bool _isDisposed;
 
 
         public ServiceProxy(IOptions<ServiceSettings> settings)
@@ -62,12 +61,10 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         public void Dispose()
         {
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
+            if (_isDisposed) return;
+            _isDisposed = true;
 
-                _client.Dispose();
-            }
+            _client.Dispose();
         }
 
         #endregion

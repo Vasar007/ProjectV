@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Views
     /// <summary>
     /// Interaction logic for InputThing.xaml
     /// </summary>
-    public partial class InputThingDialog : UserControl
+    public sealed partial class InputThingDialog : UserControl
     {
         public InputThingDialog()
         {

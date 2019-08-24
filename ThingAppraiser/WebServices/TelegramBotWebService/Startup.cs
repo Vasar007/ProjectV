@@ -9,7 +9,7 @@ using ThingAppraiser.TelegramBotWebService.v1.Domain;
 
 namespace ThingAppraiser.TelegramBotWebService
 {
-    public class Startup
+    public sealed class Startup
     {
         public IConfiguration Configuration { get; }
 

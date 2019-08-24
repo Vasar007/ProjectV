@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.WebService;
+using ThingAppraiser.DesktopApp.Models.Things;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ThingSupplier : IThingSupplier, ITagable
+    internal sealed class ThingSupplier : IThingSupplier, ITagable
     {
         private readonly IThingGrader _thingGrader;
 
@@ -43,7 +44,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         {
             StorageName = storageName;
 
-            _thingGrader.ProcessMetaData(response.MetaData);
+            _thingGrader.ProcessMetadata(response.Metadata);
 
             if (_things.Count > 0)
             {

@@ -6,22 +6,27 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
     /// <summary>
     /// No WPF project is complete without it's own version of this.
     /// </summary>
-    internal class RelayCommand : ICommand
+    internal sealed class RelayCommand : ICommand
     {
-        private readonly Action<object> _execute;
+        private readonly Action _execute;
 
-        private readonly Func<object, bool> _canExecute;
+        private readonly Func<bool> _canExecute;
 
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
+        public RelayCommand(Action execute, Func<bool> canExecute)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
-            _canExecute = canExecute ?? (x => true);
+            _canExecute = canExecute ?? (() => true);
         }
 
-        public RelayCommand(Action<object> execute)
+        public RelayCommand(Action execute)
             : this(execute, null)
         {
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void Refresh()
@@ -31,20 +36,18 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
 
         #region ICommand Implementation
 
+        public event EventHandler CanExecuteChanged;
+
         public bool CanExecute(object parameter)
         {
-            return _canExecute(parameter);
+            return _canExecute();
         }
 
         public void Execute(object parameter)
         {
-            _execute(parameter);
-        }
+            _execute();
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
+            RaiseCanExecuteChanged();
         }
 
         #endregion

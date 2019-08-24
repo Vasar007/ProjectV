@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Crawlers;
-using ThingAppraiser.Data;
-using ThingAppraiser.Data.Crawlers;
-using ThingAppraiser.Data.Models;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
+using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Logging;
+using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
-    internal class ThingGrader : IThingGrader
+    internal sealed class ThingGrader : IThingGrader
     {
-        private static readonly LoggerAbstraction _logger =
-            LoggerAbstraction.CreateLoggerInstanceFor<ThingGrader>();
-
-        private readonly IImageSupplier _tmdbImageSupplier =
-            new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
-
-        private readonly IImageSupplier _omdbImageSupplier = new OmdbImageSupplier();
-
-        private readonly IImageSupplier _steamImageSupplier = new SteamImageSupplier();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ThingGrader>();
 
 
         public ThingGrader()
@@ -47,15 +40,17 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             return result;
         }
 
-        public void ProcessMetaData(ResponseMetaData metaData)
+        public void ProcessMetadata(ResponseMetadata metadata)
         {
-            if (metaData.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
+            metadata.ThrowIfNull(nameof(metadata));
+
+            if (metadata.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
                                                   out IOptionalData optionalData))
             {
                 if (!TmdbServiceConfiguration.HasValue)
                 {
                     var tmdbServiceConfig = (TmdbServiceConfigurationInfo) optionalData;
-                    TmdbServiceConfiguration.SetServiceConfigurationIfNeed(tmdbServiceConfig);
+                    TmdbServiceConfiguration.SetServiceConfiguration(tmdbServiceConfig);
                 }
             }
         }
@@ -64,22 +59,30 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         private IImageSupplier DetermineImageSupplier(BasicInfo basicInfo)
         {
+            basicInfo.ThrowIfNull(nameof(basicInfo));
+
             switch (basicInfo)
             {
                 case TmdbMovieInfo _:
-                    return _tmdbImageSupplier;
+                {
+                    return new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
+                }
 
                 case OmdbMovieInfo _:
-                    return _omdbImageSupplier;
+                {
+                    return new OmdbImageSupplier();
+                }
 
                 case SteamGameInfo _:
-                    return _steamImageSupplier;
+                {
+                    return new SteamImageSupplier();
+                }
 
                 default:
-                    var ex = new ArgumentOutOfRangeException(nameof(basicInfo),
-                                                             "Got unknown type to process.");
-                    _logger.Error(ex, "Got unknown type.");
-                    throw ex;
+                {
+                    throw new ArgumentOutOfRangeException(nameof(basicInfo), basicInfo,
+                                                          "Got unknown type to process.");
+                }
             }
         }
     }

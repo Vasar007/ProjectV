@@ -1,6 +1,6 @@
 ﻿namespace ThingAppraiser.CommunicationWebService
 {
-    public class ServiceSettings
+    public sealed class ServiceSettings
     {
         public string ConfigurationServiceBaseAddress { get; set; }
 
