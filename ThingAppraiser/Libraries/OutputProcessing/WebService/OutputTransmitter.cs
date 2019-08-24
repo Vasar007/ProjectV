@@ -5,9 +5,8 @@ namespace ThingAppraiser.IO.Output.WebService
 {
     public sealed class OutputTransmitter : IOutputter, IOutputterBase, ITagable
     {
-        private List<List<RatingDataContainer>> _transmittingResults;
-
-        public string StorageName { get; private set; }
+        private List<List<RatingDataContainer>> _transmittingResults =
+            new List<List<RatingDataContainer>>();
 
         #region ITagable Implementation
 
@@ -16,6 +15,8 @@ namespace ThingAppraiser.IO.Output.WebService
 
         #endregion
 
+        public string StorageName { get; private set; } = string.Empty;
+
 
         public OutputTransmitter()
         {
@@ -23,11 +24,7 @@ namespace ThingAppraiser.IO.Output.WebService
 
         public List<List<RatingDataContainer>> GetResults()
         {
-            if (_transmittingResults is null)
-            {
-                return new List<List<RatingDataContainer>>();
-            }
-            return _transmittingResults ;
+            return _transmittingResults;
         }
 
         #region IOutputter Implementation

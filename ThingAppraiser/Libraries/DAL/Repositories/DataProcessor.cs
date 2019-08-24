@@ -19,33 +19,30 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = $"SELECT MIN({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetScalar<T>(query);
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetScalar<T>(query);
         }
 
         public T GetMaximum<T>(string columnName, string tableName)
         {
             string sqlStatement = $"SELECT MAX({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetScalar<T>(query);
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetScalar<T>(query);
         }
 
         public (T, T) GetMinMax<T>(string columnName, string tableName)
         {
             string sqlStatement = $"SELECT MIN({columnName}), MAX({columnName}) FROM {tableName}";
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetData(new TwoValuesMapper<T>(), query)[0];
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetData(new TwoValuesMapper<T>(), query)[0];
         }
 
         #endregion

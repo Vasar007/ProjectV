@@ -57,7 +57,7 @@ namespace ThingAppraiser.Crawlers.Omdb
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                OmdbMovieInfo response = _omdbClient.TryGetItemByTitleAsync(movie).Result;
+                OmdbMovieInfo? response = _omdbClient.TryGetItemByTitleAsync(movie).Result;
 
                 if (response is null)
                 {

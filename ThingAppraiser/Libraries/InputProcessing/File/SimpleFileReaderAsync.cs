@@ -29,7 +29,8 @@ namespace ThingAppraiser.IO.Input.File
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
-            using (var engine = new FileHelperAsyncEngine<InputFileData>())
+
+            using var engine = new FileHelperAsyncEngine<InputFileData>();
             using (engine.BeginReadFile(filename))
             {
                 foreach (var record in engine)
@@ -49,23 +50,21 @@ namespace ThingAppraiser.IO.Input.File
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
 
-            using (var reader = new StreamReader(filename))
-            using (var csv = new CsvReader(
-                       reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-                  )
-            )
+            using var reader = new StreamReader(filename);
+            using var csv = new CsvReader(
+                reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
+            );
+
+            if (!csv.Read() || !csv.ReadHeader())
             {
-                if (!csv.Read() || !csv.ReadHeader())
+                throw new InvalidDataException("CSV file doesn't contain header!");
+            }
+            while (csv.Read())
+            {
+                string thingName = csv[_thingNameHeader];
+                if (result.Add(thingName))
                 {
-                    throw new InvalidDataException("CSV file doesn't contain header!");
-                }
-                while (csv.Read())
-                {
-                    string thingName = csv[_thingNameHeader];
-                    if (result.Add(thingName))
-                    {
-                        await queue.SendAsync(thingName);
-                    }
+                    await queue.SendAsync(thingName);
                 }
             }
         }

@@ -78,7 +78,7 @@ namespace ThingAppraiser.Core
         public static Building.ShellBuilderDirector CreateBuilderDirector(XDocument configuration)
         {
             return new Building.ShellBuilderDirector(
-                new Building.CShellBuilderFromXDocument(configuration)
+                new Building.ShellBuilderFromXDocument(configuration)
             );
         }
 
@@ -153,9 +153,9 @@ namespace ThingAppraiser.Core
         /// <summary>
         /// Processes the data in accordance with the formulas.
         /// </summary>
-        private RatingsStorage AppraiseThings()
+        private RatingsStorage? AppraiseThings()
         {
-            RatingsStorage ratingsStorage = null;
+            RatingsStorage? ratingsStorage = null;
             try
             {
                 List<RawDataContainer> results = 
@@ -186,6 +186,7 @@ namespace ThingAppraiser.Core
                 _logger.Error(ex, "Exception occured during appraising work.");
                 _status = ServiceStatus.AppraiseError;
             }
+
             return ratingsStorage;
         }
 
@@ -196,7 +197,6 @@ namespace ThingAppraiser.Core
         private bool SaveResults(RatingsStorage ratingsStorage)
         {
             bool success = false;
-
             try
             {
                 var ratings = DataBaseManager.GetRatingValuesFromDb(ratingsStorage);
@@ -240,8 +240,8 @@ namespace ThingAppraiser.Core
             if (_status != ServiceStatus.Ok) return _status;
 
             // Appraisers component work.
-            RatingsStorage ratingsStorage = AppraiseThings();
-            if (_status != ServiceStatus.Ok) return _status;
+            RatingsStorage? ratingsStorage = AppraiseThings();
+            if (_status != ServiceStatus.Ok || ratingsStorage is null) return _status;
 
             // Output component work.
             SaveResults(ratingsStorage);

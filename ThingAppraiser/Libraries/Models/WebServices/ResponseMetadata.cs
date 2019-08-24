@@ -5,6 +5,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Models.WebService
 {
+    // TODO: make this DTO immutable.
     public sealed class ResponseMetadata
     {
         public int CommonResultsNumber { get; set; }
@@ -14,7 +15,7 @@ namespace ThingAppraiser.Models.WebService
         [JsonConverter(typeof(StringEnumConverter))]
         public ServiceStatus ResultStatus { get; set; }
 
-        public IReadOnlyDictionary<string, IOptionalData> OptionalData { get; set; }
+        public IReadOnlyDictionary<string, IOptionalData> OptionalData { get; set; } = default!;
 
 
         public ResponseMetadata()

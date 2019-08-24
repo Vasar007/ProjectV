@@ -63,7 +63,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                TmdbSearchContainer response = _tmdbClient.TrySearchMovieAsync(movie).Result;
+                TmdbSearchContainer? response = _tmdbClient.TrySearchMovieAsync(movie).Result;
 
                 if (response is null || response.Results.IsNullOrEmpty())
                 {

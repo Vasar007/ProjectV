@@ -40,7 +40,8 @@ namespace ThingAppraiser.OmdbService
             _omdbClient = new AsyncOmdbClient(apikey, rottenTomatoesRatings);
         }
 
-        public async Task<OmdbMovieInfo> TryGetItemByTitleAsync(string title, bool fullPlot = false)
+        public async Task<OmdbMovieInfo?> TryGetItemByTitleAsync(string title,
+            bool fullPlot = false)
         {
             title.ThrowIfNullOrWhiteSpace(nameof(title));
 

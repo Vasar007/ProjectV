@@ -61,7 +61,7 @@ namespace ThingAppraiser.Crawlers.Omdb
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                OmdbMovieInfo response = await _omdbClient.TryGetItemByTitleAsync(movie);
+                OmdbMovieInfo? response = await _omdbClient.TryGetItemByTitleAsync(movie);
 
                 if (response is null)
                 {

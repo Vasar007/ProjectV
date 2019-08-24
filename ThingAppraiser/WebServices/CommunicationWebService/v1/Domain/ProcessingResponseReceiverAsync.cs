@@ -36,7 +36,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
         {
             using (HttpResponseMessage responseMessage = await _client.PostAsJsonAsync(
                     _settings.ProcessingServiceApiUrl, requestData
-                   ))
+                  )
+            )
             {
                 if (responseMessage.IsSuccessStatusCode)
                 {

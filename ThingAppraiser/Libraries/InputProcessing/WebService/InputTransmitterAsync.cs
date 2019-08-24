@@ -15,7 +15,7 @@ namespace ThingAppraiser.IO.Input.WebService
 
         #endregion
 
-        public string StorageName { get; private set; }
+        public string StorageName { get; private set; } = string.Empty;
 
 
         public InputTransmitterAsync(List<string> thingNames)

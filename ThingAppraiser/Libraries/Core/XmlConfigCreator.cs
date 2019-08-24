@@ -85,7 +85,7 @@ namespace ThingAppraiser.Core
         /// <summary>
         /// Represents result of the generating process.
         /// </summary>
-        private ConfigurationXml _result;
+        private ConfigurationXml _result = default!;
 
 
         /// <summary>

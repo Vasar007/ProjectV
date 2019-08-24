@@ -37,7 +37,7 @@ namespace ThingAppraiser.Core
         {
             InputManagerAsync = inputManagerAsync.ThrowIfNull(nameof(inputManagerAsync));
             CrawlersManagerAsync = crawlersManagerAsync.ThrowIfNull(nameof(crawlersManagerAsync));
-            AppraisersManagerAsync = 
+            AppraisersManagerAsync =
                 appraisersManagerAsync.ThrowIfNull(nameof(appraisersManagerAsync));
             OutputManagerAsync = outputManagerAsync.ThrowIfNull(nameof(outputManagerAsync));
 
@@ -53,7 +53,8 @@ namespace ThingAppraiser.Core
             );
         }
 
-        private async Task<ServiceStatus> GetThingNames(BufferBlock<string> queue, string storageName)
+        private async Task<ServiceStatus> GetThingNames(BufferBlock<string> queue,
+            string storageName)
         {
             try
             {

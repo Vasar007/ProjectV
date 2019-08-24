@@ -53,13 +53,12 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = SQLStatementsForTmdb.CountItemsById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@thing_id", thingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetScalar<int>(query) > 0;
-            }
+            query.Parameters.AddWithValue("@thing_id", thingId);
+
+            return dbHelper.GetScalar<int>(query) > 0;
         }
 
         public void InsertItem(BasicInfo item)
@@ -70,52 +69,49 @@ namespace ThingAppraiser.DAL.Repositories
 
             string genreIdsAsstring = string.Join(",", movieInfo.GenreIds);
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
+            using var dbHelper = new DbHelperScope(_dbSettings);
+
+            if (!_basicInfoRepository.Contains(item.ThingId))
             {
-                if (!_basicInfoRepository.Contains(item.ThingId))
-                {
-                    _basicInfoRepository.InsertItem(item, dbHelper);
-                }
-
-                using (var command = new SqlCommand(sqlStatement))
-                {
-                    command.Parameters.AddWithValue("@thing_id", movieInfo.ThingId);
-                    command.Parameters.AddWithValue("@overview", movieInfo.Overview);
-                    command.Parameters.AddWithValue("@release_date", movieInfo.ReleaseDate);
-                    command.Parameters.AddWithValue("@popularity", movieInfo.Popularity);
-                    command.Parameters.AddWithValue("@adult", movieInfo.Adult);
-                    command.Parameters.AddWithValue("@genre_ids", genreIdsAsstring);
-                    command.Parameters.AddWithValue("@poster_path", movieInfo.PosterPath);
-
-                    dbHelper.ExecuteCommand(command);
-                }
-
-                dbHelper.Commit();
+                _basicInfoRepository.InsertItem(item, dbHelper);
             }
+
+            using (var command = new SqlCommand(sqlStatement))
+            {
+                command.Parameters.AddWithValue("@thing_id", movieInfo.ThingId);
+                command.Parameters.AddWithValue("@overview", movieInfo.Overview);
+                command.Parameters.AddWithValue("@release_date", movieInfo.ReleaseDate);
+                command.Parameters.AddWithValue("@popularity", movieInfo.Popularity);
+                command.Parameters.AddWithValue("@adult", movieInfo.Adult);
+                command.Parameters.AddWithValue("@genre_ids", genreIdsAsstring);
+                command.Parameters.AddWithValue("@poster_path", movieInfo.PosterPath);
+
+                dbHelper.ExecuteCommand(command);
+            }
+
+            dbHelper.Commit();
         }
 
         public BasicInfo GetItemById(int thingId)
         {
             string sqlStatement = SQLStatementsForTmdb.SelectItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@thing_id", thingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetItem(new TmdbMovieMapper(), query);
-            }
+            query.Parameters.AddWithValue("@thing_id", thingId);
+
+            return dbHelper.GetItem(new TmdbMovieMapper(), query);
         }
 
         public List<BasicInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForTmdb.SelectAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetData(new TmdbMovieMapper(), query);
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetData(new TmdbMovieMapper(), query);
         }
 
         public void UpdateItem(BasicInfo item)
@@ -126,64 +122,62 @@ namespace ThingAppraiser.DAL.Repositories
 
             string genreIdsAsstring = string.Join(",", movieInfo.GenreIds);
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
+            using var dbHelper = new DbHelperScope(_dbSettings);
+
+            _basicInfoRepository.UpdateItem(item, dbHelper);
+
+            using (var command = new SqlCommand(sqlStatement))
             {
-                _basicInfoRepository.UpdateItem(item, dbHelper);
+                command.Parameters.AddWithValue("@overview", movieInfo.Overview);
+                command.Parameters.AddWithValue("@release_date", movieInfo.ReleaseDate);
+                command.Parameters.AddWithValue("@popularity", movieInfo.Popularity);
+                command.Parameters.AddWithValue("@adult", movieInfo.Adult);
+                command.Parameters.AddWithValue("@genre_ids", genreIdsAsstring);
+                command.Parameters.AddWithValue("@poster_path", movieInfo.PosterPath);
+                command.Parameters.AddWithValue("@thing_id", movieInfo.ThingId);
 
-                using (var command = new SqlCommand(sqlStatement))
-                {
-                    command.Parameters.AddWithValue("@overview", movieInfo.Overview);
-                    command.Parameters.AddWithValue("@release_date", movieInfo.ReleaseDate);
-                    command.Parameters.AddWithValue("@popularity", movieInfo.Popularity);
-                    command.Parameters.AddWithValue("@adult", movieInfo.Adult);
-                    command.Parameters.AddWithValue("@genre_ids", genreIdsAsstring);
-                    command.Parameters.AddWithValue("@poster_path", movieInfo.PosterPath);
-                    command.Parameters.AddWithValue("@thing_id", movieInfo.ThingId);
-
-                    dbHelper.ExecuteCommand(command);
-                }
-
-                dbHelper.Commit();
+                dbHelper.ExecuteCommand(command);
             }
+
+            dbHelper.Commit();
         }
 
         public void DeleteAllData()
         {
             string sqlStatement = SQLStatementsForTmdb.DeleteAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            {
-                using (var command = new SqlCommand(sqlStatement))
-                {
-                    dbHelper.ExecuteCommand(command);
-                }
+            using var dbHelper = new DbHelperScope(_dbSettings);
 
-                dbHelper.Commit();
+            using (var command = new SqlCommand(sqlStatement))
+            {
+                dbHelper.ExecuteCommand(command);
             }
+
+            dbHelper.Commit();
         }
 
         public void DeleteItemById(int thingId)
         {
             string sqlStatement = SQLStatementsForTmdb.DeleteItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
+            using var dbHelper = new DbHelperScope(_dbSettings);
+
+            using (var command = new SqlCommand(sqlStatement))
             {
-                using (var command = new SqlCommand(sqlStatement))
-                {
-                    command.Parameters.AddWithValue("@thing_id", thingId);
+                command.Parameters.AddWithValue("@thing_id", thingId);
 
-                    dbHelper.ExecuteCommand(command);
-                }
-
-                dbHelper.Commit();
+                dbHelper.ExecuteCommand(command);
             }
+
+            dbHelper.Commit();
         }
 
         #endregion
 
         #region IDataRepository Implementation
 
-        public T GetMinimum<T>(string columnName)
+        public T GetMinimum<T>(string columnName) 
+            where T : struct
         {
             if (!Columns.Contains(columnName)) return default;
             if (_basicInfoRepository.Columns.Contains(columnName))
@@ -193,7 +187,8 @@ namespace ThingAppraiser.DAL.Repositories
             return _dataProcessor.GetMinimum<T>(columnName, TableName);
         }
 
-        public T GetMaximum<T>(string columnName)
+        public T GetMaximum<T>(string columnName) 
+            where T : struct
         {
             if (_basicInfoRepository.Columns.Contains(columnName))
             {
@@ -203,7 +198,8 @@ namespace ThingAppraiser.DAL.Repositories
             return _dataProcessor.GetMaximum<T>(columnName, TableName);
         }
 
-        public (T, T) GetMinMax<T>(string columnName)
+        public (T, T) GetMinMax<T>(string columnName) 
+            where T : struct
         {
             if (_basicInfoRepository.Columns.Contains(columnName))
             {

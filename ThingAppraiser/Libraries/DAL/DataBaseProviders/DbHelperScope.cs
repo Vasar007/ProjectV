@@ -106,15 +106,14 @@ namespace ThingAppraiser.DAL
             {
                 ConfigureCommand(query, connection, transaction);
 
-                using (IDataReader reader = query.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        result.Add(mapper.ReadItem(reader));
-                    }
+                using IDataReader reader = query.ExecuteReader();
 
-                    reader.Close();
+                while (reader.Read())
+                {
+                    result.Add(mapper.ReadItem(reader));
                 }
+
+                reader.Close();
             }
             catch (Exception ex)
             {
@@ -134,12 +133,12 @@ namespace ThingAppraiser.DAL
             {
                 ConfigureCommand(query, connection, transaction);
 
-                using (IDataReader reader = query.ExecuteReader())
-                {
-                    reader.Read();
-                    result = mapper.ReadItem(reader);
-                    reader.Close();
-                }
+                using IDataReader reader = query.ExecuteReader();
+
+                reader.Read();
+                result = mapper.ReadItem(reader);
+
+                reader.Close();
             }
             catch (Exception ex)
             {
@@ -159,7 +158,7 @@ namespace ThingAppraiser.DAL
             {
                 ConfigureCommand(query, connection, transaction);
 
-                result = (T)query.ExecuteScalar();
+                result = (T) query.ExecuteScalar();
             }
             catch (Exception ex)
             {

@@ -45,95 +45,88 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = SQLStatementsForResults.CountItemsById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@rating_id", ratingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetScalar<int>(query) > 0;
-            }
+            query.Parameters.AddWithValue("@rating_id", ratingId);
+
+            return dbHelper.GetScalar<int>(query) > 0;
         }
 
         public void InsertItem(ResultInfo item)
         {
             string sqlStatement = SQLStatementsForResults.InsertItem;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@thing_id", item.ThingId);
-                command.Parameters.AddWithValue("@rating_value", item.RatingValue);
-                command.Parameters.AddWithValue("@rating_id", item.RatingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            command.Parameters.AddWithValue("@thing_id", item.ThingId);
+            command.Parameters.AddWithValue("@rating_value", item.RatingValue);
+            command.Parameters.AddWithValue("@rating_id", item.RatingId);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         public ResultInfo GetItemById(Guid ratingId)
         {
             string sqlStatement = SQLStatementsForResults.SelectItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@rating_id", ratingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetItem(new ResultInfoMapper(), query);
-            }
+            query.Parameters.AddWithValue("@rating_id", ratingId);
+
+            return dbHelper.GetItem(new ResultInfoMapper(), query);
         }
 
         public List<ResultInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForResults.SelectAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetData(new ResultInfoMapper(), query);
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetData(new ResultInfoMapper(), query);
         }
 
         public void UpdateItem(ResultInfo item)
         {
             string sqlStatement = SQLStatementsForResults.UpdateItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@rating_value", item.RatingValue);
-                command.Parameters.AddWithValue("@thing_id", item.ThingId);
-                command.Parameters.AddWithValue("@rating_id", item.RatingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            command.Parameters.AddWithValue("@rating_value", item.RatingValue);
+            command.Parameters.AddWithValue("@thing_id", item.ThingId);
+            command.Parameters.AddWithValue("@rating_id", item.RatingId);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         public void DeleteItemById(Guid ratingId)
         {
             string sqlStatement = SQLStatementsForResults.DeleteItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@rating_id", ratingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            command.Parameters.AddWithValue("@rating_id", ratingId);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         public void DeleteAllData()
         {
             string sqlStatement = SQLStatementsForResults.DeleteAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         #endregion
@@ -144,13 +137,12 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = SQLStatementsForResults.SelectItemsWithDescOrderingByRating;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@rating_id", ratingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetData(new ThingIdWithRatingMapper(), query);
-            }
+            query.Parameters.AddWithValue("@rating_id", ratingId);
+
+            return dbHelper.GetData(new ThingIdWithRatingMapper(), query);
         }
 
         #endregion

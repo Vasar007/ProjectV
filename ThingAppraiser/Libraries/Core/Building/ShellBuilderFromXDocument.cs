@@ -12,13 +12,13 @@ namespace ThingAppraiser.Core.Building
     /// Structure of XML config must satisfy certain contracts, otherwise different exception could
     /// be thrown.
     /// </remarks>
-    public sealed class CShellBuilderFromXDocument : ShellBuilderBase, IShellBuilder
+    public sealed class ShellBuilderFromXDocument : ShellBuilderBase, IShellBuilder
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<CShellBuilderFromXDocument>();
+            LoggerFactory.CreateLoggerFor<ShellBuilderFromXDocument>();
 
         /// <summary>
         /// Provides methods to create instances of service classes.
@@ -34,27 +34,27 @@ namespace ThingAppraiser.Core.Building
         /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.InputManager _inputManager;
+        private IO.Input.InputManager? _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CrawlersManager _crawlersManager;
+        private Crawlers.CrawlersManager? _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.AppraisersManager _appraisersManager;
+        private Appraisers.AppraisersManager? _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.OutputManager _outputManager;
+        private IO.Output.OutputManager? _outputManager;
 
         /// <summary>
         /// Variables which saves data base manager instance during building process.
         /// </summary>
-        private DAL.DataBaseManager _dataBaseManager;
+        private DAL.DataBaseManager? _dataBaseManager;
 
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace ThingAppraiser.Core.Building
         /// provides deferred parsing of XML configuration.
         /// </summary>
         /// <param name="configuration">XML configuration of <see cref="Shell" /> class.</param>
-        public CShellBuilderFromXDocument(XDocument configuration)
+        public ShellBuilderFromXDocument(XDocument configuration)
         {
             _documentParser = new XDocumentParser(
                 new XDocument(configuration.Root.Element(_rootElementName))
@@ -84,9 +84,15 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildMessageHandler()
         {
-            XElement messageHandlerElement = _documentParser.FindElement(
+            XElement? messageHandlerElement = _documentParser.FindElement(
                 _messageHandlerParameterName
             );
+            if (messageHandlerElement is null)
+            {
+                throw new InvalidOperationException(
+                    $"XML document has not value for {_messageHandlerParameterName}."
+                );
+            }
 
             Communication.GlobalMessageHandler.SetMessageHangler(
                 _serviceBuilder.CreateMessageHandler(messageHandlerElement)
@@ -99,11 +105,11 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildInputManager()
         {
-            XElement inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
+            XElement? inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
             if (inputManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_inputManagerParameterName}."
+                    $"XML document has not value for {_inputManagerParameterName}."
                 );
             }
 
@@ -125,17 +131,17 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildCrawlersManager()
         {
-            XElement crawlerManagerElement = _documentParser.FindElement(
+            XElement? crawlerManagerElement = _documentParser.FindElement(
                 _crawlersManagerParameterName
             );
             if (crawlerManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_crawlersManagerParameterName}."
+                    $"XML document has not value for {_crawlersManagerParameterName}."
                 );
             }
 
-            var crawlersOutput = XDocumentParser.GetAttributeValue<Boolean>(
+            var crawlersOutput = XDocumentParser.GetAttributeValue<bool>(
                 crawlerManagerElement, _crawlersOutputParameterName
             );
             _crawlersManager = new Crawlers.CrawlersManager(crawlersOutput);
@@ -153,17 +159,17 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildAppraisersManager()
         {
-            XElement appraiserManagerElement = _documentParser.FindElement(
+            XElement? appraiserManagerElement = _documentParser.FindElement(
                 _appraisersManagerParameterName
             );
             if (appraiserManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_appraisersManagerParameterName}."
+                    $"XML document has not value for {_appraisersManagerParameterName}."
                 );
             }
 
-            var appraisersOutput = XDocumentParser.GetAttributeValue<Boolean>(
+            var appraisersOutput = XDocumentParser.GetAttributeValue<bool>(
                 appraiserManagerElement, _appraisersOutputParameterName
             );
             _appraisersManager = new Appraisers.AppraisersManager(appraisersOutput);
@@ -181,13 +187,13 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildOutputManager()
         {
-            XElement outputManagerElement = _documentParser.FindElement(
+            XElement? outputManagerElement = _documentParser.FindElement(
                 _outputManagerParameterName
             );
             if (outputManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_outputManagerParameterName}."
+                    $"XML document has not value for {_outputManagerParameterName}."
                 );
             }
 
@@ -209,13 +215,13 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildDataBaseManager()
         {
-            XElement dataBaseManagerElement = _documentParser.FindElement(
+            XElement? dataBaseManagerElement = _documentParser.FindElement(
                 _dataBaseManagerParameterName
             );
             if (dataBaseManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_dataBaseManagerParameterName}."
+                    $"XML document has not value for {_dataBaseManagerParameterName}."
                 );
             }
 
@@ -240,7 +246,39 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public Shell GetResult()
         {
-            _logger.Info("Created Shell from user-defined XML config.");
+            if (_inputManager is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(IO.Input.InputManager)} was not built."
+                );
+            }
+            if (_crawlersManager is null)
+            {
+                throw new InvalidOperationException(
+                     $"{nameof(Crawlers.CrawlersManager)} was not built."
+                );
+            }
+            if (_appraisersManager is null)
+            {
+                throw new InvalidOperationException(
+                     $"{nameof(Appraisers.AppraisersManager)} was not built."
+                );
+            }
+            if (_outputManager is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(IO.Output.OutputManager)} was not built."
+                );
+            }
+            if (_dataBaseManager is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(DAL.DataBaseManager)} was not built."
+                );
+            }
+
+            _logger.Info($"Creating {nameof(Shell)} from user-defined XML config.");
+
             return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
                              _dataBaseManager);
         }

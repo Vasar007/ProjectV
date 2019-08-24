@@ -101,7 +101,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    if (!_userCache.TryGetValue(message.Chat.Id, out RequestParams requestParams))
+                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams)
+                        || requestParams is null)
                     {
                         await SendResponseToInvalidMessage(message.Chat.Id);
                         return;

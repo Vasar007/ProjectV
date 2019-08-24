@@ -144,17 +144,16 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
         /// <param name="saveTo">Filename to save on local storage.</param>
         private void DownloadFile(string fileId, string saveTo)
         {
-            using (var stream = new MemoryStream())
-            {
-                FilesResource.GetRequest request = GoogleDriveService.Files.Get(fileId);
+            using var stream = new MemoryStream();
 
-                // Add a handler which will be notified on progress changes.
-                // It will notify on each chunk download and when the
-                // download is completed or failed.
-                request.MediaDownloader.ProgressChanged +=
-                    progress => ProgressChanged_Callback(progress, stream, saveTo, string.Empty);
-                request.Download(stream);
-            }
+            FilesResource.GetRequest request = GoogleDriveService.Files.Get(fileId);
+
+            // Add a handler which will be notified on progress changes.
+            // It will notify on each chunk download and when the
+            // download is completed or failed.
+            request.MediaDownloader.ProgressChanged +=
+                progress => ProgressChanged_Callback(progress, stream, saveTo, string.Empty);
+            request.Download(stream);
         }
 
         /// <inheritdoc cref="DownloadFile" />
@@ -163,15 +162,13 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
         /// </param>
         private void ExportFile(string fileId, string saveTo, string mimeType)
         {
-            using (var stream = new MemoryStream())
-            {
-                FilesResource.ExportRequest request = GoogleDriveService.Files.Export(fileId,
-                                                                                      mimeType);
+            using var stream = new MemoryStream();
 
-                request.MediaDownloader.ProgressChanged +=
-                    progress => ProgressChanged_Callback(progress, stream, saveTo, mimeType);
-                request.Download(stream);
-            }
+            FilesResource.ExportRequest request = GoogleDriveService.Files.Export(fileId, mimeType);
+
+            request.MediaDownloader.ProgressChanged +=
+                progress => ProgressChanged_Callback(progress, stream, saveTo, mimeType);
+            request.Download(stream);
         }
 
         /// <summary>

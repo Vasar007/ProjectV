@@ -4,6 +4,7 @@ using System.Xml.Linq;
 
 namespace ThingAppraiser.Models.Configuration
 {
+    // TODO: make this DTO immutable.
     [Serializable]
     public sealed class AppraisersManagerConfig
     {
@@ -11,10 +12,10 @@ namespace ThingAppraiser.Models.Configuration
         public bool AppraisersOutputFlag { get; set; }
 
         [XmlAnyElement(Name = "AppraisersManagerParameters")]
-        public XElement[] AppraisersManagerParameters { get; set; }
+        public XElement[] AppraisersManagerParameters { get; set; } = default!;
 
         [XmlAnyElement(Name = "Appraisers")]
-        public XElement[] Appraisers { get; set; }
+        public XElement[] Appraisers { get; set; } = default!;
 
 
         public AppraisersManagerConfig()

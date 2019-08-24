@@ -16,13 +16,13 @@ namespace ThingAppraiser.IO.Output.File
         /// Name of appraised Thing.
         /// </summary>
         [FieldOrder(1), FieldTitle("Thing Name")]
-        public string thingName = default; // Default assignment to remove warning.
+        public string thingName = default!;
 
         /// <summary>
         /// Rating values of all appraisers. Appraisers list user can specify in config.
         /// </summary>
         [FieldOrder(2), FieldTitle("Rating Value"), FieldConverter(typeof(RatingValueConverter))]
-        public List<double> ratingValue = default; // Default assignment to remove warning.
+        public List<double> ratingValue = default!;
 
 
         /// <summary>

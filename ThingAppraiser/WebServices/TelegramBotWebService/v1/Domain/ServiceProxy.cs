@@ -38,21 +38,21 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         #region IServiceProxy Implementation
 
-        public async Task<ProcessingResponse> SendPostRequest(RequestParams requestParams)
+        public async Task<ProcessingResponse?> SendPostRequest(RequestParams requestParams)
         {
             _logger.Info("Service method 'PostInitialRequest' is called.");
 
-            using (var response = await _client.PostAsJsonAsync(
-                       _settings.ThingAppraiserServiceApiUrl, requestParams
-                   ))
+            using HttpResponseMessage response = await _client.PostAsJsonAsync(
+                _settings.ThingAppraiserServiceApiUrl, requestParams
+            );
+
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<ProcessingResponse>();
-                    return result;
-                }
-                return null;
+                var result = await response.Content.ReadAsAsync<ProcessingResponse>();
+                return result;
             }
+
+            return null;
         }
 
         #endregion

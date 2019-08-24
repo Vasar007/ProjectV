@@ -6,9 +6,10 @@ namespace ThingAppraiser.IO.Output.WebService
 {
     public sealed class OutputTransmitterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
-        private List<List<RatingDataContainer>> _transmittingResults;
+        private List<List<RatingDataContainer>> _transmittingResults =
+            new List<List<RatingDataContainer>>();
 
-        public string StorageName { get; private set; }
+        public string StorageName { get; private set; } = string.Empty;
 
         #region ITagable Implementation
 
@@ -24,24 +25,18 @@ namespace ThingAppraiser.IO.Output.WebService
 
         public List<List<RatingDataContainer>> GetResults()
         {
-            if (_transmittingResults is null)
-            {
-                _transmittingResults = new List<List<RatingDataContainer>>();
-            }
             return _transmittingResults ;
         }
 
         #region IOutputter Implementation
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<bool> SaveResults(List<List<RatingDataContainer>> results,
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             string storageName)
         {
             StorageName = storageName;
 
             _transmittingResults = results;
-            return true;
+            return await Task.FromResult(true);
         }
 
         #endregion

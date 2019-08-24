@@ -16,13 +16,13 @@ namespace ThingAppraiser.IO.Input.File
         /// Finds in header "Status" column and try to read its values.
         /// </summary>
         [FieldOrder(1), FieldTitle("Status")]
-        public string status = default; // Default assignment to remove warning.
+        public string status = default!;
 
         /// <summary>
         /// Finds in header "Thing Name" column and try to read its values.
         /// </summary>
         [FieldOrder(2), FieldTitle("Thing Name")]
-        public string thingName = default; // Default assignment to remove warning.
+        public string thingName = default!;
 
 
         /// <summary>

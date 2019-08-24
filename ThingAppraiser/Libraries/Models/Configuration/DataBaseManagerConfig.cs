@@ -4,17 +4,18 @@ using System.Xml.Linq;
 
 namespace ThingAppraiser.Models.Configuration
 {
+    // TODO: make this DTO immutable.
     [Serializable]
     public sealed class DataBaseManagerConfig
     {
         [XmlAttribute(DataType = "string")]
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; } = default!;
 
         [XmlAnyElement(Name = "DataBaseManagerParameters")]
-        public XElement[] DataBaseManagerParameters { get; set; }
+        public XElement[] DataBaseManagerParameters { get; set; } = default!;
 
         [XmlAnyElement(Name = "Repositories")]
-        public XElement[] Repositories { get; set; }
+        public XElement[] Repositories { get; set; } = default!;
 
 
         public DataBaseManagerConfig()

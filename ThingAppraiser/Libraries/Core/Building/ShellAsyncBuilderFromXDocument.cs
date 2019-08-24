@@ -5,7 +5,7 @@ using ThingAppraiser.Logging;
 namespace ThingAppraiser.Core.Building
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="ShellAsync" /> instances 
+    /// Builder class which provides the way of constructing <see cref="ShellAsync" /> instances
     /// from <see cref="XDocument" /> config.
     /// </summary>
     /// <remarks>
@@ -39,22 +39,22 @@ namespace ThingAppraiser.Core.Building
         /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.InputManagerAsync _inputManager;
+        private IO.Input.InputManagerAsync? _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CrawlersManagerAsync _crawlersManager;
+        private Crawlers.CrawlersManagerAsync? _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.AppraisersManagerAsync _appraisersManager;
+        private Appraisers.AppraisersManagerAsync? _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.OutputManagerAsync _outputManager;
+        private IO.Output.OutputManagerAsync? _outputManager;
 
 
         /// <summary>
@@ -85,9 +85,15 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public void BuildMessageHandler()
         {
-            XElement messageHandlerElement = _documentParser.FindElement(
+            XElement? messageHandlerElement = _documentParser.FindElement(
                 _messageHandlerParameterName
             );
+            if (messageHandlerElement is null)
+            {
+                throw new InvalidOperationException(
+                    $"XML document has not value for {_messageHandlerParameterName}."
+                );
+            }
 
             Communication.GlobalMessageHandler.SetMessageHangler(
                 _serviceBuilder.CreateMessageHandler(messageHandlerElement)
@@ -100,11 +106,11 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildInputManager()
         {
-            XElement inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
+            XElement? inputManagerElement = _documentParser.FindElement(_inputManagerParameterName);
             if (inputManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_inputManagerParameterName}."
+                    $"XML document has not value for {_inputManagerParameterName}."
                 );
             }
 
@@ -126,13 +132,13 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildCrawlersManager()
         {
-            XElement crawlerManagerElement = _documentParser.FindElement(
+            XElement? crawlerManagerElement = _documentParser.FindElement(
                 _crawlersManagerParameterName
             );
             if (crawlerManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_crawlersManagerParameterName}."
+                    $"XML document has not value for {_crawlersManagerParameterName}."
                 );
             }
 
@@ -154,13 +160,13 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildAppraisersManager()
         {
-            XElement appraiserManagerElement = _documentParser.FindElement(
+            XElement? appraiserManagerElement = _documentParser.FindElement(
                 _appraisersManagerParameterName
             );
             if (appraiserManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_appraisersManagerParameterName}."
+                    $"XML document has not value for {_appraisersManagerParameterName}."
                 );
             }
 
@@ -182,13 +188,13 @@ namespace ThingAppraiser.Core.Building
         /// </exception>
         public void BuildOutputManager()
         {
-            XElement outputManagerElement = _documentParser.FindElement(
+            XElement? outputManagerElement = _documentParser.FindElement(
                 _outputManagerParameterName
             );
             if (outputManagerElement is null)
             {
                 throw new InvalidOperationException(
-                    $"XML document hasn't value for {_outputManagerParameterName}."
+                    $"XML document has not value for {_outputManagerParameterName}."
                 );
             }
 
@@ -207,7 +213,33 @@ namespace ThingAppraiser.Core.Building
         /// <inheritdoc />
         public ShellAsync GetResult()
         {
-            _logger.Info("Created ShellAsync from user-defined XML config.");
+            if (_inputManager is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(IO.Input.InputManagerAsync)} was not built."
+                );
+            }
+            if (_crawlersManager is null)
+            {
+                throw new InvalidOperationException(
+                     $"{nameof(Crawlers.CrawlersManagerAsync)} was not built."
+                );
+            }
+            if (_appraisersManager is null)
+            {
+                throw new InvalidOperationException(
+                     $"{nameof(Appraisers.AppraisersManagerAsync)} was not built."
+                );
+            }
+            if (_outputManager is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(IO.Output.OutputManagerAsync)} was not built."
+                );
+            }
+
+            _logger.Info($"Creating {nameof(ShellAsync)} from user-defined XML config.");
+
             return new ShellAsync(_inputManager, _crawlersManager, _appraisersManager,
                                   _outputManager, _defaultBoundedCapacity);
         }

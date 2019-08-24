@@ -71,7 +71,7 @@ namespace ThingAppraiser.IO
             {
                 // Copy value from optional parms to the request.
                 // WARNING! They should have the same names and data types.
-                PropertyInfo piShared = (request.GetType()).GetProperty(property.Name);
+                PropertyInfo piShared = request.GetType().GetProperty(property.Name);
                 object propertyValue = property.GetValue(optional, null);
 
                 // Test that we do not add values for items that are null.
@@ -90,10 +90,9 @@ namespace ThingAppraiser.IO
         /// <param name="saveTo">Filename (absolute or relative).</param>
         protected static void SaveStream(MemoryStream stream, string saveTo)
         {
-            using (var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write))
-            {
-                stream.WriteTo(file);
-            }
+            using var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write);
+
+            stream.WriteTo(file);
         }
 
         /// <summary>

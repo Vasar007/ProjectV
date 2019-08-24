@@ -12,7 +12,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
     public static class ProcessingResponseReceiver
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
+            LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
 
 
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
@@ -20,10 +20,17 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
         {
             Task.Factory.StartNew(() =>
             {
-                _logger.Info("Try to send request to service.");
+                _logger.Info("Trying to send request to service.");
                 try
                 {
-                    var response = serviceProxy.SendPostRequest(requestParams).Result;
+                    ProcessingResponse? response =
+                        serviceProxy.SendPostRequest(requestParams).Result;
+
+                    if (response is null)
+                    {
+                        throw new InvalidOperationException("Request has not successful status.");
+                    }
+
                     var converted = ConvertResultsToDict(response.RatingDataContainers);
 
                     _logger.Info("Got response. Output message to chat.");
@@ -50,8 +57,15 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                        out List<double> ratingValues))
+                                              out List<double>? ratingValues))
                     {
+                        if (ratingValues is null)
+                        {
+                            throw new InvalidOperationException(
+                                "Rating data container contains null values"
+                            );
+                        }
+
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }
                     else
@@ -72,6 +86,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             {
                 stringBuilder.AppendLine(key + " — " + string.Join("| ", value));
             }
+
             return stringBuilder.ToString();
         }
     }

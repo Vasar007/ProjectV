@@ -5,6 +5,6 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public interface IServiceProxy
     {
-        Task<ProcessingResponse> SendPostRequest(RequestParams requestParams);
+        Task<ProcessingResponse?> SendPostRequest(RequestParams requestParams);
     }
 }

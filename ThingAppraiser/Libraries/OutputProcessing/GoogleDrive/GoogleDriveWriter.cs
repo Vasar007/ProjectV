@@ -126,27 +126,26 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
         /// <returns><c>true</c> if uploading was successful, <c>false</c> otherwise</returns>
         private bool UploadFile(string path, string name, string mimeTypeToUpload)
         {
-            using (var stream = new FileStream(path, FileMode.Open))
-            {
-                FilesResource.CreateMediaUpload request = GoogleDriveService.Files.Create(
-                    new GoogleDriveData.File
-                    {
-                        Name = name,
-                        MimeType = mimeTypeToUpload ?? string.Empty
-                    },
-                    stream,
-                    GetMimeType(path)
-                );
+            using var stream = new FileStream(path, FileMode.Open);
 
-                // Add handlers which will be notified on progress changes and upload completion.
-                // Notification of progress changed will be invoked when the upload was started,
-                // on each upload chunk, and on success or failure.
-                request.ProgressChanged += Upload_ProgressChanged;
-                request.ResponseReceived += Upload_ResponseReceived;
+            FilesResource.CreateMediaUpload request = GoogleDriveService.Files.Create(
+                new GoogleDriveData.File
+                {
+                    Name = name,
+                    MimeType = mimeTypeToUpload ?? string.Empty
+                },
+                stream,
+                GetMimeType(path)
+            );
 
-                IUploadProgress result = request.Upload();
-                return result.Status == UploadStatus.Completed;
-            }
+            // Add handlers which will be notified on progress changes and upload completion.
+            // Notification of progress changed will be invoked when the upload was started,
+            // on each upload chunk, and on success or failure.
+            request.ProgressChanged += Upload_ProgressChanged;
+            request.ResponseReceived += Upload_ResponseReceived;
+
+            IUploadProgress result = request.Upload();
+            return result.Status == UploadStatus.Completed;
         }
 
         /// <summary>
@@ -172,7 +171,7 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
         /// <exception cref="ArgumentOutOfRangeException">
         /// Maximum uploading file size exceeded.
         /// </exception>
-        private bool UpdateFile(string fileId, string path, string newName, string newMimeType)
+        private bool UpdateFile(string fileId, string path, string? newName, string? newMimeType)
         {
             // First retrieve the file from the API.
             GoogleDriveData.File file = GoogleDriveService.Files.Get(fileId).Execute();
@@ -184,29 +183,28 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
                 Name = newName ?? file.Name
             };
 
-            using (var stream = new FileStream(path, FileMode.Open))
+            using var stream = new FileStream(path, FileMode.Open);
+
+            if (stream.Length > _maxFileLength)
             {
-                if (stream.Length > _maxFileLength)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(stream), stream.Length,
-                        $"File size {stream.Length} is greater than maximum for uploading (10MB)."
-                    );
-                }
-
-                // Send the request to the API.
-                FilesResource.UpdateMediaUpload request = GoogleDriveService.Files.Update(
-                    newContent, fileId, stream, newContent.MimeType
+                throw new ArgumentOutOfRangeException(nameof(stream), stream.Length,
+                    $"File size {stream.Length} is greater than maximum for uploading (10MB)."
                 );
-
-                // Add handlers which will be notified on progress changes and upload completion.
-                // Notification of progress changed will be invoked when the upload was started,
-                // on each upload chunk, and on success or failure.
-                request.ProgressChanged += Upload_ProgressChanged;
-                request.ResponseReceived += Upload_ResponseReceived;
-
-                IUploadProgress result = request.Upload();
-                return result.Status == UploadStatus.Completed;
             }
+
+            // Send the request to the API.
+            FilesResource.UpdateMediaUpload request = GoogleDriveService.Files.Update(
+                newContent, fileId, stream, newContent.MimeType
+            );
+
+            // Add handlers which will be notified on progress changes and upload completion.
+            // Notification of progress changed will be invoked when the upload was started,
+            // on each upload chunk, and on success or failure.
+            request.ProgressChanged += Upload_ProgressChanged;
+            request.ResponseReceived += Upload_ResponseReceived;
+
+            IUploadProgress result = request.Upload();
+            return result.Status == UploadStatus.Completed;
         }
 
         /// <summary>
@@ -232,7 +230,7 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName)) return false;
 
-            String storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
+            string storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
                 { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
 

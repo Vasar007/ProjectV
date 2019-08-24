@@ -41,7 +41,10 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
             _logger.Info($"Service method '{nameof(SendPostRequest)}' is called.");
 
-            using (var response = await _client.PostAsJsonAsync(_apiUrl, requestParams))
+            using (HttpResponseMessage response = await _client.PostAsJsonAsync(
+                       _apiUrl, requestParams
+                  )
+            )
             {
                 if (response.IsSuccessStatusCode)
                 {

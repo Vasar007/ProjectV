@@ -16,7 +16,7 @@ namespace ThingAppraiser.SteamService
 
         Task<SteamBriefInfoContainer> GetAppListAsync(CancellationToken token = default);
 
-        Task<SteamGameInfo> TryGetSteamAppAsync(int appId, SteamCountryCode countryCode,
+        Task<SteamGameInfo?> TryGetSteamAppAsync(int appId, SteamCountryCode countryCode,
             SteamResponseLanguage language, CancellationToken token = default);
     }
 }

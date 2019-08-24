@@ -61,7 +61,7 @@ namespace ThingAppraiser.SteamService
             return _containerMapper.Transform(steamAppsList);
         }
 
-        public async Task<SteamGameInfo> TryGetSteamAppAsync(int appId,
+        public async Task<SteamGameInfo?> TryGetSteamAppAsync(int appId,
             SteamCountryCode countryCode, SteamResponseLanguage language,
             CancellationToken token = default)
         {

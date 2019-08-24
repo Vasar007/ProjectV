@@ -81,7 +81,7 @@ namespace ThingAppraiser.TmdbService
 
 
         public TmdbClient(string apiKey, bool useSsl = false, string baseUrl = "api.themoviedb.org",
-            JsonSerializer serializer = null, IWebProxy proxy = null)
+            JsonSerializer? serializer = null, IWebProxy? proxy = null)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
             baseUrl.ThrowIfNullOrWhiteSpace(nameof(apiKey));
@@ -95,9 +95,9 @@ namespace ThingAppraiser.TmdbService
 
             TMDbConfig config = await _tmdbClient.GetConfigAsync();
 
-            if (config.Images is null)
+            if (config?.Images is null)
             {
-                string message = "TMDb Image configuration cannot be obtained.";
+                string message = "TMDb image configuration cannot be obtained.";
                 GlobalMessageHandler.OutputMessage(message);
 
                 throw new CannotGetTmdbConfigException(message);
@@ -106,7 +106,7 @@ namespace ThingAppraiser.TmdbService
             return _configMapper.Transform(config);
         }
 
-        public async Task<TmdbSearchContainer> TrySearchMovieAsync(string query, int page = 0,
+        public async Task<TmdbSearchContainer?> TrySearchMovieAsync(string query, int page = 0,
             bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default)
         {
             query.ThrowIfNullOrWhiteSpace(nameof(query));

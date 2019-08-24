@@ -48,7 +48,7 @@ namespace ThingAppraiser
             element.ThrowIfNull(nameof(element));
             attribute.ThrowIfNullOrEmpty(nameof(attribute));
 
-            string value = element.Attribute(attribute)?.Value;
+            string? value = element.Attribute(attribute)?.Value;
             return value ?? string.Empty;
         }
 
@@ -163,7 +163,7 @@ namespace ThingAppraiser
             element.ThrowIfNullOrEmpty(nameof(element));
             attribute.ThrowIfNullOrEmpty(nameof(attribute));
 
-            string value = _document.Root.Element(element)?.Attribute(attribute)?.Value;
+            string? value = _document.Root.Element(element)?.Attribute(attribute)?.Value;
             return value ?? string.Empty;
         }
 

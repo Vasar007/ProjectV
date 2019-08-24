@@ -14,6 +14,6 @@ namespace ThingAppraiser.OmdbService
         bool UseRottenTomatoesRatings { get; }
 
 
-        Task<OmdbMovieInfo> TryGetItemByTitleAsync(string title, bool fullPlot = false);
+        Task<OmdbMovieInfo?> TryGetItemByTitleAsync(string title, bool fullPlot = false);
     }
 }

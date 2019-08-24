@@ -15,7 +15,7 @@ namespace ThingAppraiser.IO.Input.File
         /// Finds in header "Thing Name" column and try to read its values.
         /// </summary>
         [FieldOrder(1), FieldTitle("Thing Name")]
-        public string thingName = default; // Default assignment to remove warning.
+        public string thingName = default!;
 
 
         /// <summary>

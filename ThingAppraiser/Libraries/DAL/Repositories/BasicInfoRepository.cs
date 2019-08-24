@@ -49,100 +49,96 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = SQLStatementsForCommon.CountItemsById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@thing_id", thingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetScalar<int>(query) > 0;
-            }
+            query.Parameters.AddWithValue("@thing_id", thingId);
+
+            return dbHelper.GetScalar<int>(query) > 0;
         }
 
         public void InsertItem(BasicInfo item)
         {
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            {
-                InsertItem(item, dbHelper);
-                dbHelper.Commit();
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+
+            InsertItem(item, dbHelper);
+            dbHelper.Commit();
         }
 
         public BasicInfo GetItemById(int thingId)
         {
             string sqlStatement = SQLStatementsForCommon.SelectItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                query.Parameters.AddWithValue("@thing_id", thingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
 
-                return dbHelper.GetItem(new BasicInfoMapper(), query);
-            }
+            query.Parameters.AddWithValue("@thing_id", thingId);
+
+            return dbHelper.GetItem(new BasicInfoMapper(), query);
         }
 
         public List<BasicInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForCommon.SelectAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var query = new SqlCommand(sqlStatement))
-            {
-                return dbHelper.GetData(new BasicInfoMapper(), query);
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var query = new SqlCommand(sqlStatement);
+
+            return dbHelper.GetData(new BasicInfoMapper(), query);
         }
 
         public void UpdateItem(BasicInfo item)
         {
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            {
-                UpdateItem(item, dbHelper);
-                dbHelper.Commit();
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+
+            UpdateItem(item, dbHelper);
+            dbHelper.Commit();
         }
 
         public void DeleteItemById(int thingId)
         {
             string sqlStatement = SQLStatementsForCommon.DeleteItemById;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@thing_id", thingId);
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            command.Parameters.AddWithValue("@thing_id", thingId);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         public void DeleteAllData()
         {
             string sqlStatement = SQLStatementsForCommon.DeleteAllItems;
 
-            using (var dbHelper = new DbHelperScope(_dbSettings))
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                dbHelper.ExecuteCommand(command);
-                dbHelper.Commit();
-            }
+            using var dbHelper = new DbHelperScope(_dbSettings);
+            using var command = new SqlCommand(sqlStatement);
+
+            dbHelper.ExecuteCommand(command);
+            dbHelper.Commit();
         }
 
         #endregion
 
         #region IDataRepository Implementation
 
-        public T GetMinimum<T>(string columnName)
+        public T GetMinimum<T>(string columnName) 
+            where T : struct
         {
             if (!Columns.Contains(columnName)) return default;
             return _dataProcessor.GetMinimum<T>(columnName, TableName);
         }
 
-        public T GetMaximum<T>(string columnName)
+        public T GetMaximum<T>(string columnName) 
+            where T : struct
         {
             if (!Columns.Contains(columnName)) return default;
             return _dataProcessor.GetMaximum<T>(columnName, TableName);
         }
 
-        public (T, T) GetMinMax<T>(string columnName)
+        public (T, T) GetMinMax<T>(string columnName) 
+            where T : struct
         {
             if (!Columns.Contains(columnName)) return (default, default);
             return _dataProcessor.GetMinMax<T>(columnName, TableName);
@@ -154,30 +150,28 @@ namespace ThingAppraiser.DAL.Repositories
         {
             string sqlStatement = SQLStatementsForCommon.InsertItem;
 
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@thing_id", item.ThingId);
-                command.Parameters.AddWithValue("@title", item.Title);
-                command.Parameters.AddWithValue("@vote_count", item.VoteCount);
-                command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-            }
+            command.Parameters.AddWithValue("@thing_id", item.ThingId);
+            command.Parameters.AddWithValue("@title", item.Title);
+            command.Parameters.AddWithValue("@vote_count", item.VoteCount);
+            command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
+
+            dbHelper.ExecuteCommand(command);
         }
 
         public void UpdateItem(BasicInfo item, DbHelperScope dbHelper)
         {
             string sqlStatement = SQLStatementsForCommon.UpdateItemById;
 
-            using (var command = new SqlCommand(sqlStatement))
-            {
-                command.Parameters.AddWithValue("@title", item.Title);
-                command.Parameters.AddWithValue("@vote_count", item.VoteCount);
-                command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
-                command.Parameters.AddWithValue("@thing_id", item.ThingId);
+            using var command = new SqlCommand(sqlStatement);
 
-                dbHelper.ExecuteCommand(command);
-            }
+            command.Parameters.AddWithValue("@title", item.Title);
+            command.Parameters.AddWithValue("@vote_count", item.VoteCount);
+            command.Parameters.AddWithValue("@vote_average", item.VoteAverage);
+            command.Parameters.AddWithValue("@thing_id", item.ThingId);
+
+            dbHelper.ExecuteCommand(command);
         }
     }
 }

@@ -15,10 +15,6 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
         #endregion
 
 
-        public BotService()
-        {
-        }
-
         public BotService(IOptions<BotConfiguration> config)
         {
             _config = config.Value.ThrowIfNull(nameof(config));

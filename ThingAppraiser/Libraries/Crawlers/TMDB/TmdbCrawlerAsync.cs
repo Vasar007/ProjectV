@@ -47,7 +47,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                TmdbSearchContainer response = await _tmdbClient.TrySearchMovieAsync(movie);
+                TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(movie);
 
                 if (response is null || response.Results.IsNullOrEmpty())
                 {
