@@ -144,17 +144,6 @@ namespace ThingAppraiser
         }
 
         /// <summary>
-        /// Compares string with invariant culture without throwing exception.
-        /// </summary>
-        /// <param name="str">First string to compare.</param>
-        /// <param name="other">Second string to compare.</param>
-        /// <returns><c>true</c> if strings are equal, <c>false</c> otherwise.</returns>
-        public static bool IsEqualWithInvariantCulture(this string str, string other)
-        {
-            return string.Compare(str, other, StringComparison.InvariantCulture) == 0;
-        }
-
-        /// <summary>
         /// Compare guid with the empty guid without throwing exception.
         /// </summary>
         /// <param name="guid">Guid to compare.</param>

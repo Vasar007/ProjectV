@@ -70,7 +70,8 @@ namespace ThingAppraiser.Models.Data
 
             const double eps = 1e-6;
             return ThingId == basicInfo.ThingId &&
-                   Title.IsEqualWithInvariantCulture(basicInfo.Title) &&
+                   string.Equals(Title, basicInfo.Title,
+                                 StringComparison.InvariantCultureIgnoreCase) &&
                    VoteCount == basicInfo.VoteCount && 
                    Math.Abs(VoteAverage - basicInfo.VoteAverage) < eps;
         }

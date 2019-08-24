@@ -62,7 +62,8 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
             {
                 foreach (GoogleDriveData.File file in files)
                 {
-                    if (storageName.IsEqualWithInvariantCulture(file.Name))
+                    if (string.Equals(storageName, file.Name,
+                                      StringComparison.InvariantCultureIgnoreCase))
                     {
                         result = DownloadAndReadFile(storageName, file.Id);
                         break;

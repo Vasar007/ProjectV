@@ -21,11 +21,6 @@ namespace ThingAppraiser.Crawlers.Tmdb
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawler>();
 
         /// <summary>
-        /// Key to get access to TMDb service.
-        /// </summary>
-        private readonly string _apiKey;
-
-        /// <summary>
         /// Adapter class to make a calls to TMDb API.
         /// </summary>
         private readonly ITmdbClient _tmdbClient;
@@ -50,9 +45,9 @@ namespace ThingAppraiser.Crawlers.Tmdb
         /// </exception>
         public TmdbCrawler(string apiKey, int maxRetryCount)
         {
-            _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
+            apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _tmdbClient = TmdbClientFactory.CreateClient(_apiKey, maxRetryCount);
+            _tmdbClient = TmdbClientFactory.CreateClient(apiKey, maxRetryCount);
         }
 
         #region Crawler Overridden Methods
@@ -68,11 +63,14 @@ namespace ThingAppraiser.Crawlers.Tmdb
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                TmdbSearchContainer response = _tmdbClient.SearchMovieAsync(movie).Result;
-                if (response.Results.IsNullOrEmpty())
+                TmdbSearchContainer response = _tmdbClient.TrySearchMovieAsync(movie).Result;
+
+                if (response is null || response.Results.IsNullOrEmpty())
                 {
-                    _logger.Warn($"{movie} wasn't processed.");
-                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    string message = $"{movie} was not processed.";
+                    _logger.Warn(message);
+                    GlobalMessageHandler.OutputMessage(message);
+
                     continue;
                 }
 

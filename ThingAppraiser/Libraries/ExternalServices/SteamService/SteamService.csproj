@@ -15,15 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="SteamWebApiLib" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonHelperClasses\CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\..\Logging\Logging.csproj" />
     <ProjectReference Include="..\..\Models\Models.csproj" />
   </ItemGroup>
 

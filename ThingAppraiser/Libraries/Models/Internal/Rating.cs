@@ -27,7 +27,8 @@ namespace ThingAppraiser.Models.Internal
             if (!(obj is Rating rating)) return false;
 
             return RatingId == rating.RatingId &&
-                   RatingName.IsEqualWithInvariantCulture(rating.RatingName);
+                   string.Equals(RatingName, rating.RatingName,
+                                 StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <inheritdoc />

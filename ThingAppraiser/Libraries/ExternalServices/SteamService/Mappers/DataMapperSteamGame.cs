@@ -3,7 +3,7 @@ using System.Linq;
 using SteamWebApiLib.Models.AppDetails;
 using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers.Steam
+namespace ThingAppraiser.SteamService.Mappers
 {
     public sealed class DataMapperSteamGame : IDataMapper<SteamApp, SteamGameInfo>
     {

@@ -10,6 +10,9 @@ namespace ThingAppraiser.TmdbService.Mappers
     internal sealed class DataMapperTmdbContainer :
         IDataMapper<SearchContainer<SearchMovie>, TmdbSearchContainer>
     {
+        /// <summary>
+        /// Helper class to transform raw DTO objects to concrete object without extra data.
+        /// </summary>
         private readonly DataMapperTmdbMovie _mapperTmdbMovie = new DataMapperTmdbMovie();
 
 

@@ -10,13 +10,13 @@ namespace ThingAppraiser.TmdbService
     public interface ITmdbClient : IDisposable
     {
         /// <summary>
-        /// The maximum number of times a call to TMDB will be retried.
+        /// The maximum number of times a call to TMDb will be retried.
         /// </summary>
         /// <remarks>Default is 0</remarks>
         int MaxRetryCount { get; set; }
 
         /// <summary>
-        /// Throw exceptions when TMDBs API returns certain errors, such as Not Found.
+        /// Throw exceptions when TMDbs API returns certain errors, such as Not Found.
         /// </summary>
         bool ThrowApiExceptions { get; set; }
 
@@ -32,10 +32,15 @@ namespace ThingAppraiser.TmdbService
         /// </summary>
         string DefaultCountry { get; set; }
 
+        TmdbServiceConfigurationInfo Config { get; }
+
+        /// <summary>
+        /// Key to get access to TMDb service.
+        /// </summary>
         string ApiKey { get; }
 
         /// <summary>
-        /// Gets or sets the Web Proxy to use during requests to TMDB API.
+        /// Gets or sets the Web Proxy to use during requests to TMDb API.
         /// </summary>
         /// <remarks>
         /// The Web Proxy is optional. If set, every request will be sent through it.
@@ -47,7 +52,7 @@ namespace ThingAppraiser.TmdbService
         IWebProxy WebProxy { get; }
 
 
-        Task<TmdbSearchContainer> SearchMovieAsync(string query, int page = 0,
+        Task<TmdbSearchContainer> TrySearchMovieAsync(string query, int page = 0,
             bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default);
 
         Task<TmdbServiceConfigurationInfo> GetConfigAsync();

@@ -23,11 +23,6 @@ namespace ThingAppraiser.TmdbService
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbClient>();
 
         /// <summary>
-        /// Third-party helper class to make a calls to TMDB API.
-        /// </summary>
-        private readonly TMDbClient _tmdbClient;
-
-        /// <summary>
         /// Helper class to transform raw DTO objects to concrete object without extra data.
         /// </summary>
         private readonly IDataMapper<SearchContainer<SearchMovie>, TmdbSearchContainer> _dataMapper
@@ -38,6 +33,11 @@ namespace ThingAppraiser.TmdbService
         /// </summary>
         private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
             new DataMapperTmdbConfig();
+
+        /// <summary>
+        /// Third-party helper class to make a calls to TMDb API.
+        /// </summary>
+        private readonly TMDbClient _tmdbClient;
 
         private bool _isDisposed;
 
@@ -73,6 +73,7 @@ namespace ThingAppraiser.TmdbService
         
         public TmdbServiceConfigurationInfo Config => _configMapper.Transform(_tmdbClient.Config);
 
+        /// <inheritdoc />
         public string ApiKey => _tmdbClient.ApiKey;
 
         /// <inheritdoc />
@@ -96,7 +97,7 @@ namespace ThingAppraiser.TmdbService
 
             if (config.Images is null)
             {
-                string message = "TMDB Image configuration cannot be obtained.";
+                string message = "TMDb Image configuration cannot be obtained.";
                 GlobalMessageHandler.OutputMessage(message);
 
                 throw new CannotGetTmdbConfigException(message);
@@ -105,19 +106,28 @@ namespace ThingAppraiser.TmdbService
             return _configMapper.Transform(config);
         }
 
-        public async Task<TmdbSearchContainer> SearchMovieAsync(string query, int page = 0,
+        public async Task<TmdbSearchContainer> TrySearchMovieAsync(string query, int page = 0,
             bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default)
         {
             query.ThrowIfNullOrWhiteSpace(nameof(query));
 
-            _logger.Info($"Searching TMBD movie by query: \"{query}\" [page: {page.ToString()}, " +
+            _logger.Info($"Searching TMDb movie by query: \"{query}\" [page: {page.ToString()}, " +
                          $"includeAdult: {includeAdult.ToString()}, year: {year.ToString()}].");
 
-            SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
+            try
+            {
+                SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
                 query, page, includeAdult, year, cancellationToken
             );
 
-            return _dataMapper.Transform(response);
+                return _dataMapper.Transform(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Exception occurred during processing response for \"{query}\".");
+
+                return null;
+            }
         }
 
         #region IDisposable Implementation

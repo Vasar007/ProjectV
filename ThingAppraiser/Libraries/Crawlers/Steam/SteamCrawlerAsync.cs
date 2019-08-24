@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using SteamWebApiLib;
-using SteamWebApiLib.Models.AppDetails;
-using SteamWebApiLib.Models.BriefInfo;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
+using ThingAppraiser.SteamService;
+using ThingAppraiser.SteamService.Models;
 
 namespace ThingAppraiser.Crawlers.Steam
 {
@@ -23,20 +22,9 @@ namespace ThingAppraiser.Crawlers.Steam
             LoggerFactory.CreateLoggerFor<SteamCrawlerAsync>();
 
         /// <summary>
-        /// Helper class to transform raw DTO objects to concrete object without extra data.
+        /// Adapter class to make a calls to Steam API.
         /// </summary>
-        private readonly IDataMapper<SteamApp, SteamGameInfo> _dataMapper =
-            new DataMapperSteamGame(); 
-
-        /// <summary>
-        /// Key to get access to Steam service (using only for client data requests).
-        /// </summary>
-        private readonly string _apiKey;
-
-        /// <summary>
-        /// Third-party helper class to make a calls to Steam API.
-        /// </summary>
-        private readonly SteamApiClient _steamApiClient;
+        private readonly ISteamApiClient _steamApiClient;
 
         /// <inheritdoc />
         public override string Tag { get; } = nameof(SteamCrawlerAsync);
@@ -57,14 +45,9 @@ namespace ThingAppraiser.Crawlers.Steam
         /// </exception>
         public SteamCrawlerAsync(string apiKey)
         {
-            _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
+            apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _steamApiClient = new SteamApiClient(
-                new SteamApiConfig
-                {
-                    ApiKey = _apiKey
-                }
-            );
+            _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
         }
 
         #region CrawlerAsync Overridden Methods
@@ -75,8 +58,8 @@ namespace ThingAppraiser.Crawlers.Steam
         {
             if (SteamAppsStorage.IsEmpty)
             {
-                SteamAppBriefInfoList steamAppsList = await _steamApiClient.GetAppListAsync();
-                SteamAppsStorage.FillStorage(steamAppsList);
+                SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
+                SteamAppsStorage.FillStorage(steamApps);
             }
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
@@ -85,30 +68,38 @@ namespace ThingAppraiser.Crawlers.Steam
             {
                 string game = await entitiesQueue.ReceiveAsync();
 
-                SteamApp response;
-                try
+                int? appId = SteamAppsStorage.TryGetAppIdByName(game);
+
+                if (!appId.HasValue)
                 {
-                    int appId = SteamAppsStorage.GetAppIdByName(game);
-                    response = await _steamApiClient.GetSteamAppAsync(
-                        appId, CountryCode.Russia, Language.English
-                    );
+                    string message = $"{game} was not find in Steam responses storage.";
+                    _logger.Warn(message);
+                    GlobalMessageHandler.OutputMessage(message);
+
+                    continue;
                 }
-                catch (Exception ex)
+
+                var response = await _steamApiClient.TryGetSteamAppAsync(
+                    appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
+                );
+
+                if (response is null)
                 {
-                    _logger.Warn(ex, $"{game} wasn't processed.");
-                    GlobalMessageHandler.OutputMessage($"{game} wasn't processed.");
+                    string message = $"{game} was not processed.";
+                    _logger.Warn(message);
+                    GlobalMessageHandler.OutputMessage(message);
+
                     continue;
                 }
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {response} from {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
                 }
 
-                SteamGameInfo extractedInfo = _dataMapper.Transform(response);
-                if (searchResults.Add(extractedInfo))
+                if (searchResults.Add(response))
                 {
-                    await responsesQueue.SendAsync(extractedInfo);
+                    await responsesQueue.SendAsync(response);
                 }
             }
             return searchResults.Count != 0;

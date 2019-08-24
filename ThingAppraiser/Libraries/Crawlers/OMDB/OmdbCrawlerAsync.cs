@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using OMDbApiNet;
-using OMDbApiNet.Model;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
+using ThingAppraiser.OmdbService;
 
 namespace ThingAppraiser.Crawlers.Omdb
 {
@@ -22,20 +21,9 @@ namespace ThingAppraiser.Crawlers.Omdb
             LoggerFactory.CreateLoggerFor<OmdbCrawlerAsync>();
 
         /// <summary>
-        /// Helper class to transform raw DTO objects to concrete object without extra data.
+        /// Adapter class to make a calls to OMDb API.
         /// </summary>
-        private readonly IDataMapper<Item, OmdbMovieInfo> _dataMapper =
-            new DataMapperOmdbMovie();
-
-        /// <summary>
-        /// Key to get access to OMDb service.
-        /// </summary>
-        private readonly string _apiKey;
-
-        /// <summary>
-        /// Third-party helper class to make a calls to OMDb API.
-        /// </summary>
-        private readonly AsyncOmdbClient _omdbClient;
+        private readonly IOmdbClient _omdbClient;
 
         /// <inheritdoc />
         public override string Tag { get; } = nameof(OmdbCrawlerAsync);
@@ -56,9 +44,9 @@ namespace ThingAppraiser.Crawlers.Omdb
         /// </exception>
         public OmdbCrawlerAsync(string apiKey)
         {
-            _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
+            apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _omdbClient = new AsyncOmdbClient(_apiKey);
+            _omdbClient = OmdbClientFactory.CreateClient(apiKey);
         }
 
         #region CrawlerAsync Overridden Methods
@@ -73,35 +61,26 @@ namespace ThingAppraiser.Crawlers.Omdb
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                Item response;
-                try
-                {
-                    response = await _omdbClient.GetItemByTitleAsync(movie);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, $"{movie} wasn't processed.");
-                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
-                    continue;
-                }
+                OmdbMovieInfo response = await _omdbClient.TryGetItemByTitleAsync(movie);
 
-                if (!response.Response.IsEqualWithInvariantCulture("True"))
+                if (response is null)
                 {
-                    _logger.Warn($"{movie} wasn't processed.");
-                    GlobalMessageHandler.OutputMessage($"{movie} wasn't processed.");
+                    string message = $"{movie} was not processed.";
+                    _logger.Warn(message);
+                    GlobalMessageHandler.OutputMessage(message);
+
                     continue;
                 }
 
                 // Get first search result from response and ignore all the rest.
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {response.Title} from {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
                 }
 
-                OmdbMovieInfo extractedInfo = _dataMapper.Transform(response);
-                if (searchResults.Add(extractedInfo))
+                if (searchResults.Add(response))
                 {
-                    await responsesQueue.SendAsync(extractedInfo);
+                    await responsesQueue.SendAsync(response);
                 }
             }
             return searchResults.Count != 0;

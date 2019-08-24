@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using OMDbApiNet.Model;
 using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.Crawlers.Omdb
+namespace ThingAppraiser.OmdbService.Mappers
 {
     public sealed class DataMapperOmdbMovie : IDataMapper<Item, OmdbMovieInfo>
     {
@@ -12,18 +13,24 @@ namespace ThingAppraiser.Crawlers.Omdb
         {
         }
 
-        #region IDataMapper<SearchMovie, OmdbMovieInfo> Implementation
+        #region IDataMapper<Item, OmdbMovieInfo> Implementation
 
         public OmdbMovieInfo Transform(Item dataObject)
         {
-            var thingId = int.Parse(dataObject.ImdbId.Substring(2));
-            var voteCount = int.Parse(dataObject.ImdbVotes, NumberStyles.AllowThousands);
-            var voteAverage = double.Parse(dataObject.ImdbRating);
-            var releaseDate = DateTime.Parse(dataObject.Released);
-            var metascore = dataObject.Metascore.IsEqualWithInvariantCulture("N/A")
+            int thingId = int.Parse(dataObject.ImdbId.Substring(2));
+            int voteCount = int.Parse(dataObject.ImdbVotes, NumberStyles.AllowThousands);
+            double voteAverage = double.Parse(dataObject.ImdbRating);
+            DateTime releaseDate = DateTime.Parse(dataObject.Released);
+
+            int metascore = string.Equals(dataObject.Metascore, "N/A",
+                                          StringComparison.InvariantCultureIgnoreCase)
                 ? 0
                 : int.Parse(dataObject.Metascore);
-            var genreIds = dataObject.Genre.Split(',').Select(genre => genre.Trim()).ToList();
+
+            List<string> genreIds = dataObject.Genre
+                .Split(',')
+                .Select(genre => genre.Trim())
+                .ToList();
 
             return new OmdbMovieInfo(
                 thingId:     thingId,
