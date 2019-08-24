@@ -22,7 +22,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         #region IServiceSetupAsync Implementation
 
-        public async Task SetWebhook()
+        public async Task SetWebhookAsync()
         {
             string serviceUrl = _settings.NgrokUrl + _settings.ServiceApiUrl;
 
@@ -31,7 +31,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             _logger.Info("Webhook was set.");
         }
 
-        public async Task DeleteWebhook()
+        public async Task DeleteWebhookAsync()
         {
             _logger.Info($"Try to delete webhook.");
             var info = await _botService.Client.GetWebhookInfoAsync();

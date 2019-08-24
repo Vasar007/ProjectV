@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using System.Xml.Linq;
 
 namespace ThingAppraiser.Models.Configuration
 {
     // TODO: make this DTO immutable.
-    [Serializable]
     public sealed class DataBaseManagerConfig
     {
         [XmlAttribute(DataType = "string")]

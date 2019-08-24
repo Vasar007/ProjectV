@@ -224,9 +224,11 @@
     <Resource Include="Resources\ta_thumb.ico" />
     <Resource Include="Resources\ta_thumb900.jpg" />
     <None Include="games.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="thing_names.csv" />
+    <None Include="thing_names.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

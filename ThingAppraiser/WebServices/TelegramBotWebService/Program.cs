@@ -33,13 +33,13 @@ namespace ThingAppraiser.TelegramBotWebService
 
                 // Set web hook to get messages from Telegram Bot.
                 var serviceSetup = webHost.Services.GetRequiredService<IServiceSetupAsync>();
-                await serviceSetup.SetWebhook();
+                await serviceSetup.SetWebhookAsync();
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
                 await webHost.RunAsync();
 
-                await serviceSetup.DeleteWebhook();
+                await serviceSetup.DeleteWebhookAsync();
             }
             catch (Exception ex)
             {

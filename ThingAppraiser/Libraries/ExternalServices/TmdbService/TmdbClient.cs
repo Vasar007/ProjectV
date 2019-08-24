@@ -39,7 +39,7 @@ namespace ThingAppraiser.TmdbService
         /// </summary>
         private readonly TMDbClient _tmdbClient;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
         /// <inheritdoc />
         public int MaxRetryCount
@@ -134,8 +134,8 @@ namespace ThingAppraiser.TmdbService
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _tmdbClient.Dispose();
         }

@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    [Serializable]
     [XmlRoot(ElementName = "Toplist", Namespace = "")]
     public sealed class ToplistXml
     {

@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using ThingAppraiser.ProcessingWebService.v1.Domain;
 
 namespace ThingAppraiser.ProcessingWebService
@@ -27,7 +28,8 @@ namespace ThingAppraiser.ProcessingWebService
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson();
 
             services.AddApiVersioning(
                 options =>
@@ -45,22 +47,22 @@ namespace ThingAppraiser.ProcessingWebService
             // Register the Swagger generator, defining 1 or more Swagger documents.
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "ThingAppraiser Processing API",
                     Description = "Web API to process data based on configuration.",
-                    TermsOfService = "None",
-                    Contact = new Contact
+                    //TermsOfService = "None",
+                    Contact = new OpenApiContact
                     {
                         Name = "Vasily Vasilyev",
                         Email = "vasar007@yandex.ru",
-                        Url = "https://t.me/Vasar007"
+                        Url = new Uri("https://t.me/Vasar007")
                     },
-                    License = new License
+                    License = new OpenApiLicense
                     {
                         Name = "Apache License 2.0",
-                        Url = "http://www.apache.org/licenses/LICENSE-2.0"
+                        Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0")
                     }
                 });
             });

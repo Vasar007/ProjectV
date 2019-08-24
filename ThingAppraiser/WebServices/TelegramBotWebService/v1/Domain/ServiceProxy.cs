@@ -16,7 +16,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         private readonly HttpClient _client;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
 
         public ServiceProxy(IOptions<ServiceSettings> settings)
@@ -61,8 +61,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _client.Dispose();
         }

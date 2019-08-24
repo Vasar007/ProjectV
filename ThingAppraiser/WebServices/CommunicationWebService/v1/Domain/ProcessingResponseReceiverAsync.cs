@@ -3,17 +3,22 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {
-    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync, IDisposable
+    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync,
+        IDisposable
     {
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ProcessingResponseReceiverAsync>();
+
         private readonly ServiceSettings _settings;
 
         private readonly HttpClient _client;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
 
         public ProcessingResponseReceiverAsync(IOptions<ServiceSettings> settingsOptions)
@@ -32,8 +37,11 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 
         #region IProcessingResponseReceiverAsync Implementation
 
-        public async Task<ProcessingResponse> ReceiveProcessingResponseAsync(RequestData requestData)
+        public async Task<ProcessingResponse> ReceiveProcessingResponseAsync(
+            RequestData requestData)
         {
+            _logger.Info("Sending data request and trying to receive response.");
+
             using (HttpResponseMessage responseMessage = await _client.PostAsJsonAsync(
                     _settings.ProcessingServiceApiUrl, requestData
                   )
@@ -41,10 +49,14 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
             {
                 if (responseMessage.IsSuccessStatusCode)
                 {
+                    _logger.Info("Received successful data response.");
+
                     var result = await responseMessage.Content.ReadAsAsync<ProcessingResponse>();
                     return result;
                 }
             }
+
+            _logger.Info("Received bad data response.");
 
             throw new Exception("Data processing request failed.");
         }
@@ -55,8 +67,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _client.Dispose();
         }

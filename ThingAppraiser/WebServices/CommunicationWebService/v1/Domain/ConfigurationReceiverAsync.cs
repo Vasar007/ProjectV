@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Models.WebService;
 
@@ -10,11 +11,14 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 {
     public sealed class ConfigurationReceiverAsync : IConfigurationReceiverAsync, IDisposable
     {
+        private static readonly ILogger _logger =
+           LoggerFactory.CreateLoggerFor<ConfigurationReceiverAsync>();
+
         private readonly ServiceSettings _settings;
 
         private readonly HttpClient _client;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
 
         public ConfigurationReceiverAsync(IOptions<ServiceSettings> settingsOptions)
@@ -35,6 +39,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 
         public async Task<RequestData> ReceiveConfigForRequestAsync(RequestParams requestParams)
         {
+            _logger.Info("Sending config request and trying to receive response.");
+
             using (HttpResponseMessage responseConfigMessage = await _client.PostAsJsonAsync(
                        _settings.ConfigurationServiceApiUrl, requestParams.Requirements
                   )
@@ -42,6 +48,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
             {
                 if (responseConfigMessage.IsSuccessStatusCode)
                 {
+                    _logger.Info("Received successful config response.");
+
                     var config =
                         await responseConfigMessage.Content.ReadAsAsync<ConfigurationXml>();
 
@@ -54,6 +62,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
                 }
             }
 
+            _logger.Info("Received bad config response.");
+
             throw new Exception("Config request failed.");
         }
 
@@ -63,8 +73,8 @@ namespace ThingAppraiser.CommunicationWebService.v1.Domain
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _client.Dispose();
         }

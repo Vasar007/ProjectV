@@ -35,7 +35,7 @@ namespace ThingAppraiser.SteamService
         /// </summary>
         private readonly SteamWebApiLib.SteamApiClient _steamApiClient;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
         /// <inheritdoc />
         public string ApiKey { get; }
@@ -89,8 +89,8 @@ namespace ThingAppraiser.SteamService
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _steamApiClient.Dispose();
         }

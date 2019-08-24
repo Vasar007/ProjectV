@@ -18,7 +18,7 @@ namespace ThingAppraiser.DAL
 
         private readonly SqlTransaction _transaction;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
 
         public DbHelperScope(DataStorageSettings settings)
@@ -80,8 +80,8 @@ namespace ThingAppraiser.DAL
 
         public void Dispose()
         {
-            if (_isDisposed) return;
-            _isDisposed = true;
+            if (_disposed) return;
+            _disposed = true;
 
             _transaction?.Dispose();
 

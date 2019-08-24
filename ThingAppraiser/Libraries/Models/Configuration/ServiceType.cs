@@ -8,6 +8,6 @@ namespace ThingAppraiser.Models.Configuration
         Sequential,
 
         [XmlEnum]
-        TplDataflow,
+        TplDataflow
     }
 }

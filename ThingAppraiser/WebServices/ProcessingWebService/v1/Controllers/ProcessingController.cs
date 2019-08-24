@@ -33,6 +33,8 @@ namespace ThingAppraiser.ProcessingWebService.v1.Controllers
         public async Task<ActionResult<ProcessingResponse>> PostRequestData(
             RequestData requestData)
         {
+            _logger.Info("Processing data request.");
+
             try
             {
                 IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(

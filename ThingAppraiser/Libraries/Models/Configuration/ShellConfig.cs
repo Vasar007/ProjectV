@@ -1,10 +1,8 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace ThingAppraiser.Models.Configuration
 {
     // TODO: make this DTO immutable.
-    [Serializable]
     public sealed class ShellConfig
     {
         [XmlElement]

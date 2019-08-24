@@ -5,8 +5,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {
     public interface IServiceSetupAsync
     {
-        Task SetWebhook();
+        Task SetWebhookAsync();
 
-        Task DeleteWebhook();
+        Task DeleteWebhookAsync();
     }
 }

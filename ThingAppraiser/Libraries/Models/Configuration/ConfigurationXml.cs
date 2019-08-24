@@ -6,8 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace ThingAppraiser.Models.Configuration
 {
     // TODO: make this DTO immutable.
-    [Serializable]
-    [XmlRoot(ElementName = "Configuration", Namespace = "")]
+    [XmlRoot(ElementName = "ConfigurationXml", Namespace = "")]
     public sealed class ConfigurationXml
     {
         [XmlElement]
