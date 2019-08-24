@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using TMDbLib.Client;
-using TMDbLib.Objects.General;
-using TMDbLib.Objects.Search;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.TmdbService;
-using ThingAppraiser.TmdbService.Mappers;
+using ThingAppraiser.TmdbService.Models;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
@@ -19,15 +16,9 @@ namespace ThingAppraiser.Crawlers.Tmdb
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawlerAsync>();
 
-        private readonly IDataMapper<SearchMovie, TmdbMovieInfo> _dataMapper =
-            new DataMapperTmdbMovie();
-
-        private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
-            new DataMapperTmdbConfig();
-
         private readonly string _apiKey;
 
-        private readonly TMDbClient _tmdbClient;
+        private readonly ITmdbClient _tmdbClient;
 
         /// <inheritdoc />
         public override string Tag { get; } = nameof(TmdbCrawlerAsync);
@@ -40,10 +31,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
         {
             _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _tmdbClient = new TMDbClient(_apiKey)
-            {
-                MaxRetryCount = maxRetryCount
-            };
+            _tmdbClient = TmdbClientFactory.CreateClient(_apiKey, maxRetryCount);
         }
 
         #region CrawlerAsync Overridden Methods
@@ -61,7 +49,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
             {
                 string movie = await entitiesQueue.ReceiveAsync();
 
-                SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(movie);
+                TmdbSearchContainer response = await _tmdbClient.SearchMovieAsync(movie);
                 if (response.Results.IsNullOrEmpty())
                 {
                     _logger.Warn($"{movie} wasn't processed.");
@@ -70,16 +58,15 @@ namespace ThingAppraiser.Crawlers.Tmdb
                 }
 
                 // Get first search result from response and ignore all the rest.
-                SearchMovie searchResult = response.Results.First();
+                TmdbMovieInfo searchResult = response.Results.First();
                 if (outputResults)
                 {
                     GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
                 }
 
-                TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);
-                if (searchResults.Add(extractedInfo))
+                if (searchResults.Add(searchResult))
                 {
-                    await responsesQueue.SendAsync(extractedInfo);
+                    await responsesQueue.SendAsync(searchResult);
                 }
             }
             return searchResults.Count != 0;
@@ -90,20 +77,14 @@ namespace ThingAppraiser.Crawlers.Tmdb
         private async Task<TmdbServiceConfigurationInfo> GetServiceConfiguration(
             bool outputResults)
         {
-            var config = await _tmdbClient.GetConfigAsync();
-
-            if (config.Images is null)
-            {
-                _logger.Warn("Image configuration cannot be obtained.");
-                GlobalMessageHandler.OutputMessage("Image configuration cannot be obtained.");
-            }
+            TmdbServiceConfigurationInfo config = await _tmdbClient.GetConfigAsync();
 
             if (outputResults)
             {
                 GlobalMessageHandler.OutputMessage("Got TMDb config.");
             }
 
-            return _configMapper.Transform(config);
+            return config;
         }
     }
 }

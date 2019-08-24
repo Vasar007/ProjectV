@@ -19,7 +19,7 @@ namespace ThingAppraiser.Crawlers.Steam
             var price = Convert.ToDecimal(dataObject.PriceOverview.Final);
             var genreIds = dataObject.Genres.Select(genre => genre.Id).ToList();
 
-            var result = new SteamGameInfo(
+            return new SteamGameInfo(
                 thingId:     dataObject.SteamAppId,
                 title:       dataObject.Name,
                 voteCount:   dataObject.PriceOverview.DiscountPercent,
@@ -31,7 +31,6 @@ namespace ThingAppraiser.Crawlers.Steam
                 genreIds:    genreIds,
                 posterPath:  dataObject.HeaderImage
             );
-            return result;
         }
 
         #endregion

@@ -14,7 +14,7 @@ namespace ThingAppraiser.TmdbService.Mappers
 
         public TmdbMovieInfo Transform(SearchMovie dataObject)
         {
-            var result = new TmdbMovieInfo(
+            return new TmdbMovieInfo(
                 thingId:     dataObject.Id,
                 title:       dataObject.Title,
                 voteCount:   dataObject.VoteCount,
@@ -26,7 +26,6 @@ namespace ThingAppraiser.TmdbService.Mappers
                 genreIds:    dataObject.GenreIds,
                 posterPath:  dataObject.PosterPath
             );
-            return result;
         }
 
         #endregion

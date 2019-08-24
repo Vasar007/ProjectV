@@ -24,7 +24,7 @@ namespace ThingAppraiser.DAL.Mappers
             var genreIdsAsString = (string) reader["genre_ids"];
             List<int> genreIds = genreIdsAsString.Split(',').Select(int.Parse).ToList();
 
-            var item = new TmdbMovieInfo(
+            return new TmdbMovieInfo(
                 thingId:     (int)      reader["thing_id"],
                 title:       (string)   reader["title"],
                 voteCount:   (int)      reader["vote_count"],
@@ -36,7 +36,6 @@ namespace ThingAppraiser.DAL.Mappers
                 genreIds:               genreIds,
                 posterPath:  (string)   reader["poster_path"]
             );
-            return item;
         }
 
         #endregion

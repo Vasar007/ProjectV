@@ -77,11 +77,11 @@ namespace ThingAppraiser.IO.Output.File
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
-            var engine = new FileHelperAsyncEngine<OuputFileData>
-            {
-                HeaderText = typeof(OuputFileData).GetCsvHeader()
-            };
-
+            using (var engine = new FileHelperAsyncEngine<OuputFileData>
+                  {
+                      HeaderText = typeof(OuputFileData).GetCsvHeader()
+                  }
+            )
             using (engine.BeginWriteFile(filename))
             {
                 Dictionary<string, List<double>> converted = ConvertResultsToDict(results);

@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.TmdbService.Models
 {
     public sealed class TmdbSearchContainer
     {
-        public IReadOnlyList<TmdbMovieInfo> SearchResults { get; }
+        public int Page { get; }
+        public IReadOnlyList<TmdbMovieInfo> Results { get; }
+        public int TotalPages { get; }
+        public int TotalResults { get; }
 
-        public TmdbSearchContainer(IReadOnlyList<TmdbMovieInfo> searchResults)
+
+        public TmdbSearchContainer(int page, IReadOnlyList<TmdbMovieInfo> results, int totalPages,
+            int totalResults)
         {
-            SearchResults = searchResults.ThrowIfNull(nameof(searchResults));
+            Page = page;
+            Results = results.ThrowIfNull(nameof(results));
+            TotalPages = totalPages;
+            TotalResults = totalResults;
         }
     }
 }

@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonHelperClasses\CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\..\Communication\Communication.csproj" />
+    <ProjectReference Include="..\..\Logging\Logging.csproj" />
     <ProjectReference Include="..\..\Models\Models.csproj" />
   </ItemGroup>
 

@@ -11,7 +11,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <RootNamespace>ThingAppraiser.Data</RootNamespace>
+    <RootNamespace>ThingAppraiser.Models</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

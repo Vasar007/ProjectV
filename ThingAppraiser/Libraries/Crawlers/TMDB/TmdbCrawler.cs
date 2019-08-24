@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMDbLib.Client;
-using TMDbLib.Objects.General;
-using TMDbLib.Objects.Search;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.TmdbService;
-using ThingAppraiser.TmdbService.Mappers;
+using ThingAppraiser.TmdbService.Models;
 
 namespace ThingAppraiser.Crawlers.Tmdb
 {
@@ -24,26 +21,14 @@ namespace ThingAppraiser.Crawlers.Tmdb
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawler>();
 
         /// <summary>
-        /// Helper class to transform raw DTO objects to concrete object without extra data.
-        /// </summary>
-        private readonly IDataMapper<SearchMovie, TmdbMovieInfo> _dataMapper =
-            new DataMapperTmdbMovie();
-
-        /// <summary>
-        /// Helper class to transform raw DTO config to concrete interanl object without extra data.
-        /// </summary>
-        private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
-            new DataMapperTmdbConfig();
-
-        /// <summary>
         /// Key to get access to TMDb service.
         /// </summary>
         private readonly string _apiKey;
 
         /// <summary>
-        /// Third-party helper class to make a calls to TMDb API.
+        /// Adapter class to make a calls to TMDb API.
         /// </summary>
-        private readonly TMDbClient _tmdbClient;
+        private readonly ITmdbClient _tmdbClient;
 
         /// <inheritdoc />
         public override string Tag { get; } = nameof(TmdbCrawler);
@@ -67,10 +52,7 @@ namespace ThingAppraiser.Crawlers.Tmdb
         {
             _apiKey = apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _tmdbClient = new TMDbClient(_apiKey)
-            {
-                MaxRetryCount = maxRetryCount
-            };
+            _tmdbClient = TmdbClientFactory.CreateClient(_apiKey, maxRetryCount);
         }
 
         #region Crawler Overridden Methods
@@ -79,14 +61,14 @@ namespace ThingAppraiser.Crawlers.Tmdb
         public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
-                    GetServiceConfiguration(outputResults)
+                GetServiceConfiguration(outputResults)
             );
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();
             foreach (string movie in entities)
             {
-                SearchContainer<SearchMovie> response = _tmdbClient.SearchMovieAsync(movie).Result;
+                TmdbSearchContainer response = _tmdbClient.SearchMovieAsync(movie).Result;
                 if (response.Results.IsNullOrEmpty())
                 {
                     _logger.Warn($"{movie} wasn't processed.");
@@ -95,14 +77,13 @@ namespace ThingAppraiser.Crawlers.Tmdb
                 }
 
                 // Get first search result from response and ignore all the rest.
-                SearchMovie searchResult = response.Results.First();
+                TmdbMovieInfo searchResult = response.Results.First();
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
                 }
 
-                TmdbMovieInfo extractedInfo = _dataMapper.Transform(searchResult);
-                searchResults.Add(extractedInfo);
+                searchResults.Add(searchResult);
             }
             return searchResults.ToList();
         }
@@ -116,20 +97,14 @@ namespace ThingAppraiser.Crawlers.Tmdb
         /// <returns>Transformed configuration of the service.</returns>
         private TmdbServiceConfigurationInfo GetServiceConfiguration(bool outputResults)
         {
-            var config = _tmdbClient.GetConfigAsync().Result;
-
-            if (config.Images is null)
-            {
-                _logger.Warn("Image configuration cannot be obtained.");
-                GlobalMessageHandler.OutputMessage("Image configuration cannot be obtained.");
-            }
+            TmdbServiceConfigurationInfo config = _tmdbClient.GetConfigAsync().Result;
 
             if (outputResults)
             {
                 GlobalMessageHandler.OutputMessage("Got TMDb config.");
             }
 
-            return _configMapper.Transform(config);
+            return config;
         }
     }
 }

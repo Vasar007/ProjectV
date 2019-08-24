@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         private readonly HttpClient _client;
 
-        private bool _disposedValue;
+        private bool _isDisposed;
 
 
         public ServiceProxy()
@@ -56,12 +56,10 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public void Dispose()
         {
-            if (!_disposedValue)
-            {
-                _disposedValue = true;
+            if (_isDisposed) return;
+            _isDisposed = true;
 
-                _client.Dispose();
-            }
+            _client.Dispose();
         }
 
         #endregion

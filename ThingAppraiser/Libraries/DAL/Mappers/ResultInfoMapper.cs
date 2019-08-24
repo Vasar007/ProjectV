@@ -14,12 +14,11 @@ namespace ThingAppraiser.DAL.Mappers
 
         public ResultInfo ReadItem(IDataReader reader)
         {
-            var item = new ResultInfo(
+            return new ResultInfo(
                 (int)    reader["thing_id"],
                 (double) reader["rating_value"],
                 (Guid)   reader["rating_id"]
             );
-            return item;
         }
 
         #endregion

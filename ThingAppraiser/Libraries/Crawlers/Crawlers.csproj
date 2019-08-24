@@ -15,9 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OmdbApiNet" Version="1.3.0" />
     <PackageReference Include="RestSharp" Version="106.6.10" />
-    <PackageReference Include="SteamWebApiLib" Version="1.1.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
@@ -25,6 +23,8 @@
     <ProjectReference Include="..\CommonHelperClasses\CommonHelperClasses.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\ExternalServices\OmdbService\OmdbService.csproj" />
+    <ProjectReference Include="..\ExternalServices\SteamService\SteamService.csproj" />
     <ProjectReference Include="..\ExternalServices\TmdbService\TmdbService.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />

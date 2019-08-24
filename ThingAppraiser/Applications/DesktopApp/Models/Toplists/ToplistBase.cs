@@ -7,27 +7,15 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
     {
         private string _name;
 
-        private ToplistType _type;
-
-        private ToplistFormat _format;
-
         public string Name
         {
             get => _name;
             set => SetProperty(ref _name, value.ThrowIfNullOrEmpty(nameof(value)));
         }
 
-        public ToplistType Type
-        {
-            get => _type;
-            set => SetProperty(ref _type, value);
-        }
+        public ToplistType Type { get; }
 
-        public ToplistFormat Format
-        {
-            get => _format;
-            set => SetProperty(ref _format, value);
-        }
+        public ToplistFormat Format { get; }
 
         public ObservableCollection<ToplistBlock> Blocks { get; private set; }
             = new ObservableCollection<ToplistBlock>();

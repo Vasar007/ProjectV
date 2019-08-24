@@ -13,13 +13,12 @@ namespace ThingAppraiser.DAL.Mappers
 
         public BasicInfo ReadItem(IDataReader reader)
         {
-            var item = new BasicInfo(
+            return new BasicInfo(
                 thingId:     (int)    reader["thing_id"],
                 title:       (string) reader["title"],
                 voteCount:   (int)    reader["vote_count"],
                 voteAverage: (double) reader["vote_average"]
             );
-            return item;
         }
 
         #endregion

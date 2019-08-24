@@ -18,7 +18,7 @@ namespace ThingAppraiser.Logging
             string fullName = type.FullName ?? throw new ArgumentException(
                 $"Could not get full name of class {type}."
             );
-            return new NLogLoggerAbstraction(fullName);
+            return new NLogLoggerAdapter(fullName);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ThingAppraiser.Logging
             string fullName = type.FullName ?? throw new ArgumentException(
                 $"Could not get full name of class {nameof(type)}"
             );
-            return new NLogLoggerAbstraction(fullName);
+            return new NLogLoggerAdapter(fullName);
         }
     }
 }

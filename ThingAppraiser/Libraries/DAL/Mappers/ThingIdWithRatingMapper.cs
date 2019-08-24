@@ -13,11 +13,10 @@ namespace ThingAppraiser.DAL.Mappers
 
         public ThingIdWithRating ReadItem(IDataReader reader)
         {
-            var item = new ThingIdWithRating(
+            return new ThingIdWithRating(
                 id:     (int)    reader["thing_id"],
                 rating: (double) reader["rating_value"]
             );
-            return item;
         }
 
         #endregion

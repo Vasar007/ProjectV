@@ -13,13 +13,12 @@ namespace ThingAppraiser.TmdbService.Mappers
 
         public TmdbServiceConfigurationInfo Transform(TMDbConfig dataObject)
         {
-            var result = new TmdbServiceConfigurationInfo(
+            return new TmdbServiceConfigurationInfo(
                 baseUrl:       dataObject.Images.BaseUrl,
                 secureBaseUrl: dataObject.Images.SecureBaseUrl,
                 backdropSizes: dataObject.Images.BackdropSizes,
                 posterSizes:   dataObject.Images.PosterSizes
             );
-            return result;
         }
 
         #endregion

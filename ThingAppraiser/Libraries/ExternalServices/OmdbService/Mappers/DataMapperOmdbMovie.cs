@@ -25,7 +25,7 @@ namespace ThingAppraiser.Crawlers.Omdb
                 : int.Parse(dataObject.Metascore);
             var genreIds = dataObject.Genre.Split(',').Select(genre => genre.Trim()).ToList();
 
-            var result = new OmdbMovieInfo(
+            return new OmdbMovieInfo(
                 thingId:     thingId,
                 title:       dataObject.Title,
                 voteCount:   voteCount,
@@ -37,7 +37,6 @@ namespace ThingAppraiser.Crawlers.Omdb
                 genreIds:    genreIds,
                 posterPath:  dataObject.Poster
             );
-            return result;
         }
 
         #endregion
