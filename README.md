@@ -21,7 +21,9 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET Standard is 2.0 for libraries, .NET Core is 2.2 for web services and .NET Framework is 4.7.2 for desktop app. Version of C# is 7.1.
+Target .NET Standard is 2.0 for libraries, .NET Core is 3.0 for web services and .NET Framework is 4.7.2 for desktop app. Version of C# is 8.0.
+
+**Note:** .NET Framework is 4.7.2 is legacy and will be removed with stable version of .NET Core WPF.
 
 You can install all dependencies using NuGet package manager.
 
