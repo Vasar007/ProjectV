@@ -25,3 +25,14 @@ nuget:
 before_build:
 - cmd: cd ThingAppraiser
 - cmd: dotnet restore
+
+build:
+  verbosity: minimal
+
+notifications:
+- provider: Email
+  to:
+  - vasar007@yandex.ru
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false
