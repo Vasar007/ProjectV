@@ -2,7 +2,7 @@
 {
     internal sealed class EnterDataViewModel : ViewModelBase
     {
-        private string _name;
+        private string _name = string.Empty;
 
         public string Name
         {

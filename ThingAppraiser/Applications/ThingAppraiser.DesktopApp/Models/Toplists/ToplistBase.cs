@@ -5,7 +5,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal abstract class ToplistBase : ModelBase
     {
-        private string _name;
+        private string _name = default!; // Initializes throught property.
 
         public string Name
         {

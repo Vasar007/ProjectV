@@ -32,15 +32,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private bool _isNotBusy = true;
 
-        private UserControl _currentContent;
+        // Initializes throught property (in SelectedSceneItem when ChangeScene called in ctor).
+        private UserControl _currentContent = default!;
 
-        private string _selectedStorageName;
+        private string _selectedStorageName = string.Empty;
 
         private DataSource _selectedDataSource = DataSource.Nothing;
 
-        private SceneItem _selectedSceneItem;
+        // Initializes throught property (in ChangeScene which called in ctor).
+        private SceneItem _selectedSceneItem = default!;
 
-        private ThingProducer _thingProducer;
+        private ThingProducer? _thingProducer;
 
         public bool IsNotBusy
         {
@@ -301,7 +303,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             Submit.ExecuteAsync(SelectedDataSource);
         }
 
-        private void ProcessStatusOperation(ProcessingResponse response)
+        private void ProcessStatusOperation(ProcessingResponse? response)
         {
             if (response?.Metadata.ResultStatus == ServiceStatus.Ok)
             {
@@ -322,7 +324,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             {
                 IsNotBusy = false;
                 RequestParams requestParams = await ConfigureServiceRequest(dataSource);
-                ProcessingResponse response = await _serviceProxy.SendPostRequest(requestParams);
+                ProcessingResponse? response = await _serviceProxy.SendPostRequest(requestParams);
                 ProcessStatusOperation(response);
             }
             catch (Exception ex)
@@ -391,6 +393,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private async Task<RequestParams> CreateRequestWithUserInputData()
         {
             CreateBasicRequirements();
+
+            if (_thingProducer is null)
+            {
+                throw new InvalidOperationException(
+                    $"Thing producer ({nameof(_thingProducer)}) should be initialized at first."
+                );
+            }
 
             List<string> thingNames = await Task.Run(
                 () => _thingProducer.ReadThingNames("Service request")

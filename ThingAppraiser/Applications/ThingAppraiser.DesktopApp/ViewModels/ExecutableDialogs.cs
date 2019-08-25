@@ -39,18 +39,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using (var dialog = new WinForms.OpenFileDialog
-                   {
-                       FileName = "things.txt",
-                       DefaultExt = ".csv",
-                       Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
-                   })
+            using var dialog = new WinForms.OpenFileDialog
             {
-                WinForms.DialogResult result = dialog.ShowDialog();
-                if (result == WinForms.DialogResult.OK)
-                {
-                    mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
-                }
+                FileName = "things.txt",
+                DefaultExt = ".csv",
+                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
+            };
+
+            WinForms.DialogResult result = dialog.ShowDialog();
+            if (result == WinForms.DialogResult.OK)
+            {
+                mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
             }
         }
 
@@ -58,18 +57,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using (var dialog = new WinForms.OpenFileDialog
-                   {
-                       FileName = "toplist.txt",
-                       DefaultExt = ".txt",
-                       Filter = "Text Files (*.txt)|*.txt"
-                   })
+            using var dialog = new WinForms.OpenFileDialog
             {
-                WinForms.DialogResult result = dialog.ShowDialog();
-                if (result == WinForms.DialogResult.OK)
-                {
-                    mainViewModel.OpenToplistEditorScene(dialog.FileName);
-                }
+                FileName = "toplist.txt",
+                DefaultExt = ".txt",
+                Filter = "Text Files (*.txt)|*.txt"
+            };
+
+            WinForms.DialogResult result = dialog.ShowDialog();
+            if (result == WinForms.DialogResult.OK)
+            {
+                mainViewModel.OpenToplistEditorScene(dialog.FileName);
             }
         }
 
@@ -77,18 +75,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using (var dialog = new WinForms.SaveFileDialog
-                   {
-                       FileName = "toplist.txt",
-                       DefaultExt = ".txt",
-                       Filter = "Text Files (*.txt)|*.txt"
-                   })
+            using var dialog = new WinForms.SaveFileDialog
             {
-                WinForms.DialogResult result = dialog.ShowDialog();
-                if (result == WinForms.DialogResult.OK)
-                {
-                    mainViewModel.SaveToplistToFile(dialog.FileName);
-                }
+                FileName = "toplist.txt",
+                DefaultExt = ".txt",
+                Filter = "Text Files (*.txt)|*.txt"
+            };
+
+            WinForms.DialogResult result = dialog.ShowDialog();
+            if (result == WinForms.DialogResult.OK)
+            {
+                mainViewModel.SaveToplistToFile(dialog.FileName);
             }
         }
 

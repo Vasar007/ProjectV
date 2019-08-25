@@ -35,24 +35,23 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             );
         }
 
-        public async Task<ProcessingResponse> SendPostRequest(RequestParams requestParams)
+        public async Task<ProcessingResponse?> SendPostRequest(RequestParams requestParams)
         {
             requestParams.ThrowIfNull(nameof(requestParams));
 
             _logger.Info($"Service method '{nameof(SendPostRequest)}' is called.");
 
-            using (HttpResponseMessage response = await _client.PostAsJsonAsync(
-                       _apiUrl, requestParams
-                  )
-            )
+            using HttpResponseMessage response = await _client.PostAsJsonAsync(
+                _apiUrl, requestParams
+            );
+
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<ProcessingResponse>();
-                    return result;
-                }
-                return null;
+                var result = await response.Content.ReadAsAsync<ProcessingResponse>();
+                return result;
             }
+
+            return null;
         }
 
         #region IDisposable Implementation

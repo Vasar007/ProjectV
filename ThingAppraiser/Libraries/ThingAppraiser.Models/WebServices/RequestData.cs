@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ThingAppraiser.Models.Configuration;
 
 namespace ThingAppraiser.Models.WebService

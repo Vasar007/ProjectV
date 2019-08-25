@@ -8,7 +8,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class StartViewModel : ViewModelBase
     {
-        private string _selectedService;
+        private string _selectedService = default!; // Initializes throught property.
 
         public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
             ConfigContract.AvailableBeautifiedServices;

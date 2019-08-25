@@ -13,7 +13,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         private readonly List<Thing> _things = new List<Thing>();
 
-        public string StorageName { get; private set; }
+        public string StorageName { get; private set; } = string.Empty;
 
         #region ITagable Implementation
 

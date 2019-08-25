@@ -5,12 +5,13 @@ using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class ToplistEditorViewModel : ViewModelBase
     {
-        private ToplistBase _toplist;
+        private ToplistBase? _toplist;
 
         private ObservableCollection<ToplistBlock> _toplistBlocks =
             new ObservableCollection<ToplistBlock>();
@@ -56,6 +57,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
+            if (_toplist is null)
+            {
+                throw new InvalidOperationException(
+                    $"Toplist ({nameof(_toplist)}) should be initialized at first."
+                );
+            }
+
             string toplistData = ToplistBase.Serialize(_toplist);
             File.WriteAllText(toplistFilename, toplistData);
         }
@@ -91,6 +99,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void RemoveBlock(ToplistBlock block)
         {
             block.ThrowIfNull(nameof(block));
+
+            if (_toplist is null) return;
 
             _toplist.RemoveBlock(block);
         }

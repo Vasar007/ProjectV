@@ -10,20 +10,20 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
 
         private readonly Func<bool> _canExecute;
 
-        private readonly IErrorHandler _errorHandler;
+        private readonly IErrorHandler? _errorHandler;
 
         private bool _isExecuting;
 
 
-        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute,
-            IErrorHandler errorHandler)
+        public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute,
+            IErrorHandler? errorHandler)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
             _canExecute = canExecute ?? (() => true);
             _errorHandler = errorHandler;
         }
 
-        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute)
+        public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute)
             : this(execute, canExecute, null)
         {
         }

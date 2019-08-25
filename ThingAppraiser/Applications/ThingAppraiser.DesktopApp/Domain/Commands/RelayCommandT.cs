@@ -13,7 +13,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
         private readonly Func<T, bool> _canExecute;
 
 
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute)
+        public RelayCommand(Action<T> execute, Func<T, bool>? canExecute)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
             _canExecute = canExecute ?? (t => true);

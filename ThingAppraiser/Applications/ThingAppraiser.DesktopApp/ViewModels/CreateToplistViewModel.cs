@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class CreateToplistViewModel : ViewModelBase
     {
-        private string _toplistName;
+        private string _toplistName = string.Empty;
 
         private ToplistType _selectedToplistType;
 

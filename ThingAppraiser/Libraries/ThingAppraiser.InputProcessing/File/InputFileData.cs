@@ -2,6 +2,7 @@
 
 namespace ThingAppraiser.IO.Input.File
 {
+    // TODO: refactor FieldOrderAttribute and allow to work with propertis and immutable models.
     /// <summary>
     /// Represents record which could be used by FileHelper reader.
     /// </summary>

@@ -12,18 +12,18 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
 
         private readonly Func<T, bool> _canExecute;
 
-        private readonly IErrorHandler _errorHandler;
+        private readonly IErrorHandler? _errorHandler;
 
 
-        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool> canExecute,
-            IErrorHandler errorHandler)
+        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool>? canExecute,
+            IErrorHandler? errorHandler)
         {
             _execute = execute.ThrowIfNull(nameof(execute));
             _canExecute = canExecute ?? (t => true);
             _errorHandler = errorHandler;
         }
 
-        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool> canExecute)
+        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool>? canExecute)
             : this(execute, canExecute, null)
         {
         }

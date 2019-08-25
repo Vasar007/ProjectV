@@ -10,7 +10,7 @@ namespace ThingAppraiser.DesktopApp.Domain
             LoggerFactory.CreateLoggerFor(typeof(TaskExtension));
 
         public static async void FireAndForgetSafeAsync(this Task task,
-            IErrorHandler handler = null)
+            IErrorHandler? handler = null)
         {
             try
             {

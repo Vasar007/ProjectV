@@ -8,7 +8,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     {
         private ObservableCollection<string> _thingList = new ObservableCollection<string>();
 
-        private string _thingName;
+        private string _thingName = string.Empty;
 
         public ObservableCollection<string> ThingList
         {

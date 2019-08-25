@@ -39,7 +39,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         /// desired value.
         /// </returns>
         protected virtual bool SetProperty<T>(ref T storage, T value,
-            [CallerMemberName] string propertyName = null)
+            [CallerMemberName] string? propertyName = null)
         {
             if (Equals(storage, value)) return false;
 
@@ -64,7 +64,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         /// provided automatically when invoked from compilers that support
         /// <see cref="CallerMemberNameAttribute" />.
         /// </param>
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

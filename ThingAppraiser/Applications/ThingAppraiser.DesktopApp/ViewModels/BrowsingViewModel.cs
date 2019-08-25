@@ -10,11 +10,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     {
         private readonly IThingSupplier _thingSupplier;
 
-        private Thing _selectedThing;
+        private Thing? _selectedThing;
 
         public ObservableCollection<Thing> Things { get; private set; }
 
-        public Thing SelectedThing
+        public Thing? SelectedThing
         {
             get => _selectedThing;
             set

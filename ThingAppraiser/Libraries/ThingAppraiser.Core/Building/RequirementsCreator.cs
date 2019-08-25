@@ -5,6 +5,7 @@ namespace ThingAppraiser.Core.Building
 {
     public sealed class RequirementsCreator : IRequirementsCreator
     {
+        // Initializes in method call in ctor.
         private ConfigRequirements _configRequirements = default!;
 
 

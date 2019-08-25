@@ -5,9 +5,9 @@ namespace ThingAppraiser.DesktopApp.Models
 {
     internal sealed class SceneItem : ModelBase
     {
-        private string _name;
+        private string _name = default!; // Initializes throught property.
 
-        private UserControl _content;
+        private UserControl _content = default!; // Initializes throught property.
 
         private ScrollBarVisibility _horizontalScrollBarVisibilityRequirement;
 

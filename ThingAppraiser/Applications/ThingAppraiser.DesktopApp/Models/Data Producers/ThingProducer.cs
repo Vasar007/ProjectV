@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataProducers
     {
         private readonly List<string> _thingNames;
 
-        public string StorageName { get; private set; }
+        public string StorageName { get; private set; } = string.Empty;
 
         #region ITagable Implementation
 

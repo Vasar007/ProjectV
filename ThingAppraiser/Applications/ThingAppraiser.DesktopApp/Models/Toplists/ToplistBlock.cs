@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal sealed class ToplistBlock : ModelBase
     {
-        private string _title;
+        private string _title = default!; // Initializes throught property.
 
         private int _number;
 

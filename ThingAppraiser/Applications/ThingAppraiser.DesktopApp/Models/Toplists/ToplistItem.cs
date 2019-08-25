@@ -5,7 +5,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal sealed class ToplistItem : ModelBase
     {
-        private string _name;
+        private string _name = default!; // Initializes throught property.
 
         private int? _position;
 

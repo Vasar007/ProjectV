@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
+    // TODO: make this DTO immutable.
     [XmlRoot(ElementName = "Toplist", Namespace = "")]
     public sealed class ToplistXml
     {
         [XmlAttribute(DataType = "string")]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         [XmlAttribute(DataType = "int")]
         public int Type { get; set; }
@@ -19,7 +19,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         public int Format { get; set; }
 
         [XmlAnyElement(Name = "Blocks")]
-        public XElement Blocks { get; set; }
+        public XElement Blocks { get; set; } = default!;
 
         public ToplistXml()
         {

@@ -5,7 +5,7 @@ namespace ThingAppraiser.DesktopApp.Models.Things
 {
     internal sealed class Thing : ModelBase
     {
-        private string _name;
+        private string _name = string.Empty;
 
         private int _thingId;
 
@@ -13,7 +13,7 @@ namespace ThingAppraiser.DesktopApp.Models.Things
 
         private int _voteCount;
 
-        private string _imageLink;
+        private string _imageLink = default!; // Initializes throught property.
 
         public Guid InternalId { get; }
 
