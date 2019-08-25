@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ThingAppraiser.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThingAppraiser.Appraisers\ThingAppraiser.Appraisers.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Communication\ThingAppraiser.Communication.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.IOHelperClasses\ThingAppraiser.IOHelperClasses.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.OutputProcessing\ThingAppraiser.OutputProcessing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="credentials.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

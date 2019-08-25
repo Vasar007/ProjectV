@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RootNamespace>ThingAppraiser.ProcessingWebService</RootNamespace>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="credentials.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0-preview8.19405.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="credentials.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.OutputProcessing\ThingAppraiser.OutputProcessing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="v1\" />
+  </ItemGroup>
+
+</Project>
