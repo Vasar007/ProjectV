@@ -43,8 +43,7 @@ namespace ThingAppraiser.Models.Internal
         /// <param name="ratingValue">Variable to write rating value.</param>
         /// <param name="ratingId">Variable to write rating ID.</param>
         /// <remarks>Need to work with deconstructing user-defined types.</remarks>
-        public void Deconstruct(out int thingId, out double ratingValue,
-            out Guid ratingId)
+        public void Deconstruct(out int thingId, out double ratingValue, out Guid ratingId)
         {
             thingId = ThingId;
             ratingValue = RatingValue;

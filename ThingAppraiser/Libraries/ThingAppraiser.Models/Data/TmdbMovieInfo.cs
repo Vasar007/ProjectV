@@ -7,7 +7,7 @@ namespace ThingAppraiser.Models.Data
     /// <summary>
     /// Concrete data object for TMDb service <see href="https://www.themoviedb.org" />.
     /// </summary>
-    public sealed class TmdbMovieInfo : MovieInfo
+    public sealed class TmdbMovieInfo : MovieInfo, IEquatable<TmdbMovieInfo>
     {
         /// <inheritdoc />
         public override string Kind { get; } = nameof(TmdbMovieInfo);
@@ -51,6 +51,86 @@ namespace ThingAppraiser.Models.Data
             Adult = adult;
             GenreIds = genreIds;
             PosterPath = posterPath;
+        }
+
+        #region MovieInfo Overridden Methods
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (!(obj is TmdbMovieInfo other)) return false;
+
+            return IsEqual(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion
+
+        #region IEquatable<TmdbMovieInfo> Implementation
+
+        /// <inheritdoc />
+        public bool Equals(TmdbMovieInfo? other)
+        {
+            if (other is null) return false;
+
+            if (ReferenceEquals(this, other)) return true;
+
+            if (!base.IsEqual(other)) return false;
+
+            return IsEqual(other);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="TmdbMovieInfo" /> are equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        public static bool operator ==(TmdbMovieInfo? left, TmdbMovieInfo? right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="TmdbMovieInfo" /> are not equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns>
+        /// <c>true</c> if values are not memberwise equals, <c>false</c> otherwise.
+        /// </returns>
+        public static bool operator !=(TmdbMovieInfo? left, TmdbMovieInfo? right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// Determines whether specified instance of <see cref="TmdbMovieInfo" /> is equal to caller
+        /// object.
+        /// </summary>
+        /// <param name="other">Other object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        private bool IsEqual(TmdbMovieInfo other)
+        {
+            // Note: list with genre IDs usually has only few items and that is why comparison
+            // using contains method is considered the best option here.
+
+            const double eps = 1e-6;
+            return Math.Abs(Popularity - other.Popularity) < eps &&
+                   Adult == other.Adult &&
+                   GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
+                   string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }
     }
 }
