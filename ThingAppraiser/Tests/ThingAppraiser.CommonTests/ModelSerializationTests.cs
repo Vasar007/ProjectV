@@ -1,6 +1,4 @@
-using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Xunit;
 using ThingAppraiser.Models.Data;
 
@@ -17,9 +15,14 @@ namespace ThingAppraiser.CommonTests
         {
             var expectedModel = new BasicInfo(42, "Title", 100, 9.9);
 
-            var json = Serialize(expectedModel);
+            string json = Serialize(expectedModel);
             var actualModel = Deserialize<BasicInfo>(json);
+            Assert.NotNull(actualModel);
+            Assert.Equal(expectedModel, actualModel);
 
+            json = SerializePrettyPrint(expectedModel);
+            actualModel = Deserialize<BasicInfo>(json);
+            Assert.NotNull(actualModel);
             Assert.Equal(expectedModel, actualModel);
         }
 
