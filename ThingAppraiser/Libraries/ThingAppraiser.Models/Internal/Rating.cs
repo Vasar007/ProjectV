@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.Models.Internal
 {
-    public sealed class Rating
+    public sealed class Rating : IEquatable<Rating>
     {
         public Guid RatingId { get; }
 
@@ -18,16 +18,15 @@ namespace ThingAppraiser.Models.Internal
         #region Object Overridden Methods
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
 
             if (ReferenceEquals(this, obj)) return true;
 
-            if (!(obj is Rating rating)) return false;
+            if (!(obj is Rating other)) return false;
 
-            return RatingId == rating.RatingId &&
-                   string.Equals(RatingName, rating.RatingName, StringComparison.InvariantCulture);
+            return IsEqual(other);
         }
 
         /// <inheritdoc />
@@ -37,5 +36,55 @@ namespace ThingAppraiser.Models.Internal
         }
 
         #endregion
+
+        #region  IEquatable<Rating> Implementation
+
+        /// <inheritdoc />
+        public bool Equals(Rating? other)
+        {
+            if (other is null) return false;
+
+            if (ReferenceEquals(this, other)) return true;
+
+            return IsEqual(other);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="Rating" /> are equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        public static bool operator ==(Rating? left, Rating? right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="Rating" /> are not equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns>
+        /// <c>true</c> if values are not memberwise equals, <c>false</c> otherwise.
+        /// </returns>
+        public static bool operator !=(Rating? left, Rating? right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// Determines whether specified instance of <see cref="Rating" /> is equal to caller
+        /// object.
+        /// </summary>
+        /// <param name="other">Other object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        private bool IsEqual(Rating other)
+        {
+            return RatingId == other.RatingId &&
+                   string.Equals(RatingName, other.RatingName, StringComparison.InvariantCulture);
+        }
     }
 }

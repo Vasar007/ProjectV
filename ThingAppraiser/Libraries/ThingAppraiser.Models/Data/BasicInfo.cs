@@ -74,7 +74,7 @@ namespace ThingAppraiser.Models.Data
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return ThingId;
+            return ThingId.GetHashCode();
         }
 
         #endregion
