@@ -19,6 +19,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview8.19405.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj" />
   </ItemGroup>

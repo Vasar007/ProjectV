@@ -3,6 +3,12 @@ using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.DAL.EntityFramework;
+using ThingAppraiser.DAL;
+using System.Configuration;
+using ThingAppraiser.Models.Data;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace ThingAppraiser.ConsoleApp
 {
@@ -75,6 +81,7 @@ namespace ThingAppraiser.ConsoleApp
                 _logger.PrintHeader("Console client application started.");
 
                 MainXDocument(args);
+                //Test();
             }
             catch (Exception ex)
             {
@@ -83,6 +90,41 @@ namespace ThingAppraiser.ConsoleApp
             finally
             {
                 _logger.PrintFooter("Console client application stopped.");
+            }
+        }
+
+        private static void Test()
+        {
+            using (var context = new ThingAppraiserContext())
+            {
+                var tmdbMovie = new TmdbMovieInfo(
+                    thingId:     1,
+                    title:       "Test",
+                    voteCount:   100,
+                    voteAverage: 10.0,
+                    overview:    "Overview",
+                    releaseDate: DateTime.UtcNow,
+                    popularity:  50.0,
+                    adult:       true,
+                    genreIds:    new List<int> { 1, 2, 4 },
+                    posterPath:  "None"
+                );
+
+                context.Add(tmdbMovie);
+
+                int count = context.SaveChanges();
+                Console.WriteLine($"{count.ToString()} records saved to database.");
+            }
+
+            using (var context = new ThingAppraiserContext())
+            {
+                foreach (TmdbMovieInfo tmdbMovie in context.TmdbMovies)
+                {
+                    Console.WriteLine(
+                        $"TMDB movie: {tmdbMovie.ThingId.ToString()}, {tmdbMovie.Title}, " +
+                        $"{tmdbMovie.Popularity.ToString()}"
+                    );
+                }
             }
         }
     }

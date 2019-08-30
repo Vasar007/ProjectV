@@ -16,7 +16,7 @@ namespace ThingAppraiser.DAL
 
         private readonly IRatingRepository _ratingRepository;
 
-        public DataRepositoriesManager DataRepositoriesManager {get; } =
+        public DataRepositoriesManager DataRepositoriesManager { get; } =
             new DataRepositoriesManager();
 
 
