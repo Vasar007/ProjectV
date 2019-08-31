@@ -23,7 +23,6 @@
       <ProjectReference Include="..\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj" />
       <ProjectReference Include="..\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
       <ProjectReference Include="..\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj" />
-      <ProjectReference Include="..\ThingAppraiser.FuzzyLogicSystem\ThingAppraiser.FuzzyLogicSystem.csproj" />
       <ProjectReference Include="..\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />
       <ProjectReference Include="..\ThingAppraiser.IOHelperClasses\ThingAppraiser.IOHelperClasses.csproj" />
       <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />

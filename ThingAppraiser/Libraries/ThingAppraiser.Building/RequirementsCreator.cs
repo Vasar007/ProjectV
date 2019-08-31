@@ -15,6 +15,8 @@ namespace ThingAppraiser.Building
             Reset();
         }
 
+        #region IRequirementsCreator Implementation
+
         public void Reset()
         {
             _configRequirements = new ConfigRequirements
@@ -61,5 +63,7 @@ namespace ThingAppraiser.Building
             // Warning! You should avoid errors with further editing.
             return _configRequirements;
         }
+
+        #endregion
     }
 }
