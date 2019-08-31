@@ -51,7 +51,8 @@ namespace ThingAppraiser.IO.Output
         #endregion
 
         public async Task<bool> SaveResults(
-            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues, string storageName)
+            IReadOnlyList<ISourceBlock<RatingDataContainer>> appraisedDataQueues,
+            string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -62,7 +63,7 @@ namespace ThingAppraiser.IO.Output
 
             var consumers = new List<ActionBlock<RatingDataContainer>>();
             var results = new List<List<RatingDataContainer>>();
-            foreach (BufferBlock<RatingDataContainer> appraisedDataQueue in appraisedDataQueues)
+            foreach (ISourceBlock<RatingDataContainer> appraisedDataQueue in appraisedDataQueues)
             {
                 var rating = new List<RatingDataContainer>();
                 results.Add(rating);
@@ -79,7 +80,7 @@ namespace ThingAppraiser.IO.Output
                 rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
             );
 
-            List<Task<bool>> resultTasks = _outputtersAsync.Select(
+            IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync.Select(
                 outputterAsync => outputterAsync.SaveResults(results, storageName)
             ).ToList();
 

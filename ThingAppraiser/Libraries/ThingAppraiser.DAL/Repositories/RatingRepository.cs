@@ -79,7 +79,7 @@ namespace ThingAppraiser.DAL.Repositories
             return dbHelper.GetItem(new RatingMapper(), query);
         }
 
-        public List<Rating> GetAllData()
+        public IReadOnlyList<Rating> GetAllData()
         {
             string sqlStatement = SQLStatementsForRatings.SelectAllItems;
 

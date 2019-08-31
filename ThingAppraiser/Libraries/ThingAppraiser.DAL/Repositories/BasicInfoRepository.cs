@@ -77,7 +77,7 @@ namespace ThingAppraiser.DAL.Repositories
             return dbHelper.GetItem(new BasicInfoMapper(), query);
         }
 
-        public List<BasicInfo> GetAllData()
+        public IReadOnlyList<BasicInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForCommon.SelectAllItems;
 

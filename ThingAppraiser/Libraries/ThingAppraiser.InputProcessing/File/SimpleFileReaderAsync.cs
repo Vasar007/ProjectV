@@ -23,7 +23,7 @@ namespace ThingAppraiser.IO.Input.File
 
         #region IFileReaderAsync Implementation
 
-        public async Task ReadFile(BufferBlock<string> queue, string filename)
+        public async Task ReadFile(ITargetBlock<string> queue, string filename)
         {
             _logger.Info($"Reading file \"{filename}\".");
 
@@ -43,7 +43,7 @@ namespace ThingAppraiser.IO.Input.File
             }
         }
 
-        public async Task ReadCsvFile(BufferBlock<string> queue, string filename)
+        public async Task ReadCsvFile(ITargetBlock<string> queue, string filename)
         {
             _logger.Info($"Reading CSV file \"{filename}\".");
 

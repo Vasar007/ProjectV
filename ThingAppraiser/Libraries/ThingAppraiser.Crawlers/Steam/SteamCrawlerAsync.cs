@@ -53,8 +53,8 @@ namespace ThingAppraiser.Crawlers.Steam
         #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
-        public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
-            BufferBlock<BasicInfo> responsesQueue, bool outputResults)
+        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
             if (SteamAppsStorage.IsEmpty)
             {

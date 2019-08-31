@@ -34,8 +34,8 @@ namespace ThingAppraiser.Crawlers.Tmdb
 
         #region CrawlerAsync Overridden Methods
 
-        public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
-            BufferBlock<BasicInfo> responsesQueue, bool outputResults)
+        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)

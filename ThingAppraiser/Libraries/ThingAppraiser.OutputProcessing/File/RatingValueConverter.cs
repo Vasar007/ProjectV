@@ -32,12 +32,13 @@ namespace ThingAppraiser.IO.Output.File
         /// <inheritdoc />
         public override string FieldToString(object fieldValue)
         {
-            if (fieldValue is List<double> value)
+            if (fieldValue is IList<double> value)
             {
                 return string.Join(_separator + " ", value);
             }
 
-            throw new ArgumentException("Object value is not a List<float>");
+            throw new ArgumentException($"Object value is not a {nameof(IList<double>)}",
+                                        nameof(fieldValue));
         }
 
         #endregion

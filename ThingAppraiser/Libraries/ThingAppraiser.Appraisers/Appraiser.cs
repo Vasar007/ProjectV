@@ -54,12 +54,13 @@ namespace ThingAppraiser.Appraisers
         /// Entities collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        public virtual ResultList GetRatings(RawDataContainer rawDataContainer, bool outputResults)
+        public virtual IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
+            bool outputResults)
         {
             CheckRatingId();
 
-            var ratings = new ResultList();
-            IReadOnlyList<BasicInfo> rawData = rawDataContainer.GetData();
+            var ratings = new List<ResultInfo>();
+            IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
             if (rawData.IsNullOrEmpty()) return ratings;
 
             MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");

@@ -6,8 +6,13 @@ namespace ThingAppraiser.Building
 {
     public sealed class RequirementsCreator : IRequirementsCreator
     {
-        // Initializes in method call in ctor.
-        private ConfigRequirements _configRequirements = default!;
+        private readonly List<string> _input = new List<string>();
+
+        private readonly List<string> _services = new List<string>();
+
+        private readonly List<string> _appraisals = new List<string>();
+
+        private readonly List<string> _output = new List<string>();
 
 
         public RequirementsCreator()
@@ -19,20 +24,17 @@ namespace ThingAppraiser.Building
 
         public void Reset()
         {
-            _configRequirements = new ConfigRequirements
-            {
-                Input = new List<string>(),
-                Services = new List<string>(),
-                Appraisals = new List<string>(),
-                Output = new List<string>()
-            };
+            _input.Clear();
+            _services.Clear();
+            _appraisals.Clear();
+            _output.Clear();
         }
 
         public void AddInputRequirement(string inputRequirement)
         {
             ConfigContract.CheckAvailability(inputRequirement, ConfigContract.AvailableInput);
 
-            _configRequirements.Input.Add(inputRequirement);
+            _input.Add(inputRequirement);
         }
 
         public void AddServiceRequirement(string serviceRequirement)
@@ -40,7 +42,7 @@ namespace ThingAppraiser.Building
             ConfigContract.CheckAvailability(serviceRequirement,
                                              ConfigContract.AvailableServices);
 
-            _configRequirements.Services.Add(serviceRequirement);
+            _services.Add(serviceRequirement);
         }
 
         public void AddAppraisalRequirement(string appraisalRequirement)
@@ -48,20 +50,24 @@ namespace ThingAppraiser.Building
             ConfigContract.CheckAvailability(appraisalRequirement,
                                              ConfigContract.AvailableAppraisals);
 
-            _configRequirements.Appraisals.Add(appraisalRequirement);
+            _appraisals.Add(appraisalRequirement);
         }
 
         public void AddOutputRequirement(string outputRequirement)
         {
             ConfigContract.CheckAvailability(outputRequirement, ConfigContract.AvailableOutput);
 
-            _configRequirements.Output.Add(outputRequirement);
+            _output.Add(outputRequirement);
         }
 
         public ConfigRequirements GetResult()
         {
-            // Warning! You should avoid errors with further editing.
-            return _configRequirements;
+            return new ConfigRequirements(
+                input:      _input.ToArray(),
+                services:   _services.ToArray(),
+                appraisals: _appraisals.ToArray(),
+                output:     _output.ToArray()
+            );
         }
 
         #endregion

@@ -43,11 +43,11 @@ namespace ThingAppraiser.Crawlers
 
         #endregion
 
-        public async Task<bool> CollectAllResponses(BufferBlock<string> entitiesQueue,
+        public async Task<bool> CollectAllResponses(ISourceBlock<string> entitiesQueue,
             IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues, DataflowBlockOptions options)
         {
             var producers = new List<Task<bool>>(_crawlersAsync.Count);
-            var consumers = new List<BufferBlock<string>>(_crawlersAsync.Count);
+            var consumers = new List<ITargetBlock<string>>(_crawlersAsync.Count);
 
             foreach (CrawlerAsync crawlerAsync in _crawlersAsync)
             {
@@ -64,7 +64,7 @@ namespace ThingAppraiser.Crawlers
 
             await Task.WhenAll(SplitQueue(entitiesQueue, consumers), consumersTasks, statusesTask);
 
-            bool[] statuses =  await statusesTask;
+            IReadOnlyList<bool> statuses =  await statusesTask;
             foreach (BufferBlock<BasicInfo> rawDataQueue in rawDataQueues.Values)
             {
                 rawDataQueue.Complete();
@@ -80,8 +80,8 @@ namespace ThingAppraiser.Crawlers
             return false;
         }
 
-        private async Task SplitQueue(BufferBlock<string> entitiesQueue,
-            IList<BufferBlock<string>> consumers)
+        private async Task SplitQueue(ISourceBlock<string> entitiesQueue,
+            IReadOnlyList<ITargetBlock<string>> consumers)
         {
             while (await entitiesQueue.OutputAvailableAsync())
             {
@@ -97,7 +97,7 @@ namespace ThingAppraiser.Crawlers
                 );
             }
 
-            foreach (BufferBlock<string> consumer in consumers)
+            foreach (ITargetBlock<string> consumer in consumers)
             {
                 consumer.Complete();
             }

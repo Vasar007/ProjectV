@@ -50,12 +50,13 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         /// <paramref name="rawDataContainer" /> contains instances of invalid type for this 
         /// appraiser.
         /// </exception>
-        public override ResultList GetRatings(RawDataContainer rawDataContainer, bool outputResults)
+        public override IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
+            bool outputResults)
         {
             CheckRatingId();
 
-            var ratings = new ResultList();
-            IReadOnlyList<BasicInfo> rawData = rawDataContainer.GetData();
+            var ratings = new List<ResultInfo>();
+            IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
             if (rawData.IsNullOrEmpty()) return ratings;
 
             // Check if list have proper type.

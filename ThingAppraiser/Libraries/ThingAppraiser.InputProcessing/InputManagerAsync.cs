@@ -44,7 +44,7 @@ namespace ThingAppraiser.IO.Input
 
         #endregion
 
-        public async Task<bool> GetNames(BufferBlock<string> queueToWrite, string storageName)
+        public async Task<bool> GetNames(ITargetBlock<string> queueToWrite, string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -73,7 +73,7 @@ namespace ThingAppraiser.IO.Input
         }
 
         private static async Task<bool> TryReadThingNames(IInputterAsync inputterAsync,
-            BufferBlock<string> queueToWrite, string storageName)
+            ITargetBlock<string> queueToWrite, string storageName)
         {
             try
             {

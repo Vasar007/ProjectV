@@ -123,7 +123,8 @@ namespace ThingAppraiser.Core
         {
             try
             {
-                List<List<BasicInfo>> results = CrawlersManager.CollectAllResponses(names);
+                IReadOnlyList<IReadOnlyList<BasicInfo>> results =
+                    CrawlersManager.CollectAllResponses(names);
                 if (results.Count == 0)
                 {
                     GlobalMessageHandler.OutputMessage(
@@ -157,12 +158,12 @@ namespace ThingAppraiser.Core
             RatingsStorage? ratingsStorage = null;
             try
             {
-                List<RawDataContainer> results = 
+                IReadOnlyList<RawDataContainer> results = 
                     DataBaseManager.GetResultsFromDbWithAdditionalInfo();
                 ProcessedDataContainer ratings = AppraisersManager.GetAllRatings(results);
 
                 ratingsStorage = ratings.RatingsStorage;
-                if (ratings.GetData().Count == 0)
+                if (ratings.Data.Count == 0)
                 {
                     GlobalMessageHandler.OutputMessage(
                         "Appraisers have not calculated ratings. Result is empty."

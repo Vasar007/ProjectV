@@ -8,7 +8,8 @@ namespace ThingAppraiser.Models.WebService
     {
         public ResponseMetadata Metadata { get; set; } = default!;
 
-        public List<List<RatingDataContainer>> RatingDataContainers { get; set; } = default!;
+        public IReadOnlyList<IReadOnlyList<RatingDataContainer>> RatingDataContainers { get; set; }
+            = default!;
 
 
         public ProcessingResponse()

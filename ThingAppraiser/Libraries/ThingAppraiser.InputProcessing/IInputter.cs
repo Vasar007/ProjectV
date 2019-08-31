@@ -13,6 +13,6 @@ namespace ThingAppraiser.IO.Input
         /// </summary>
         /// <param name="storageName">Storage with Things names.</param>
         /// <returns>Things names as collection of strings.</returns>
-        List<string> ReadThingNames(string storageName);
+        IReadOnlyList<string> ReadThingNames(string storageName);
     }
 }

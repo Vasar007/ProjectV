@@ -24,7 +24,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataProducers
 
         #region IInputter Implementation
 
-        public List<string> ReadThingNames(string storageName)
+        public IReadOnlyList<string> ReadThingNames(string storageName)
         {
             StorageName = storageName.ThrowIfNull(nameof(storageName));
             return _thingNames;

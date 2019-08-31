@@ -6,6 +6,7 @@ namespace ThingAppraiser.IO.Output
 {
     public interface IOutputterAsync : IOutputterBase, ITagable
     {
-        Task<bool> SaveResults(List<List<RatingDataContainer>> results, string storageName);
+        Task<bool> SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName);
     }
 }

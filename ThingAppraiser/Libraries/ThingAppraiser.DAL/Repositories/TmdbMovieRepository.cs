@@ -104,7 +104,7 @@ namespace ThingAppraiser.DAL.Repositories
             return dbHelper.GetItem(new TmdbMovieMapper(), query);
         }
 
-        public List<BasicInfo> GetAllData()
+        public IReadOnlyList<BasicInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForTmdb.SelectAllItems;
 

@@ -48,16 +48,16 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
-        private static Dictionary<string, List<double>> ConvertResultsToDict(
-            List<List<RatingDataContainer>> results)
+        private static Dictionary<string, IList<double>> ConvertResultsToDict(
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results)
         {
-            var converted = new Dictionary<string, List<double>>();
-            foreach (List<RatingDataContainer> rating in results)
+            var converted = new Dictionary<string, IList<double>>();
+            foreach (IReadOnlyList<RatingDataContainer> rating in results)
             {
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                                              out List<double>? ratingValues))
+                                              out IList<double>? ratingValues))
                     {
                         if (ratingValues is null)
                         {
@@ -78,7 +78,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             return converted;
         }
 
-        private static string CreateResponseMessage(Dictionary<string, List<double>> converted)
+        private static string CreateResponseMessage(Dictionary<string, IList<double>> converted)
         {
             var stringBuilder = new StringBuilder(1000);
             stringBuilder.AppendLine("Results:");

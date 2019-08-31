@@ -13,8 +13,7 @@ namespace ThingAppraiser.IO.Input
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<InputManager>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
@@ -91,7 +90,8 @@ namespace ThingAppraiser.IO.Input
 
             foreach (IInputter inputter in _inputters)
             {
-                bool success = TryReadThingNames(inputter, storageName, out List<string> value);
+                bool success = TryReadThingNames(inputter, storageName,
+                                                 out IReadOnlyList<string> value);
 
                 if (!success || value.IsNullOrEmpty())
                 {
@@ -114,13 +114,13 @@ namespace ThingAppraiser.IO.Input
         /// Calls reading method from inputter and process caught exceptions.
         /// </summary>
         /// <param name="inputter">Reader of input source.</param>
-        /// <param name="result">Reference to collection to write data.</param>
         /// <param name="storageName">Input storage name.</param>
+        /// <param name="result">Reference to collection to write data.</param>
         /// <returns>
         /// <c>true</c> if read method doesn't throw any exceptions, <c>false</c> otherwise.
         /// </returns>
         private static bool TryReadThingNames(IInputter inputter, string storageName,
-            out List<string> result)
+            out IReadOnlyList<string> result)
         {
             try
             {

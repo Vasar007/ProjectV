@@ -15,8 +15,8 @@ namespace ThingAppraiser.Appraisers
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<AppraisersManagerAsync>();
 
-        private readonly Dictionary<Type, List<AppraiserAsync>> _appraisersAsync =
-            new Dictionary<Type, List<AppraiserAsync>>();
+        private readonly Dictionary<Type, IList<AppraiserAsync>> _appraisersAsync =
+            new Dictionary<Type, IList<AppraiserAsync>>();
 
         private readonly bool _outputResults;
 
@@ -32,7 +32,7 @@ namespace ThingAppraiser.Appraisers
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisersAsync.TryGetValue(item.TypeId, out List<AppraiserAsync> list))
+            if (_appraisersAsync.TryGetValue(item.TypeId, out IList<AppraiserAsync> list))
             {
                 if (!list.Contains(item))
                 {
@@ -64,7 +64,7 @@ namespace ThingAppraiser.Appraisers
 
             foreach (KeyValuePair<Type, BufferBlock<BasicInfo>> keyValue in rawDataQueues)
             {
-                if (!_appraisersAsync.TryGetValue(keyValue.Key, out List<AppraiserAsync> values))
+                if (!_appraisersAsync.TryGetValue(keyValue.Key, out IList<AppraiserAsync> values))
                 {
                     string message = $"Type {keyValue.Key} wasn't used to appraise!";
                     _logger.Info(message);
@@ -72,11 +72,12 @@ namespace ThingAppraiser.Appraisers
                     continue;
                 }
 
-                var consumers = new List<BufferBlock<BasicInfo>>(values.Count);
+                var consumers = new List<ITargetBlock<BasicInfo>>(values.Count);
                 foreach (AppraiserAsync appraiserAsync in values)
                 {
                     var consumer = new BufferBlock<BasicInfo>(options);
                     var appraisedDataQueue = new BufferBlock<RatingDataContainer>(options);
+
                     appraisedDataQueues.Add(appraisedDataQueue);
                     producers.Add(
                         appraiserAsync.GetRatings(consumer, appraisedDataQueue, _outputResults)
@@ -94,7 +95,7 @@ namespace ThingAppraiser.Appraisers
 
             await Task.WhenAll(splitQueueFinalTask, consumersFinalTask, statusesTask);
 
-            bool[] statuses = await statusesTask;
+            IReadOnlyList<bool> statuses = await statusesTask;
             foreach (BufferBlock<RatingDataContainer> appraisedQueue in appraisedDataQueues)
             {
                 appraisedQueue.Complete();
@@ -110,8 +111,8 @@ namespace ThingAppraiser.Appraisers
             return false;
         }
 
-        private async Task SplitQueue(BufferBlock<BasicInfo> rawDataQueue,
-            IList<BufferBlock<BasicInfo>> consumers)
+        private async Task SplitQueue(ISourceBlock<BasicInfo> rawDataQueue,
+            IReadOnlyList<ITargetBlock<BasicInfo>> consumers)
         {
             while (await rawDataQueue.OutputAvailableAsync())
             {
@@ -127,7 +128,7 @@ namespace ThingAppraiser.Appraisers
                 );
             }
 
-            foreach (BufferBlock<BasicInfo> consumer in consumers)
+            foreach (ITargetBlock<BasicInfo> consumer in consumers)
             {
                 consumer.Complete();
             }

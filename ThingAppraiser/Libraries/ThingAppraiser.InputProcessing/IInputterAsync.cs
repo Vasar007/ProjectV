@@ -5,6 +5,6 @@ namespace ThingAppraiser.IO.Input
 {
     public interface IInputterAsync : IInputterBase, ITagable
     {
-        Task ReadThingNames(BufferBlock<string> queueToWrite, string storageName);
+        Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName);
     }
 }

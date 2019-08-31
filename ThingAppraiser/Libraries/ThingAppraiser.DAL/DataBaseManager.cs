@@ -27,29 +27,28 @@ namespace ThingAppraiser.DAL
             _ratingRepository = ratingRepository.ThrowIfNull(nameof(ratingRepository));
         }
 
-        public List<List<BasicInfo>> GetResultsFromDb()
+        public IReadOnlyList<IReadOnlyList<BasicInfo>> GetResultsFromDb()
         {
             return DataRepositoriesManager.GetResultsFromDb();
         }
 
-        public List<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
+        public IReadOnlyList<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
         {
             return DataRepositoriesManager.GetResultsFromDbWithAdditionalInfo();
         }
 
-        public List<List<RatingDataContainer>> GetRatingValuesFromDb(
+        public IReadOnlyList<IReadOnlyList<RatingDataContainer>> GetRatingValuesFromDb(
             RatingsStorage ratingsStorage)
         {
-            var results = new List<List<RatingDataContainer>>();
+            var results = new List<IReadOnlyList<RatingDataContainer>>();
 
-            List<Rating> ratings = _ratingRepository.GetAllData();
+            IReadOnlyList<Rating> ratings = _ratingRepository.GetAllData();
             foreach (Rating rating in ratings)
             {
-                List<ThingIdWithRating> ratingsValue = _resultRepository.GetOrderedRatingsValue(
-                    rating.RatingId
-                );
+                IReadOnlyList<ThingIdWithRating> ratingsValue =
+                    _resultRepository.GetOrderedRatingsValue(rating.RatingId);
 
-                List<RatingDataContainer> dataHandlers = ratingsValue.Select(
+                IReadOnlyList<RatingDataContainer> dataHandlers = ratingsValue.Select(
                     thingIdWithRating => new RatingDataContainer(
                         DataRepositoriesManager.GetProperDataHandlerById(
                             thingIdWithRating.ThingId,
@@ -64,7 +63,7 @@ namespace ThingAppraiser.DAL
             return results;
         }
 
-        public void PutResultsToDb(List<List<BasicInfo>> results)
+        public void PutResultsToDb(IReadOnlyList<IReadOnlyList<BasicInfo>> results)
         {
             DataRepositoriesManager.PutResultsToDb(results);
         }
@@ -79,7 +78,7 @@ namespace ThingAppraiser.DAL
                 }
             }
 
-            foreach (ResultList datum in ratings.GetData())
+            foreach (IReadOnlyList<ResultInfo> datum in ratings.Data)
             {
                 // Skip empty collections of data.
                 if (datum.IsNullOrEmpty()) continue;

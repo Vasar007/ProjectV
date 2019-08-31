@@ -51,7 +51,7 @@ namespace ThingAppraiser.Core
             return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
         }
 
-        private async Task<ServiceStatus> GetThingNames(BufferBlock<string> queue,
+        private async Task<ServiceStatus> GetThingNames(ITargetBlock<string> queue,
             string storageName)
         {
             try
@@ -73,7 +73,7 @@ namespace ThingAppraiser.Core
             }
         }
 
-        private async Task<ServiceStatus> RequestData(BufferBlock<string> entitiesQueue,
+        private async Task<ServiceStatus> RequestData(ISourceBlock<string> entitiesQueue,
             IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues)
         {
             try
@@ -131,7 +131,7 @@ namespace ThingAppraiser.Core
         }
 
         private async Task<ServiceStatus> SaveResults(
-            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues)
+            IReadOnlyList<ISourceBlock<RatingDataContainer>> appraisedDataQueues)
         {
             try
             {

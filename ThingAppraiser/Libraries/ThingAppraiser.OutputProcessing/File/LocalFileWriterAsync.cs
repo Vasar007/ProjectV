@@ -28,8 +28,8 @@ namespace ThingAppraiser.IO.Output.File
 
         #region IOutputterAsync Implementation
 
-        public async Task<bool> SaveResults(List<List<RatingDataContainer>> results,
-            string storageName)
+        public async Task<bool> SaveResults(
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return false;
 

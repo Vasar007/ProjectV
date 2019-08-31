@@ -59,7 +59,8 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
         /// <remarks>
         /// This method creates and deletes temporary file to store appraised content.
         /// </remarks>
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return false;
 

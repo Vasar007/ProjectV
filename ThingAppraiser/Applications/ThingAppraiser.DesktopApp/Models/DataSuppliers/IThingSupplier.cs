@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
     internal interface IThingSupplier : ITagable
     {
-        List<Thing> GetAllThings();
+        IReadOnlyList<Thing> GetAllThings();
 
         Thing GetThingById(Guid thingId);
 

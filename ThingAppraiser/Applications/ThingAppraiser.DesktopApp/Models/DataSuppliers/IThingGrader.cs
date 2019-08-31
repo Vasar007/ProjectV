@@ -7,7 +7,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
     internal interface IThingGrader
     {
-        List<Thing> ProcessRatings(List<RatingDataContainer> rating);
+        IReadOnlyList<Thing> ProcessRatings(IReadOnlyList<RatingDataContainer> rating);
 
         void ProcessMetadata(ResponseMetadata metadata);
     }

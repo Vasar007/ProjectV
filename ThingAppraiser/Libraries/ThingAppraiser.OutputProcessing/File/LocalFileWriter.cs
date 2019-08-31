@@ -17,8 +17,7 @@ namespace ThingAppraiser.IO.Output.File
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<LocalFileWriter>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<LocalFileWriter>();
 
         #region ITagable Implementation
 
@@ -49,7 +48,8 @@ namespace ThingAppraiser.IO.Output.File
         /// <param name="results">Results to save.</param>
         /// <param name="storageName">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return false;
 
@@ -73,7 +73,8 @@ namespace ThingAppraiser.IO.Output.File
         /// <param name="results">Results to save.</param>
         /// <param name="filename">Filename to write.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        private static bool WriteFile(List<List<RatingDataContainer>> results, string filename)
+        private static bool WriteFile(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string filename)
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
@@ -84,7 +85,7 @@ namespace ThingAppraiser.IO.Output.File
             )
             using (engine.BeginWriteFile(filename))
             {
-                Dictionary<string, List<double>> converted = ConvertResultsToDict(results);
+                Dictionary<string, IList<double>> converted = ConvertResultsToDict(results);
                 engine.WriteNexts(converted.Select(result => new OuputFileData
                 {
                     thingName = $"\"{result.Key}\"", // Escape Thing names.
@@ -100,8 +101,8 @@ namespace ThingAppraiser.IO.Output.File
         /// </summary>
         /// <param name="results">Result to convert.</param>
         /// <returns>Transformed results.</returns>
-        private static Dictionary<string, List<double>> ConvertResultsToDict(
-            List<List<RatingDataContainer>> results)
+        private static Dictionary<string, IList<double>> ConvertResultsToDict(
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results)
         {
             // TODO: add additional data structure based on Dictionary<string, (CResultInfo, Int32)>
             // where string is name of the Thing, CResultInfo is meta information and Int32 is place
@@ -110,13 +111,13 @@ namespace ThingAppraiser.IO.Output.File
             // similar, i.e. default or special value). Such data structure, I think, can help to
             // decrease memory usage and save sorting order in ratings with meta information.
 
-            var converted = new Dictionary<string, List<double>>();
-            foreach (List<RatingDataContainer> rating in results)
+            var converted = new Dictionary<string, IList<double>>();
+            foreach (IReadOnlyList<RatingDataContainer> rating in results)
             {
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                                              out List<double> ratingValues))
+                                              out IList<double> ratingValues))
                     {
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }

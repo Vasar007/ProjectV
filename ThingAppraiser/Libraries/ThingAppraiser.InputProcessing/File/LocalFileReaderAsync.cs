@@ -27,7 +27,7 @@ namespace ThingAppraiser.IO.Input.File
 
         #region IInputterAsync Implementation
 
-        public async Task ReadThingNames(BufferBlock<string> queueToWrite, string storageName)
+        public async Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return;
 

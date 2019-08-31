@@ -34,6 +34,7 @@ namespace ThingAppraiser.Crawlers
         /// Response collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        public abstract List<BasicInfo> GetResponse(List<string> entities, bool outputResults);
+        public abstract IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+            bool outputResults);
     }
 }

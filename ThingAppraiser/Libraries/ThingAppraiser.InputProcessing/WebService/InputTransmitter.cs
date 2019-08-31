@@ -5,7 +5,7 @@ namespace ThingAppraiser.IO.Input.WebService
 {
     public sealed class InputTransmitter : IInputter, IInputterBase, ITagable
     {
-        private readonly List<string> _thingNames;
+        private readonly IReadOnlyList<string> _thingNames;
 
         #region ITagable Implementation
 
@@ -17,14 +17,14 @@ namespace ThingAppraiser.IO.Input.WebService
         public string StorageName { get; private set; } = string.Empty;
 
 
-        public InputTransmitter(List<string> thingNames)
+        public InputTransmitter(IReadOnlyList<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }
 
         #region IInputter Implementation
 
-        public List<string> ReadThingNames(string storageName)
+        public IReadOnlyList<string> ReadThingNames(string storageName)
         {
             StorageName = storageName;
 

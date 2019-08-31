@@ -5,8 +5,8 @@ namespace ThingAppraiser.IO.Output.WebService
 {
     public sealed class OutputTransmitter : IOutputter, IOutputterBase, ITagable
     {
-        private List<List<RatingDataContainer>> _transmittingResults =
-            new List<List<RatingDataContainer>>();
+        private IReadOnlyList<IReadOnlyList<RatingDataContainer>> _transmittingResults =
+            new List<IReadOnlyList<RatingDataContainer>>();
 
         #region ITagable Implementation
 
@@ -22,14 +22,15 @@ namespace ThingAppraiser.IO.Output.WebService
         {
         }
 
-        public List<List<RatingDataContainer>> GetResults()
+        public IReadOnlyList<IReadOnlyList<RatingDataContainer>> GetResults()
         {
             return _transmittingResults;
         }
 
         #region IOutputter Implementation
 
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName)
         {
             StorageName = storageName;
 

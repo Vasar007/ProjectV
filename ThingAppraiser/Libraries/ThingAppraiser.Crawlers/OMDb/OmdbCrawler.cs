@@ -51,7 +51,8 @@ namespace ThingAppraiser.Crawlers.Omdb
         #region Crawler Overridden Methods
 
         /// <inheritdoc />
-        public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
+        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+            bool outputResults)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

@@ -30,7 +30,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         #region IThingSupplier Implementation
 
-        public List<Thing> GetAllThings()
+        public IReadOnlyList<Thing> GetAllThings()
         {
             return _things;
         }
@@ -50,7 +50,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             {
                 _things.Clear();
             }
-            foreach (List<RatingDataContainer> rating in response.RatingDataContainers)
+            foreach (IReadOnlyList<RatingDataContainer> rating in response.RatingDataContainers)
             {
                 _things.AddRange(_thingGrader.ProcessRatings(rating));
             }

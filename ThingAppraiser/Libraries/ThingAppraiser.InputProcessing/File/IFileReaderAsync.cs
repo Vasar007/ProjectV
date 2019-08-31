@@ -5,8 +5,8 @@ namespace ThingAppraiser.IO.Input.File
 {
     public interface IFileReaderAsync
     {
-        Task ReadFile(BufferBlock<string> queue, string filename);
+        Task ReadFile(ITargetBlock<string> queue, string filename);
 
-        Task ReadCsvFile(BufferBlock<string> queue, string filename);
+        Task ReadCsvFile(ITargetBlock<string> queue, string filename);
     }
 }

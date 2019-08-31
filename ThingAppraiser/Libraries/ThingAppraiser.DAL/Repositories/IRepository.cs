@@ -10,7 +10,7 @@ namespace ThingAppraiser.DAL.Repositories
 
         TData GetItemById(TIdentifier id);
 
-        List<TData> GetAllData();
+        IReadOnlyList<TData> GetAllData();
 
         void UpdateItem(TData item);
 

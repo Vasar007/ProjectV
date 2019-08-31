@@ -52,8 +52,8 @@ namespace ThingAppraiser.Crawlers.Omdb
         #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
-        public override async Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
-            BufferBlock<BasicInfo> responsesQueue, bool outputResults)
+        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();

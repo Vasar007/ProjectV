@@ -23,7 +23,7 @@ namespace ThingAppraiser.IO.Output.File
         /// Rating values of all appraisers. Appraisers list user can specify in config.
         /// </summary>
         [FieldOrder(2), FieldTitle("Rating Value"), FieldConverter(typeof(RatingValueConverter))]
-        public List<double> ratingValue = default!;
+        public IList<double> ratingValue = default!;
 
 
         /// <summary>

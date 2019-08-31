@@ -6,7 +6,7 @@ namespace ThingAppraiser.IO.Input.WebService
 {
     public sealed class InputTransmitterAsync : IInputterAsync, IInputterBase, ITagable
     {
-        private readonly List<string> _thingNames;
+        private readonly IReadOnlyList<string> _thingNames;
 
         #region ITagable Implementation
 
@@ -18,14 +18,14 @@ namespace ThingAppraiser.IO.Input.WebService
         public string StorageName { get; private set; } = string.Empty;
 
 
-        public InputTransmitterAsync(List<string> thingNames)
+        public InputTransmitterAsync(IReadOnlyList<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }
 
         #region IInputterAsync Implementation
 
-        public async Task ReadThingNames(BufferBlock<string> queueToWrite, string storageName)
+        public async Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName)
         {
             StorageName = storageName;
 

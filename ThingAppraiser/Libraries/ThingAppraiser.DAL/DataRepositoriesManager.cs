@@ -41,9 +41,9 @@ namespace ThingAppraiser.DAL
 
         #endregion
 
-        public List<List<BasicInfo>> GetResultsFromDb()
+        public IReadOnlyList<IReadOnlyList<BasicInfo>> GetResultsFromDb()
         {
-            var results = new List<List<BasicInfo>>();
+            var results = new List<IReadOnlyList<BasicInfo>>();
             foreach (IDataRepository repository in _repositories.Values)
             {
                 results.Add(repository.GetAllData());
@@ -51,12 +51,12 @@ namespace ThingAppraiser.DAL
             return results;
         }
 
-        public List<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
+        public IReadOnlyList<RawDataContainer> GetResultsFromDbWithAdditionalInfo()
         {
             var results = new List<RawDataContainer>();
             foreach (IDataRepository repository in _repositories.Values)
             {
-                List<BasicInfo> data = repository.GetAllData();
+                IReadOnlyList<BasicInfo> data = repository.GetAllData();
                 results.Add(AddAdditionalParameters(data));
             }
             return results;
@@ -73,9 +73,9 @@ namespace ThingAppraiser.DAL
             return repository.GetItemById(thingId);
         }
 
-        public void PutResultsToDb(List<List<BasicInfo>> results)
+        public void PutResultsToDb(IReadOnlyList<IReadOnlyList<BasicInfo>> results)
         {
-            foreach (List<BasicInfo> datum in results)
+            foreach (IReadOnlyList<BasicInfo> datum in results)
             {
                 // Skip empty collections of data.
                 if (datum.IsNullOrEmpty()) continue;
@@ -125,7 +125,7 @@ namespace ThingAppraiser.DAL
             return new MinMaxDenominator(min, max);
         }
 
-        private RawDataContainer AddAdditionalParameters(List<BasicInfo> data)
+        private RawDataContainer AddAdditionalParameters(IReadOnlyList<BasicInfo> data)
         {
             var container = new RawDataContainer(data);
             switch (data[0])

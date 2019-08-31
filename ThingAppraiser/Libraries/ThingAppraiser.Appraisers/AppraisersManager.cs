@@ -22,8 +22,8 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Represents relations one-to-many for every type of the potential data.
         /// </summary>
-        private readonly Dictionary<Type, List<Appraiser>> _appraisers =
-            new Dictionary<Type, List<Appraiser>>();
+        private readonly Dictionary<Type, IList<Appraiser>> _appraisers =
+            new Dictionary<Type, IList<Appraiser>>();
 
         /// <summary>
         /// Sets this flag to <c>true</c> if you need to monitor appraisers results.
@@ -55,7 +55,7 @@ namespace ThingAppraiser.Appraisers
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisers.TryGetValue(item.TypeId, out List<Appraiser> list))
+            if (_appraisers.TryGetValue(item.TypeId, out IList<Appraiser> list))
             {
                 if (!list.Contains(item))
                 {
@@ -92,18 +92,18 @@ namespace ThingAppraiser.Appraisers
         /// </summary>
         /// <param name="data">Collections of crawlers results.</param>
         /// <returns>Appraised collections produced from a set of data.</returns>
-        public ProcessedDataContainer GetAllRatings(List<RawDataContainer> data)
+        public ProcessedDataContainer GetAllRatings(IReadOnlyList<RawDataContainer> data)
         {
-            var results = new List<ResultList>();
+            var results = new List<IReadOnlyList<ResultInfo>>();
             foreach (RawDataContainer datum in data)
             {
-                IReadOnlyList<BasicInfo> internalData = datum.GetData();
+                IReadOnlyList<BasicInfo> internalData = datum.RawData;
                 // Skip empty collections of data.
                 if (internalData.IsNullOrEmpty()) continue;
 
                 // Suggest that all types in collection are identical.
                 if (!_appraisers.TryGetValue(internalData[0].GetType(),
-                                             out List<Appraiser> values))
+                                             out IList<Appraiser> values))
                 {
                     string message = $"Type {internalData[0].GetType()} wasn't used to appraise!";
                     _logger.Info(message);

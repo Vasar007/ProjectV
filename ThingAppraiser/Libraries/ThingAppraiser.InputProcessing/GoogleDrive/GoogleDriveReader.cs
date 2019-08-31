@@ -49,10 +49,9 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
         /// </summary>
         /// <param name="storageName">Storage name on Google Drive with Things names.</param>
         /// <returns>Processed collection of Things names as strings.</returns>
-        public List<string> ReadThingNames(string storageName)
+        public IReadOnlyList<string> ReadThingNames(string storageName)
         {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(storageName)) return result;
+            if (string.IsNullOrEmpty(storageName)) return new List<string>();
 
             // Get info from API, download file and read it.
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
@@ -65,8 +64,7 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
                     if (string.Equals(storageName, file.Name,
                                       StringComparison.InvariantCultureIgnoreCase))
                     {
-                        result = DownloadAndReadFile(storageName, file.Id);
-                        break;
+                        return DownloadAndReadFile(storageName, file.Id);
                     }
                 }
             }
@@ -75,7 +73,7 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
                 _logger.Info($"No files found. Tried to find \"{storageName}\".");
             }
 
-            return result;
+            return new List<string>();
         }
 
         #endregion
@@ -181,9 +179,8 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
         /// <remarks>
         /// This method creates and deletes temporary file to store downloaded content.
         /// </remarks>
-        private List<string> DownloadAndReadFile(string storageName, string fileId)
+        private IReadOnlyList<string> DownloadAndReadFile(string storageName, string fileId)
         {
-            var result = new List<string>();
             try
             {
                 if (HasExtenstionSafe(storageName))
@@ -197,18 +194,18 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
                     storageName += GetExtension(mimeType);
                 }
 
-                result = _localFileReader.ReadThingNames(storageName);
+                return _localFileReader.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "An error occured during downloading and reading file.");
+                return new List<string>();
             }
             finally
             {
                 DeleteFile(storageName);
                 _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
-            return result;
         }
     }
 }

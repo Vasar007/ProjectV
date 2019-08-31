@@ -6,20 +6,15 @@ namespace ThingAppraiser.Models.Internal
 {
     public sealed class RawDataContainer
     {
-        private readonly List<BasicInfo> _rawData;
+        public IReadOnlyList<BasicInfo> RawData { get; }
 
         private readonly Dictionary<string, MinMaxDenominator> _additionalData =
             new Dictionary<string, MinMaxDenominator>();
 
 
-        public RawDataContainer(List<BasicInfo> rawData)
+        public RawDataContainer(IReadOnlyList<BasicInfo> rawData)
         {
-            _rawData = rawData.ThrowIfNull(nameof(rawData));
-        }
-
-        public IReadOnlyList<BasicInfo> GetData()
-        {
-            return _rawData;
+            RawData = rawData.ThrowIfNull(nameof(rawData));
         }
 
         public bool AddParameter(string parameterName, MinMaxDenominator value)

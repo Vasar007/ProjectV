@@ -17,6 +17,7 @@ namespace ThingAppraiser.IO.Output
         /// <returns>
         /// <c>true</c> if results were saved successfully, <c>false</c> otherwise.
         /// </returns>
-        bool SaveResults(List<List<RatingDataContainer>> results, string storageName);
+        bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName);
     }
 }

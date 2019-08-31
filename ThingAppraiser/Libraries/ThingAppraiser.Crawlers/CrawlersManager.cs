@@ -68,9 +68,9 @@ namespace ThingAppraiser.Crawlers
         /// </summary>
         /// <param name="entities">Collection of entities as strings to process.</param>
         /// <returns>Collection of results from crawlers produced from a set of entities.</returns>
-        public List<List<BasicInfo>> CollectAllResponses(List<string> entities)
+        public IReadOnlyList<IReadOnlyList<BasicInfo>> CollectAllResponses(List<string> entities)
         {
-            var results = new List<List<BasicInfo>>();
+            var results = new List<IReadOnlyList<BasicInfo>>();
             foreach (Crawler crawler in _crawlers)
             {
                 results.Add(crawler.GetResponse(entities, _outputResults));

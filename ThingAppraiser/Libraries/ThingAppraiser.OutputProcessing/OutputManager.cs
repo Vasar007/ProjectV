@@ -80,7 +80,8 @@ namespace ThingAppraiser.IO.Output
         /// <param name="results">Collections of appraised results to save.</param>
         /// <param name="storageName">Storage name of output source.</param>
         /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
-        public bool SaveResults(List<List<RatingDataContainer>> results, string storageName)
+        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+            string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {

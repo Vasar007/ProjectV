@@ -37,7 +37,7 @@ namespace ThingAppraiser.Models.Internal
             return _ratingsHelper.Keys.First(x => x.RatingId == ratingId);
         }
 
-        public List<Rating> GetAllRatings()
+        public IReadOnlyList<Rating> GetAllRatings()
         {
             return _ratingsHelper.Keys.ToList();
         }

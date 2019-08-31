@@ -18,7 +18,7 @@ namespace ThingAppraiser.Crawlers
         {
         }
 
-        public abstract Task<bool> GetResponse(BufferBlock<string> entitiesQueue,
-            BufferBlock<BasicInfo> responsesQueue, bool outputResults);
+        public abstract Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+            ITargetBlock<BasicInfo> responsesQueue, bool outputResults);
     }
 }

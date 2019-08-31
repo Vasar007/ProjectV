@@ -80,7 +80,7 @@ namespace ThingAppraiser.DAL.Repositories
             return dbHelper.GetItem(new ResultInfoMapper(), query);
         }
 
-        public List<ResultInfo> GetAllData()
+        public IReadOnlyList<ResultInfo> GetAllData()
         {
             string sqlStatement = SQLStatementsForResults.SelectAllItems;
 
@@ -133,7 +133,7 @@ namespace ThingAppraiser.DAL.Repositories
 
         #region IResultRepository
 
-        public List<ThingIdWithRating> GetOrderedRatingsValue(Guid ratingId)
+        public IReadOnlyList<ThingIdWithRating> GetOrderedRatingsValue(Guid ratingId)
         {
             string sqlStatement = SQLStatementsForResults.SelectItemsWithDescOrderingByRating;
 

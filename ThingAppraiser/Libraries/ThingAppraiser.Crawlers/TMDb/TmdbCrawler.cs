@@ -53,7 +53,8 @@ namespace ThingAppraiser.Crawlers.Tmdb
         #region Crawler Overridden Methods
 
         /// <inheritdoc />
-        public override List<BasicInfo> GetResponse(List<string> entities, bool outputResults)
+        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+            bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 GetServiceConfiguration(outputResults)

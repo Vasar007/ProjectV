@@ -4,21 +4,16 @@ namespace ThingAppraiser.Models.Internal
 {
     public sealed class ProcessedDataContainer
     {
-        private readonly List<ResultList> _processedData;
+        public IReadOnlyList<IReadOnlyList<ResultInfo>> Data { get; }
 
         public RatingsStorage RatingsStorage { get; }
 
 
-        public ProcessedDataContainer(List<ResultList> processedData,
+        public ProcessedDataContainer(IReadOnlyList<IReadOnlyList<ResultInfo>> processedData,
             RatingsStorage ratingsStorage)
         {
-            _processedData = processedData.ThrowIfNull(nameof(processedData));
+            Data = processedData.ThrowIfNull(nameof(processedData));
             RatingsStorage = ratingsStorage.ThrowIfNull(nameof(ratingsStorage));
-        }
-
-        public IReadOnlyList<ResultList> GetData()
-        {
-            return _processedData;
         }
     }
 }

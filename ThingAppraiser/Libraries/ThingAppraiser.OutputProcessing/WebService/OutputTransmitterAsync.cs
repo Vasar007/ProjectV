@@ -6,8 +6,8 @@ namespace ThingAppraiser.IO.Output.WebService
 {
     public sealed class OutputTransmitterAsync : IOutputterAsync, IOutputterBase, ITagable
     {
-        private List<List<RatingDataContainer>> _transmittingResults =
-            new List<List<RatingDataContainer>>();
+        private IReadOnlyList<IReadOnlyList<RatingDataContainer>> _transmittingResults =
+            new List<IReadOnlyList<RatingDataContainer>>();
 
         public string StorageName { get; private set; } = string.Empty;
 
@@ -23,14 +23,14 @@ namespace ThingAppraiser.IO.Output.WebService
         {
         }
 
-        public List<List<RatingDataContainer>> GetResults()
+        public IReadOnlyList<IReadOnlyList<RatingDataContainer>> GetResults()
         {
             return _transmittingResults ;
         }
 
         #region IOutputter Implementation
 
-        public Task<bool> SaveResults(List<List<RatingDataContainer>> results,
+        public Task<bool> SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string storageName)
         {
             StorageName = storageName;

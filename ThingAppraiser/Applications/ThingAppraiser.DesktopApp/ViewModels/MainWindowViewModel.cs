@@ -403,7 +403,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 );
             }
 
-            List<string> thingNames = await Task.Run(
+            IReadOnlyList<string> thingNames = await Task.Run(
                 () => _thingProducer.ReadThingNames("Service request")
             );
 
@@ -420,7 +420,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             CreateBasicRequirements();
 
             var localFileReader = new LocalFileReader(new SimpleFileReader());
-            List<string> thingNames = await Task.Run(
+            IReadOnlyList<string> thingNames = await Task.Run(
                 () => localFileReader.ReadThingNames(SelectedStorageName)
             );
 
@@ -442,7 +442,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                     ConfigOptions.Inputters.GoogleDriveReaderSimpleName
                 )
             );
-            List<string> thingNames = await Task.Run(
+            IReadOnlyList<string> thingNames = await Task.Run(
                 () => googleDriveReader.ReadThingNames(SelectedStorageName)
             );
 

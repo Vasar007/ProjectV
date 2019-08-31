@@ -58,7 +58,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         #region IThingSupplier Implementation
 
-        public List<Thing> GetAllThings()
+        public IReadOnlyList<Thing> GetAllThings()
         {
             return _things;
         }

@@ -129,21 +129,27 @@ namespace ThingAppraiser.Configuration
                     },
                     CrawlersManager = new CrawlersManagerConfig
                     {
-                        CrawlersOutputFlag = false,
+                        CrawlersOutputFlag = true,
                         Crawlers = new[]
                         {
                             ConfigModule.GetConfigForCrawler(
                                 ConfigOptions.Crawlers.TmdbCrawlerName
+                            ),
+                            ConfigModule.GetConfigForCrawler(
+                                ConfigOptions.Crawlers.OmdbCrawlerName
                             )
                         }
                     },
                     AppraisersManager = new AppraisersManagerConfig
                     {
-                        AppraisersOutputFlag = false,
+                        AppraisersOutputFlag = true,
                         Appraisers = new[]
                         {
                             ConfigModule.GetConfigForAppraiser(
                                 ConfigOptions.Appraisers.TmdbAppraiserCommonName
+                            ),
+                            ConfigModule.GetConfigForAppraiser(
+                                ConfigOptions.Appraisers.OmdbAppraiserCommonName
                             )
                         }
                     },

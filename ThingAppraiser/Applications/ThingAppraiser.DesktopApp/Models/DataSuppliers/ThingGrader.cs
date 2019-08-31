@@ -21,7 +21,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         #region IThingGrader Implementation
 
-        public List<Thing> ProcessRatings(List<RatingDataContainer> rating)
+        public IReadOnlyList<Thing> ProcessRatings(IReadOnlyList<RatingDataContainer> rating)
         {
             _logger.Info("Got rating container to process.");
 
@@ -29,7 +29,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
             IImageSupplier imageSupplier = DetermineImageSupplier(rating.First().DataHandler);
 
-            List<Thing> result = rating.Select(r =>
+            IReadOnlyList<Thing> result = rating.Select(r =>
                 new Thing(
                     Guid.NewGuid(), r.DataHandler,
                     imageSupplier.GetImageLink(r.DataHandler, ImageSize.Large)

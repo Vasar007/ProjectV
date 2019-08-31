@@ -11,8 +11,7 @@ namespace ThingAppraiser.DAL
     // TODO: add command creation method (important).
     public sealed class DbHelperScope : IDisposable
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<DbHelperScope>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<DbHelperScope>();
 
         private readonly SqlConnection _connection;
 
@@ -40,7 +39,7 @@ namespace ThingAppraiser.DAL
             }
         }
 
-        public List<T> GetData<T>(IMapper<T> mapper, IDbCommand query)
+        public IReadOnlyList<T> GetData<T>(IMapper<T> mapper, IDbCommand query)
         {
             mapper.ThrowIfNull(nameof(mapper));
             query.ThrowIfNull(nameof(query));
@@ -98,7 +97,7 @@ namespace ThingAppraiser.DAL
             command.Transaction = transaction;
         }
 
-        private static List<T> GetData<T>(IDbConnection connection, IMapper<T> mapper,
+        private static IReadOnlyList<T> GetData<T>(IDbConnection connection, IMapper<T> mapper,
             IDbCommand query, IDbTransaction transaction)
         {
             var result = new List<T>();

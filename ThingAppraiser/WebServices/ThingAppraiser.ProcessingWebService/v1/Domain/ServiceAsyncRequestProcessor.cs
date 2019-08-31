@@ -34,7 +34,8 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
                 await simpleTask.ExecuteAsync(requestData, inputTransmitter, outputTransmitter)
             ).Single();
 
-            List<List<RatingDataContainer>> results = outputTransmitter.GetResults();
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results =
+                outputTransmitter.GetResults();
 
             var response = new ProcessingResponse
             {

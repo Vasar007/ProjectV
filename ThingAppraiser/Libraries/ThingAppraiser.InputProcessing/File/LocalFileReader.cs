@@ -43,7 +43,7 @@ namespace ThingAppraiser.IO.Input.File
         /// </summary>
         /// <param name="storageName">Storage with Things names.</param>
         /// <returns>Things names as collection of strings.</returns>
-        public List<string> ReadThingNames(string storageName)
+        public IReadOnlyList<string> ReadThingNames(string storageName)
         {
             var result = new List<string>();
             if (string.IsNullOrEmpty(storageName)) return result;

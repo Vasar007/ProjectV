@@ -20,8 +20,8 @@ namespace ThingAppraiser.Appraisers
         {
         }
 
-        public virtual async Task<bool> GetRatings(BufferBlock<BasicInfo> entitiesInfoQueue,
-            BufferBlock<RatingDataContainer> entitiesRatingQueue, bool outputResults)
+        public virtual async Task<bool> GetRatings(ISourceBlock<BasicInfo> entitiesInfoQueue,
+            ITargetBlock<RatingDataContainer> entitiesRatingQueue, bool outputResults)
         {
             while (await entitiesInfoQueue.OutputAvailableAsync())
             {
