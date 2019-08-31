@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser.Core.Building
+﻿namespace ThingAppraiser.Configuration
 {
     public static class ConfigOptions
     {

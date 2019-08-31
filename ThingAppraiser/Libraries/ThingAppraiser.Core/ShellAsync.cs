@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Core.ShellBuilders;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -45,12 +46,9 @@ namespace ThingAppraiser.Core
             _dataFlowOptions = new DataflowBlockOptions { BoundedCapacity = _boundedCapacity };
         }
 
-        public static Building.ShellAsyncBuilderDirector CreateBuilderDirector(
-            XDocument configuration)
+        public static ShellAsyncBuilderDirector CreateBuilderDirector(XDocument configuration)
         {
-            return new Building.ShellAsyncBuilderDirector(
-                new Building.ShellAsyncBuilderFromXDocument(configuration)
-            );
+            return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
         }
 
         private async Task<ServiceStatus> GetThingNames(BufferBlock<string> queue,

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Configuration
 {
     public sealed class ServiceConfigRegistry
     {

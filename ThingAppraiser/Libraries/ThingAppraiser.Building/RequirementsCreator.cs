@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.Models.WebService;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Building
 {
     public sealed class RequirementsCreator : IRequirementsCreator
     {

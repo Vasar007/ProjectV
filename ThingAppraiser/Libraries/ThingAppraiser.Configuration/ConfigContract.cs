@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Configuration
 {
     public static class ConfigContract
     {

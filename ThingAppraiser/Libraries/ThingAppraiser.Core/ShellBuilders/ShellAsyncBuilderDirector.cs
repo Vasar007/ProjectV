@@ -1,15 +1,15 @@
-﻿namespace ThingAppraiser.Core.Building
+﻿namespace ThingAppraiser.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder director which controls of <see cref="Shell" /> creating process with the help of
-    /// specified builder.
+    /// Builder director which controls of <see cref="ShellAsync" /> creating process with the help
+    /// of specified builder.
     /// </summary>
-    public sealed class ShellBuilderDirector
+    public sealed class ShellAsyncBuilderDirector
     {
         /// <summary>
-        /// Builder which create step by step <see cref="Shell" /> class.
+        /// Builder which create step by step <see cref="ShellAsync" /> class.
         /// </summary>
-        private IShellBuilder _shellBuilder;
+        private IShellAsyncBuilder _shellBuilder;
 
 
         /// <summary>
@@ -19,7 +19,7 @@
         /// <exception cref="System.ArgumentNullException">
         /// <paramref name="shellBuilder" /> is <c>null</c>.
         /// </exception>
-        public ShellBuilderDirector(IShellBuilder shellBuilder)
+        public ShellAsyncBuilderDirector(IShellAsyncBuilder shellBuilder)
         {
             _shellBuilder = shellBuilder.ThrowIfNull(nameof(shellBuilder));
         }
@@ -31,7 +31,7 @@
         /// <exception cref="System.ArgumentNullException">
         /// <paramref name="newBuilder" /> is <c>null</c>.
         /// </exception>
-        public void ChangeShellBuilder(IShellBuilder newBuilder)
+        public void ChangeShellBuilder(IShellAsyncBuilder newBuilder)
         {
             _shellBuilder = newBuilder.ThrowIfNull(nameof(newBuilder));
         }
@@ -39,8 +39,8 @@
         /// <summary>
         /// Executes building process and gets result.
         /// </summary>
-        /// <returns>Fully initialized <see cref="Shell" /> class.</returns>
-        public Shell MakeShell()
+        /// <returns>Fully initialized <see cref="ShellAsync" /> class.</returns>
+        public ShellAsync MakeShell()
         {
             _shellBuilder.Reset();
 
@@ -49,7 +49,6 @@
             _shellBuilder.BuildCrawlersManager();
             _shellBuilder.BuildAppraisersManager();
             _shellBuilder.BuildOutputManager();
-            _shellBuilder.BuildDataBaseManager();
 
             return _shellBuilder.GetResult();
         }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using ThingAppraiser.Core.Building;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 
 namespace ThingAppraiser.DesktopApp.ViewModels

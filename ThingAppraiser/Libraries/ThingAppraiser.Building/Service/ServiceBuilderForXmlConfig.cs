@@ -2,30 +2,30 @@
 using System.Xml.Linq;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Building.Service
 {
     /// <summary>
-    /// Provides methods to create service classes (async) instances with parameters from XML 
+    /// Provides methods to create service classes (sequential) instances with parameters from XML 
     /// config.
     /// </summary>
-    public sealed class ServiceAsyncBuilderForXmlConfig : ServiceBuilderBase
+    public sealed class ServiceBuilderForXmlConfig : ServiceBuilderBase
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ServiceAsyncBuilderForXmlConfig>();
+            LoggerFactory.CreateLoggerFor<ServiceBuilderForXmlConfig>();
 
 
         /// <summary>
-        /// Creates service (async) builder to interact with XML config.
+        /// Creates service (sequential) builder to interact with XML config.
         /// </summary>
-        public ServiceAsyncBuilderForXmlConfig()
+        public ServiceBuilderForXmlConfig()
         {
         }
 
         /// <summary>
-        /// Creates message (sequential) handler instance depend on parameter value (could be get 
+        /// Creates message handler (sequential) instance depend on parameter value (could be get 
         /// from config).
         /// </summary>
         /// <param name="messageHandlerElement">Element from XML config.</param>
@@ -71,7 +71,8 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <summary>
-        /// Creates inputter (async) instance depend on parameter value (could be get from config).
+        /// Creates inputter (sequential) instance depend on parameter value (could be get from 
+        /// config).
         /// </summary>
         /// <param name="inputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of inputter interface.</returns>
@@ -81,11 +82,11 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentNullException">
         /// <paramref name="inputterElement" /> is <c>null</c>.
         /// </exception>
-        public IO.Input.IInputterAsync CreateInputter(XElement inputterElement)
+        public IO.Input.IInputter CreateInputter(XElement inputterElement)
         {
             inputterElement.ThrowIfNull(nameof(inputterElement));
 
-            _logger.Info("Creating intputter.");
+            _logger.Info("Creating inputter.");
 
             switch (inputterElement.Name.LocalName)
             {
@@ -95,15 +96,20 @@ namespace ThingAppraiser.Core.Building
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.File.IFileReaderAsync fileReader =
-                        CreateFileReaderAsync(fileReaderName);
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
 
-                    return new IO.Input.File.LocalFileReaderAsync(fileReader);
+                    return new IO.Input.File.LocalFileReader(fileReader);
                 }
 
                 case _googleDriveParameterName:
                 {
-                    throw new NotImplementedException("Now GoogleDrive isn't supported.");
+                    string fileReaderName = XDocumentParser.GetAttributeValue(
+                        inputterElement, _fileReaderParameterName + _googleDriveParameterName
+                    );
+
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
+
+                    return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
                 }
 
                 default:
@@ -117,7 +123,8 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <summary>
-        /// Creates crawler (async) instance depend on parameter value (could be get from config).
+        /// Creates crawler (sequential) instance depend on parameter value (could be get from 
+        /// config).
         /// </summary>
         /// <param name="crawlerElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of crawler class.</returns>
@@ -127,7 +134,7 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentNullException">
         /// <paramref name="crawlerElement" /> is <c>null</c>.
         /// </exception>
-        public Crawlers.CrawlerAsync CreateCrawler(XElement crawlerElement)
+        public Crawlers.Crawler CreateCrawler(XElement crawlerElement)
         {
             crawlerElement.ThrowIfNull(nameof(crawlerElement));
 
@@ -144,7 +151,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _tmdbMaxRetryCountParameterName
                     );
 
-                    return new Crawlers.Tmdb.TmdbCrawlerAsync(apiKey, maxRetryCount);
+                    return new Crawlers.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
                 }
 
                 case _omdbCrawlerParameterName:
@@ -153,7 +160,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _omdbApiKeyParameterName
                     );
 
-                    return new Crawlers.Omdb.OmdbCrawlerAsync(apiKey);
+                    return new Crawlers.Omdb.OmdbCrawler(apiKey);
                 }
 
                 case _steamCrawlerParameterName:
@@ -162,7 +169,7 @@ namespace ThingAppraiser.Core.Building
                         crawlerElement, _steamApiKeyParameterName
                     );
 
-                    return new Crawlers.Steam.SteamCrawlerAsync(apiKey);
+                    return new Crawlers.Steam.SteamCrawler(apiKey);
                 }
 
                 default:
@@ -176,7 +183,8 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <summary>
-        /// Creates appraiser (async) instance depend on parameter value (could be get from config).
+        /// Creates appraiser (sequential) instance depend on parameter value (could be get from 
+        /// config).
         /// </summary>
         /// <param name="appraiserElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of appraiser class.</returns>
@@ -186,7 +194,7 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentNullException">
         /// <paramref name="appraiserElement" /> is <c>null</c>.
         /// </exception>
-        public Appraisers.AppraiserAsync CreateAppraiser(XElement appraiserElement)
+        public Appraisers.Appraiser CreateAppraiser(XElement appraiserElement)
         {
             appraiserElement.ThrowIfNull(nameof(appraiserElement));
 
@@ -196,22 +204,22 @@ namespace ThingAppraiser.Core.Building
             {
                 case _appraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiser();
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiser();
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiserAsync();
+                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiser();
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    return new Appraisers.GameRating.Steam.SteamAppraiserAsync();
+                    return new Appraisers.GameRating.Steam.SteamAppraiser();
                 }
 
                 default:
@@ -225,7 +233,8 @@ namespace ThingAppraiser.Core.Building
         }
 
         /// <summary>
-        /// Creates outputter (async) instance depend on parameter value (could be get from config).
+        /// Creates outputter (sequential) instance depend on parameter value (could be get from 
+        /// config).
         /// </summary>
         /// <param name="outputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of outputter interface.</returns>
@@ -235,7 +244,7 @@ namespace ThingAppraiser.Core.Building
         /// <exception cref="ArgumentNullException">
         /// <paramref name="outputterElement" /> is <c>null</c>.
         /// </exception>
-        public IO.Output.IOutputterAsync CreateOutputter(XElement outputterElement)
+        public IO.Output.IOutputter CreateOutputter(XElement outputterElement)
         {
             outputterElement.ThrowIfNull(nameof(outputterElement));
 
@@ -245,18 +254,64 @@ namespace ThingAppraiser.Core.Building
             {
                 case _localFileParameterName:
                 {
-                    return new IO.Output.File.LocalFileWriterAsync();
+                    return new IO.Output.File.LocalFileWriter();
                 }
 
                 case _googleDriveParameterName:
                 {
-                    throw new NotImplementedException("Now GoogleDrive isn't supported.");
+                    return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
                 }
 
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
                         nameof(outputterElement), outputterElement,
+                        "Couldn't recognize output type specified in XML config."
+                    );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates repository (sequential) instance depend on parameter value (could be get from 
+        /// config).
+        /// </summary>
+        /// <param name="repositoryElement">Element from XML config.</param>
+        /// <param name="storageSettings">
+        /// Storage settings for repositrory (at least contain connection string).
+        /// </param>
+        /// <returns>Fully initialized instance of repository interface.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="repositoryElement" /> isn't specified in config.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="repositoryElement" /> or <paramref name="storageSettings" /> is 
+        /// <c>null</c>.
+        /// </exception>
+        public DAL.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
+            DAL.DataStorageSettings storageSettings)
+        {
+            repositoryElement.ThrowIfNull(nameof(repositoryElement));
+            storageSettings.ThrowIfNull(nameof(storageSettings));
+
+            _logger.Info("Creating reppository.");
+
+            switch (repositoryElement.Name.LocalName)
+            {
+                case _basicInfoRepositoryParameterName:
+                {
+                    return new DAL.Repositories.BasicInfoRepository(storageSettings);
+                }
+
+                case _tmdbMovieRepositoryParameterName:
+                {
+                    return new DAL.Repositories.TmdbMovieRepository(storageSettings);
+                }
+
+                default:
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(repositoryElement), repositoryElement,
                         "Couldn't recognize output type specified in XML config."
                     );
                 }

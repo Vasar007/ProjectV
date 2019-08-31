@@ -7,7 +7,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Building.Service
 {
     /// <summary>
     /// Contains identifiers to create proper type of components.

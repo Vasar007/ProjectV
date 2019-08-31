@@ -5,6 +5,7 @@ using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Core.ShellBuilders;
 
 namespace ThingAppraiser.Core
 {
@@ -75,11 +76,9 @@ namespace ThingAppraiser.Core
         /// Creates director with builder which can parse XML config and initialize shell instance.
         /// </summary>
         /// <returns>Helper class to create instances of shell.</returns>
-        public static Building.ShellBuilderDirector CreateBuilderDirector(XDocument configuration)
+        public static ShellBuilderDirector CreateBuilderDirector(XDocument configuration)
         {
-            return new Building.ShellBuilderDirector(
-                new Building.ShellBuilderFromXDocument(configuration)
-            );
+            return new ShellBuilderDirector(new ShellBuilderFromXDocument(configuration));
         }
 
         /// <summary>

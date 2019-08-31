@@ -4,10 +4,9 @@ using System.Configuration;
 using System.Xml.Linq;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
-using ThingAppraiser.Core.Building;
 using ThingAppraiser.Models.WebService;
 
-namespace ThingAppraiser.Core
+namespace ThingAppraiser.Configuration
 {
     /// <summary>
     /// Provides template methods to generate XML configuration for shell instance.

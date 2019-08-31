@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Core;
+﻿using ThingAppraiser.Configuration;
 using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Models.WebService;
 

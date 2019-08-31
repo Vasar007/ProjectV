@@ -1,6 +1,6 @@
 ﻿using ThingAppraiser.Models.Configuration;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Core.ShellBuilders
 {
     /// <summary>
     /// Contains identifiers to work with XML configs.

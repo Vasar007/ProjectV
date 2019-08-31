@@ -1,6 +1,6 @@
 ﻿using ThingAppraiser.Models.WebService;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Building
 {
     public interface IRequirementsCreator
     {

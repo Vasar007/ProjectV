@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser.Core.Building
+﻿namespace ThingAppraiser.Core.ShellBuilders
 {
     /// <summary>
     /// Creates interface to build <see cref="ShellAsync" /> class step by step.

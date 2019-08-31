@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Core.Building;
+﻿using ThingAppraiser.Configuration;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {

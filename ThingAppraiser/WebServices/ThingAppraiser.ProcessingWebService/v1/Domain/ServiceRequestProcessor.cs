@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ThingAppraiser.Core;
-using ThingAppraiser.Models.Internal;
-using ThingAppraiser.Models.WebService;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.IO.Input.WebService;
 using ThingAppraiser.IO.Output.WebService;
+using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
 using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Domain

@@ -250,9 +250,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Building\ThingAppraiser.Building.csproj">
+      <Project>{2201541E-75ED-40DD-B121-B3195AA946A9}</Project>
+      <Name>ThingAppraiser.Building</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj">
       <Project>{6e425cf6-a8a7-49a2-a679-6d97e8a0f1b9}</Project>
       <Name>ThingAppraiser.CommonHelperClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj">
+      <Project>{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}</Project>
+      <Name>ThingAppraiser.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj">
       <Project>{cc0ef513-e29d-4cb0-a2ba-767bad540ec5}</Project>

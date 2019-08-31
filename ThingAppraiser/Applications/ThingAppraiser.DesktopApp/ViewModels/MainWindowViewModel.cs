@@ -4,18 +4,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ThingAppraiser.Models.WebService;
+using ThingAppraiser.Building;
+using ThingAppraiser.Building.Service;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataProducers;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.DesktopApp.Views;
-using ThingAppraiser.Core.Building;
 using ThingAppraiser.IO.Input.File;
 using ThingAppraiser.Logging;
-using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

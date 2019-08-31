@@ -1,14 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Logging;
-using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.DAL.EntityFramework;
-using ThingAppraiser.DAL;
-using System.Configuration;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Design;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.ConsoleApp
 {

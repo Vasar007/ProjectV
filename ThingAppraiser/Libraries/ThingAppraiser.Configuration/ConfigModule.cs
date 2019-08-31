@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace ThingAppraiser.Core.Building
+namespace ThingAppraiser.Configuration
 {
     public static class ConfigModule
     {

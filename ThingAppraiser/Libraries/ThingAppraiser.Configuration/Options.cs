@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser.Core
+﻿namespace ThingAppraiser.Configuration
 {
     public static class Options
     {
