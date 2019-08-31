@@ -36,19 +36,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ExternalServices\ThingAppraiser.TmdbService\ThingAppraiser.TmdbService.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Building\ThingAppraiser.Building.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.OutputProcessing\ThingAppraiser.OutputProcessing.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="v1\" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.TaskService\ThingAppraiser.TaskService.csproj" />
   </ItemGroup>
 
 </Project>

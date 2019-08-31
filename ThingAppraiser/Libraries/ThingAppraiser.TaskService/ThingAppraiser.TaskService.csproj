@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Label="Globals">
+        <SccProjectName>SAK</SccProjectName>
+        <SccProvider>SAK</SccProvider>
+        <SccAuxPath>SAK</SccAuxPath>
+        <SccLocalPath>SAK</SccLocalPath>
+        <Platforms>x64</Platforms>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>8.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+        <RootNamespace>ThingAppraiser.TaskService</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.Core\ThingAppraiser.Core.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
+      <ProjectReference Include="..\ThingAppraiser.OutputProcessing\ThingAppraiser.OutputProcessing.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -33,81 +33,69 @@ namespace ThingAppraiser.DAL.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BasicInfo>(
-                builder =>
-                {
-                    builder.HasKey(e => e.ThingId);
-                    builder.Property(e => e.Title);
-                    builder.Property(e => e.VoteCount);
-                    builder.Property(e => e.VoteAverage);
-                }
-            );
+            modelBuilder.Entity<BasicInfo>(builder =>
+            {
+                builder.HasKey(e => e.ThingId);
+                builder.Property(e => e.Title);
+                builder.Property(e => e.VoteCount);
+                builder.Property(e => e.VoteAverage);
+            });
 
-            modelBuilder.Entity<MovieInfo>(
-                builder =>
-                {
-                    builder.HasBaseType<BasicInfo>();
-                    builder.Property(e => e.Overview);
-                    builder.Property(e => e.ReleaseDate);
-                }
-            );
+            modelBuilder.Entity<MovieInfo>(builder =>
+            {
+                builder.HasBaseType<BasicInfo>();
+                builder.Property(e => e.Overview);
+                builder.Property(e => e.ReleaseDate);
+            });
 
-            modelBuilder.Entity<TmdbMovieInfo>(
-                builder =>
-                {
-                    builder.HasBaseType<BasicInfo>();
-                    builder.HasBaseType<MovieInfo>();
-                    builder.Property(e => e.Popularity);
-                    builder.Property(e => e.Adult);
-                    builder.Property(e => e.GenreIds)
-                           .HasConversion(
-                               v => string.Join(",", v),
-                               v => v.Split(new[] { ',' }, StringSplitOptions.None).Select(int.Parse).ToList()
-                           );
-                    builder.Property(e => e.PosterPath);
-                }
-            );
+            modelBuilder.Entity<TmdbMovieInfo>(builder =>
+            {
+                builder.HasBaseType<BasicInfo>();
+                builder.HasBaseType<MovieInfo>();
+                builder.Property(e => e.Popularity);
+                builder.Property(e => e.Adult);
+                builder.Property(e => e.GenreIds)
+                        .HasConversion(
+                            v => string.Join(",", v),
+                            v => v.Split(new[] { ',' }, StringSplitOptions.None).Select(int.Parse).ToList()
+                        );
+                builder.Property(e => e.PosterPath);
+            });
 
-            modelBuilder.Entity<OmdbMovieInfo>(
-                builder =>
-                {
-                    builder.HasBaseType<BasicInfo>();
-                    builder.HasBaseType<MovieInfo>();
-                    builder.Property(e => e.Metascore);
-                    builder.Property(e => e.Rated);
-                    builder.Property(e => e.GenreIds)
-                           .HasConversion(
-                               v => string.Join(",", v),
-                               v => v.Split(new[] { ',' }, StringSplitOptions.None).ToList()
-                           );
-                    builder.Property(e => e.PosterPath);
-                }
-            );
+            modelBuilder.Entity<OmdbMovieInfo>(builder =>
+            {
+                builder.HasBaseType<BasicInfo>();
+                builder.HasBaseType<MovieInfo>();
+                builder.Property(e => e.Metascore);
+                builder.Property(e => e.Rated);
+                builder.Property(e => e.GenreIds)
+                        .HasConversion(
+                            v => string.Join(",", v),
+                            v => v.Split(new[] { ',' }, StringSplitOptions.None).ToList()
+                        );
+                builder.Property(e => e.PosterPath);
+            });
 
-            modelBuilder.Entity<GameInfo>(
-                builder =>
-                {
-                    builder.HasBaseType<BasicInfo>();
-                    builder.Property(e => e.Overview);
-                    builder.Property(e => e.ReleaseDate);
-                }
-            );
+            modelBuilder.Entity<GameInfo>(builder =>
+            {
+                builder.HasBaseType<BasicInfo>();
+                builder.Property(e => e.Overview);
+                builder.Property(e => e.ReleaseDate);
+            });
 
-            modelBuilder.Entity<SteamGameInfo>(
-                builder =>
-                {
-                    builder.HasBaseType<BasicInfo>();
-                    builder.HasBaseType<GameInfo>();
-                    builder.Property(e => e.Price);
-                    builder.Property(e => e.RequiredAge);
-                    builder.Property(e => e.GenreIds)
-                           .HasConversion(
-                               v => string.Join(",", v),
-                               v => v.Split(new[] { ',' }, StringSplitOptions.None).Select(int.Parse).ToList()
-                           );
-                    builder.Property(e => e.PosterPath);
-                }
-            );
+            modelBuilder.Entity<SteamGameInfo>(builder =>
+            {
+                builder.HasBaseType<BasicInfo>();
+                builder.HasBaseType<GameInfo>();
+                builder.Property(e => e.Price);
+                builder.Property(e => e.RequiredAge);
+                builder.Property(e => e.GenreIds)
+                        .HasConversion(
+                            v => string.Join(",", v),
+                            v => v.Split(new[] { ',' }, StringSplitOptions.None).Select(int.Parse).ToList()
+                        );
+                builder.Property(e => e.PosterPath);
+            });
         }
     }
 }

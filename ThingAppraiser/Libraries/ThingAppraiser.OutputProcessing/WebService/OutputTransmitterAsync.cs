@@ -30,13 +30,13 @@ namespace ThingAppraiser.IO.Output.WebService
 
         #region IOutputter Implementation
 
-        public async Task<bool> SaveResults(List<List<RatingDataContainer>> results,
+        public Task<bool> SaveResults(List<List<RatingDataContainer>> results,
             string storageName)
         {
             StorageName = storageName;
 
             _transmittingResults = results;
-            return await Task.FromResult(true);
+            return Task.FromResult(true);
         }
 
         #endregion

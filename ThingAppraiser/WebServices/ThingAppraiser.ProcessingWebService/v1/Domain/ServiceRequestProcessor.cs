@@ -33,15 +33,13 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
             shell.OutputManager.Add(outputTransmitter);
 
             ServiceStatus status = await Task.Run(() => shell.Run("Processing response"));
-
             var results = outputTransmitter.GetResults();
+
             var response = new ProcessingResponse
             {
                 Metadata = new ResponseMetadata
                 {
-                    CommonResultsNumber = results.Aggregate(
-                        0, (counter, rating) => counter + rating.Count
-                    ),
+                    CommonResultsNumber = results.Sum(rating => rating.Count),
                     CommonResultCollectionsNumber = results.Count,
                     ResultStatus = status,
                     OptionalData = CreateOptionalData()

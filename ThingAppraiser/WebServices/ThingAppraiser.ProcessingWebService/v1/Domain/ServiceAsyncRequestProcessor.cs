@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ThingAppraiser.Core;
-using ThingAppraiser.Configuration;
 using ThingAppraiser.IO.Input.WebService;
 using ThingAppraiser.IO.Output.WebService;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.WebService;
+using ThingAppraiser.TaskService;
 using ThingAppraiser.TmdbService;
 
 namespace ThingAppraiser.ProcessingWebService.v1.Domain
@@ -21,27 +21,26 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
 
         public async Task<ProcessingResponse> ProcessRequest(RequestData requestData)
         {
-            var builderDirector = ShellAsync.CreateBuilderDirector(
-                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
-            );
-            var shell = builderDirector.MakeShell();
-
             var inputTransmitter = new InputTransmitterAsync(requestData.ThingNames);
-            shell.InputManagerAsync.Add(inputTransmitter);
-
             var outputTransmitter = new OutputTransmitterAsync();
-            shell.OutputManagerAsync.Add(outputTransmitter);
 
-            ServiceStatus status = await shell.Run("Processing response");
+            var simpleTask = new SimpleTask(
+                id:               Guid.NewGuid(),
+                executionsNumber: 1,
+                delayTime:        TimeSpan.Zero
+            );
 
-            var results = outputTransmitter.GetResults();
+            ServiceStatus status = (
+                await simpleTask.ExecuteAsync(requestData, inputTransmitter, outputTransmitter)
+            ).Single();
+
+            List<List<RatingDataContainer>> results = outputTransmitter.GetResults();
+
             var response = new ProcessingResponse
             {
                 Metadata = new ResponseMetadata
                 {
-                    CommonResultsNumber = results.Aggregate(
-                        0, (counter, rating) => counter + rating.Count
-                    ),
+                    CommonResultsNumber = results.Sum(rating => rating.Count),
                     CommonResultCollectionsNumber = results.Count,
                     ResultStatus = status,
                     OptionalData = CreateOptionalData()
