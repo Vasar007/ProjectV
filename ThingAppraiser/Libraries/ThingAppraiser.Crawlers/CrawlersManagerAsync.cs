@@ -89,7 +89,9 @@ namespace ThingAppraiser.Crawlers
 
                 if (_outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {entity}");
+                    GlobalMessageHandler.OutputMessage(
+                        $"Got {entity} and transmitted to crawling."
+                    );
                 }
 
                 await Task.WhenAll(

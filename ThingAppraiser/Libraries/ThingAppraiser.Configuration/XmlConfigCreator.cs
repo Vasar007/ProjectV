@@ -129,7 +129,7 @@ namespace ThingAppraiser.Configuration
                     },
                     CrawlersManager = new CrawlersManagerConfig
                     {
-                        CrawlersOutputFlag = true,
+                        CrawlersOutputFlag = false,
                         Crawlers = new[]
                         {
                             ConfigModule.GetConfigForCrawler(
@@ -142,7 +142,7 @@ namespace ThingAppraiser.Configuration
                     },
                     AppraisersManager = new AppraisersManagerConfig
                     {
-                        AppraisersOutputFlag = true,
+                        AppraisersOutputFlag = false,
                         Appraisers = new[]
                         {
                             ConfigModule.GetConfigForAppraiser(

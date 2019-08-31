@@ -120,7 +120,9 @@ namespace ThingAppraiser.Appraisers
 
                 if (_outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Got {entity}");
+                    GlobalMessageHandler.OutputMessage(
+                        $"Got {entity.Title} and transmitted to appraising."
+                    );
                 }
 
                 await Task.WhenAll(

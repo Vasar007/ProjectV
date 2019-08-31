@@ -124,7 +124,7 @@ namespace ThingAppraiser.TmdbService
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Exception occurred during processing response for \"{query}\".");
+                _logger.Warn(ex, $"Exception occurred during processing response for \"{query}\".");
 
                 return null;
             }
