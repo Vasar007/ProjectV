@@ -24,7 +24,7 @@ namespace ThingAppraiser
         /// <paramref name="paramName" /> is <c>null</c>.
         /// </exception>
         public static T ThrowIfNull<T>(this T obj, string paramName)
-            where T : class
+            where T : class?
         {
             if (paramName is null)
             {
@@ -54,11 +54,14 @@ namespace ThingAppraiser
         /// <exception cref="ArgumentException">
         /// <paramref name="str" /> presents empty string.
         /// </exception>
-        public static string ThrowIfNullOrEmpty(this string str, string paramName)
+        public static string ThrowIfNullOrEmpty(this string? str, string paramName)
         {
             paramName.ThrowIfNull(nameof(paramName));
 
-            str.ThrowIfNull(paramName);
+            if (str is null)
+            {
+                throw new ArgumentNullException(paramName, $"{paramName} is null.");
+            }
             if (str == string.Empty)
             {
                 throw new ArgumentException($"{paramName} presents empty string.", paramName);
@@ -83,11 +86,18 @@ namespace ThingAppraiser
         /// <exception cref="ArgumentException">
         /// <paramref name="str" /> presents empty string or contains only whitespaces.
         /// </exception>
-        public static string ThrowIfNullOrWhiteSpace(this string str, string paramName)
+        public static string ThrowIfNullOrWhiteSpace(this string? str, string paramName)
         {
             paramName.ThrowIfNull(nameof(paramName));
 
-            str.ThrowIfNullOrEmpty(paramName);
+            if (str is null)
+            {
+                throw new ArgumentNullException(paramName, $"{paramName} is null.");
+            }
+            if (string.Equals(str, string.Empty, StringComparison.InvariantCulture))
+            {
+                throw new ArgumentException($"{paramName} presents empty string.", paramName);
+            }
             if (str.All(char.IsWhiteSpace))
             {
                 throw new ArgumentException($"{paramName} contains only whitespaces.", paramName);
@@ -105,7 +115,7 @@ namespace ThingAppraiser
         /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty, <c>false</c> 
         /// otherwise.
         /// </returns>
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? collection)
         {
             return collection is null || !collection.Any();
         }
@@ -126,7 +136,7 @@ namespace ThingAppraiser
         /// <exception cref="ArgumentException">
         /// <paramref name="collection" /> contains no elements.
         /// </exception>
-        public static IEnumerable<T> ThrowIfNullOrEmpty<T>(this IEnumerable<T> collection,
+        public static IEnumerable<T> ThrowIfNullOrEmpty<T>(this IEnumerable<T>? collection,
             string paramName)
         {
             paramName.ThrowIfNull(nameof(paramName));
