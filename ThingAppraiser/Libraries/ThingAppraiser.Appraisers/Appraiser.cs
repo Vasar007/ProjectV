@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -32,17 +33,6 @@ namespace ThingAppraiser.Appraisers
         {
         }
 
-        protected static double CalculateRating(BasicInfo entity, MinMaxDenominator voteCountMMD,
-            MinMaxDenominator voteAverageMMD)
-        {
-            double vcValue = (entity.VoteCount - voteCountMMD.MinValue) / 
-                             voteCountMMD.Denominator;
-            double vaValue = (entity.VoteAverage - voteAverageMMD.MinValue) / 
-                             voteAverageMMD.Denominator;
-
-            return vcValue + vaValue;
-        }
-
         /// <summary>
         /// Makes prior analysis through normalizers and calculates ratings based on average vote 
         /// and vote count.
@@ -57,14 +47,20 @@ namespace ThingAppraiser.Appraisers
         public virtual IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
             bool outputResults)
         {
+            rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
+
             CheckRatingId();
 
             var ratings = new List<ResultInfo>();
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
-            if (rawData.IsNullOrEmpty()) return ratings;
+            if (!rawData.Any()) return ratings;
 
-            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter("VoteCount");
-            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter("VoteAverage");
+            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter(
+                 nameof(BasicInfo.VoteCount)
+            );
+            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter(
+                nameof(BasicInfo.VoteAverage)
+            );
 
             foreach (BasicInfo entityInfo in rawData)
             {
@@ -84,15 +80,33 @@ namespace ThingAppraiser.Appraisers
         }
 
         /// <summary>
+        /// Calculates rating for <see cref="BasicInfo" /> with specified values.
+        /// </summary>
+        /// <param name="entity">Target value to calculate rating.</param>
+        /// <param name="voteCountMMD">Additional value to normalize vote count property.</param>
+        /// <param name="voteAverageMMD">
+        /// Additional value to normalize vote average property.
+        /// </param>
+        /// <returns>Normalized sum of vote count and vote average values.</returns>
+        protected static double CalculateRating(BasicInfo entity, MinMaxDenominator voteCountMMD,
+            MinMaxDenominator voteAverageMMD)
+        {
+            double vcValue = (entity.VoteCount - voteCountMMD.MinValue) /
+                             voteCountMMD.Denominator;
+            double vaValue = (entity.VoteAverage - voteAverageMMD.MinValue) /
+                             voteAverageMMD.Denominator;
+
+            return vcValue + vaValue;
+        }
+
+        /// <summary>
         /// Checks that class was registered rating and has proper rating ID.
         /// </summary>
         protected void CheckRatingId()
         {
             if (RatingId == Guid.Empty)
             {
-                throw new InvalidOperationException(
-                    "Rating ID has no value."
-                );
+                throw new InvalidOperationException("Rating ID has no value.");
             }
         }
     }

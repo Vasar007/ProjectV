@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.DAL.Repositories
 {
-    public interface IRepository<TData, in TIdentifier> : IRepositoryBase, ITagable, ITypeId
+    public interface IRepository<TData, TIdentifier> : IRepositoryBase, ITagable, ITypeId
     {
         bool Contains(TIdentifier id);
 

@@ -41,17 +41,19 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
         public override IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
             bool outputResults)
         {
+            rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
+
             CheckRatingId();
 
             var ratings = new List<ResultInfo>();
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
-            if (rawData.IsNullOrEmpty()) return ratings;
+            if (!rawData.Any()) return ratings;
 
             // Check if list have proper type.
             if (!rawData.All(e => e is OmdbMovieInfo))
             {
                 throw new ArgumentException(
-                    $"Element type is invalid for appraiser with type {TypeId.FullName}"
+                    $"One of element type is invalid for appraiser with type {TypeId.FullName}"
                 );
             }
 

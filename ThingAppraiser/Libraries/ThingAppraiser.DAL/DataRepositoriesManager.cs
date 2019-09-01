@@ -136,13 +136,16 @@ namespace ThingAppraiser.DAL
                                                   out IDataRepository repository))
                     {
                         container.AddParameter(
-                            "VoteCount", GetAdditionalInfoInt32(repository, "vote_count")
+                            nameof(TmdbMovieInfo.VoteCount),
+                            GetAdditionalInfoInt32(repository, "vote_count")
                         );
                         container.AddParameter(
-                            "VoteAverage", GetAdditionalInfoDouble(repository, "vote_average")
+                            nameof(TmdbMovieInfo.VoteAverage),
+                            GetAdditionalInfoDouble(repository, "vote_average")
                         );
                         container.AddParameter(
-                            "Popularity", GetAdditionalInfoDouble(repository, "popularity")
+                            nameof(TmdbMovieInfo.Popularity),
+                            GetAdditionalInfoDouble(repository, "popularity")
                         );
                     }
                     break;
@@ -154,10 +157,12 @@ namespace ThingAppraiser.DAL
                                                   out IDataRepository repository))
                     {
                         container.AddParameter(
-                            "VoteCount", GetAdditionalInfoInt32(repository, "vote_count")
+                            nameof(BasicInfo.VoteCount),
+                            GetAdditionalInfoInt32(repository, "vote_count")
                         );
                         container.AddParameter(
-                            "VoteAverage", GetAdditionalInfoDouble(repository, "vote_average")
+                            nameof(BasicInfo.VoteAverage),
+                            GetAdditionalInfoDouble(repository, "vote_average")
                         );
                     }
                     break;

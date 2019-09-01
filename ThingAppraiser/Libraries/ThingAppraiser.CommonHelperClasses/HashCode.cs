@@ -23,6 +23,7 @@ namespace ThingAppraiser
         /// </summary>
         private readonly int value;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HashCode" /> struct.
         /// </summary>

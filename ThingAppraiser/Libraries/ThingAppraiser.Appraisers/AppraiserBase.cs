@@ -27,7 +27,8 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Rating name which describes rating calculation.
         /// </summary>
-        public virtual string RatingName { get; } = "AppraiserBase has no rating calculation";
+        public virtual string RatingName { get; } =
+            $"{nameof(AppraiserBase)} has no rating calculation";
 
         /// <summary>
         /// Specify rating ID for result.

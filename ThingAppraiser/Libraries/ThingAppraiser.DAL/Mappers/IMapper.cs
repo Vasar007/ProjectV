@@ -5,8 +5,8 @@ namespace ThingAppraiser.DAL.Mappers
     /// <summary>
     /// Used to read current row from SQL data reader to DTO object.
     /// </summary>
-    /// <typeparam name="T">Type to convert data for mapper.</typeparam>
-    public interface IMapper<out T>
+    /// <typeparam name="T">The type to convert data for mapper.</typeparam>
+    public interface IMapper<T>
     {
         /// <summary>
         /// Reads data from reader and converts to specified type.

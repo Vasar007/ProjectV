@@ -19,6 +19,9 @@ namespace ThingAppraiser.Models.Internal
 
         public bool AddParameter(string parameterName, MinMaxDenominator value)
         {
+            parameterName.ThrowIfNullOrEmpty(nameof(parameterName));
+            value.ThrowIfNull(nameof(value));
+
             if (_additionalData.ContainsKey(parameterName)) return false;
 
             _additionalData.Add(parameterName, value);
@@ -27,6 +30,8 @@ namespace ThingAppraiser.Models.Internal
 
         public MinMaxDenominator GetParameter(string parameterName)
         {
+            parameterName.ThrowIfNullOrEmpty(nameof(parameterName));
+
             if (!_additionalData.TryGetValue(parameterName, out MinMaxDenominator result))
             {
                 throw new ArgumentException(

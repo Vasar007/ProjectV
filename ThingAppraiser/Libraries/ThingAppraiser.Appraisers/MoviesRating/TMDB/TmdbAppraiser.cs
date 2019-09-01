@@ -29,17 +29,6 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         {
         }
 
-        private static double CalculateRating(TmdbMovieInfo entity, 
-            MinMaxDenominator voteCountMMD, MinMaxDenominator voteAverageMMD, 
-            MinMaxDenominator popularityMMD)
-        {
-            double baseValue = Appraiser.CalculateRating(entity, voteCountMMD, voteAverageMMD);
-            double popValue = (entity.Popularity - popularityMMD.MinValue) / 
-                              popularityMMD.Denominator;
-
-            return baseValue + popValue;
-        }
-
         #region MoviesAppraiser Overriden Methods
 
         /// <inheritdoc />
@@ -53,17 +42,19 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         public override IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
             bool outputResults)
         {
+            rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
+
             CheckRatingId();
 
             var ratings = new List<ResultInfo>();
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
-            if (rawData.IsNullOrEmpty()) return ratings;
+            if (!rawData.Any()) return ratings;
 
             // Check if list have proper type.
             if (!rawData.All(e => e is TmdbMovieInfo))
             {
                 throw new ArgumentException(
-                    $"Element type is invalid for appraiser with type {TypeId.FullName}"
+                    $"One of element type is invalid for appraiser with type {TypeId.FullName}"
                 );
             }
 
@@ -97,5 +88,26 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         }
 
         #endregion
+
+        /// <summary>
+        /// Calculates rating for <see cref="TmdbMovieInfo" /> with specified values.
+        /// </summary>
+        /// <param name="entity">Target value to calculate rating.</param>
+        /// <param name="voteCountMMD">Additional value to normalize vote count property.</param>
+        /// <param name="voteAverageMMD">
+        /// Additional value to normalize vote average property.
+        /// </param>
+        /// <param name="popularityMMD">Additional value to normalize popularity property.</param>
+        /// <returns>Normalized sum of vote count, vote average and popularity values.</returns>
+        private static double CalculateRating(TmdbMovieInfo entity,
+            MinMaxDenominator voteCountMMD, MinMaxDenominator voteAverageMMD,
+            MinMaxDenominator popularityMMD)
+        {
+            double baseValue = Appraiser.CalculateRating(entity, voteCountMMD, voteAverageMMD);
+            double popValue = (entity.Popularity - popularityMMD.MinValue) /
+                              popularityMMD.Denominator;
+
+            return baseValue + popValue;
+        }
     }
 }

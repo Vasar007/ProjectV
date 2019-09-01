@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThingAppraiser.Logging;
+using System.Linq;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 
@@ -99,13 +100,14 @@ namespace ThingAppraiser.Appraisers
             {
                 IReadOnlyList<BasicInfo> internalData = datum.RawData;
                 // Skip empty collections of data.
-                if (internalData.IsNullOrEmpty()) continue;
+                if (!internalData.Any()) continue;
 
                 // Suggest that all types in collection are identical.
-                if (!_appraisers.TryGetValue(internalData[0].GetType(),
-                                             out IList<Appraiser> values))
+                Type itemsType = internalData.First().GetType();
+
+                if (!_appraisers.TryGetValue(itemsType, out IList<Appraiser> values))
                 {
-                    string message = $"Type {internalData[0].GetType()} wasn't used to appraise!";
+                    string message = $"Type {itemsType} was not used to appraise!";
                     _logger.Info(message);
                     GlobalMessageHandler.OutputMessage(message);
                     continue;
