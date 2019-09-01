@@ -3,8 +3,7 @@
 namespace ThingAppraiser.Models.Exceptions
 {
     /// <summary>
-    /// Provides library specific exception to show that client could not get config from TMDb
-    /// service.
+    /// The exception that is thrown when client could not get config from the TMDb service.
     /// </summary>
     [Serializable]
     public sealed class CannotGetTmdbConfigException : Exception
@@ -19,7 +18,7 @@ namespace ThingAppraiser.Models.Exceptions
         /// <summary>
         /// Creates the exception with description.
         /// </summary>
-        /// <param name="message">Exception description.</param>
+        /// <param name="message">The exception description.</param>
         public CannotGetTmdbConfigException(string message)
             : base(message)
         {
@@ -28,8 +27,8 @@ namespace ThingAppraiser.Models.Exceptions
         /// <summary>
         /// Creates the exception with description and inner cause.
         /// </summary>
-        /// <param name="message">Exception description.</param>
-        /// <param name="innerException">Exception inner cause.</param>
+        /// <param name="message">The exception description.</param>
+        /// <param name="innerException">The exception inner cause.</param>
         public CannotGetTmdbConfigException(string message, Exception innerException)
             : base(message, innerException)
         {

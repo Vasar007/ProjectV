@@ -61,7 +61,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Building", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Configuration", "Libraries\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj", "{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingAppraiser.TaskService", "Libraries\ThingAppraiser.TaskService\ThingAppraiser.TaskService.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.TaskService", "Libraries\ThingAppraiser.TaskService\ThingAppraiser.TaskService.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingAppraiser.Appraisers.Tests", "Tests\ThingAppraiser.Appraisers.Tests\ThingAppraiser.Appraisers.Tests.csproj", "{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -169,6 +171,10 @@ Global
 		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Debug|x64.Build.0 = Debug|x64
 		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Release|x64.ActiveCfg = Release|x64
 		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Release|x64.Build.0 = Release|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Debug|x64.ActiveCfg = Debug|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Debug|x64.Build.0 = Debug|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Release|x64.ActiveCfg = Release|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +206,7 @@ Global
 		{2201541E-75ED-40DD-B121-B3195AA946A9} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

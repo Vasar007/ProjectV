@@ -74,7 +74,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
                 ratings.Add(resultInfo);
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
 

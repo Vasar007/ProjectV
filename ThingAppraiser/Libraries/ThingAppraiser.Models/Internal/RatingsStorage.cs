@@ -23,7 +23,7 @@ namespace ThingAppraiser.Models.Internal
                 return rating.RatingId;
             }
 
-            return _ratingsHelper.FirstOrDefault(x => x.Value == dataHandlerType).Key.RatingId;
+            return _ratingsHelper.First(x => x.Value == dataHandlerType).Key.RatingId;
         }
 
         public bool Deregister(Guid ratingId)

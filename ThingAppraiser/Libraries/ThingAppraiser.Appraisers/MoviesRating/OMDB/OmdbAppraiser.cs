@@ -53,7 +53,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
             if (!rawData.All(e => e is OmdbMovieInfo))
             {
                 throw new ArgumentException(
-                    $"One of element type is invalid for appraiser with type {TypeId.FullName}"
+                    $"One of element type is invalid for appraiser with type {TypeId.FullName}."
                 );
             }
 
@@ -67,7 +67,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Omdb
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
@@ -93,8 +94,13 @@ namespace ThingAppraiser.Appraisers
         /// </summary>
         /// <param name="data">Collections of crawlers results.</param>
         /// <returns>Appraised collections produced from a set of data.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="data" /> is <c>null</c>.
+        /// </exception>
         public ProcessedDataContainer GetAllRatings(IReadOnlyList<RawDataContainer> data)
         {
+            data.ThrowIfNull(nameof(data));
+
             var results = new List<IReadOnlyList<ResultInfo>>();
             foreach (RawDataContainer datum in data)
             {

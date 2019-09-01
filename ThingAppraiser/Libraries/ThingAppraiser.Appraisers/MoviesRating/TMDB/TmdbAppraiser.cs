@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -54,32 +55,25 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
             if (!rawData.All(e => e is TmdbMovieInfo))
             {
                 throw new ArgumentException(
-                    $"One of element type is invalid for appraiser with type {TypeId.FullName}"
+                    $"One of element type is invalid for appraiser with type {TypeId.FullName}."
                 );
             }
 
-            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter(
-                nameof(TmdbMovieInfo.VoteCount)
-            );
-            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter(
-                nameof(TmdbMovieInfo.VoteAverage)
-            );
-            MinMaxDenominator popularityMMD = rawDataContainer.GetParameter(
-                nameof(TmdbMovieInfo.Popularity)
-            );
+            // TODO: somehow inject this appraisals from the outside.
+            var basicAppraisal = new BasicAppraisal(rawDataContainer);
+            var appraisal = new TmdbAppraisal(basicAppraisal, rawDataContainer);
 
             var converted = rawData.Select(e => (TmdbMovieInfo) e);
             foreach (TmdbMovieInfo entityInfo in converted)
             {
-                double ratingValue = CalculateRating(entityInfo, voteCountMMD, voteAverageMMD,
-                                                     popularityMMD);
+                double ratingValue = appraisal.CalculateRating(entityInfo);
 
                 var resultInfo = new ResultInfo(entityInfo.ThingId, ratingValue, RatingId);
                 ratings.Add(resultInfo);
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
 
@@ -88,26 +82,5 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
         }
 
         #endregion
-
-        /// <summary>
-        /// Calculates rating for <see cref="TmdbMovieInfo" /> with specified values.
-        /// </summary>
-        /// <param name="entity">Target value to calculate rating.</param>
-        /// <param name="voteCountMMD">Additional value to normalize vote count property.</param>
-        /// <param name="voteAverageMMD">
-        /// Additional value to normalize vote average property.
-        /// </param>
-        /// <param name="popularityMMD">Additional value to normalize popularity property.</param>
-        /// <returns>Normalized sum of vote count, vote average and popularity values.</returns>
-        private static double CalculateRating(TmdbMovieInfo entity,
-            MinMaxDenominator voteCountMMD, MinMaxDenominator voteAverageMMD,
-            MinMaxDenominator popularityMMD)
-        {
-            double baseValue = Appraiser.CalculateRating(entity, voteCountMMD, voteAverageMMD);
-            double popValue = (entity.Popularity - popularityMMD.MinValue) /
-                              popularityMMD.Denominator;
-
-            return baseValue + popValue;
-        }
     }
 }

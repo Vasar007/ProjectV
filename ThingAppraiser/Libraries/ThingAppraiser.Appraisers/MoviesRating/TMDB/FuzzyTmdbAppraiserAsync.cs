@@ -44,7 +44,7 @@ namespace ThingAppraiser.Appraisers.MoviesRating.Tmdb
                 await entitiesRatingQueue.SendAsync(resultInfo);
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
             return true;

@@ -38,7 +38,7 @@ namespace ThingAppraiser.Appraisers.GameRating.Steam
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}");
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
             return true;

@@ -12,7 +12,7 @@ namespace ThingAppraiser.CommonTests
 
         [Fact(Skip = "Current version of JsonSerializer cannot work with classe without " +
                      "parameterless constructors.")]
-        public void BasucInfoSerializationTest()
+        public void BasicInfoSerializationToJsonAndBack()
         {
             var expectedModel = new BasicInfo(42, "Title", 100, 9.9);
 

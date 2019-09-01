@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -37,8 +38,11 @@ namespace ThingAppraiser.Appraisers
         /// Makes prior analysis through normalizers and calculates ratings based on average vote 
         /// and vote count.
         /// </summary>
-        /// <param name="rawDataContainer">Entities to appraise with additional parameters.</param>
-        /// <param name="outputResults">Flag to define need to output.</param>
+        /// <param name="rawDataContainer">
+        /// The entities to appraise with additional parameters.
+        /// </param>
+        /// <param name="outputResults">The flag to define need to output.</param>
+        /// <param name="appraisal">The strategy to calculate rating value.</param>
         /// <returns>Collection of result object (data object with rating).</returns>
         /// <remarks>
         /// Entities collection must be unique because rating calculation errors can occur in such
@@ -55,48 +59,24 @@ namespace ThingAppraiser.Appraisers
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
             if (!rawData.Any()) return ratings;
 
-            MinMaxDenominator voteCountMMD = rawDataContainer.GetParameter(
-                 nameof(BasicInfo.VoteCount)
-            );
-            MinMaxDenominator voteAverageMMD = rawDataContainer.GetParameter(
-                nameof(BasicInfo.VoteAverage)
-            );
+            // TODO: somehow inject this appraisal from the outside.
+            var appraisal = new BasicAppraisal(rawDataContainer);
 
             foreach (BasicInfo entityInfo in rawData)
             {
-                double ratingValue = CalculateRating(entityInfo, voteCountMMD, voteAverageMMD);
+                double ratingValue = appraisal.CalculateRating(entityInfo);
 
                 var resultInfo = new ResultInfo(entityInfo.ThingId, ratingValue, RatingId);
                 ratings.Add(resultInfo);
 
                 if (outputResults)
                 {
-                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
+                    GlobalMessageHandler.OutputMessage($"Appraised {resultInfo} by {Tag}.");
                 }
             }
 
             ratings.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue));
             return ratings;
-        }
-
-        /// <summary>
-        /// Calculates rating for <see cref="BasicInfo" /> with specified values.
-        /// </summary>
-        /// <param name="entity">Target value to calculate rating.</param>
-        /// <param name="voteCountMMD">Additional value to normalize vote count property.</param>
-        /// <param name="voteAverageMMD">
-        /// Additional value to normalize vote average property.
-        /// </param>
-        /// <returns>Normalized sum of vote count and vote average values.</returns>
-        protected static double CalculateRating(BasicInfo entity, MinMaxDenominator voteCountMMD,
-            MinMaxDenominator voteAverageMMD)
-        {
-            double vcValue = (entity.VoteCount - voteCountMMD.MinValue) /
-                             voteCountMMD.Denominator;
-            double vaValue = (entity.VoteAverage - voteAverageMMD.MinValue) /
-                             voteAverageMMD.Denominator;
-
-            return vcValue + vaValue;
         }
 
         /// <summary>
