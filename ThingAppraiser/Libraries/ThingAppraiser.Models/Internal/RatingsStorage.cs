@@ -48,7 +48,8 @@ namespace ThingAppraiser.Models.Internal
             if (!_ratingsHelper.TryGetValue(rating, out Type type))
             {
                 throw new ArgumentException(
-                    $"Rating with specified ID {ratingId} was not registered.", nameof(ratingId)
+                    $"Rating with specified ID {ratingId.ToString()} was not registered.",
+                    nameof(ratingId)
                 );
             }
             return type;

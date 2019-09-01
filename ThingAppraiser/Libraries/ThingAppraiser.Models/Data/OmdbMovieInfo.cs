@@ -127,7 +127,7 @@ namespace ThingAppraiser.Models.Data
             // using contains method is considered the best option here.
 
             return string.Equals(Rated, other.Rated, StringComparison.InvariantCulture) &&
-                   Metascore == other.Metascore &&
+                   Metascore.Equals(other.Metascore) &&
                    GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }

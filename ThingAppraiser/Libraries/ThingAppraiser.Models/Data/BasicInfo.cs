@@ -126,9 +126,9 @@ namespace ThingAppraiser.Models.Data
         protected bool IsEqual(BasicInfo other)
         {
             const double eps = 1e-6;
-            return ThingId == other.ThingId &&
+            return ThingId.Equals(other.ThingId) &&
                    string.Equals(Title, other.Title, StringComparison.InvariantCulture) &&
-                   VoteCount == other.VoteCount &&
+                   VoteCount.Equals(other.VoteCount) &&
                    Math.Abs(VoteAverage - other.VoteAverage) < eps;
         }
     }

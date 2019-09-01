@@ -5,7 +5,7 @@ namespace ThingAppraiser.Models.Internal
     /// <summary>
     /// Represent result of internal calculations and data processing.
     /// </summary>
-    public sealed class ResultInfo
+    public sealed class ResultInfo : IEquatable<ResultInfo>
     {
         /// <summary>
         /// Thing ID.
@@ -59,5 +59,80 @@ namespace ThingAppraiser.Models.Internal
         }
 
         #endregion
+
+        #region Object Overridden Methods
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+
+            if (ReferenceEquals(this, obj)) return true;
+
+            if (!(obj is ResultInfo other)) return false;
+
+            return IsEqual(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            // TODO: replace with System.HashCode.Combine method in .NET Standard 2.1 version.
+            return HashCode.Of(ThingId).And(RatingValue).And(RatingId);
+        }
+
+        #endregion
+
+        #region IEquatable<BasicInfo> Implementation
+
+        /// <inheritdoc />
+        public bool Equals(ResultInfo? other)
+        {
+            if (other is null) return false;
+
+            if (ReferenceEquals(this, other)) return true;
+
+            return IsEqual(other);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="ResultInfo" /> are equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        public static bool operator ==(ResultInfo? left, ResultInfo? right)
+        {
+            return Equals(left, right);
+        }
+
+        /// <summary>
+        /// Determines whether two specified instances of <see cref="ResultInfo" /> are not equal.
+        /// </summary>
+        /// <param name="left">Left hand side object to compare.</param>
+        /// <param name="right">Right hand side object to compare.</param>
+        /// <returns>
+        /// <c>true</c> if values are not memberwise equals, <c>false</c> otherwise.
+        /// </returns>
+        public static bool operator !=(ResultInfo? left, ResultInfo? right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// Determines whether specified instance of <see cref="ResultInfo" /> is equal to caller
+        /// object.
+        /// </summary>
+        /// <param name="other">Other object to compare.</param>
+        /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
+        private bool IsEqual(ResultInfo other)
+        {
+            const double eps = 1e-6;
+            return ThingId.Equals(other.ThingId) &&
+                   Math.Abs(RatingValue - other.RatingValue) < eps &&
+                   RatingId.Equals(other.RatingId);
+        }
     }
 }

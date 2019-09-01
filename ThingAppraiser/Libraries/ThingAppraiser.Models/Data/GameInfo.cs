@@ -107,7 +107,7 @@ namespace ThingAppraiser.Models.Data
         /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
         protected bool IsEqual(GameInfo other)
         {
-            return ReleaseDate == other.ReleaseDate &&
+            return ReleaseDate.Equals(other.ReleaseDate) &&
                    string.Equals(Overview, other.Overview, StringComparison.InvariantCulture);
         }
     }

@@ -128,7 +128,7 @@ namespace ThingAppraiser.Models.Data
 
             const double eps = 1e-6;
             return Math.Abs(Popularity - other.Popularity) < eps &&
-                   Adult == other.Adult &&
+                   Adult.Equals(other.Adult) &&
                    GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }

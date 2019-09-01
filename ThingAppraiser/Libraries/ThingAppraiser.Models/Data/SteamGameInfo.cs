@@ -126,8 +126,8 @@ namespace ThingAppraiser.Models.Data
             // Note: list with genre IDs usually has only few items and that is why comparison
             // using contains method is considered the best option here.
 
-            return Price == other.Price &&
-                   RequiredAge == other.RequiredAge &&
+            return Price.Equals(other.Price) &&
+                   RequiredAge.Equals(other.RequiredAge) &&
                    GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }
