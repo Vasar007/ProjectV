@@ -5,8 +5,6 @@ using Moq;
 using Xunit;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.Data;
-using Moq.Protected;
-using ThingAppraiser.Appraisers.Appraisals;
 
 namespace ThingAppraiser.Appraisers.Tests
 {
@@ -28,6 +26,26 @@ namespace ThingAppraiser.Appraisers.Tests
             mock.Verify(x => x.Tag, Times.Once);
 
             const string expectedValue = nameof(Appraiser);
+
+            Assert.NotNull(actualValue);
+            Assert.NotEmpty(actualValue);
+            Assert.Equal(expectedValue, actualValue);
+        }
+
+        [Fact]
+        public void CheckTypeIdPropertyDefaultValue()
+        {
+            var mock = new Mock<AppraiserBase>(MockBehavior.Loose)
+            {
+                CallBase = true
+            };
+
+            Type actualValue = mock.Object.TypeId;
+            mock.Verify(x => x.TypeId, Times.Once);
+
+            Type expectedValue = typeof(BasicInfo);
+
+            Assert.NotNull(actualValue);
             Assert.Equal(expectedValue, actualValue);
         }
 
@@ -43,6 +61,9 @@ namespace ThingAppraiser.Appraisers.Tests
             mock.Verify(x => x.RatingName, Times.Once);
 
             const string expectedValue = "Common rating";
+
+            Assert.NotNull(actualValue);
+            Assert.NotEmpty(actualValue);
             Assert.Equal(expectedValue, actualValue);
         }
 
@@ -135,6 +156,9 @@ namespace ThingAppraiser.Appraisers.Tests
                         Times.Once);
 
             IReadOnlyList<ResultInfo> expectedValue = new List<ResultInfo>();
+
+            Assert.NotNull(actualValue);
+            Assert.Empty(actualValue);
             Assert.Equal(expectedValue, actualValue);
         }
 
@@ -149,12 +173,12 @@ namespace ThingAppraiser.Appraisers.Tests
             Guid ratingId = Guid.NewGuid();
             mock.Object.RatingId = ratingId;
 
-            var basicInfo = new BasicInfo(
+            var item = new BasicInfo(
                 thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
             );
 
             RawDataContainer rawDataContainer =
-                TestDataCreator.CreateRawDataContainerWithBasicInfo(basicInfo);
+                TestDataCreator.CreateRawDataContainerWithBasicInfo(item);
 
             IReadOnlyList<ResultInfo> actualValue = mock.Object.GetRatings(
                 rawDataContainer, outputResults: false
@@ -162,13 +186,96 @@ namespace ThingAppraiser.Appraisers.Tests
             mock.Verify(x => x.GetRatings(It.IsNotNull<RawDataContainer>(), It.IsAny<bool>()),
                         Times.Once);
 
-            var appraisal = new BasicAppraisal(rawDataContainer);
+            IReadOnlyList<ResultInfo> expectedValue =
+                TestDataCreator.CreateExpectedValueForBasicInfo(
+                    ratingId, rawDataContainer, item
+                );
 
-            double expectedRating = appraisal.CalculateRating(basicInfo);
-            var expectedItem = new ResultInfo(basicInfo.ThingId, expectedRating, ratingId);
+            Assert.NotNull(actualValue);
+            Assert.NotEmpty(actualValue);
+            Assert.Single(actualValue);
+            Assert.Equal(expectedValue.Single(), actualValue.Single());
+        }
 
-            IReadOnlyList<ResultInfo> expectedValue = new List<ResultInfo> { expectedItem };
-            Assert.Equal(expectedValue, actualValue);
+        [Fact]
+        public void CallGetRatingsWithConteinerWithThreeItems()
+        {
+            var mock = new Mock<Appraiser>(MockBehavior.Loose)
+            {
+                CallBase = true
+            };
+
+            Guid ratingId = Guid.NewGuid();
+            mock.Object.RatingId = ratingId;
+
+            var item1 = new BasicInfo(
+                thingId: 1, title: "Title-1", voteCount: 11, voteAverage: 9.7
+            );
+            var item2 = new BasicInfo(
+               thingId: 2, title: "Title-2", voteCount: 12, voteAverage: 9.8
+           );
+            var item3 = new BasicInfo(
+               thingId: 3, title: "Title-3", voteCount: 13, voteAverage: 9.9
+           );
+
+            RawDataContainer rawDataContainer =
+                TestDataCreator.CreateRawDataContainerWithBasicInfo(item1, item2, item3);
+
+            IReadOnlyList<ResultInfo> actualValue = mock.Object.GetRatings(
+                rawDataContainer, outputResults: false
+            );
+            mock.Verify(x => x.GetRatings(It.IsNotNull<RawDataContainer>(), It.IsAny<bool>()),
+                        Times.Once);
+
+            IReadOnlyList<ResultInfo> expectedValue =
+                TestDataCreator.CreateExpectedValueForBasicInfo(
+                    ratingId, rawDataContainer, item1, item2, item3
+                );
+
+            Assert.NotNull(actualValue);
+            Assert.NotEmpty(actualValue);
+            Assert.All(expectedValue, resultInfo => actualValue.Contains(resultInfo));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(5)]
+        [InlineData(10)]
+        [InlineData(25)]
+        [InlineData(50)]
+        [InlineData(100)]
+        public void CallGetRatingsWithConteinerWithRandomData(int itemsCount)
+        {
+            var mock = new Mock<Appraiser>(MockBehavior.Loose)
+            {
+                CallBase = true
+            };
+
+            Guid ratingId = Guid.NewGuid();
+            mock.Object.RatingId = ratingId;
+
+            IReadOnlyList<BasicInfo> items =
+                TestDataCreator.CreateBasicInfoListRandomly(itemsCount);
+
+            RawDataContainer rawDataContainer =
+                TestDataCreator.CreateRawDataContainerWithBasicInfo(items);
+
+            IReadOnlyList<ResultInfo> actualValue = mock.Object.GetRatings(
+                rawDataContainer, outputResults: false
+            );
+            mock.Verify(x => x.GetRatings(It.IsNotNull<RawDataContainer>(), It.IsAny<bool>()),
+                        Times.Once);
+
+            IReadOnlyList<ResultInfo> expectedValue =
+                TestDataCreator.CreateExpectedValueForBasicInfo(
+                    ratingId, rawDataContainer, items
+                );
+
+            Assert.NotNull(actualValue);
+            Assert.NotEmpty(actualValue);
+            Assert.All(expectedValue, resultInfo => actualValue.Contains(resultInfo));
         }
     }
 }
