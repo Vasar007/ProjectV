@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace ThingAppraiser.Models.Data
@@ -25,7 +26,7 @@ namespace ThingAppraiser.Models.Data
         /// <summary>
         /// Contains all genre ids of game.
         /// </summary>
-        public List<int> GenreIds { get; }
+        public IReadOnlyList<int> GenreIds { get; }
 
         /// <summary>
         /// Poster file path to Steam image service.
@@ -128,7 +129,7 @@ namespace ThingAppraiser.Models.Data
 
             return Price.Equals(other.Price) &&
                    RequiredAge.Equals(other.RequiredAge) &&
-                   GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
+                   GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }
     }

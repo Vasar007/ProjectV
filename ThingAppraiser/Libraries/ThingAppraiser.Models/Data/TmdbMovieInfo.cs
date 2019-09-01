@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace ThingAppraiser.Models.Data
@@ -25,7 +26,7 @@ namespace ThingAppraiser.Models.Data
         /// <summary>
         /// Contains all genre ids of movie.
         /// </summary>
-        public List<int> GenreIds { get; }
+        public IReadOnlyList<int> GenreIds { get; }
 
         /// <summary>
         /// Poster file path to TMDb image service.
@@ -129,7 +130,7 @@ namespace ThingAppraiser.Models.Data
             const double eps = 1e-6;
             return Math.Abs(Popularity - other.Popularity) < eps &&
                    Adult.Equals(other.Adult) &&
-                   GenreIds.TrueForAll(genreId => other.GenreIds.Contains(genreId)) &&
+                   GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
         }
     }
