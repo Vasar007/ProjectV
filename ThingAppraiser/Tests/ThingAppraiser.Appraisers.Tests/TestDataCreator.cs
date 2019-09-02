@@ -58,7 +58,9 @@ namespace ThingAppraiser.Appraisers.Tests
             rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
             items.ThrowIfNull(nameof(items));
 
-            var appraisal = new BasicAppraisal(rawDataContainer);
+            var appraisal = new BasicAppraisal();
+
+            appraisal.PrepareCalculation(rawDataContainer);
 
             var expectedValue = new List<ResultInfo>();
             foreach (BasicInfo item in items)
@@ -84,11 +86,29 @@ namespace ThingAppraiser.Appraisers.Tests
                 .Range(1, count)
                 .Select(i => new BasicInfo(
                     thingId:     i,
-                    title:       $"Title-{i.ToString()}", // TODO: implement 'CreateRandomString'.
+                    title:       $"Title-{i.ToString()}-{CreateRandomString(count, RandomInstance)}",
                     voteCount:   i * RandomInstance.Next(),
                     voteAverage: i * RandomInstance.NextDouble()
                 ))
                 .ToList();
+        }
+
+        private static string CreateRandomString(int length, Random? random = null)
+        {
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length,
+                                                      "Length must pe positive.");
+            }
+
+            random ??= new Random();
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(
+                Enumerable.Repeat(chars, length)
+                    .Select(str => str[random.Next(str.Length)])
+                    .ToArray()
+            );
         }
     }
 }

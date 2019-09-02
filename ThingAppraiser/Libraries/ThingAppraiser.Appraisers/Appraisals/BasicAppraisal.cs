@@ -12,31 +12,28 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <summary>
         /// Provides min, max and denominator values to normalize vote count value.
         /// </summary>
-        private readonly MinMaxDenominator _voteCountMMD;
+        private MinMaxDenominator? _voteCountMMD;
 
         /// <summary>
         /// Provides min, max and denominator values to normalize vote average value.
         /// </summary>
-        private readonly MinMaxDenominator _voteAverageMMD;
+        private MinMaxDenominator? _voteAverageMMD;
+
+        /// <inheritdoc />
+        public string RatingName { get; } = "Common rating";
 
 
         /// <summary>
-        /// Initializes instance with specified valus.
+        /// Initializes instance with default values.
         /// </summary>
-        /// <param name="voteCountMMD">The value to normalize vote count property.</param>
-        /// <param name="voteAverageMMD">The value to normalize vote average property.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="voteCountMMD" /> is <c>null</c> -or-
-        /// <paramref name="voteAverageMMD" /> is <c>null</c> .
-        /// </exception>
-        public BasicAppraisal(MinMaxDenominator voteCountMMD, MinMaxDenominator voteAverageMMD)
+        public BasicAppraisal()
         {
-            _voteCountMMD = voteCountMMD.ThrowIfNull(nameof(voteCountMMD));
-            _voteAverageMMD = voteAverageMMD.ThrowIfNull(nameof(voteAverageMMD));
         }
 
+        #region IAppraisal<BasicInfo> Implementation
+
         /// <summary>
-        /// Initializes instance with specified valus.
+        /// Extracts additional values to rating calculation from <see cref="RawDataContainer" />.
         /// </summary>
         /// <param name="rawDataContainer">
         /// The object which contains values to normalize properties.
@@ -48,15 +45,13 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// Vote count characteristics do not contains in <paramref name="rawDataContainer" /> -or-
         /// Vote average characteristics do not contains in <paramref name="rawDataContainer" />.
         /// </exception>
-        public BasicAppraisal(RawDataContainer rawDataContainer)
+        public void PrepareCalculation(RawDataContainer rawDataContainer)
         {
             rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
 
             _voteCountMMD = rawDataContainer.GetParameter(nameof(BasicInfo.VoteCount));
             _voteAverageMMD = rawDataContainer.GetParameter(nameof(BasicInfo.VoteAverage));
         }
-
-        #region IAppraisal<BasicInfo> Implementation
 
         /// <summary>
         /// Calculates rating for <see cref="BasicInfo" /> with specified values.
@@ -66,9 +61,26 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <exception cref="ArgumentNullException">
         /// <paramref name="entity" /> is <c>null</c>.
         /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// <see cref="_voteCountMMD" /> is <c>null</c> -or-
+        /// <see cref="_voteAverageMMD" /> is <c>null</c>.
+        /// </exception>
         public double CalculateRating(BasicInfo entity)
         {
             entity.ThrowIfNull(nameof(entity));
+
+            if (_voteCountMMD is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(_voteCountMMD)} is not initialized."
+                );
+            }
+            if (_voteAverageMMD is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(_voteAverageMMD)} is not initialized."
+                );
+            }
 
             double vcValue = (entity.VoteCount - _voteCountMMD.MinValue) /
                              _voteCountMMD.Denominator;

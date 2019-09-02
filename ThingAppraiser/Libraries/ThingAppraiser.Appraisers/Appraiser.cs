@@ -42,7 +42,6 @@ namespace ThingAppraiser.Appraisers
         /// The entities to appraise with additional parameters.
         /// </param>
         /// <param name="outputResults">The flag to define need to output.</param>
-        /// <param name="appraisal">The strategy to calculate rating value.</param>
         /// <returns>Collection of result object (data object with rating).</returns>
         /// <remarks>
         /// Entities collection must be unique because rating calculation errors can occur in such
@@ -59,8 +58,10 @@ namespace ThingAppraiser.Appraisers
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
             if (!rawData.Any()) return ratings;
 
-            // TODO: somehow inject this appraisal from the outside.
-            var appraisal = new BasicAppraisal(rawDataContainer);
+            // Use default appraisal in case when appraiser do not override method.
+            var appraisal = new BasicAppraisal();
+
+            appraisal.PrepareCalculation(rawDataContainer);
 
             foreach (BasicInfo entityInfo in rawData)
             {

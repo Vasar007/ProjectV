@@ -204,7 +204,10 @@ namespace ThingAppraiser.Building.Service
             {
                 case _appraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiser();
+                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
+                    var appraisal = new Appraisers.Appraisals.TmdbAppraisal(basicAppraisal);
+
+                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiser(appraisal);
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:

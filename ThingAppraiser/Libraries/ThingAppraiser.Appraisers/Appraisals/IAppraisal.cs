@@ -1,4 +1,5 @@
 ﻿using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers.Appraisals
 {
@@ -9,6 +10,18 @@ namespace ThingAppraiser.Appraisers.Appraisals
     public interface IAppraisal<T>
         where T : BasicInfo
     {
+        /// <summary>
+        /// Rating name which describes rating calculation.
+        /// </summary>
+        string RatingName { get; }
+
+
+        /// <summary>
+        /// Extracts additional values to rating calculation from <see cref="RawDataContainer" />.
+        /// </summary>
+        /// <param name="rawDataContainer">The container to get helper values from.</param>
+        void PrepareCalculation(RawDataContainer rawDataContainer);
+
         /// <summary>
         /// Calculates rating for <typeparamref name="T" />.
         /// </summary>

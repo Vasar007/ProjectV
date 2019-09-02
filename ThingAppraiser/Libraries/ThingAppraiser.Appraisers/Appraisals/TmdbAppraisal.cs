@@ -19,7 +19,11 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <summary>
         /// Provides min, max and denominator values to normalize popularity value.
         /// </summary>
-        private readonly MinMaxDenominator _popularityMMD;
+        private MinMaxDenominator? _popularityMMD;
+
+        /// <inheritdoc />
+        public string RatingName { get; } = "Rating based on popularity and votes";
+
 
         /// <summary>
         /// Initializes instance with specified values.
@@ -28,44 +32,36 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// The basic appraisal to calculate rating for <see cref="BasicInfo" /> part of
         /// <see cref="TmdbMovieInfo" />.
         /// </param>
-        /// <param name="popularityMMD">The value to normalize popularity property.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="basicAppraisal" /> is <c>null</c> -or-
-        /// <paramref name="popularityMMD" /> is <c>null</c> .
+        /// <paramref name="basicAppraisal" /> is <c>null</c>.
         /// </exception>
-        public TmdbAppraisal(IAppraisal<BasicInfo> basicAppraisal, MinMaxDenominator popularityMMD)
+        public TmdbAppraisal(IAppraisal<BasicInfo> basicAppraisal)
         {
             _basicAppraisal = basicAppraisal.ThrowIfNull(nameof(basicAppraisal));
-            _popularityMMD = popularityMMD.ThrowIfNull(nameof(popularityMMD));
+
         }
 
+        #region IAppraisal<TmdbMovieInfo> Implementation
+
         /// <summary>
-        /// Initializes instance with specified valus.
+        /// Extracts additional values to rating calculation from <see cref="RawDataContainer" />.
         /// </summary>
-        /// <param name="basicAppraisal">
-        /// The basic appraisal to calculate rating for <see cref="BasicInfo" /> part of
-        /// <see cref="TmdbMovieInfo" />.
-        /// </param>
         /// <param name="rawDataContainer">
         /// The object which contains values to normalize properties.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="basicAppraisal" /> is <c>null</c> -or-
         /// <paramref name="rawDataContainer" /> is <c>null</c> .
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Popularity characteristics do not contains in <paramref name="rawDataContainer" />.
         /// </exception>
-        public TmdbAppraisal(IAppraisal<BasicInfo> basicAppraisal, RawDataContainer rawDataContainer)
+        public void PrepareCalculation(RawDataContainer rawDataContainer)
         {
-            _basicAppraisal = basicAppraisal.ThrowIfNull(nameof(basicAppraisal));
-
             rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
 
+            _basicAppraisal.PrepareCalculation(rawDataContainer);
             _popularityMMD = rawDataContainer.GetParameter(nameof(TmdbMovieInfo.Popularity));
         }
-
-        #region IAppraisal<TmdbMovieInfo> Implementation
 
         /// <summary>
         /// Calculates rating for <see cref="TmdbMovieInfo" /> with specified values.
@@ -77,9 +73,19 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <exception cref="ArgumentNullException">
         /// <paramref name="entity" /> is <c>null</c>.
         /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// <see cref="_popularityMMD" /> is <c>null</c>.
+        /// </exception>
         public double CalculateRating(TmdbMovieInfo entity)
         {
             entity.ThrowIfNull(nameof(entity));
+
+            if (_popularityMMD is null)
+            {
+                throw new InvalidOperationException(
+                    $"{nameof(_popularityMMD)} is not initialized."
+                );
+            }
 
             double baseValue = _basicAppraisal.CalculateRating(entity);
             double popValue = (entity.Popularity - _popularityMMD.MinValue) /
