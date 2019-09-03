@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
@@ -13,7 +12,7 @@ namespace ThingAppraiser.Appraisers
     /// Class which connects collected data with appraisers and executes the last one to process
     /// this data.
     /// </summary>
-    public sealed class AppraisersManager : IManager<Appraiser>
+    public sealed class AppraisersManager : IManager<IAppraiser>
     {
         /// <summary>
         /// Logger instance for current class.
@@ -24,8 +23,8 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Represents relations one-to-many for every type of the potential data.
         /// </summary>
-        private readonly Dictionary<Type, IList<Appraiser>> _appraisers =
-            new Dictionary<Type, IList<Appraiser>>();
+        private readonly Dictionary<Type, IList<IAppraiser>> _appraisers =
+            new Dictionary<Type, IList<IAppraiser>>();
 
         /// <summary>
         /// Sets this flag to <c>true</c> if you need to monitor appraisers results.
@@ -53,11 +52,11 @@ namespace ThingAppraiser.Appraisers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(Appraiser item)
+        public void Add(IAppraiser item)
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisers.TryGetValue(item.TypeId, out IList<Appraiser> list))
+            if (_appraisers.TryGetValue(item.TypeId, out IList<IAppraiser> list))
             {
                 if (!list.Contains(item))
                 {
@@ -68,7 +67,7 @@ namespace ThingAppraiser.Appraisers
             else
             {
                 item.RatingId = _ratingsStorage.Register(item.TypeId, item.RatingName);
-                _appraisers.Add(item.TypeId, new List<Appraiser> { item });
+                _appraisers.Add(item.TypeId, new List<IAppraiser> { item });
             }
         }
 
@@ -76,7 +75,7 @@ namespace ThingAppraiser.Appraisers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public bool Remove(Appraiser item)
+        public bool Remove(IAppraiser item)
         {
             item.ThrowIfNull(nameof(item));
 
@@ -111,7 +110,7 @@ namespace ThingAppraiser.Appraisers
                 // Suggest that all types in collection are identical.
                 Type itemsType = internalData.First().GetType();
 
-                if (!_appraisers.TryGetValue(itemsType, out IList<Appraiser> values))
+                if (!_appraisers.TryGetValue(itemsType, out IList<IAppraiser> values))
                 {
                     string message = $"Type {itemsType} was not used to appraise!";
                     _logger.Info(message);
@@ -119,7 +118,7 @@ namespace ThingAppraiser.Appraisers
                     continue;
                 }
 
-                foreach (Appraiser appraiser in values)
+                foreach (IAppraiser appraiser in values)
                 {
                     results.Add(appraiser.GetRatings(datum, _outputResults));
                 }

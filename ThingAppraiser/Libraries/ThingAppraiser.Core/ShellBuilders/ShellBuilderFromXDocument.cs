@@ -177,7 +177,7 @@ namespace ThingAppraiser.Core.ShellBuilders
 
             foreach (var element in appraiserManagerElement.Elements())
             {
-                Appraisers.Appraiser crawler = _serviceBuilder.CreateAppraiser(element);
+                Appraisers.IAppraiser crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
             }
         }

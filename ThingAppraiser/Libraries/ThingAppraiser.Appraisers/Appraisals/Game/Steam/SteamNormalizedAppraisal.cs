@@ -3,26 +3,26 @@ using System;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 
-namespace ThingAppraiser.Appraisers.Appraisals
+namespace ThingAppraiser.Appraisers.Appraisals.Game.Steam
 {
     /// <summary>
-    /// Appraisal to get rating for instances of <see cref="TmdbMovieInfo" />.
+    /// Appraisal to get rating for instances of <see cref="SteamGameInfo" /> with normalization.
     /// </summary>
-    public sealed class TmdbAppraisal : IAppraisal<TmdbMovieInfo>
+    public sealed class SteamNormalizedAppraisal : IAppraisal<SteamGameInfo>
     {
         /// <summary>
         /// Provides rating calculation for <see cref="BasicInfo" /> part of
-        /// <see cref="TmdbMovieInfo" />.
+        /// <see cref="SteamGameInfo" />.
         /// </summary>
         private readonly IAppraisal<BasicInfo> _basicAppraisal;
 
         /// <summary>
-        /// Provides min, max and denominator values to normalize popularity value.
+        /// Provides min, max and denominator values to normalize price value.
         /// </summary>
-        private MinMaxDenominator? _popularityMMD;
+        private MinMaxDenominator? _priceMMD;
 
         /// <inheritdoc />
-        public string RatingName { get; } = "Rating based on popularity and votes";
+        public string RatingName { get; } = "Rating based on price and votes";
 
 
         /// <summary>
@@ -30,18 +30,18 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// </summary>
         /// <param name="basicAppraisal">
         /// The basic appraisal to calculate rating for <see cref="BasicInfo" /> part of
-        /// <see cref="TmdbMovieInfo" />.
+        /// <see cref="SteamGameInfo" />.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="basicAppraisal" /> is <c>null</c>.
         /// </exception>
-        public TmdbAppraisal(IAppraisal<BasicInfo> basicAppraisal)
+        public SteamNormalizedAppraisal(IAppraisal<BasicInfo> basicAppraisal)
         {
             _basicAppraisal = basicAppraisal.ThrowIfNull(nameof(basicAppraisal));
 
         }
 
-        #region IAppraisal<TmdbMovieInfo> Implementation
+        #region IAppraisal<SteamGameInfo> Implementation
 
         /// <summary>
         /// Extracts additional values to rating calculation from <see cref="RawDataContainer" />.
@@ -60,38 +60,38 @@ namespace ThingAppraiser.Appraisers.Appraisals
             rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
 
             _basicAppraisal.PrepareCalculation(rawDataContainer);
-            _popularityMMD = rawDataContainer.GetParameter(nameof(TmdbMovieInfo.Popularity));
+            _priceMMD = rawDataContainer.GetParameter(nameof(SteamGameInfo.Price));
         }
 
         /// <summary>
-        /// Calculates rating for <see cref="TmdbMovieInfo" /> with specified values.
+        /// Calculates rating for <see cref="SteamGameInfo" /> with specified values.
         /// </summary>
         /// <param name="entity">Target value to calculate rating.</param>
         /// <returns>
-        /// Sum of rating <see cref="BasicInfo" /> and normalized popularity value.
+        /// Sum of rating <see cref="BasicInfo" /> and normalized price value.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="entity" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// <see cref="_popularityMMD" /> is <c>null</c>.
+        /// <see cref="_priceMMD" /> is <c>null</c>.
         /// </exception>
-        public double CalculateRating(TmdbMovieInfo entity)
+        public double CalculateRating(SteamGameInfo entity)
         {
             entity.ThrowIfNull(nameof(entity));
 
-            if (_popularityMMD is null)
+            if (_priceMMD is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(_popularityMMD)} is not initialized."
+                    $"{nameof(_priceMMD)} is not initialized."
                 );
             }
 
             double baseValue = _basicAppraisal.CalculateRating(entity);
-            double popValue = (entity.Popularity - _popularityMMD.MinValue) /
-                              _popularityMMD.Denominator;
+            double priceValue = (decimal.ToDouble(entity.Price) - _priceMMD.MinValue) /
+                              _priceMMD.Denominator;
 
-            return baseValue + popValue;
+            return baseValue + priceValue;
         }
 
         #endregion

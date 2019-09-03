@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Building.Service
 {
@@ -194,7 +195,7 @@ namespace ThingAppraiser.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="appraiserElement" /> is <c>null</c>.
         /// </exception>
-        public Appraisers.Appraiser CreateAppraiser(XElement appraiserElement)
+        public Appraisers.IAppraiser CreateAppraiser(XElement appraiserElement)
         {
             appraiserElement.ThrowIfNull(nameof(appraiserElement));
 
@@ -205,24 +206,35 @@ namespace ThingAppraiser.Building.Service
                 case _appraiserTmdbParameterName:
                 {
                     var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
-                    var appraisal = new Appraisers.Appraisals.TmdbAppraisal(basicAppraisal);
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb
+                        .TmdbNormalizedAppraisal(basicAppraisal);
 
-                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiser(appraisal);
+                    return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiser();
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbFuzzyAppraisal();
+
+                    return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiser();
+                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
+                    var appraisal = new Appraisers.Appraisals.Movie.Omdb
+                        .OmdbNormalizedAppraisal(basicAppraisal);
+
+                    return new Appraisers.Appraiser<OmdbMovieInfo>(appraisal);
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    return new Appraisers.GameRating.Steam.SteamAppraiser();
+                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
+                    var appraisal = new Appraisers.Appraisals.Game.Steam
+                        .SteamNormalizedAppraisal(basicAppraisal);
+
+                    return new Appraisers.Appraiser<SteamGameInfo>(appraisal);
                 }
 
                 default:

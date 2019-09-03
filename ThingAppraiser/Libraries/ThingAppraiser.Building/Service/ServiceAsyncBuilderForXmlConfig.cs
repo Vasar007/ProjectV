@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Building.Service
 {
@@ -186,7 +187,7 @@ namespace ThingAppraiser.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="appraiserElement" /> is <c>null</c>.
         /// </exception>
-        public Appraisers.AppraiserAsync CreateAppraiser(XElement appraiserElement)
+        public Appraisers.IAppraiserAsync CreateAppraiser(XElement appraiserElement)
         {
             appraiserElement.ThrowIfNull(nameof(appraiserElement));
 
@@ -196,22 +197,30 @@ namespace ThingAppraiser.Building.Service
             {
                 case _appraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.TmdbAppraiserAsync();
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbCommonAppraisal();
+
+                    return new Appraisers.AppraiserAsync<TmdbMovieInfo>(appraisal);
                 }
 
                 case _fuzzyAppraiserTmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Tmdb.FuzzyTmdbAppraiserAsync();
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbFuzzyAppraisal();
+
+                    return new Appraisers.AppraiserAsync<TmdbMovieInfo>(appraisal);
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    return new Appraisers.MoviesRating.Omdb.OmdbAppraiserAsync();
+                    var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();
+
+                    return new Appraisers.AppraiserAsync<OmdbMovieInfo>(appraisal);
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    return new Appraisers.GameRating.Steam.SteamAppraiserAsync();
+                    var appraisal = new Appraisers.Appraisals.Game.Steam.SteamCommonAppraisal();
+
+                    return new Appraisers.AppraiserAsync<SteamGameInfo>(appraisal);
                 }
 
                 default:

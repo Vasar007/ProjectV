@@ -9,34 +9,56 @@ using ThingAppraiser.Models.Internal;
 namespace ThingAppraiser.Appraisers
 {
     /// <summary>
-    /// Basic appraiser with default rating calculations. You should inherit this class if would 
-    /// like to create your own appraiser with rating calculation.
+    /// Concrete appraiser of specified <typeparamref name="T" /> using strategy to calculate
+    /// ratings.
     /// </summary>
-    public abstract class Appraiser : AppraiserBase
+    /// <typeparam name="T">The data handler type.</typeparam>
+    public sealed class Appraiser<T> : IAppraiser, ITagable, ITypeId
+        where T : BasicInfo
     {
+        /// <summary>
+        /// The appraisal to calculate ratings for <typeparamref name="T" />.
+        /// </summary>
+        private readonly IAppraisal<T> _appraisal;
+
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public override string Tag { get; } = nameof(Appraiser);
+        public string Tag { get; } = $"Appraiser<{typeof(T).Name}>";
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(T);
 
         #endregion
 
         /// <summary>
         /// Rating name which describes rating calculation.
         /// </summary>
-        public override string RatingName { get; } = "Common rating";
+        public string RatingName => _appraisal.RatingName;
+
+        /// <inheritdoc />
+        public Guid RatingId { get; set; }
 
 
         /// <summary>
         /// Creates instance with default values.
         /// </summary>
-        protected Appraiser()
+        /// <param name="appraisal">The strategy to calculate rating value.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="appraisal" /> is <c>null</c>.
+        /// </exception>
+        public Appraiser(IAppraisal<T> appraisal)
         {
+            _appraisal = appraisal.ThrowIfNull(nameof(appraisal));
         }
 
         /// <summary>
-        /// Makes prior analysis through normalizers and calculates ratings based on average vote 
-        /// and vote count.
+        /// Makes prior analysis through prepare stage for strategy and then uses it to calculate
+        /// ratings.
         /// </summary>
         /// <param name="rawDataContainer">
         /// The entities to appraise with additional parameters.
@@ -47,7 +69,14 @@ namespace ThingAppraiser.Appraisers
         /// Entities collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        public virtual IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="rawDataContainer" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="rawDataContainer" /> contains instances of invalid type for this 
+        /// appraiser.
+        /// </exception>
+        public IReadOnlyList<ResultInfo> GetRatings(RawDataContainer rawDataContainer,
             bool outputResults)
         {
             rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
@@ -58,14 +87,25 @@ namespace ThingAppraiser.Appraisers
             IReadOnlyList<BasicInfo> rawData = rawDataContainer.RawData;
             if (!rawData.Any()) return ratings;
 
-            // Use default appraisal in case when appraiser do not override method.
-            var appraisal = new BasicAppraisal();
-
-            appraisal.PrepareCalculation(rawDataContainer);
-
-            foreach (BasicInfo entityInfo in rawData)
+            // Check if list have proper type.
+            IReadOnlyList<T> converted = rawData.Select(e =>
             {
-                double ratingValue = appraisal.CalculateRating(entityInfo);
+                if (!(e is T result))
+                {
+                    throw new ArgumentException(
+                        $"Element '{e.Title}' (ID = {e.ThingId.ToString()}) type " +
+                        $"'{e.GetType().FullName}' is invalid for appraiser with type " +
+                        $"'{TypeId.FullName}'."
+                    );
+                }
+                return result;
+            }).ToList();
+
+            _appraisal.PrepareCalculation(rawDataContainer);
+
+            foreach (T entityInfo in converted)
+            {
+                double ratingValue = _appraisal.CalculateRating(entityInfo);
 
                 var resultInfo = new ResultInfo(entityInfo.ThingId, ratingValue, RatingId);
                 ratings.Add(resultInfo);
@@ -83,7 +123,7 @@ namespace ThingAppraiser.Appraisers
         /// <summary>
         /// Checks that class was registered rating and has proper rating ID.
         /// </summary>
-        protected void CheckRatingId()
+        private void CheckRatingId()
         {
             if (RatingId == Guid.Empty)
             {
