@@ -7,7 +7,7 @@ using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.OmdbService;
 
-namespace ThingAppraiser.Crawlers.Omdb
+namespace ThingAppraiser.Crawlers.Movie.Omdb
 {
     /// <summary>
     /// Provides async version of OMDb crawler.

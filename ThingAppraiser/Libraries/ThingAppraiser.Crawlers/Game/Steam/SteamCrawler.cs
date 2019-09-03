@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+using System.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.SteamService;
 using ThingAppraiser.SteamService.Models;
 
-namespace ThingAppraiser.Crawlers.Steam
+namespace ThingAppraiser.Crawlers.Game.Steam
 {
     /// <summary>
-    /// Provides async version of Steam crawler.
+    /// Concrete crawler for Steam service.
     /// </summary>
-    public sealed class SteamCrawlerAsync : CrawlerAsync
+    public sealed class SteamCrawler : Crawler
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<SteamCrawlerAsync>();
+            LoggerFactory.CreateLoggerFor<SteamCrawler>();
 
         /// <summary>
         /// Adapter class to make a calls to Steam API.
@@ -27,7 +26,7 @@ namespace ThingAppraiser.Crawlers.Steam
         private readonly ISteamApiClient _steamApiClient;
 
         /// <inheritdoc />
-        public override string Tag { get; } = nameof(SteamCrawlerAsync);
+        public override string Tag { get; } = nameof(SteamCrawler);
 
         /// <inheritdoc />
         public override Type TypeId { get; } = typeof(SteamGameInfo);
@@ -43,31 +42,29 @@ namespace ThingAppraiser.Crawlers.Steam
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> presents empty strings or contains only whitespaces.
         /// </exception>
-        public SteamCrawlerAsync(string apiKey)
+        public SteamCrawler(string apiKey)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
         }
 
-        #region CrawlerAsync Overridden Methods
+        #region Crawler Overridden Methods
 
         /// <inheritdoc />
-        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
-            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
+        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+            bool outputResults)
         {
             if (SteamAppsStorage.IsEmpty)
             {
-                SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
+                SteamBriefInfoContainer steamApps = _steamApiClient.GetAppListAsync().Result;
                 SteamAppsStorage.FillStorage(steamApps);
             }
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();
-            while (await entitiesQueue.OutputAvailableAsync())
+            foreach (string game in entities)
             {
-                string game = await entitiesQueue.ReceiveAsync();
-
                 int? appId = SteamAppsStorage.TryGetAppIdByName(game);
 
                 if (!appId.HasValue)
@@ -79,9 +76,9 @@ namespace ThingAppraiser.Crawlers.Steam
                     continue;
                 }
 
-                var response = await _steamApiClient.TryGetSteamAppAsync(
+                var response = _steamApiClient.TryGetSteamAppAsync(
                     appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
-                );
+                ).Result;
 
                 if (response is null)
                 {
@@ -97,12 +94,9 @@ namespace ThingAppraiser.Crawlers.Steam
                     GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
                 }
 
-                if (searchResults.Add(response))
-                {
-                    await responsesQueue.SendAsync(response);
-                }
+                searchResults.Add(response);
             }
-            return searchResults.Count != 0;
+            return searchResults.ToList();
         }
 
         #endregion

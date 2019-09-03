@@ -8,7 +8,7 @@ using ThingAppraiser.Models.Internal;
 using ThingAppraiser.TmdbService;
 using ThingAppraiser.TmdbService.Models;
 
-namespace ThingAppraiser.Crawlers.Tmdb
+namespace ThingAppraiser.Crawlers.Movie.Tmdb
 {
     /// <summary>
     /// Concrete crawler for The Movie Database service.

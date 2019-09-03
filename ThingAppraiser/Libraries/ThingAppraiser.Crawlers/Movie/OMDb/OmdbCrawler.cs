@@ -6,7 +6,7 @@ using ThingAppraiser.Communication;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.OmdbService;
 
-namespace ThingAppraiser.Crawlers.Omdb
+namespace ThingAppraiser.Crawlers.Movie.Omdb
 {
     /// <summary>
     /// Concrete crawler for Open Movie Database service.

@@ -152,7 +152,7 @@ namespace ThingAppraiser.Building.Service
                         crawlerElement, _tmdbMaxRetryCountParameterName
                     );
 
-                    return new Crawlers.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
+                    return new Crawlers.Movie.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
                 }
 
                 case _omdbCrawlerParameterName:
@@ -161,7 +161,7 @@ namespace ThingAppraiser.Building.Service
                         crawlerElement, _omdbApiKeyParameterName
                     );
 
-                    return new Crawlers.Omdb.OmdbCrawler(apiKey);
+                    return new Crawlers.Movie.Omdb.OmdbCrawler(apiKey);
                 }
 
                 case _steamCrawlerParameterName:
@@ -170,7 +170,7 @@ namespace ThingAppraiser.Building.Service
                         crawlerElement, _steamApiKeyParameterName
                     );
 
-                    return new Crawlers.Steam.SteamCrawler(apiKey);
+                    return new Crawlers.Game.Steam.SteamCrawler(apiKey);
                 }
 
                 default:
