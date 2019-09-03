@@ -16,7 +16,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CheckTagPropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             string actualValue = appraiser.Tag;
 
@@ -30,7 +30,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CheckTypeIdPropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Type actualValue = appraiser.TypeId;
 
@@ -43,7 +43,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CheckRatingNamePropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             string actualValue = appraiser.RatingName;
 
@@ -57,7 +57,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CheckRatingIdPropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid actualValue = appraiser.RatingId;
 
@@ -68,7 +68,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void SetRatingIdPropertyAndCompare()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid expectedValue = Guid.NewGuid();
             appraiser.RatingId = expectedValue;
@@ -80,7 +80,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void GetRatingsThrowsExceptionBecauseOfRatingIdIsUnspecified()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             RawDataContainer rawDataContainer =
                 TestDataCreator.CreateRawDataContainerWithBasicInfo();
@@ -96,7 +96,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void GetRatingsThrowsExceptionBecauseOfNullContainer()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Assert.Throws<ArgumentNullException>(
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -113,7 +113,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CallGetRatingsWithEmptyConteiner()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid ratingId = Guid.NewGuid();
             appraiser.RatingId = ratingId;
@@ -135,7 +135,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CallGetRatingsWithConteinerWithOneItem()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid ratingId = Guid.NewGuid();
             appraiser.RatingId = ratingId;
@@ -165,7 +165,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [Fact]
         public void CallGetRatingsWithConteinerWithThreeItems()
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid ratingId = Guid.NewGuid();
             appraiser.RatingId = ratingId;
@@ -208,7 +208,7 @@ namespace ThingAppraiser.Appraisers.Tests
         [InlineData(100)]
         public void CallGetRatingsWithConteinerWithRandomData(int itemsCount)
         {
-            var appraiser = TestAppraisersCreator.CreateTmdbNormalizedAppraiser();
+            IAppraiser appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Guid ratingId = Guid.NewGuid();
             appraiser.RatingId = ratingId;

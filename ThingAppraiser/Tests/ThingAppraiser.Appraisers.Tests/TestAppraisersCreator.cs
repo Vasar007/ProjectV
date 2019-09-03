@@ -5,7 +5,7 @@ namespace ThingAppraiser.Appraisers.Tests
 {
     internal static class TestAppraisersCreator
     {
-        public static IAppraiser CreateTmdbNormalizedAppraiser()
+        public static IAppraiser CreateBasicAppraiser()
         {
             var appraisal = new BasicAppraisal();
 
