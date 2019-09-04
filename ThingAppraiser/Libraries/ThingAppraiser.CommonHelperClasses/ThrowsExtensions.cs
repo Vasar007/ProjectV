@@ -91,7 +91,7 @@ namespace ThingAppraiser
             {
                 throw new ArgumentNullException(paramName, $"{paramName} is null.");
             }
-            if (string.Equals(str, string.Empty, StringComparison.InvariantCulture))
+            if (string.Equals(str, string.Empty, StringComparison.Ordinal))
             {
                 throw new ArgumentException($"{paramName} presents empty string.", paramName);
             }

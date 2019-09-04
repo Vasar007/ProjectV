@@ -22,7 +22,7 @@ namespace ThingAppraiser.DAL.Mappers
         public BasicInfo ReadItem(IDataReader reader)
         {
             var genreIdsAsString = (string) reader["genre_ids"];
-            List<int> genreIds = genreIdsAsString.Split(',').Select(int.Parse).ToList();
+            IReadOnlyList<int> genreIds = genreIdsAsString.Split(',').Select(int.Parse).ToList();
 
             return new TmdbMovieInfo(
                 thingId:     (int)      reader["thing_id"],

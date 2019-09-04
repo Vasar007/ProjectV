@@ -45,7 +45,7 @@ namespace ThingAppraiser.Models.Data
         [JsonConstructor]
         public TmdbMovieInfo(int thingId, string title, int voteCount, double voteAverage,
             string overview, DateTime releaseDate, double popularity, bool adult,
-            List<int> genreIds, string posterPath)
+            IReadOnlyList<int> genreIds, string posterPath)
             : base(thingId, title, voteCount, voteAverage, overview, releaseDate)
         {
             Popularity = popularity;
@@ -131,7 +131,7 @@ namespace ThingAppraiser.Models.Data
             return Math.Abs(Popularity - other.Popularity) < eps &&
                    Adult.Equals(other.Adult) &&
                    GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
-                   string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
+                   string.Equals(PosterPath, other.PosterPath, StringComparison.Ordinal);
         }
     }
 }

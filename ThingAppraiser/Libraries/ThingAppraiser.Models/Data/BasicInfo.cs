@@ -127,7 +127,7 @@ namespace ThingAppraiser.Models.Data
         {
             const double eps = 1e-6;
             return ThingId.Equals(other.ThingId) &&
-                   string.Equals(Title, other.Title, StringComparison.InvariantCulture) &&
+                   string.Equals(Title, other.Title, StringComparison.Ordinal) &&
                    VoteCount.Equals(other.VoteCount) &&
                    Math.Abs(VoteAverage - other.VoteAverage) < eps;
         }

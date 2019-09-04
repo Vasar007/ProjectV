@@ -108,7 +108,7 @@ namespace ThingAppraiser.Models.Data
         protected bool IsEqual(MovieInfo other)
         {
             return ReleaseDate.Equals(other.ReleaseDate) &&
-                   string.Equals(Overview, other.Overview, StringComparison.InvariantCulture);
+                   string.Equals(Overview, other.Overview, StringComparison.Ordinal);
         }
     }
 }

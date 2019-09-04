@@ -96,8 +96,7 @@ namespace ThingAppraiser.Configuration
 
             serviceName = serviceName.ToLowerInvariant();
             int index = AvailableServicesToLower.IndexOf(
-                service => string.Equals(service, serviceName,
-                                         StringComparison.InvariantCultureIgnoreCase)
+                service => string.Equals(service, serviceName, StringComparison.OrdinalIgnoreCase)
             );
 
             return AvailableServices[index];

@@ -23,11 +23,11 @@ namespace ThingAppraiser.OmdbService.Mappers
             DateTime releaseDate = DateTime.Parse(dataObject.Released);
 
             int metascore = string.Equals(dataObject.Metascore, "N/A",
-                                          StringComparison.InvariantCultureIgnoreCase)
+                                          StringComparison.OrdinalIgnoreCase)
                 ? 0
                 : int.Parse(dataObject.Metascore);
 
-            List<string> genreIds = dataObject.Genre
+            IReadOnlyList<string> genreIds = dataObject.Genre
                 .Split(',')
                 .Select(genre => genre.Trim())
                 .ToList();

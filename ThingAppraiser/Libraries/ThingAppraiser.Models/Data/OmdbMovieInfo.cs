@@ -45,7 +45,7 @@ namespace ThingAppraiser.Models.Data
         [JsonConstructor]
         public OmdbMovieInfo(int thingId, string title, int voteCount, double voteAverage,
             string overview, DateTime releaseDate, int metascore, string rated,
-            List<string> genreIds, string posterPath)
+            IReadOnlyList<string> genreIds, string posterPath)
             : base(thingId, title, voteCount, voteAverage, overview, releaseDate)
         {
             Metascore = metascore;
@@ -127,10 +127,10 @@ namespace ThingAppraiser.Models.Data
             // Note: list with genre IDs usually has only few items and that is why comparison
             // using contains method is considered the best option here.
 
-            return string.Equals(Rated, other.Rated, StringComparison.InvariantCulture) &&
+            return string.Equals(Rated, other.Rated, StringComparison.Ordinal) &&
                    Metascore.Equals(other.Metascore) &&
                    GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
-                   string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
+                   string.Equals(PosterPath, other.PosterPath, StringComparison.Ordinal);
         }
     }
 }

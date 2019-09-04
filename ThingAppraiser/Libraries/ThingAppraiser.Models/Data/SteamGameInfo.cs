@@ -45,7 +45,7 @@ namespace ThingAppraiser.Models.Data
         [JsonConstructor]
         public SteamGameInfo(int thingId, string title, int voteCount, double voteAverage,
             string overview, DateTime releaseDate, decimal price, int requiredAge,
-            List<int> genreIds, string posterPath)
+            IReadOnlyList<int> genreIds, string posterPath)
             : base(thingId, title, voteCount, voteAverage, overview, releaseDate)
         {
             Price = price;
@@ -130,7 +130,7 @@ namespace ThingAppraiser.Models.Data
             return Price.Equals(other.Price) &&
                    RequiredAge.Equals(other.RequiredAge) &&
                    GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
-                   string.Equals(PosterPath, other.PosterPath, StringComparison.InvariantCulture);
+                   string.Equals(PosterPath, other.PosterPath, StringComparison.Ordinal);
         }
     }
 }

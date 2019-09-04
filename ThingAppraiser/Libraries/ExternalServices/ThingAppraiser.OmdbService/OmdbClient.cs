@@ -60,8 +60,7 @@ namespace ThingAppraiser.OmdbService
                 return null;
             }
 
-            if (!string.Equals(response.Response, "True",
-                               StringComparison.InvariantCultureIgnoreCase))
+            if (!string.Equals(response.Response, "True", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.Warn($"Got response for \"{title}\" with negative result.");
 

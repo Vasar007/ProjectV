@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SteamWebApiLib.Models.AppDetails;
 using ThingAppraiser.Models.Data;
@@ -15,9 +16,9 @@ namespace ThingAppraiser.SteamService.Mappers
 
         public SteamGameInfo Transform(SteamApp dataObject)
         {
-            var releaseDate = DateTime.Parse(dataObject.ReleaseDate.Date);
-            var price = Convert.ToDecimal(dataObject.PriceOverview.Final);
-            var genreIds = dataObject.Genres.Select(genre => genre.Id).ToList();
+            DateTime releaseDate = DateTime.Parse(dataObject.ReleaseDate.Date);
+            decimal price = Convert.ToDecimal(dataObject.PriceOverview.Final);
+            IReadOnlyList<int> genreIds = dataObject.Genres.Select(genre => genre.Id).ToList();
 
             return new SteamGameInfo(
                 thingId:     dataObject.SteamAppId,

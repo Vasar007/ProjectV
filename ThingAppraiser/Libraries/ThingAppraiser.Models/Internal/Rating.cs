@@ -84,7 +84,7 @@ namespace ThingAppraiser.Models.Internal
         private bool IsEqual(Rating other)
         {
             return RatingId == other.RatingId &&
-                   string.Equals(RatingName, other.RatingName, StringComparison.InvariantCulture);
+                   string.Equals(RatingName, other.RatingName, StringComparison.Ordinal);
         }
     }
 }
