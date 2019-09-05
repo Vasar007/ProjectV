@@ -59,7 +59,7 @@ namespace ThingAppraiser
             {
                 throw new ArgumentNullException(paramName, $"{paramName} is null.");
             }
-            if (str == string.Empty)
+            if (str.Length == 0)
             {
                 throw new ArgumentException($"{paramName} presents empty string.", paramName);
             }
@@ -91,7 +91,7 @@ namespace ThingAppraiser
             {
                 throw new ArgumentNullException(paramName, $"{paramName} is null.");
             }
-            if (string.Equals(str, string.Empty, StringComparison.Ordinal))
+            if (str.Length == 0)
             {
                 throw new ArgumentException($"{paramName} presents empty string.", paramName);
             }
