@@ -102,42 +102,23 @@ namespace ThingAppraiser.IO
         /// <returns>Appropriate extension to passed type.</returns>
         protected static string GetExtension(string mimeType)
         {
-            switch (mimeType)
+            return mimeType switch
             {
-                case "text/plain":
-                {
-                    return ".txt";
-                }
+                "text/plain" => ".txt",
 
-                case "text/csv":
-                {
-                    return ".csv";
-                }
+                "text/csv" => ".csv",
 
-                case "text/html":
-                {
-                    return ".html";
-                }
+                "text/html" => ".html",
 
-                case "application/rtf":
-                {
-                    return ".rtf";
-                }
+                "application/rtf" => ".rtf",
 
-                case "application/pdf":
-                {
-                    return ".pdf";
-                }
+                "application/pdf" => ".pdf",
 
-                default:
-                {
-                    _logger.Warn($"Not found extension for MIME type: {mimeType}");
-                    GlobalMessageHandler.OutputMessage(
-                        $"Not found extension for MIME type: {mimeType}"
-                    );
-                    return string.Empty;
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(
+                         nameof(mimeType), mimeType,
+                         $"Not found extension for MIME type: '{mimeType}'."
+                     )
+            };
         }
 
         /// <summary>
@@ -152,47 +133,28 @@ namespace ThingAppraiser.IO
         {
             if (!HasExtenstionSafe(filename))
             {
-                throw new ArgumentException($"Filename \"{filename}\" isn't contain extension.",
+                throw new ArgumentException($"Filename '{filename}' isn't contain extension.",
                                             nameof(filename));
             }
 
             string extension = Path.GetExtension(filename);
-            switch (extension)
+            return extension switch
             {
-                case ".txt":
-                {
-                    return "text/plain";
-                }
+                ".txt" => "text/plain",
 
-                case ".csv":
-                {
-                    return "text/csv";
-                }
+                ".csv" => "text/csv",
 
-                case ".html":
-                {
-                    return "text/html";
-                }
+                ".html" => "text/html",
 
-                case ".rtf":
-                {
-                    return "application/rtf";
-                }
+                ".rtf" => "application/rtf",
 
-                case ".pdf":
-                {
-                    return "application/pdf";
-                }
+                ".pdf" => "application/pdf",
 
-                default:
-                {
-                    _logger.Warn($"Not found MIME type for extension: {extension}");
-                    GlobalMessageHandler.OutputMessage(
-                        $"Not found MIME type for extension: {extension}"
-                    );
-                    return string.Empty;
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(
+                         nameof(filename), filename,
+                         $"Not found MIME type for extension '{extension}' for file '{filename}'."
+                     )
+            };
         }
 
         /// <summary>

@@ -54,34 +54,19 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
                                                       "Length value must be positive.");
             }
 
-            switch (imageSize)
+            return imageSize switch
             {
-                case ImageSize.Small:
-                {
-                    return 0;
-                }
+                ImageSize.Small => 0,
 
-                case ImageSize.Middle:
-                {
-                    return length / 3;
-                }
+                ImageSize.Middle => length / 3,
 
-                case ImageSize.Large:
-                {
-                    return length * 2 / 3;
-                }
+                ImageSize.Large => length * 2 / 3,
 
-                case ImageSize.Origin:
-                {
-                    return length - 1;
-                }
+                ImageSize.Origin => length - 1,
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(imageSize), imageSize,
-                                                          "Invalid image size value.");
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(nameof(imageSize), imageSize,
+                                                           "Invalid image size value.")
+            };
         }
     }
 }

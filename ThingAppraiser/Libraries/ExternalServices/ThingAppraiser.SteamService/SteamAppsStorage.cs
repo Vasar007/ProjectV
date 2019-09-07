@@ -56,7 +56,7 @@ namespace ThingAppraiser.SteamService
 
             if (!_steamAppsList.TryGetValue(name, out int appId))
             {
-                throw new ArgumentException($"Couldn't find Steam App with name {name}",
+                throw new ArgumentException($"Couldn't find Steam App with name \"{name}\".",
                                             nameof(name));
             }
             return appId;

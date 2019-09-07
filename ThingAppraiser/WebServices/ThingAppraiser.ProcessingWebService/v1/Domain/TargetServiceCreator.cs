@@ -13,18 +13,16 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
 
         public IServiceRequestProcessor CreateRequestProcessor(ServiceType serviceType)
         {
-            switch (serviceType)
+            // Cast needs to inference type for pattern matching.
+            return serviceType switch
             {
-                case ServiceType.Sequential:
-                    return new ServiceRequestProcessor();
+                ServiceType.Sequential => (IServiceRequestProcessor) new ServiceRequestProcessor(),
 
-                case ServiceType.TplDataflow:
-                    return new ServiceAsyncRequestProcessor();
+                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(),
 
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(serviceType),
-                                                          "Not known service type");
-            }
+                _ => throw new ArgumentOutOfRangeException(nameof(serviceType),
+                                                           "Not known service type")
+            };
         }
 
         #endregion

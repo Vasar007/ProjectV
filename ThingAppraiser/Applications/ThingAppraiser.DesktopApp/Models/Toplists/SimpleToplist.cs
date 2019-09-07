@@ -32,28 +32,16 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         private int CalculateInsertIndex()
         {
-            int insertIndex;
-            switch (Format)
+            int insertIndex = Format switch
             {
-                case ToplistFormat.Forward:
-                {
-                    insertIndex = Blocks.Count;
-                    break;
-                }
+                ToplistFormat.Forward => Blocks.Count,
 
-                case ToplistFormat.Reverse:
-                {
-                    insertIndex = 0;
-                    break;
-                }
+                ToplistFormat.Reverse => 0,
 
-                default:
-                {
-                    throw new InvalidOperationException(
-                        $"Unknown toplist format: '{Format.ToString()}'."
-                    );
-                }
-            }
+                _ => throw new InvalidOperationException(
+                         $"Unknown toplist format: '{Format.ToString()}'."
+                     )
+            };
 
             return insertIndex;
         }

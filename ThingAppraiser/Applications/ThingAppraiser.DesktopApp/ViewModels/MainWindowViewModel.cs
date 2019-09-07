@@ -359,37 +359,23 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private async Task<RequestParams> ConfigureServiceRequest(DataSource dataSource)
         {
-            switch (dataSource)
+            return dataSource switch
             {
-                case DataSource.Nothing:
-                {
-                    _logger.Error("Data source wasn't set.");
-                    throw new InvalidOperationException("Data source wasn't set.");
-                }
+                DataSource.Nothing => throw new InvalidOperationException(
+                                          "Data source wasn't set."
+                                      ),
 
-                case DataSource.InputThing:
-                {
-                    return await CreateRequestWithUserInputData();
-                }
+                DataSource.InputThing => await CreateRequestWithUserInputData(),
 
-                case DataSource.LocalFile:
-                {
-                    return await CreateRequestWithLocalFileData();
-                }
+                DataSource.LocalFile => await CreateRequestWithLocalFileData(),
 
-                case DataSource.GoogleDrive:
-                {
-                    return await CreateGoogleDriveRequest();
-                }
+                DataSource.GoogleDrive => await CreateGoogleDriveRequest(),
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(dataSource), dataSource,
-                        "Couldn't recognize specified data source type."
-                    );
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(
+                         nameof(dataSource), dataSource,
+                         "Couldn't recognize specified data source type."
+                     )
+            };
         }
 
         private async Task<RequestParams> CreateRequestWithUserInputData()

@@ -252,7 +252,7 @@ namespace ThingAppraiser.Building.Service
                     new FileDataStore(credPath, true)
                 ).Result;
 
-                _logger.Info($"Credential file saved to: \"{credPath}\"");
+                _logger.Info($"Credential file saved to: \"{credPath}\".");
             }
 
             // Create Drive API service.

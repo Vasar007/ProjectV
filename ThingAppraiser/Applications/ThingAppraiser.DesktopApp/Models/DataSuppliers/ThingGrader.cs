@@ -61,29 +61,18 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         {
             basicInfo.ThrowIfNull(nameof(basicInfo));
 
-            switch (basicInfo)
+            // Cast needs to inference type for pattern matching.
+            return basicInfo switch
             {
-                case TmdbMovieInfo _:
-                {
-                    return new TmdbImageSupplier(TmdbServiceConfiguration.Configuration);
-                }
+                OmdbMovieInfo _ => (IImageSupplier) new OmdbImageSupplier(),
 
-                case OmdbMovieInfo _:
-                {
-                    return new OmdbImageSupplier();
-                }
+                TmdbMovieInfo _ =>  new TmdbImageSupplier(TmdbServiceConfiguration.Configuration),
 
-                case SteamGameInfo _:
-                {
-                    return new SteamImageSupplier();
-                }
+                SteamGameInfo _ => new SteamImageSupplier(),
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(basicInfo), basicInfo,
-                                                          "Got unknown type to process.");
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(nameof(basicInfo), basicInfo,
+                                                           "Got unknown type to process.")
+            };
         }
     }
 }

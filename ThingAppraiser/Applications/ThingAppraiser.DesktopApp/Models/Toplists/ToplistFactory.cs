@@ -17,24 +17,16 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             _logger.Info($"Creating toplist [Name: {toplistName}, Type: {toplistType.ToString()} " +
                          $"Format: {toplistFormat.ToString()}].");
 
-            switch (toplistType)
+            // Cast needs to inference type for pattern matching.
+            return toplistType switch
             {
-                case ToplistType.Score:
-                {
-                    return new ScoreToplist(toplistName, toplistFormat);
-                }
+                ToplistType.Score => (ToplistBase) new ScoreToplist(toplistName, toplistFormat),
 
-                case ToplistType.Simple:
-                {
-                    return new SimpleToplist(toplistName, toplistFormat);
-                }
+                ToplistType.Simple => new SimpleToplist(toplistName, toplistFormat),
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(toplistType), toplistType,
-                                                          "Could not recognize toplist type.");
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(nameof(toplistType), toplistType,
+                                                           "Could not recognize toplist type.")
+            };
         }
 
         public static ToplistBase LoadFromFile(string toplistFilename)
