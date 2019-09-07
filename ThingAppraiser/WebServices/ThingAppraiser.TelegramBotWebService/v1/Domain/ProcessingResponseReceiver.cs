@@ -18,37 +18,43 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
-            Task.Factory.StartNew(() =>
+            // Tricky code to send request in additional thread and transmit answer to user.
+            Task.Run(async () =>
             {
-                _logger.Info("Trying to send request to service.");
+                _logger.Info("Trying to send request to ThingAppraiser service.");
                 try
                 {
                     ProcessingResponse? response =
-                        serviceProxy.SendPostRequest(requestParams).Result;
+                        await serviceProxy.SendPostRequest(requestParams);
 
                     if (response is null)
                     {
                         throw new InvalidOperationException("Request has not successful status.");
                     }
 
-                    var converted = ConvertResultsToDict(response.RatingDataContainers);
+                    IReadOnlyDictionary<string, IList<double>> converted =
+                        ConvertResultsToDict(response.RatingDataContainers);
 
-                    _logger.Info("Got response. Output message to chat.");
+                    _logger.Info("Got response. Output message to Telegram chat.");
 
-                    botService.Client.SendTextMessageAsync(
+                    await botService.Client.SendTextMessageAsync(
                         chatId,
                         CreateResponseMessage(converted)
-                    ).Wait();
+                    );
                 }
                 catch (Exception ex)
                 {
                     _logger.Error(ex, "Exception occurred during data processing request.");
+                    await botService.Client.SendTextMessageAsync(
+                        chatId,
+                        $"Cannot process request. Error: {ex.Message}"
+                    );
                 }
                 _logger.Info("Request was processed.");
-            }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            }, token);
         }
 
-        private static Dictionary<string, IList<double>> ConvertResultsToDict(
+        private static IReadOnlyDictionary<string, IList<double>> ConvertResultsToDict(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results)
         {
             var converted = new Dictionary<string, IList<double>>();
@@ -78,7 +84,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             return converted;
         }
 
-        private static string CreateResponseMessage(Dictionary<string, IList<double>> converted)
+        private static string CreateResponseMessage(
+            IReadOnlyDictionary<string, IList<double>> converted)
         {
             var stringBuilder = new StringBuilder(1000);
             stringBuilder.AppendLine("Results:");

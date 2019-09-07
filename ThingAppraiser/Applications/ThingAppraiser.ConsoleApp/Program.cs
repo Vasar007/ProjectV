@@ -7,6 +7,7 @@ using ThingAppraiser.DAL.EntityFramework;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using System.Threading.Tasks;
 
 namespace ThingAppraiser.ConsoleApp
 {
@@ -26,14 +27,14 @@ namespace ThingAppraiser.ConsoleApp
         /// Main method of the Console Application which using config to manipulate Shell.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
-        private static void MainXDocument(string[] args)
+        private static async Task MainXDocument(string[] args)
         {
             // Show the case when we have a movies to appraise.
             var builderDirector = ShellAsync.CreateBuilderDirector(
                 XmlConfigCreator.CreateDefaultXmlConfigAsXDocument()
             );
             var shell = builderDirector.MakeShell();
-            Run(args, shell);
+            await Run(args, shell);
         }
 
         /// <summary>
@@ -42,19 +43,19 @@ namespace ThingAppraiser.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
-        private static void Run(string[] args, ShellAsync shell)
+        private static async Task Run(string[] args, ShellAsync shell)
         {
             ServiceStatus status;
             if (args.Length == 1)
             {
-                status = shell.Run(args[0]).Result;
+                status = await shell.Run(args[0]);
             }
             else
             {
                 GlobalMessageHandler.OutputMessage(
                     "Enter filename which contains the Things: "
                 );
-                status = shell.Run(GlobalMessageHandler.GetMessage()).Result;
+                status = await shell.Run(GlobalMessageHandler.GetMessage());
             }
 
             if (status == ServiceStatus.Nothing)
@@ -72,13 +73,13 @@ namespace ThingAppraiser.ConsoleApp
         /// Console application start point.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             try
             {
                 _logger.PrintHeader("Console client application started.");
 
-                MainXDocument(args);
+                await MainXDocument(args);
                 //Test();
             }
             catch (Exception ex)

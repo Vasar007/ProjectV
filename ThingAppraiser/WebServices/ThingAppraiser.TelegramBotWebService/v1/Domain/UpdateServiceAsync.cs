@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -64,8 +66,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
         private async Task ProcessMessage(Message message)
         {
-            string[] data = message.Text.Split('\n');
-            string[] firstLine = data.First().Split(' ');
+            IReadOnlyList<string> data = message.Text.Split(Environment.NewLine);
+            IReadOnlyList<string> firstLine = data.First().Split(' ');
             string command = firstLine.First();
 
             switch (command)
@@ -201,14 +203,14 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Enter data for {serviceName}. Please, use this format:\n" +
-                "thingName1\n" +
+                $"Enter data for {serviceName}. Please, use this format:{Environment.NewLine}" +
+                $"thingName1{Environment.NewLine}" +
                 "thingName2",
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }
 
-        private async Task ContinueRequestCommandWithData(long chatId, string[] data,
+        private async Task ContinueRequestCommandWithData(long chatId, IReadOnlyList<string> data,
             RequestParams requestParams)
         {
             _logger.Info("Continue process /request command with data.");
