@@ -19,39 +19,46 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit answer to user.
-            Task.Run(async () =>
+            Task.Run(
+                () => ScheduleRequestImplementation(botService, serviceProxy,
+                                                    chatId, requestParams),
+                token
+            );
+        }
+
+        private static async Task ScheduleRequestImplementation(IBotService botService,
+            IServiceProxy serviceProxy, long chatId, RequestParams requestParams)
+        {
+            _logger.Info("Trying to send request to ThingAppraiser service.");
+            try
             {
-                _logger.Info("Trying to send request to ThingAppraiser service.");
-                try
+                ProcessingResponse? response =
+                    await serviceProxy.SendPostRequest(requestParams);
+
+                if (response is null)
                 {
-                    ProcessingResponse? response =
-                        await serviceProxy.SendPostRequest(requestParams);
-
-                    if (response is null)
-                    {
-                        throw new InvalidOperationException("Request has not successful status.");
-                    }
-
-                    IReadOnlyDictionary<string, IList<double>> converted =
-                        ConvertResultsToDict(response.RatingDataContainers);
-
-                    _logger.Info("Got response. Output message to Telegram chat.");
-
-                    await botService.Client.SendTextMessageAsync(
-                        chatId,
-                        CreateResponseMessage(converted)
-                    );
+                    throw new InvalidOperationException("Request has not successful status.");
                 }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "Exception occurred during data processing request.");
-                    await botService.Client.SendTextMessageAsync(
-                        chatId,
-                        $"Cannot process request. Error: {ex.Message}"
-                    );
-                }
-                _logger.Info("Request was processed.");
-            }, token);
+
+                IReadOnlyDictionary<string, IList<double>> converted =
+                    ConvertResultsToDict(response.RatingDataContainers);
+
+                _logger.Info("Got response. Output message to Telegram chat.");
+
+                await botService.Client.SendTextMessageAsync(
+                    chatId,
+                    CreateResponseMessage(converted)
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during data processing request.");
+                await botService.Client.SendTextMessageAsync(
+                    chatId,
+                    $"Cannot process request. Error: {ex.Message}"
+                );
+            }
+            _logger.Info("Request was processed.");
         }
 
         private static IReadOnlyDictionary<string, IList<double>> ConvertResultsToDict(
