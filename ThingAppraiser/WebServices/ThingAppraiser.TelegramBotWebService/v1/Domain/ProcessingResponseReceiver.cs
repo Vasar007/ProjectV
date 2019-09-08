@@ -19,6 +19,8 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
+            // Need to schedule task because our service should send response to Telegram.
+            // Otherwise Telegram will retry to send event again untill service send a response.
             Task.Run(
                 () => ScheduleRequestImplementation(botService, serviceProxy,
                                                     chatId, requestParams),
