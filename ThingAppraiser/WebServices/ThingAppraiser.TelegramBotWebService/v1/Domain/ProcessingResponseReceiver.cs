@@ -18,7 +18,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
         public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
-            // Tricky code to send request in additional thread and transmit answer to user.
+            // Tricky code to send request in additional thread and transmit response to user.
             Task.Run(
                 () => ScheduleRequestImplementation(botService, serviceProxy,
                                                     chatId, requestParams),
