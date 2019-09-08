@@ -30,10 +30,10 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
             IServiceProxy serviceProxy, long chatId, RequestParams requestParams)
         {
             _logger.Info("Trying to send request to ThingAppraiser service.");
+
             try
             {
-                ProcessingResponse? response =
-                    await serviceProxy.SendPostRequest(requestParams);
+                ProcessingResponse? response = await serviceProxy.SendPostRequest(requestParams);
 
                 if (response is null)
                 {
@@ -58,6 +58,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
                     $"Cannot process request. Error: {ex.Message}"
                 );
             }
+
             _logger.Info("Request was processed.");
         }
 
