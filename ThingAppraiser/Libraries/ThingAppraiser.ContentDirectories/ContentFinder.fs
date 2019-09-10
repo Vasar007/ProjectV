@@ -4,6 +4,7 @@ open System
 open ThingAppraiser
 
 module ContentFinder =
+
     type ContentType =
         | Movie
         | Image

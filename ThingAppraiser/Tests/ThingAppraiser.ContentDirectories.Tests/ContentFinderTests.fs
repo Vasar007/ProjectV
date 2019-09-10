@@ -6,6 +6,7 @@ open Swensen.Unquote
 open ThingAppraiser.ContentDirectories
 
 module ContentFinderTests =
+
     [<Fact>]
     let ``Contnent directory does not exist`` () =
         Assert.True(true)
