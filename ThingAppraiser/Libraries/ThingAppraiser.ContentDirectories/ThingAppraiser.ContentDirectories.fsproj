@@ -10,18 +10,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
-    <RootNamespace>ThingAppraiser.Models</RootNamespace>
+    <RootNamespace>ThingAppraiser.ContentDirectories</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonSubTypes" Version="1.6.0" />
+    <Compile Include="ContentFinder.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

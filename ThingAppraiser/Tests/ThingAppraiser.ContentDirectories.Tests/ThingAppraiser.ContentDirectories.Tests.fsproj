@@ -7,19 +7,22 @@
     <SccLocalPath>SAK</SccLocalPath>
     <Platforms>x64</Platforms>
   </PropertyGroup>
-
+    
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
-    <RootNamespace>ThingAppraiser.Appraisers.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <RootNamespace>ThingAppraiser.ContentDirectories.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="ContentFinderTests.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0-preview-20190828-03" />
-    <PackageReference Include="Moq" Version="4.13.0" />
+    <PackageReference Include="Unquote" Version="5.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -28,7 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Appraisers\ThingAppraiser.Appraisers.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.ContentDirectories\ThingAppraiser.ContentDirectories.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

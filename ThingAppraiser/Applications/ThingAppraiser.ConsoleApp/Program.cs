@@ -27,7 +27,7 @@ namespace ThingAppraiser.ConsoleApp
         /// Main method of the Console Application which using config to manipulate Shell.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
-        private static async Task MainXDocument(string[] args)
+        private static async Task MainXDocument(IReadOnlyList<string> args)
         {
             // Show the case when we have a movies to appraise.
             var builderDirector = ShellAsync.CreateBuilderDirector(
@@ -43,10 +43,10 @@ namespace ThingAppraiser.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
-        private static async Task Run(string[] args, ShellAsync shell)
+        private static async Task Run(IReadOnlyList<string> args, ShellAsync shell)
         {
             ServiceStatus status;
-            if (args.Length == 1)
+            if (args.Count == 1)
             {
                 status = await shell.Run(args[0]);
             }

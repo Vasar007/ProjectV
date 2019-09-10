@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Communication\ThingAppraiser.Communication.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
     <ProjectReference Include="..\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj" />

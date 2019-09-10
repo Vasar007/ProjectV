@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ThingAppraiser.CommonHelperClasses\ThingAppraiser.CommonHelperClasses.csproj" />
+    <ProjectReference Include="..\..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
     <ProjectReference Include="..\..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
     <ProjectReference Include="..\..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
   </ItemGroup>
