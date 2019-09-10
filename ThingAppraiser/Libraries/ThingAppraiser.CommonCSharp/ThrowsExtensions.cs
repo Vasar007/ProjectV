@@ -25,12 +25,12 @@ namespace ThingAppraiser
         {
             if (paramName is null)
             {
-                throw new ArgumentNullException(nameof(paramName), $"{nameof(paramName)} is null.");
+                throw new ArgumentNullException(nameof(paramName));
             }
 
             if (obj is null)
             {
-                throw new ArgumentNullException(paramName, $"{paramName} is null.");
+                throw new ArgumentNullException(paramName);
             }
             return obj;
         }
@@ -57,7 +57,7 @@ namespace ThingAppraiser
 
             if (str is null)
             {
-                throw new ArgumentNullException(paramName, $"{paramName} is null.");
+                throw new ArgumentNullException(paramName);
             }
             if (str.Length == 0)
             {
@@ -89,7 +89,7 @@ namespace ThingAppraiser
 
             if (str is null)
             {
-                throw new ArgumentNullException(paramName, $"{paramName} is null.");
+                throw new ArgumentNullException(paramName);
             }
             if (str.Length == 0)
             {
@@ -126,7 +126,7 @@ namespace ThingAppraiser
 
             if (collection is null)
             {
-                throw new ArgumentNullException($"{paramName} is null.", paramName);
+                throw new ArgumentNullException(paramName);
             }
             if (!collection.Any())
             {

@@ -10,15 +10,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ThingAppraiser.ContentDirectories</RootNamespace>
+    <RootNamespace>ThingAppraiser.CommonFSharp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="ContentFinder.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj" />
+    <Compile Include="ThrowsExtensions.fs" />
   </ItemGroup>
 
   <ItemGroup>

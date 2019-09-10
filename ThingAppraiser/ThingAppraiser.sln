@@ -69,6 +69,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirec
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirectories.Tests", "Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj", "{67B455A2-12BF-485A-819A-D42A249667B7}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ThingAppraiser.CommonFSharp", "Libraries\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj", "{6A688168-767F-4798-8D56-9BA6131D6CD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -187,6 +189,10 @@ Global
 		{67B455A2-12BF-485A-819A-D42A249667B7}.Debug|x64.Build.0 = Debug|x64
 		{67B455A2-12BF-485A-819A-D42A249667B7}.Release|x64.ActiveCfg = Release|x64
 		{67B455A2-12BF-485A-819A-D42A249667B7}.Release|x64.Build.0 = Release|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Debug|x64.ActiveCfg = Debug|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Debug|x64.Build.0 = Debug|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.ActiveCfg = Release|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -221,6 +227,7 @@ Global
 		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{67B455A2-12BF-485A-819A-D42A249667B7} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{6A688168-767F-4798-8D56-9BA6131D6CD4} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

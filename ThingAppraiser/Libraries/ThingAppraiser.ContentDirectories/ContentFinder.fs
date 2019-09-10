@@ -1,6 +1,7 @@
 ﻿namespace ThingAppraiser.ContentDirectories
 
 open System
+open ThingAppraiser
 
 module ContentFinder =
     type ContentType =
@@ -9,6 +10,6 @@ module ContentFinder =
         | Text
 
     let findContent (directoryName: string) (contentType: ContentType) =
-        if isNull directoryName then raise (ArgumentNullException("Directory name should not be null."))
+        Throw.ifNull directoryName "directoryName"
 
         raise (NotImplementedException("You haven't written a test yet!"))
