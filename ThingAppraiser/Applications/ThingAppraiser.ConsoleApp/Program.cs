@@ -80,9 +80,9 @@ namespace ThingAppraiser.ConsoleApp
             {
                 _logger.PrintHeader("Console client application started.");
 
-                //await MainXDocument(args);
+                await MainXDocument(args);
                 //TestEntityFrameworkCore();
-                TestConentDirectories();
+                //TestConentDirectories();
             }
             catch (Exception ex)
             {
