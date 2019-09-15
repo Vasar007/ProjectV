@@ -1,7 +1,5 @@
 ﻿namespace ThingAppraiser
 
-open System
-
 module Throw =
 
     let ifNull obj (paramName: string) =

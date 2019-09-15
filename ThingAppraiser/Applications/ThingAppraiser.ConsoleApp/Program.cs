@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ThingAppraiser.Core;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Configuration;
+using ThingAppraiser.ContentDirectories;
 using ThingAppraiser.DAL.EntityFramework;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
-using System.Threading.Tasks;
 
 namespace ThingAppraiser.ConsoleApp
 {
@@ -79,8 +80,9 @@ namespace ThingAppraiser.ConsoleApp
             {
                 _logger.PrintHeader("Console client application started.");
 
-                await MainXDocument(args);
-                //Test();
+                //await MainXDocument(args);
+                //TestEntityFrameworkCore();
+                TestConentDirectories();
             }
             catch (Exception ex)
             {
@@ -92,7 +94,7 @@ namespace ThingAppraiser.ConsoleApp
             }
         }
 
-        private static void Test()
+        private static void TestEntityFrameworkCore()
         {
             using (var context = new ThingAppraiserContext())
             {
@@ -125,6 +127,14 @@ namespace ThingAppraiser.ConsoleApp
                     );
                 }
             }
+        }
+
+        private static void TestConentDirectories()
+        {
+            ContentFinder.findContentForDir(
+                @"E:\Anime\Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka",
+                ContentFinder.ContentType.Movie
+            );
         }
     }
 }
