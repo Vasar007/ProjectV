@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThingAppraiser.Core;
@@ -131,10 +132,24 @@ namespace ThingAppraiser.ConsoleApp
 
         private static void TestConentDirectories()
         {
-            ContentFinder.findContentForDir(
-                @"E:\Anime\Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka",
-                ContentFinder.ContentType.Movie
-            );
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
+                .findContentForDir(
+                    @"E:\Anime\Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka",
+                    ContentFinder.ContentType.Movie
+                )
+                .ToReadOnlyDictionary(
+                    tuple => tuple.Item1,
+                    tuple => tuple.Item2.ToReadOnlyList()
+                );
+
+            foreach ((string directoryName, IReadOnlyList<string> files) in result)
+            {
+                Console.WriteLine(directoryName);
+
+                Console.WriteLine(
+                    $"{string.Join($"{Environment.NewLine}", files)}{Environment.NewLine}"
+                );
+            }
         }
     }
 }

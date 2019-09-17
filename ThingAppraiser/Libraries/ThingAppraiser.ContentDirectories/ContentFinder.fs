@@ -6,11 +6,10 @@ open ThingAppraiser
 
 module ContentFinder =
 
-    [<Struct>]
     type ContentType =
-        | Movie
-        | Image
-        | Text
+        | Movie = 1
+        | Image = 2
+        | Text = 3
 
     type ScannerArguments = {
         FileNamePatterns: list<string>
@@ -31,9 +30,11 @@ module ContentFinder =
 
     let private getPatterns (contentType: ContentType) =
         match contentType with
-            | Movie -> [ "*.mkv"; "*.mp4"; "*.flv"; "*.avi"; "*.mov"; "*.3gp" ]
-            | Image -> [ "*.png"; "*.jpg"; "*.jpeg"; "*.bmp"; "*.jpe"; "*.jfif" ]
-            | Text -> [ "*.txt"; "*.md" ]
+            | ContentType.Movie -> [ "*.mkv"; "*.mp4"; "*.flv"; "*.avi"; "*.mov"; "*.3gp" ]
+            | ContentType.Image -> [ "*.png"; "*.jpg"; "*.jpeg"; "*.bmp"; "*.jpe"; "*.jfif" ]
+            | ContentType.Text -> [ "*.txt"; "*.md" ]
+            | _ -> invalidArg "contentType" ("Content type is out of range: " +
+                                             contentType.ToString())
 
     let private getFileSeq (directoryName: string) (args: ScannerArguments) =
         seq {
@@ -52,6 +53,11 @@ module ContentFinder =
     let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
         ()
 
+    let convertToReadOnly (collection: seq<string * seq<string>>) =
+        collection
+        |> Seq.map (fun (directoryName, files) -> (directoryName, Seq.toList files))
+        |> readOnlyDict
+
     let findContent (args: ContentFinderArguments) =
         Throw.ifNull args.DirectorySeq "args.DirectorySeq"
 
@@ -69,8 +75,7 @@ module ContentFinder =
         args.DirectorySeq
         |> Seq.filter (isNull >> not)
         |> Seq.collect (fun directoryName -> args.FileSeqGen directoryName innerArgs)
-        |> Seq.map Path.GetFileName
-        |> Seq.iter (printfn "%s")
+        |> Seq.groupBy (Path.GetDirectoryName >> Path.GetFileName)
 
     let findContentForDirectoryWith (directoryName: string) (fileSeqGen: FileSeqGenerator)
         (contentType: ContentType) =

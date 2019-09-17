@@ -47,7 +47,7 @@ namespace ThingAppraiser
         /// <paramref name="variableName" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="variableName" /> isn't contained in the dictionary -or-
+        /// <paramref name="variableName" /> isn't contained in the dictionary. -or-
         /// <paramref name="variableName" /> presents empty string.
         /// </exception>
         public static string GetValue(string variableName)
@@ -71,18 +71,18 @@ namespace ThingAppraiser
         /// <param name="variableName">Variable name to get value.</param>
         /// <returns>Converted value of specified key.</returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="variableName" /> isn't contained in the dictionary -or-
+        /// <paramref name="variableName" /> isn't contained in the dictionary. -or-
         /// <paramref name="variableName" /> is <c>null</c> or presents empty.
         /// </exception>
         /// <exception cref="InvalidCastException">
-        /// This conversion is not supported. -or- value is <c>null</c> and conversionType is a
-        /// value type. -or- value does not implement the System.IConvertible interface.
+        /// This conversion is not supported. -or- Value is <c>null</c> and conversion type is a
+        /// value type. -or- Value does not implement the <see cref="IConvertible" /> interface.
         /// </exception>
         /// <exception cref="FormatException">
-        /// Value is not in a format recognized by conversionType.
+        /// Value is not in a format recognized by conversion type.
         /// </exception>
         /// <exception cref="OverflowException">
-        /// Value represents a number that is out of the range of conversionType.
+        /// Value represents a number that is out of the range of conversion type.
         /// </exception>
         /// <exception cref="ArgumentNullException">ConversionType is <c>null</c>.</exception>
         public static T GetValue<T>(string variableName)

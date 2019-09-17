@@ -37,7 +37,7 @@ namespace ThingAppraiser
         /// <param name="attribute">Name of the attribute.</param>
         /// <returns>string value if found attribute, otherwise empty string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="element" /> is <c>null</c>. -or-
         /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -62,7 +62,7 @@ namespace ThingAppraiser
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="element" /> is <c>null</c>. -or-
         /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -115,7 +115,7 @@ namespace ThingAppraiser
         /// <param name="subelement">Name of the subelement to find.</param>
         /// <returns>First found subelement which can be <c>null</c>.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="element" /> is <c>null</c>. -or-
         /// <paramref name="subelement" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -152,7 +152,7 @@ namespace ThingAppraiser
         /// <param name="attribute">Name of the attribute.</param>
         /// <returns>string value if found attribute, otherwise empty string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="element" /> is <c>null</c>. -or-
         /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -177,7 +177,7 @@ namespace ThingAppraiser
         /// Converted value if found attribute, otherwise exception could be thrown.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="element" /> is <c>null</c> -or-
+        /// <paramref name="element" /> is <c>null</c>. -or-
         /// <paramref name="attribute" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">

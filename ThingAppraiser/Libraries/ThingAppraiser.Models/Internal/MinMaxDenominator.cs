@@ -65,7 +65,7 @@ namespace ThingAppraiser.Models.Internal
         /// <param name="selector">A function to extract value from every item.</param>
         /// <returns>Object with min, max and denominator values of specified collection.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="items" /> is <c>null</c> -or-
+        /// <paramref name="items" /> is <c>null</c>. -or-
         /// <paramref name="selector" /> is <c>null</c> .
         /// </exception>
         /// <exception cref="ArgumentException">

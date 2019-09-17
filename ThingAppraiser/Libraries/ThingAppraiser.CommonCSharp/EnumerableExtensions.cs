@@ -96,5 +96,90 @@ namespace ThingAppraiser
 
             return foundIndex;
         }
+
+        /// <summary>
+        /// Creates a <see cref="IReadOnlyDictionary{TKey, TValue}" /> from an
+        /// <see cref="IEnumerable{T}" /> according to specified key selector and element selector
+        /// functions.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        /// The type of the key returned by <paramref name="keySelector" />.
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        /// The type of the value returned by <paramref name="elementSelector" />
+        /// .</typeparam>
+        /// <param name="source">
+        /// An <see cref="IEnumerable{T}" /> to create
+        /// <see cref="IReadOnlyDictionary{TKey, TValue}" /> from.
+        /// </param>
+        /// <param name="keySelector">A function to extract a key from each element.</param>
+        /// <param name="elementSelector">
+        /// A transform function to produce a result element value from each element.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IReadOnlyDictionary{TKey, TValue}" /> that contains values of type
+        /// <typeparamref name="TElement" /> selected from the input sequence.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="source" /> or <paramref name="keySelector" /> or
+        /// <paramref name="elementSelector" /> is <c>null</c>. -or-
+        /// <paramref name="keySelector" /> produces a key that is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="keySelector" /> produces duplicate keys for two elements.
+        /// </exception>
+        public static IReadOnlyDictionary<TKey, TElement>
+            ToReadOnlyDictionary<TSource, TKey, TElement>(
+                this IEnumerable<TSource> source,
+                Func<TSource, TKey> keySelector,
+                Func<TSource, TElement> elementSelector)
+            where TKey: notnull
+        {
+            return source.ToDictionary(keySelector, elementSelector);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IReadOnlyList{T}" /> from an <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">
+        /// The <see cref="IEnumerable{T}" /> to create a <see cref="IReadOnlyList{T}" /> from.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IReadOnlyList{T}" /> that contains elements from the input sequence.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="source" /> is <c>null</c>.
+        /// </exception>
+        public static IReadOnlyList<TSource> ToReadOnlyList<TSource>(
+            this IEnumerable<TSource> source)
+        {
+            return source.ToList();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IReadOnlyCollection{T}" /> from an <see cref="IEnumerable{T}" />.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        /// The <see cref="IEnumerable{T}" /> to create a <see cref="IReadOnlyCollection{T}" />
+        /// from.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IReadOnlyCollection{T}" /> that contains elements from the input sequence.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="source" /> is <c>null</c>.
+        /// </exception>
+        public static IReadOnlyCollection<TSource> ToReadOnlyCollection<TSource>(
+            this IEnumerable<TSource> source)
+        {
+            return source.ToList();
+        }
     }
 }

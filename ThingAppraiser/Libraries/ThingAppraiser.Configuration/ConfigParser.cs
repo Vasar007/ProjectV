@@ -18,7 +18,7 @@ namespace ThingAppraiser.Configuration
         /// <paramref name="key" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="key" /> isn't contained in the config dictionary -or-
+        /// <paramref name="key" /> isn't contained in the config dictionary. -or-
         /// <paramref name="key" /> presents empty string.
         /// </exception>
         /// <exception cref="ConfigurationErrorsException">
@@ -42,12 +42,12 @@ namespace ThingAppraiser.Configuration
         /// <paramref name="key" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="key" /> isn't contained in the dictionary -or-
+        /// <paramref name="key" /> isn't contained in the dictionary. -or-
         /// <paramref name="key" /> presents empty string.
         /// </exception>
         ///  <exception cref="InvalidCastException">
-        /// This conversion is not supported. -or- value is null and <typeparamref name="T" /> is a
-        /// value type. -or- value does not implement the <see cref="IConvertible" /> interface.
+        /// This conversion is not supported. -or- Value is null and <typeparamref name="T" /> is a
+        /// value type. -or- Value does not implement the <see cref="IConvertible" /> interface.
         /// </exception>
         /// <exception cref="FormatException">
         /// Value is not in a format recognized by <typeparamref name="T" />.

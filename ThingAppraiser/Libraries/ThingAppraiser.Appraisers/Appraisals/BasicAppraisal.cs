@@ -42,7 +42,7 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <paramref name="rawDataContainer" /> is <c>null</c> .
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Vote count characteristics do not contains in <paramref name="rawDataContainer" /> -or-
+        /// Vote count characteristics do not contains in <paramref name="rawDataContainer" />. -or-
         /// Vote average characteristics do not contains in <paramref name="rawDataContainer" />.
         /// </exception>
         public void PrepareCalculation(RawDataContainer rawDataContainer)
@@ -62,7 +62,7 @@ namespace ThingAppraiser.Appraisers.Appraisals
         /// <paramref name="entity" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// <see cref="_voteCountMMD" /> is <c>null</c> -or-
+        /// <see cref="_voteCountMMD" /> is <c>null</c>. -or-
         /// <see cref="_voteAverageMMD" /> is <c>null</c>.
         /// </exception>
         public double CalculateRating(BasicInfo entity)

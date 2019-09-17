@@ -14,13 +14,16 @@ module ContentFinderTests =
     [<Fact>]
     let ``Content directory name is null for "findContentForDir" call`` () =
         let contentType = ContentFinder.ContentType.Movie
+
         raises<ArgumentNullException> <@ ContentFinder.findContentForDir null contentType @>
 
     [<Fact>]
     let ``Directory sequence is null for "findContentForDirectoryWith" call`` () =
         let contentType = ContentFinder.ContentType.Movie
         let f = fun (_: string) (_: ContentFinder.ScannerArguments) -> Seq.empty<string>
-        raises<ArgumentNullException> <@ ContentFinder.findContentForDirectoryWith null f contentType @>
+        
+        raises<ArgumentNullException>
+            <@ ContentFinder.findContentForDirectoryWith null f contentType @>
 
     [<Fact>]
     let ``Directory sequence is null for "findContent" call`` () =

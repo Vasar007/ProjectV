@@ -17,7 +17,7 @@ namespace ThingAppraiser
         /// </param>
         /// <returns>Returns passed value.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="obj" /> is <c>null</c> -or-
+        /// <paramref name="obj" /> is <c>null</c>. -or-
         /// <paramref name="paramName" /> is <c>null</c>.
         /// </exception>
         public static T ThrowIfNull<T>(this T obj, string paramName)
@@ -45,7 +45,7 @@ namespace ThingAppraiser
         /// </param>
         /// <returns>The original string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="str" /> is <c>null</c> -or-
+        /// <paramref name="str" /> is <c>null</c>. -or-
         /// <paramref name="paramName" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -77,7 +77,7 @@ namespace ThingAppraiser
         /// </param>
         /// <returns>The original string.</returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="str" /> is <c>null</c> -or-
+        /// <paramref name="str" /> is <c>null</c>. -or-
         /// <paramref name="paramName" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -113,7 +113,7 @@ namespace ThingAppraiser
         /// otherwise.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="collection" /> is <c>null</c> -or-
+        /// <paramref name="collection" /> is <c>null</c>. -or-
         /// <paramref name="paramName" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
