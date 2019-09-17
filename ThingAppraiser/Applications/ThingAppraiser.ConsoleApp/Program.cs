@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThingAppraiser.Core;
@@ -134,8 +133,8 @@ namespace ThingAppraiser.ConsoleApp
         {
             IReadOnlyDictionary<string, IReadOnlyList<string>> result = 
                 ContentFinder.findContentForDir(
-                    @"E:\Anime\Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka",
-                    ContentFinder.ContentType.Movie
+                    @"C:\Users\vasar\Documents\GitHub",
+                    ContentFinder.ContentType.Text
                 )
                 .ToReadOnlyDictionary(
                     tuple => tuple.Item1,
