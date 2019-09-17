@@ -335,5 +335,5 @@ ASALocalRun/
 credentials.json
 token.json/
 /ThingAppraiser/MigrationBackup
-ThingAppraiser/WebServices/ProcessingWebService/credentials.json
-ThingAppraiser/Library/Core/credentials.json
+ThingAppraiser/WebServices/ThingAppraiser.ProcessingWebService/credentials.json
+ThingAppraiser/Libraries/ThingAppraiser.Core/credentials.json

@@ -3,55 +3,73 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Libraries\Models\Models.csproj", "{3CCE9023-B85D-4450-83D6-3D652007900A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Models", "Libraries\ThingAppraiser.Models\ThingAppraiser.Models.csproj", "{3CCE9023-B85D-4450-83D6-3D652007900A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Libraries\Logging\Logging.csproj", "{691EF706-60F9-4092-A0B9-529DE966443C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Logging", "Libraries\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj", "{691EF706-60F9-4092-A0B9-529DE966443C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOHelperClasses", "Libraries\IOHelperClasses\IOHelperClasses.csproj", "{30383659-A566-4FF3-94EE-C53B9DF64FEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.IOHelperClasses", "Libraries\ThingAppraiser.IOHelperClasses\ThingAppraiser.IOHelperClasses.csproj", "{30383659-A566-4FF3-94EE-C53B9DF64FEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputProcessing", "Libraries\InputProcessing\InputProcessing.csproj", "{5228B7AB-6AD0-4988-BF96-2B1A1CCC9AE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.InputProcessing", "Libraries\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj", "{5228B7AB-6AD0-4988-BF96-2B1A1CCC9AE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutputProcessing", "Libraries\OutputProcessing\OutputProcessing.csproj", "{6D9824D8-3429-4B40-B999-4B690437677A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.OutputProcessing", "Libraries\ThingAppraiser.OutputProcessing\ThingAppraiser.OutputProcessing.csproj", "{6D9824D8-3429-4B40-B999-4B690437677A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crawlers", "Libraries\Crawlers\Crawlers.csproj", "{5CC51BCE-A503-4614-BDDB-5A66C177D41D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Crawlers", "Libraries\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj", "{5CC51BCE-A503-4614-BDDB-5A66C177D41D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appraisers", "Libraries\Appraisers\Appraisers.csproj", "{A3E7BDF8-B64E-4435-8CE3-471B8CAA6F6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Appraisers", "Libraries\ThingAppraiser.Appraisers\ThingAppraiser.Appraisers.csproj", "{A3E7BDF8-B64E-4435-8CE3-471B8CAA6F6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Libraries\Core\Core.csproj", "{CC0EF513-E29D-4CB0-A2BA-767BAD540EC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Core", "Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj", "{CC0EF513-E29D-4CB0-A2BA-767BAD540EC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Libraries\Communication\Communication.csproj", "{CCFB8CA9-6597-413D-9E04-1FAA5AF4F24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Communication", "Libraries\ThingAppraiser.Communication\ThingAppraiser.Communication.csproj", "{CCFB8CA9-6597-413D-9E04-1FAA5AF4F24B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonHelperClasses", "Libraries\CommonHelperClasses\CommonHelperClasses.csproj", "{6E425CF6-A8A7-49A2-A679-6D97E8A0F1B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.CommonCSharp", "Libraries\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj", "{6E425CF6-A8A7-49A2-A679-6D97E8A0F1B9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "Applications\ConsoleApp\ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.ConsoleApp", "Applications\ThingAppraiser.ConsoleApp\ThingAppraiser.ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopApp", "Applications\DesktopApp\DesktopApp.csproj", "{2572EE5A-863F-4C5D-9855-85A400920D34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingAppraiser.DesktopApp", "Applications\ThingAppraiser.DesktopApp\ThingAppraiser.DesktopApp.csproj", "{2572EE5A-863F-4C5D-9855-85A400920D34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyLogicSystem", "Libraries\FuzzyLogicSystem\FuzzyLogicSystem.csproj", "{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.FuzzyLogicSystem", "Libraries\ThingAppraiser.FuzzyLogicSystem\ThingAppraiser.FuzzyLogicSystem.csproj", "{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "Libraries\DAL\DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DAL", "Libraries\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebServices", "WebServices", "{178A5A26-091E-4A8D-A385-171C3644A7D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunicationWebService", "WebServices\CommunicationWebService\CommunicationWebService.csproj", "{630BF2E5-79AD-4247-A1A2-7AA85EAA5523}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.CommunicationWebService", "WebServices\ThingAppraiser.CommunicationWebService\ThingAppraiser.CommunicationWebService.csproj", "{630BF2E5-79AD-4247-A1A2-7AA85EAA5523}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationWebService", "WebServices\ConfigurationWebService\ConfigurationWebService.csproj", "{02F143A6-8BA2-4F1E-8F91-55C0B3942A8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.ConfigurationWebService", "WebServices\ThingAppraiser.ConfigurationWebService\ThingAppraiser.ConfigurationWebService.csproj", "{02F143A6-8BA2-4F1E-8F91-55C0B3942A8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessingWebService", "WebServices\ProcessingWebService\ProcessingWebService.csproj", "{EEF0F77E-2054-4033-BB78-D30FED7E45C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.ProcessingWebService", "WebServices\ThingAppraiser.ProcessingWebService\ThingAppraiser.ProcessingWebService.csproj", "{EEF0F77E-2054-4033-BB78-D30FED7E45C0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{A7284513-CE2B-43D7-833E-99752D705D26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A3BD6BDE-F139-4D02-93C8-F006CF96016D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramBotWebService", "WebServices\TelegramBotWebService\TelegramBotWebService.csproj", "{A3D3F035-6372-422B-8066-769D9251982A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.TelegramBotWebService", "WebServices\ThingAppraiser.TelegramBotWebService\ThingAppraiser.TelegramBotWebService.csproj", "{A3D3F035-6372-422B-8066-769D9251982A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TmdbService", "Libraries\ExternalServices\TmdbService\TmdbService.csproj", "{1C03E557-5126-406D-BEA2-4BDC1CCFEEFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.TmdbService", "Libraries\ExternalServices\ThingAppraiser.TmdbService\ThingAppraiser.TmdbService.csproj", "{1C03E557-5126-406D-BEA2-4BDC1CCFEEFB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalServices", "ExternalServices", "{C4DBA83C-3341-48BF-9F8C-4F05EC08EDB3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamService", "Libraries\ExternalServices\SteamService\SteamService.csproj", "{8B98DC38-8965-4935-A7EE-0D30EC0F2BF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.SteamService", "Libraries\ExternalServices\ThingAppraiser.SteamService\ThingAppraiser.SteamService.csproj", "{8B98DC38-8965-4935-A7EE-0D30EC0F2BF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OmdbService", "Libraries\ExternalServices\OmdbService\OmdbService.csproj", "{614B4A3C-85D5-4CFD-A4AA-B89BFE214098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.OmdbService", "Libraries\ExternalServices\ThingAppraiser.OmdbService\ThingAppraiser.OmdbService.csproj", "{614B4A3C-85D5-4CFD-A4AA-B89BFE214098}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D27F98B1-E100-42F1-A514-69C92FFA9609}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.CommonTests", "Tests\ThingAppraiser.CommonTests\ThingAppraiser.CommonTests.csproj", "{46007638-699C-41F9-9578-6E177A4CB599}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Building", "Libraries\ThingAppraiser.Building\ThingAppraiser.Building.csproj", "{2201541E-75ED-40DD-B121-B3195AA946A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Configuration", "Libraries\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj", "{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.TaskService", "Libraries\ThingAppraiser.TaskService\ThingAppraiser.TaskService.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Appraisers.Tests", "Tests\ThingAppraiser.Appraisers.Tests\ThingAppraiser.Appraisers.Tests.csproj", "{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirectories", "Libraries\ThingAppraiser.ContentDirectories\ThingAppraiser.ContentDirectories.fsproj", "{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirectories.Tests", "Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj", "{67B455A2-12BF-485A-819A-D42A249667B7}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ThingAppraiser.CommonFSharp", "Libraries\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj", "{6A688168-767F-4798-8D56-9BA6131D6CD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +161,38 @@ Global
 		{614B4A3C-85D5-4CFD-A4AA-B89BFE214098}.Debug|x64.Build.0 = Debug|x64
 		{614B4A3C-85D5-4CFD-A4AA-B89BFE214098}.Release|x64.ActiveCfg = Release|x64
 		{614B4A3C-85D5-4CFD-A4AA-B89BFE214098}.Release|x64.Build.0 = Release|x64
+		{46007638-699C-41F9-9578-6E177A4CB599}.Debug|x64.ActiveCfg = Debug|x64
+		{46007638-699C-41F9-9578-6E177A4CB599}.Debug|x64.Build.0 = Debug|x64
+		{46007638-699C-41F9-9578-6E177A4CB599}.Release|x64.ActiveCfg = Release|x64
+		{46007638-699C-41F9-9578-6E177A4CB599}.Release|x64.Build.0 = Release|x64
+		{2201541E-75ED-40DD-B121-B3195AA946A9}.Debug|x64.ActiveCfg = Debug|x64
+		{2201541E-75ED-40DD-B121-B3195AA946A9}.Debug|x64.Build.0 = Debug|x64
+		{2201541E-75ED-40DD-B121-B3195AA946A9}.Release|x64.ActiveCfg = Release|x64
+		{2201541E-75ED-40DD-B121-B3195AA946A9}.Release|x64.Build.0 = Release|x64
+		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}.Debug|x64.ActiveCfg = Debug|x64
+		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}.Debug|x64.Build.0 = Debug|x64
+		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}.Release|x64.ActiveCfg = Release|x64
+		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}.Release|x64.Build.0 = Release|x64
+		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Debug|x64.ActiveCfg = Debug|x64
+		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Debug|x64.Build.0 = Debug|x64
+		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Release|x64.ActiveCfg = Release|x64
+		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}.Release|x64.Build.0 = Release|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Debug|x64.ActiveCfg = Debug|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Debug|x64.Build.0 = Debug|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Release|x64.ActiveCfg = Release|x64
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}.Release|x64.Build.0 = Release|x64
+		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE}.Debug|x64.ActiveCfg = Debug|x64
+		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE}.Debug|x64.Build.0 = Debug|x64
+		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE}.Release|x64.ActiveCfg = Release|x64
+		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE}.Release|x64.Build.0 = Release|x64
+		{67B455A2-12BF-485A-819A-D42A249667B7}.Debug|x64.ActiveCfg = Debug|x64
+		{67B455A2-12BF-485A-819A-D42A249667B7}.Debug|x64.Build.0 = Debug|x64
+		{67B455A2-12BF-485A-819A-D42A249667B7}.Release|x64.ActiveCfg = Release|x64
+		{67B455A2-12BF-485A-819A-D42A249667B7}.Release|x64.Build.0 = Release|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Debug|x64.ActiveCfg = Debug|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Debug|x64.Build.0 = Debug|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.ActiveCfg = Release|x64
+		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,6 +220,14 @@ Global
 		{C4DBA83C-3341-48BF-9F8C-4F05EC08EDB3} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{8B98DC38-8965-4935-A7EE-0D30EC0F2BF2} = {C4DBA83C-3341-48BF-9F8C-4F05EC08EDB3}
 		{614B4A3C-85D5-4CFD-A4AA-B89BFE214098} = {C4DBA83C-3341-48BF-9F8C-4F05EC08EDB3}
+		{46007638-699C-41F9-9578-6E177A4CB599} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{2201541E-75ED-40DD-B121-B3195AA946A9} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{8B7F0908-E2A7-43B0-9B5E-B11461BC4776} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{67B455A2-12BF-485A-819A-D42A249667B7} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{6A688168-767F-4798-8D56-9BA6131D6CD4} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}
