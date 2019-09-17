@@ -132,8 +132,8 @@ namespace ThingAppraiser.ConsoleApp
 
         private static void TestConentDirectories()
         {
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
-                .findContentForDir(
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result = 
+                ContentFinder.findContentForDir(
                     @"E:\Anime\Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka",
                     ContentFinder.ContentType.Movie
                 )
