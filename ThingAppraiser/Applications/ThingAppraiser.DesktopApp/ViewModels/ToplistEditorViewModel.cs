@@ -78,7 +78,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             IReadOnlyList<int> existsNumbers = _toplist.Blocks
                 .Select(block => block.Number)
                 .OrderBy(number => number)
-                .ToList();
+                .ToReadOnlyList();
 
             int blockNumber = existsNumbers.Count > 0 && existsNumbers.First() != 1
                 ? 1

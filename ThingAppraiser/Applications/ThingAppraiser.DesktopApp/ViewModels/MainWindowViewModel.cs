@@ -108,7 +108,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 { DesktopOptions.PageNames.SteamPage, 3 },
                 { DesktopOptions.PageNames.ExpertModePage, 4 },
                 { DesktopOptions.PageNames.ToplistStartPage, 5 },
-                { DesktopOptions.PageNames.ToplistEditorPage, 6 }
+                { DesktopOptions.PageNames.ToplistEditorPage, 6 },
+                { DesktopOptions.PageNames.ContentFinderPage, 7 }
             };
 
             // TODO: create new scenes for needed views dynamically in separate tabs.
@@ -149,6 +150,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
                 new SceneItem(
                     DesktopOptions.PageNames.ToplistEditorPage,
+                    new ProgressDialog()
+                ),
+
+                new SceneItem(
+                    DesktopOptions.PageNames.ContentFinderPage,
                     new ProgressDialog()
                 )
             };

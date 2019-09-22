@@ -26,6 +26,8 @@ namespace ThingAppraiser.DesktopApp.Domain
             public static string ToplistStartPage { get; } = "Toplist editor - start page";
 
             public static string ToplistEditorPage { get; } = "Toplist editor";
+
+            public static string ContentFinderPage { get; } = "Content finder";
         }
 
         public static class HintTexts

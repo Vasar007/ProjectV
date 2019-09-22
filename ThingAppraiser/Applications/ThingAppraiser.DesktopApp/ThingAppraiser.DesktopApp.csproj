@@ -92,6 +92,7 @@
     <Compile Include="Domain\ObservableDictionary.cs" />
     <Compile Include="Domain\ObservableSet.cs" />
     <Compile Include="Domain\TaskExtension.cs" />
+    <Compile Include="Models\ContentFinder\ContentFinderInfo.cs" />
     <Compile Include="Models\DataSuppliers\IImageSupplier.cs" />
     <Compile Include="Models\DataSuppliers\IThingGrader.cs" />
     <Compile Include="Models\DataSuppliers\OmdbImageSupplier.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="Models\DataSuppliers\PosterSize.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\SceneItem.cs" />
-    <Compile Include="Models\Data Producers\ThingProducer.cs" />
+    <Compile Include="Models\DataProducers\ThingProducer.cs" />
     <Compile Include="Models\DataSuppliers\IThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplier.cs" />
     <Compile Include="Models\DataSuppliers\ThingSupplierMock.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Models\Toplists\ToplistType.cs" />
     <Compile Include="Models\Toplists\ToplistXml.cs" />
     <Compile Include="ViewModels\BrowsingViewModel.cs" />
+    <Compile Include="ViewModels\ContentFinderViewModel.cs" />
     <Compile Include="ViewModels\CreateToplistViewModel.cs" />
     <Compile Include="ViewModels\ExecutableDialogs.cs" />
     <Compile Include="ViewModels\EnterDataViewModel.cs" />
@@ -129,6 +131,9 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\BrowsingControl.xaml.cs">
       <DependentUpon>BrowsingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ContentFinderControl.xaml.cs">
+      <DependentUpon>ContentFinderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateToplistDialog.xaml.cs">
       <DependentUpon>CreateToplistDialog.xaml</DependentUpon>
@@ -170,6 +175,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\BrowsingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ContentFinderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
