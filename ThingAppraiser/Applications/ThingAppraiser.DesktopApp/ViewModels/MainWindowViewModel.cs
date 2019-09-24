@@ -155,7 +155,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
                 new SceneItem(
                     DesktopOptions.PageNames.ContentFinderPage,
-                    new ProgressDialog()
+                    new ContentFinderControl(dialogIdentifier)
                 )
             };
 

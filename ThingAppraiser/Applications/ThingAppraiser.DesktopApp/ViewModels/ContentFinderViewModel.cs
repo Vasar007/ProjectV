@@ -6,8 +6,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class ContentFinderViewModel : ViewModelBase
     {
-        public ContentFinderViewModel()
+        public object DialogIdentifier { get; }
+
+        public ContentFinderViewModel(object dialogIdentifier)
         {
+            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
         }
     }
 }
