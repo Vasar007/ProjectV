@@ -136,7 +136,7 @@ namespace ThingAppraiser
                 this IEnumerable<TSource> source,
                 Func<TSource, TKey> keySelector,
                 Func<TSource, TElement> elementSelector)
-            //where TKey: notnull
+            where TKey: notnull
         {
             return source.ToDictionary(keySelector, elementSelector);
         }
