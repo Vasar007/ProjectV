@@ -5,6 +5,7 @@ using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Logging;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -39,15 +40,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new WinForms.OpenFileDialog
+            using var dialog = new CommonOpenFileDialog
             {
-                FileName = "things.txt",
-                DefaultExt = ".csv",
-                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"
+                Title = "Open things file",
+                DefaultFileName = "things.txt",
+                DefaultExtension = ".csv"
             };
+            dialog.Filters.Add(new CommonFileDialogFilter("CSV Files (*.csv)", "*.csv"));
+            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            WinForms.DialogResult result = dialog.ShowDialog();
-            if (result == WinForms.DialogResult.OK)
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
             {
                 mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
             }
@@ -57,15 +60,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new WinForms.OpenFileDialog
+            using var dialog = new CommonOpenFileDialog
             {
-                FileName = "toplist.txt",
-                DefaultExt = ".txt",
-                Filter = "Text Files (*.txt)|*.txt"
+                Title = "Open toplist file",
+                DefaultFileName = "toplist.txt",
+                DefaultExtension = ".txt"
             };
+            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            WinForms.DialogResult result = dialog.ShowDialog();
-            if (result == WinForms.DialogResult.OK)
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
             {
                 mainViewModel.OpenToplistEditorScene(dialog.FileName);
             }
@@ -75,17 +79,35 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new WinForms.SaveFileDialog
+            using var dialog = new CommonSaveFileDialog
             {
-                FileName = "toplist.txt",
-                DefaultExt = ".txt",
-                Filter = "Text Files (*.txt)|*.txt"
+                Title = "Save toplist file",
+                DefaultFileName = "toplist.txt",
+                DefaultExtension = ".txt"
             };
+            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            WinForms.DialogResult result = dialog.ShowDialog();
-            if (result == WinForms.DialogResult.OK)
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
             {
                 mainViewModel.SaveToplistToFile(dialog.FileName);
+            }
+        }
+
+        public static void ExecuteOpenContentDirectoryDialog(MainWindowViewModel mainViewModel)
+        {
+            mainViewModel.ThrowIfNull(nameof(mainViewModel));
+
+            using var dialog = new CommonOpenFileDialog
+            {
+                Title = "Open content directory",
+                IsFolderPicker = true,
+            };
+
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                mainViewModel.OpenToplistEditorScene(dialog.FileName);
             }
         }
 
