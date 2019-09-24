@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.CommonCSharp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.ConsoleApp", "Applications\ThingAppraiser.ConsoleApp\ThingAppraiser.ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingAppraiser.DesktopApp", "Applications\ThingAppraiser.DesktopApp\ThingAppraiser.DesktopApp.csproj", "{2572EE5A-863F-4C5D-9855-85A400920D34}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.FuzzyLogicSystem", "Libraries\ThingAppraiser.FuzzyLogicSystem\ThingAppraiser.FuzzyLogicSystem.csproj", "{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DAL", "Libraries\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
@@ -70,6 +68,8 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirectories.Tests", "Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj", "{67B455A2-12BF-485A-819A-D42A249667B7}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.CommonFSharp", "Libraries\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj", "{6A688168-767F-4798-8D56-9BA6131D6CD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DesktopApp", "Applications\ThingAppraiser.DesktopApp\ThingAppraiser.DesktopApp.csproj", "{21EA00DC-FCBA-430B-9F05-7971785AA17A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,10 +121,6 @@ Global
 		{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}.Debug|x64.Build.0 = Debug|x64
 		{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}.Release|x64.ActiveCfg = Release|x64
 		{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}.Release|x64.Build.0 = Release|x64
-		{2572EE5A-863F-4C5D-9855-85A400920D34}.Debug|x64.ActiveCfg = Debug|x64
-		{2572EE5A-863F-4C5D-9855-85A400920D34}.Debug|x64.Build.0 = Debug|x64
-		{2572EE5A-863F-4C5D-9855-85A400920D34}.Release|x64.ActiveCfg = Release|x64
-		{2572EE5A-863F-4C5D-9855-85A400920D34}.Release|x64.Build.0 = Release|x64
 		{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}.Debug|x64.ActiveCfg = Debug|x64
 		{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}.Debug|x64.Build.0 = Debug|x64
 		{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1}.Release|x64.ActiveCfg = Release|x64
@@ -193,6 +189,10 @@ Global
 		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Debug|x64.Build.0 = Debug|x64
 		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.ActiveCfg = Release|x64
 		{6A688168-767F-4798-8D56-9BA6131D6CD4}.Release|x64.Build.0 = Release|x64
+		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Debug|x64.ActiveCfg = Debug|x64
+		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Debug|x64.Build.0 = Debug|x64
+		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|x64.ActiveCfg = Release|x64
+		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,7 +209,6 @@ Global
 		{CCFB8CA9-6597-413D-9E04-1FAA5AF4F24B} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{6E425CF6-A8A7-49A2-A679-6D97E8A0F1B9} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1} = {A7284513-CE2B-43D7-833E-99752D705D26}
-		{2572EE5A-863F-4C5D-9855-85A400920D34} = {A7284513-CE2B-43D7-833E-99752D705D26}
 		{7FD4C01A-B0C8-48A9-80BB-628089DBDAF1} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{B361A854-721F-4062-A6B8-C07950835D8E} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{630BF2E5-79AD-4247-A1A2-7AA85EAA5523} = {178A5A26-091E-4A8D-A385-171C3644A7D4}
@@ -228,6 +227,7 @@ Global
 		{A04E85B9-9E95-4F3D-AD08-7A5FCFD5CDBE} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{67B455A2-12BF-485A-819A-D42A249667B7} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{6A688168-767F-4798-8D56-9BA6131D6CD4} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{21EA00DC-FCBA-430B-9F05-7971785AA17A} = {A7284513-CE2B-43D7-833E-99752D705D26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

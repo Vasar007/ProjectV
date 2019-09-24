@@ -13,9 +13,20 @@ namespace ThingAppraiser.TmdbService
         private readonly static object _syncRoot = new object();
 
         /// <summary>
+        /// Back field for correspond property that contains configuration of TMDb service.
+        /// </summary>
+        public static TmdbServiceConfigurationInfo? _configuration;
+
+        /// <summary>
         /// Stores service configuration.
         /// </summary>
-        public static TmdbServiceConfigurationInfo Configuration { get; private set; }
+        public static TmdbServiceConfigurationInfo Configuration
+        {
+#pragma warning disable CS8603 // Possible null reference return.
+            get => _configuration.ThrowIfNull(nameof(_configuration));
+#pragma warning restore CS8603 // Possible null reference return.
+            private set => _configuration = value.ThrowIfNull(nameof(value));
+        }
 
 
         /// <summary>
@@ -55,10 +66,7 @@ namespace ThingAppraiser.TmdbService
         {
             lock (_syncRoot)
             {
-                if (Configuration is null)
-                {
-                    Configuration = newConfiguration;
-                }
+                Configuration = newConfiguration;
             }
         }
     }

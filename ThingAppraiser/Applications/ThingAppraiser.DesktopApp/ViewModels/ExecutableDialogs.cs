@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Logging;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using Ookii.Dialogs.Wpf;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -39,19 +40,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new CommonOpenFileDialog
+            var dialog = new OpenFileDialog
             {
                 Title = "Open things file",
-                DefaultFileName = "things.txt",
-                DefaultExtension = ".csv",
-                EnsureValidNames = true,
-                EnsureFileExists = true
+                FileName = "things.txt",
+                DefaultExt = ".csv",
+                Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt",
+                ValidateNames = true,
+                CheckFileExists = true
             };
-            dialog.Filters.Add(new CommonFileDialogFilter("CSV Files (*.csv)", "*.csv"));
-            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            CommonFileDialogResult result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            bool? result = dialog.ShowDialog();
+            if (result.GetValueOrDefault())
             {
                 mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
             }
@@ -61,18 +61,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new CommonOpenFileDialog
+            var dialog = new OpenFileDialog
             {
                 Title = "Open toplist file",
-                DefaultFileName = "toplist.txt",
-                DefaultExtension = ".txt",
-                EnsureValidNames = true,
-                EnsureFileExists = true
+                FileName = "toplist.txt",
+                DefaultExt = ".txt",
+                Filter = "Text Files (*.txt)|*.txt",
+                ValidateNames = true,
+                CheckFileExists = true
             };
-            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            CommonFileDialogResult result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            bool? result = dialog.ShowDialog();
+            if (result.GetValueOrDefault())
             {
                 mainViewModel.OpenToplistEditorScene(dialog.FileName);
             }
@@ -82,18 +82,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new CommonSaveFileDialog
+            var dialog = new SaveFileDialog
             {
                 Title = "Save toplist file",
-                DefaultFileName = "toplist.txt",
-                DefaultExtension = ".txt",
-                EnsureValidNames = true,
-                EnsureFileExists = true
+                FileName = "toplist.txt",
+                DefaultExt = ".txt",
+                Filter = "Text Files (*.txt)|*.txt",
+                ValidateNames = true
             };
-            dialog.Filters.Add(new CommonFileDialogFilter("Text Files (*.txt)", "*.txt"));
 
-            CommonFileDialogResult result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            bool? result = dialog.ShowDialog();
+            if (result.GetValueOrDefault())
             {
                 mainViewModel.SaveToplistToFile(dialog.FileName);
             }
@@ -103,17 +102,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             mainViewModel.ThrowIfNull(nameof(mainViewModel));
 
-            using var dialog = new CommonOpenFileDialog
+            var dialog = new VistaFolderBrowserDialog
             {
-                Title = "Open content directory",
-                IsFolderPicker = true,
-                EnsurePathExists = true
+                Description = "Open content directory",
+                UseDescriptionForTitle = true
             };
 
-            CommonFileDialogResult result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            bool? result = dialog.ShowDialog();
+            if (result.GetValueOrDefault())
             {
-                mainViewModel.OpenToplistEditorScene(dialog.FileName);
+                mainViewModel.OpenToplistEditorScene(dialog.SelectedPath);
             }
         }
 

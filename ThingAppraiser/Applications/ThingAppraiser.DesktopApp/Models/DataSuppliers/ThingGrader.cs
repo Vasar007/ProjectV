@@ -45,8 +45,13 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             metadata.ThrowIfNull(nameof(metadata));
 
             if (metadata.OptionalData.TryGetValue(nameof(TmdbServiceConfiguration),
-                                                  out IOptionalData optionalData))
+                                                  out IOptionalData? optionalData))
             {
+                if (optionalData is null)
+                {
+                    throw new InvalidOperationException($"{nameof(optionalData)} cannot be null.");
+                }
+
                 if (!TmdbServiceConfiguration.HasValue)
                 {
                     var tmdbServiceConfig = (TmdbServiceConfigurationInfo) optionalData;
@@ -61,12 +66,11 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         {
             basicInfo.ThrowIfNull(nameof(basicInfo));
 
-            // Cast needs to inference type for pattern matching.
             return basicInfo switch
             {
-                OmdbMovieInfo _ => (IImageSupplier) new OmdbImageSupplier(),
+                OmdbMovieInfo _ => new OmdbImageSupplier(),
 
-                TmdbMovieInfo _ =>  new TmdbImageSupplier(TmdbServiceConfiguration.Configuration),
+                TmdbMovieInfo _ => new TmdbImageSupplier(TmdbServiceConfiguration.Configuration),
 
                 SteamGameInfo _ => new SteamImageSupplier(),
 

@@ -8,6 +8,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     {
         public object DialogIdentifier { get; }
 
+
         public ContentFinderViewModel(object dialogIdentifier)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));

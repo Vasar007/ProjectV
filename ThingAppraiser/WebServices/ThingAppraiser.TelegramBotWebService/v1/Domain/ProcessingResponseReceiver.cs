@@ -78,7 +78,7 @@ namespace ThingAppraiser.TelegramBotWebService.v1.Domain
                         if (ratingValues is null)
                         {
                             throw new InvalidOperationException(
-                                "Rating data container contains null values"
+                                "Rating data container contains null values."
                             );
                         }
 

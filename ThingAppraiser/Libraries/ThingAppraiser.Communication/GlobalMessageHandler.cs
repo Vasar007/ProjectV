@@ -16,7 +16,7 @@ namespace ThingAppraiser.Communication
         /// <summary>
         /// Message handler to control communications with service and its components.
         /// </summary>
-        public static IMessageHandler MessageHandler { get; private set; }
+        private static IMessageHandler? MessageHandler { get; set; }
 
         /// <summary>
         /// Sets new global message handler.
@@ -46,7 +46,9 @@ namespace ThingAppraiser.Communication
             lock (_syncRoot)
             {
                 MessageHandler.ThrowIfNull(nameof(MessageHandler));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 return MessageHandler.GetMessage();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
         }
 
@@ -62,7 +64,9 @@ namespace ThingAppraiser.Communication
             lock (_syncRoot)
             {
                 MessageHandler.ThrowIfNull(nameof(MessageHandler));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 MessageHandler.OutputMessage(message);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
         }
 

@@ -13,10 +13,9 @@ namespace ThingAppraiser.ProcessingWebService.v1.Domain
 
         public IServiceRequestProcessor CreateRequestProcessor(ServiceType serviceType)
         {
-            // Cast needs to inference type for pattern matching.
             return serviceType switch
             {
-                ServiceType.Sequential => (IServiceRequestProcessor) new ServiceRequestProcessor(),
+                ServiceType.Sequential => new ServiceRequestProcessor(),
 
                 ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(),
 

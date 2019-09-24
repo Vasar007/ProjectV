@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Models
         /// <summary>
         /// Creates instance with default values.
         /// </summary>
-        public ModelBase()
+        protected ModelBase()
         {
         }
 
@@ -54,7 +54,7 @@ namespace ThingAppraiser.DesktopApp.Models
         #region INotifyPropertyChanged Implementation
 
         /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Notifies listeners that a property value has changed.

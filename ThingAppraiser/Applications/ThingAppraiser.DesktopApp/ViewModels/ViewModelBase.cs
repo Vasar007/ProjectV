@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         /// <summary>
         /// Creates instance with default values.
         /// </summary>
-        public ViewModelBase()
+        protected ViewModelBase()
         {
         }
 
@@ -54,7 +54,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         #region INotifyPropertyChanged Implementation
 
         /// <inheritdoc />
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Notifies listeners that a property value has changed.

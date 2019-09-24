@@ -26,7 +26,6 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
             {
                 _serviceConfigurationInfo = TmdbServiceConfiguration.Configuration;
             }
-            _serviceConfigurationInfo.ThrowIfNull(nameof(_serviceConfigurationInfo));
 
             if (!(data is TmdbMovieInfo movieInfo))
             {

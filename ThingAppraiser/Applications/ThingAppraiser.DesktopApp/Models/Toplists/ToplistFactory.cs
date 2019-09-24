@@ -17,10 +17,9 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             _logger.Info($"Creating toplist [Name: {toplistName}, Type: {toplistType.ToString()} " +
                          $"Format: {toplistFormat.ToString()}].");
 
-            // Cast needs to inference type for pattern matching.
             return toplistType switch
             {
-                ToplistType.Score => (ToplistBase) new ScoreToplist(toplistName, toplistFormat),
+                ToplistType.Score => new ScoreToplist(toplistName, toplistFormat),
 
                 ToplistType.Simple => new SimpleToplist(toplistName, toplistFormat),
 

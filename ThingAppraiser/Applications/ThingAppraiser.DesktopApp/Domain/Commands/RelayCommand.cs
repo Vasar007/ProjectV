@@ -36,7 +36,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Commands
 
         #region ICommand Implementation
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
