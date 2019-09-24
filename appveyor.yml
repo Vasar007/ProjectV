@@ -16,6 +16,9 @@ configuration:
 matrix:
   fast_finish: true
 
+install: 
+- cmd: choco install dotnetcore-sdk
+
 before_build:
 - cmd: cd ThingAppraiser
 - cmd: dotnet restore
