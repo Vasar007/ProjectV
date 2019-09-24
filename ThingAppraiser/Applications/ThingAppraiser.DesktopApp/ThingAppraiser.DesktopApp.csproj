@@ -302,13 +302,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors">
-      <Version>1.2.0</Version>
+      <Version>1.2.1-ci561</Version>
     </PackageReference>
     <PackageReference Include="MaterialDesignThemes">
-      <Version>2.6.0</Version>
+      <Version>3.0.0-ci561</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
       <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="WindowsAPICodePack-Shell">
+      <Version>1.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

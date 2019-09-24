@@ -18,61 +18,7 @@
                 Choose directory to find content
             </Button>
 
-            <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          ScrollViewer.CanContentScroll="False">
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type modelsToplists:ToplistBlock}">
-
-                        <Border Visibility="Visible"
-                                BorderThickness="2"
-                                CornerRadius="8"
-                                Margin="8"
-                                BorderBrush="Gray">
-                            <StackPanel Margin="4"
-                                        Orientation="Vertical">
-
-                                <StackPanel Margin="4"
-                                            Orientation="Horizontal">
-
-                                    <TextBox Height="25"
-                                             Width="560"
-                                             MaxLength="80"
-                                             Margin="0 0 16 0"
-                                             VerticalAlignment="Top"
-                                             Text="{Binding Path=Title}" />
-
-                                    <Button Content="{materialDesign:PackIcon Delete}"
-                                            Style="{StaticResource ResourceKey=MaterialDesignFlatDarkBgButton}"
-                                            Margin="0 0 8 0"
-                                            ToolTip="Delete block"
-                                            x:Name="DeleteBlockButton"
-                                            Command="{Binding Path=DataContext.RemoveBlockCommand,
-                                                      RelativeSource={RelativeSource Mode=FindAncestor,
-                                                                      AncestorType={x:Type UserControl}}}" 
-                                            CommandParameter="{Binding Path=.}" />
-                                </StackPanel>
-
-                                <Separator Height="5" />
-
-                                <ItemsControl ItemsSource="{Binding Path=Items}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate DataType="{x:Type modelsToplists:ToplistItem}">
-                                            <views:ToplistBox Margin="4" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <ContentControl Content="{Binding Path=CreationToplistBox}"
-                                                Margin="4" />
-
-                            </StackPanel>
-                        </Border>
-
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            
         </StackPanel>
     </ScrollViewer>
 </UserControl>

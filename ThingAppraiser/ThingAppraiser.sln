@@ -69,7 +69,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirec
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.ContentDirectories.Tests", "Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj", "{67B455A2-12BF-485A-819A-D42A249667B7}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ThingAppraiser.CommonFSharp", "Libraries\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj", "{6A688168-767F-4798-8D56-9BA6131D6CD4}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.CommonFSharp", "Libraries\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj", "{6A688168-767F-4798-8D56-9BA6131D6CD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
