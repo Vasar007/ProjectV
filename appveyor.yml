@@ -1,5 +1,5 @@
 version: '{build}'
-image: Visual Studio 2019 Preview
+image: Visual Studio 2019
 
 branches:
     only:
@@ -15,9 +15,6 @@ configuration:
 
 matrix:
   fast_finish: true
-
-install: 
-- cmd: choco install dotnetcore-sdk --pre
 
 before_build:
 - cmd: cd ThingAppraiser
