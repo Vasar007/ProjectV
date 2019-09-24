@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.DAL
+namespace ThingAppraiser.DAL.DataBaseProviders
 {
     // TODO: add command creation method (important).
     public sealed class DbHelperScope : IDisposable

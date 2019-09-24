@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using ThingAppraiser.DAL.Properties;
+using ThingAppraiser.DAL.DataBaseProviders;
 using ThingAppraiser.DAL.Mappers;
+using ThingAppraiser.DAL.Properties;
 using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Repositories
