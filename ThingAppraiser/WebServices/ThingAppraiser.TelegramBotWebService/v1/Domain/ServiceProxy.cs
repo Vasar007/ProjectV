@@ -3,8 +3,9 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Models.WebService;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {

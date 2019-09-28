@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Models.Data;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Exceptions;
 
 namespace ThingAppraiser.Models.Internal
 {
+    // TODO: this class can be struct.
     /// <summary>
     /// Represents pair of three numbers: minimum, maximum and their subtraction. Used for data 
     /// processing.

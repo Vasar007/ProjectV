@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using ThingAppraiser.DesktopApp.ViewModels;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {

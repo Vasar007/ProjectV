@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.SteamService.Models
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.SteamService.Models
 {
     public sealed class SteamBriefInfo
     {

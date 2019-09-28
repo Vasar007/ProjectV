@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Models.WebService;
-using ThingAppraiser.Logging;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.CommunicationWebService.v1.Domain;
+using ThingAppraiser.Logging;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Controllers
 {

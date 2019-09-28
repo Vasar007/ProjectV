@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Communication
 {

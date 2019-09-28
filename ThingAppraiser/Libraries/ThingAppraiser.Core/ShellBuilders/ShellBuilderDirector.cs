@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.Core.ShellBuilders
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.Core.ShellBuilders
 {
     /// <summary>
     /// Builder director which controls of <see cref="Shell" /> creating process with the help of

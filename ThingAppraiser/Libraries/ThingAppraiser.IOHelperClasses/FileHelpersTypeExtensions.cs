@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ThingAppraiser;
+using ThingAppraiser.Extensions;
 
 namespace FileHelpers
 {

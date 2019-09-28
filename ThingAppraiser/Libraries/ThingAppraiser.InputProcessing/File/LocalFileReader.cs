@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input.File

@@ -1,4 +1,5 @@
-﻿using ThingAppraiser.Models.Internal;
+﻿using ThingAppraiser.Extensions;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.TmdbService
 {

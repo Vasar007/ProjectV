@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.SteamService
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.SteamService
 {
     public static class SteamApiClientFactory
     {

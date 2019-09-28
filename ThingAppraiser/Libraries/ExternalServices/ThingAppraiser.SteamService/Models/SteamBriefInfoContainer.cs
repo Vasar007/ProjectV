@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.SteamService.Models
 {

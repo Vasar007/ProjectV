@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using ThingAppraiser.ConfigurationWebService.v1.Domain;
+using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Models.WebService;
-using ThingAppraiser.Logging;
-using ThingAppraiser.ConfigurationWebService.v1.Domain;
 
 namespace ThingAppraiser.ConfigurationWebService.v1.Controllers
 {

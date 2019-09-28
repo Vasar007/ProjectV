@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 

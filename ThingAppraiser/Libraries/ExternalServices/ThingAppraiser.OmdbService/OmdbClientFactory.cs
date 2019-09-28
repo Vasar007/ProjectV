@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.OmdbService
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.OmdbService
 {
     public static class OmdbClientFactory
     {

@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 

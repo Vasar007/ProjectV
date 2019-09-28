@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.TmdbService
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.TmdbService
 {
     public static class TmdbClientFactory
     {

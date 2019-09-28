@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

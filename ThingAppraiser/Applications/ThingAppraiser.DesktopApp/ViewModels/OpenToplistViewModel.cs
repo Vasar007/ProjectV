@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.DesktopApp.ViewModels
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class OpenToplistViewModel : ViewModelBase
     {

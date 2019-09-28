@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
 
@@ -82,16 +83,16 @@ namespace ThingAppraiser.IO.Output
 
             IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync.Select(
                 outputterAsync => outputterAsync.SaveResults(results, storageName)
-            ).ToList();
+            ).ToReadOnlyList();
 
-            bool[] statuses = await Task.WhenAll(resultTasks);
+            IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            _logger.Info($"Couldn't save some results to \"{storageName}\".");
+            _logger.Info($"Could not save some results to \"{storageName}\".");
             return false;
         }
     }

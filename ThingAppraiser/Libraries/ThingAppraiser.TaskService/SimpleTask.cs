@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.Core;
 using ThingAppraiser.Core.ShellBuilders;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.IO.Input;
 using ThingAppraiser.IO.Output;
 using ThingAppraiser.Models.Internal;

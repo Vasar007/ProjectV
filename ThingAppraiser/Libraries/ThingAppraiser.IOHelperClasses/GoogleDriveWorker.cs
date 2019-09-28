@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
-using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input
@@ -55,16 +56,16 @@ namespace ThingAppraiser.IO.Input
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            List<Task<bool>> producers = _inputtersAsync.Select(
+            IReadOnlyList<Task<bool>> producers = _inputtersAsync.Select(
                 inputterAsync => TryReadThingNames(inputterAsync, queueToWrite, storageName)
-            ).ToList();
+            ).ToReadOnlyList();
 
-            bool[] statuses = await Task.WhenAll(producers);
+            IReadOnlyList<bool> statuses = await Task.WhenAll(producers);
             queueToWrite.Complete();
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
-                _logger.Info($"{statuses.Length} Thing names queues were read.");
+                _logger.Info($"{statuses.Count} Thing names queues were read.");
                 return true;
             }
 

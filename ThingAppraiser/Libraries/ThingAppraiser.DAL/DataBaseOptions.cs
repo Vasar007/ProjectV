@@ -1,4 +1,5 @@
 ﻿using ThingAppraiser.Configuration;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DAL
 {

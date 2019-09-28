@@ -6,6 +6,7 @@ using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Core.ShellBuilders;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;

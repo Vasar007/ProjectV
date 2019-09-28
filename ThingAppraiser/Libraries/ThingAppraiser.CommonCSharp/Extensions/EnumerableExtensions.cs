@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ThingAppraiser
+namespace ThingAppraiser.Extensions
 {
     /// <summary>
     /// Contains useful methods to work with enumerable items.

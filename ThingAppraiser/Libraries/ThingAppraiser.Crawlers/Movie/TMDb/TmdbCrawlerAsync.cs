@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -37,6 +38,8 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
             ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
+            throw new Exception("THIS IS A CRITICAL EXCEPTION.");
+
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );

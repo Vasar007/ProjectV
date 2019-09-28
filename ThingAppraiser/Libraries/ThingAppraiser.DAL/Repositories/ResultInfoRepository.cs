@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using ThingAppraiser.DAL.DataBaseProviders;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.DAL.Properties;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DAL.Repositories

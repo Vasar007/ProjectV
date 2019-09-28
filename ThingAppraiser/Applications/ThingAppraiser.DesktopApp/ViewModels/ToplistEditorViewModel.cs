@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.DesktopApp.Models.Toplists;
-using System.Collections.Generic;
-using System.IO;
-using System;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

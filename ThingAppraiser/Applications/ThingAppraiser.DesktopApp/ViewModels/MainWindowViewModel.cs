@@ -14,6 +14,7 @@ using ThingAppraiser.DesktopApp.Models.DataProducers;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.DesktopApp.Views;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.IO.Input.File;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;

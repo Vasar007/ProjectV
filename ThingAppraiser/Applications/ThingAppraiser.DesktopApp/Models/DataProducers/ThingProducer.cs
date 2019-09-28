@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.IO.Input;
 
 namespace ThingAppraiser.DesktopApp.Models.DataProducers

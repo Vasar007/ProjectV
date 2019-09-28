@@ -6,6 +6,7 @@ using ThingAppraiser.Communication;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.ContentDirectories;
 using ThingAppraiser.DAL.EntityFramework;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;

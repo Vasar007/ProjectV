@@ -7,6 +7,7 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Exceptions;
 using ThingAppraiser.Models.Internal;

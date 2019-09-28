@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 

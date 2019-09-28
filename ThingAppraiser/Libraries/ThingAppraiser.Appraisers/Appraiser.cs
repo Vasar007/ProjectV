@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 

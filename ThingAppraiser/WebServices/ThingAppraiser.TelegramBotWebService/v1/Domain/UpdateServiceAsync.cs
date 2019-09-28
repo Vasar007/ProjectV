@@ -6,6 +6,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using ThingAppraiser.Building;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.WebService;

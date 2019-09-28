@@ -1,4 +1,6 @@
-﻿namespace ThingAppraiser.Configuration
+﻿using ThingAppraiser.Extensions;
+
+namespace ThingAppraiser.Configuration
 {
     public sealed class ApiOptions : IOptions
     {

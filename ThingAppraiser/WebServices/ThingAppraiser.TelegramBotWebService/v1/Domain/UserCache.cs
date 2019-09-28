@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain

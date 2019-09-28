@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Models.WebService
 {

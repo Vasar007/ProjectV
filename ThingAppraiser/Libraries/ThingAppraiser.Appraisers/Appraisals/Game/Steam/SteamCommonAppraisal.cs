@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Appraisers.Appraisals.Game.Steam
 {

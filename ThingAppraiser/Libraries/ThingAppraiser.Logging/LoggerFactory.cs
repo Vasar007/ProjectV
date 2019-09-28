@@ -1,4 +1,5 @@
 ﻿using System;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Logging
 {

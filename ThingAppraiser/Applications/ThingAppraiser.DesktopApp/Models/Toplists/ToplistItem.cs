@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {

@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using Ookii.Dialogs.Wpf;
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SteamWebApiLib;
 using SteamWebApiLib.Models.AppDetails;
 using SteamWebApiLib.Models.BriefInfo;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.SteamService.Mappers;

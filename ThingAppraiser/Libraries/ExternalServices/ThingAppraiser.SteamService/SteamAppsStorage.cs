@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.SteamService.Models;
 

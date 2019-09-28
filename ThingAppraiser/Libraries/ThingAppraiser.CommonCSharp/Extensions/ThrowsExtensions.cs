@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ThingAppraiser
+namespace ThingAppraiser.Extensions
 {
     public static class ThrowsExtensions
     {

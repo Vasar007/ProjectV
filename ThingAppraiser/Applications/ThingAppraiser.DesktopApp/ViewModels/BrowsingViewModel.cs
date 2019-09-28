@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using ThingAppraiser.Models.WebService;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Models.Things;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

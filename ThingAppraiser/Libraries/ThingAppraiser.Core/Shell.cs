@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Core.ShellBuilders;
+using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
-using ThingAppraiser.Core.ShellBuilders;
 
 namespace ThingAppraiser.Core
 {

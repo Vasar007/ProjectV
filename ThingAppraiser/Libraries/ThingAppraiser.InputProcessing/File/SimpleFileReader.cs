@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using FileHelpers;
 using CsvHelper;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input.File

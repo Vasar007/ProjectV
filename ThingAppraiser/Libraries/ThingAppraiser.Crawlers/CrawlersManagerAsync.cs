@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
-    public sealed class CrawlersManagerAsync : IManager<CrawlerAsync>
+    public sealed class CrawlersManagerAsync : IManager<CrawlerAsync>, IDisposable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<CrawlersManagerAsync>();
@@ -59,16 +60,21 @@ namespace ThingAppraiser.Crawlers
                 consumers.Add(consumer);
             }
 
-            Task<bool[]> statusesTask = Task.WhenAll(producers);
+            Task<ResultOrException<bool>[]> statusesTask =
+                TaskHelper.WhenAllResultsOrExceptions(producers);
+
             Task consumersTasks = Task.WhenAll(consumers.Select(consumer => consumer.Completion));
+            Task splitQueueTask = SplitQueue(entitiesQueue, consumers);
 
-            await Task.WhenAll(SplitQueue(entitiesQueue, consumers), consumersTasks, statusesTask);
+            await Task.WhenAll(splitQueueTask, consumersTasks, statusesTask);
 
-            IReadOnlyList<bool> statuses =  await statusesTask;
-            foreach (BufferBlock<BasicInfo> rawDataQueue in rawDataQueues.Values)
-            {
-                rawDataQueue.Complete();
-            }
+            (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
+                statusesTask.Result.UnwrapResultsOrExceptions();
+
+            // Need to release queues before results and exceptions processing.
+            MarkAsCompleteQueues(rawDataQueues.Values);
+
+            CheckExceptions(taskExceptions);
 
             if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
             {
@@ -76,7 +82,7 @@ namespace ThingAppraiser.Crawlers
                 return true;
             }
 
-            _logger.Info("Crawlers have not received any data.");
+            _logger.Info("Crawlers have not received some data.");
             return false;
         }
 
@@ -103,6 +109,36 @@ namespace ThingAppraiser.Crawlers
             {
                 consumer.Complete();
             }
+        }
+
+        private static void MarkAsCompleteQueues(IEnumerable<BufferBlock<BasicInfo>> queues)
+        {
+            foreach (BufferBlock<BasicInfo> rawDataQueue in queues)
+            {
+                rawDataQueue.Complete();
+            }
+        }
+
+        private static void CheckExceptions(IReadOnlyList<Exception> taskExceptions)
+        {
+            if (!taskExceptions.Any()) return;
+
+            if (taskExceptions.Count == 1)
+            {
+                throw new Exception($"One of the crawlers failed.", taskExceptions.Single());
+            }
+
+            throw new AggregateException(
+                $"Some crawlers failed. Exceptions number: {taskExceptions.Count.ToString()}.",
+                taskExceptions
+            );
+        }
+
+
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

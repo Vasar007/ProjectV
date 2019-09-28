@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Domain.Commands
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Domain.Commands
 {
