@@ -203,7 +203,7 @@ namespace ThingAppraiser.IO.Input.GoogleDrive
             }
             finally
             {
-                DeleteFile(storageName);
+                DeleteFileSafe(storageName);
                 _logger.Debug($"Deleted temporary created file \"{storageName}\".");
             }
         }

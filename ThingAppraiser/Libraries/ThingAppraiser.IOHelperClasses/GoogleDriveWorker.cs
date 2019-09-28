@@ -27,7 +27,7 @@ namespace ThingAppraiser.IO
         /// If modifying these scopes, delete your previously saved credentials
         /// at ~/.credentials/tokens.json
         /// </remarks>
-        public static string[] Scopes { get; } = { DriveService.Scope.Drive };
+        public static IReadOnlyList<string> Scopes { get; } = new[] { DriveService.Scope.Drive };
 
         /// <summary>
         /// The name of the application that is used to obtain the required credentials.
@@ -49,7 +49,7 @@ namespace ThingAppraiser.IO
         /// <exception cref="ArgumentNullException">
         /// <paramref name="driveService" /> is <c>null</c>.
         /// </exception>
-        public GoogleDriveWorker(DriveService driveService)
+        protected GoogleDriveWorker(DriveService driveService)
         {
             GoogleDriveService = driveService.ThrowIfNull(nameof(driveService));
         }
@@ -162,7 +162,7 @@ namespace ThingAppraiser.IO
         /// </summary>
         /// <param name="filename">Filename to delete.</param>
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
-        protected static bool DeleteFile(string filename)
+        protected static bool DeleteFileSafe(string filename)
         {
             try
             {

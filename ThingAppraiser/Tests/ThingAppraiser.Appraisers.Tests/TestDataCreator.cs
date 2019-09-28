@@ -15,7 +15,7 @@ namespace ThingAppraiser.Appraisers.Tests
         internal static RawDataContainer CreateRawDataContainerWithBasicInfo(
             params BasicInfo[]? items)
         {
-            items ??= new BasicInfo[0];
+            items ??= Array.Empty<BasicInfo>();
 
             return CreateRawDataContainerWithBasicInfo(items.AsEnumerable());
         }

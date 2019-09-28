@@ -117,8 +117,8 @@ namespace ThingAppraiser.TmdbService
             try
             {
                 SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
-                query, page, includeAdult, year, cancellationToken
-            );
+                    query, page, includeAdult, year, cancellationToken
+                );
 
                 return _dataMapper.Transform(response);
             }
