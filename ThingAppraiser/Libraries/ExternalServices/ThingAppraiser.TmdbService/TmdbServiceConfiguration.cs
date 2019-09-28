@@ -33,7 +33,7 @@ namespace ThingAppraiser.TmdbService
         /// Checks if configuration was initilized before.
         /// </summary>
         /// <returns><c>true</c> if configuration was initilized, <c>false</c> otherwise.</returns>
-        public static bool HasValue => !(Configuration is null);
+        public static bool HasValue => !(_configuration is null);
 
         /// <summary>
         /// Updates configuration if it is <c>null</c>.
@@ -43,11 +43,11 @@ namespace ThingAppraiser.TmdbService
         public static bool SetServiceConfigurationIfNeed(
             TmdbServiceConfigurationInfo newConfiguration)
         {
-            if (Configuration is null)
+            if (_configuration is null)
             {
                 lock (_syncRoot)
                 {
-                    if (Configuration is null)
+                    if (_configuration is null)
                     {
                         Configuration = newConfiguration;
                         return true;
