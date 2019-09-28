@@ -119,10 +119,9 @@ namespace ThingAppraiser
         /// <paramref name="subelement" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="subelement" /> presents empty
-        /// string.
+        /// <paramref name="subelement" /> presents empty string.
         /// </exception>
-        public static XElement FindSubelement(XElement element, string subelement)
+        public static XElement? FindSubelement(XElement element, string subelement)
         {
             element.ThrowIfNull(nameof(element));
             subelement.ThrowIfNullOrEmpty(subelement);
@@ -201,7 +200,7 @@ namespace ThingAppraiser
         /// <exception cref="ArgumentException">
         /// <paramref name="element" /> presents empty string.
         /// </exception>
-        public XElement FindElement(string element)
+        public XElement? FindElement(string element)
         {
             element.ThrowIfNullOrEmpty(nameof(element));
 
