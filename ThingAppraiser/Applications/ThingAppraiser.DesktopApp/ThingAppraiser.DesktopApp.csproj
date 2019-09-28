@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="1.2.1-ci578" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.0.0-ci578" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.1-ci581" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.0-ci581" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.0.0-preview1" />
   </ItemGroup>
