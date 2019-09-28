@@ -9,7 +9,7 @@ namespace ThingAppraiser.Crawlers
     /// <summary>
     /// Class to control all process of collecting data from services.
     /// </summary>
-    public sealed class CrawlersManager : IManager<Crawler>
+    public sealed class CrawlersManager : IManager<ICrawler>, IDisposable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -20,12 +20,17 @@ namespace ThingAppraiser.Crawlers
         /// <summary>
         /// Collection of concrete crawler implementations.
         /// </summary>
-        private readonly List<Crawler> _crawlers = new List<Crawler>();
+        private readonly List<ICrawler> _crawlers = new List<ICrawler>();
 
         /// <summary>
         /// Sets this flag to <c>true</c> if you need to monitor crawlers results.
         /// </summary>
         private readonly bool _outputResults;
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
 
 
         /// <summary>
@@ -43,7 +48,7 @@ namespace ThingAppraiser.Crawlers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(Crawler item)
+        public void Add(ICrawler item)
         {
             item.ThrowIfNull(nameof(item));
             if (!_crawlers.Contains(item))
@@ -56,10 +61,25 @@ namespace ThingAppraiser.Crawlers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public bool Remove(Crawler item)
+        public bool Remove(ICrawler item)
         {
             item.ThrowIfNull(nameof(item));
             return _crawlers.Remove(item);
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases all resources used by crawlers.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _crawlers.ForEach(crawler => crawler.Dispose());
         }
 
         #endregion
@@ -72,7 +92,7 @@ namespace ThingAppraiser.Crawlers
         public IReadOnlyList<IReadOnlyList<BasicInfo>> CollectAllResponses(List<string> entities)
         {
             var results = new List<IReadOnlyList<BasicInfo>>();
-            foreach (Crawler crawler in _crawlers)
+            foreach (ICrawler crawler in _crawlers)
             {
                 results.Add(crawler.GetResponse(entities, _outputResults));
             }

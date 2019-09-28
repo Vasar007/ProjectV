@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,12 +11,12 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
-    public sealed class CrawlersManagerAsync : IManager<CrawlerAsync>, IDisposable
+    public sealed class CrawlersManagerAsync : IManager<ICrawlerAsync>, IDisposable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<CrawlersManagerAsync>();
 
-        private readonly List<CrawlerAsync> _crawlersAsync = new List<CrawlerAsync>();
+        private readonly List<ICrawlerAsync> _crawlersAsync = new List<ICrawlerAsync>();
 
         private readonly bool _outputResults;
 
@@ -34,7 +33,7 @@ namespace ThingAppraiser.Crawlers
 
         #region IManager<CrawlerAsync> Implementation
 
-        public void Add(CrawlerAsync item)
+        public void Add(ICrawlerAsync item)
         {
             item.ThrowIfNull(nameof(item));
             if (!_crawlersAsync.Contains(item))
@@ -43,7 +42,7 @@ namespace ThingAppraiser.Crawlers
             }
         }
 
-        public bool Remove(CrawlerAsync item)
+        public bool Remove(ICrawlerAsync item)
         {
             item.ThrowIfNull(nameof(item));
             return _crawlersAsync.Remove(item);
@@ -57,7 +56,7 @@ namespace ThingAppraiser.Crawlers
             var producers = new List<Task<bool>>(_crawlersAsync.Count);
             var consumers = new List<ITargetBlock<string>>(_crawlersAsync.Count);
 
-            foreach (CrawlerAsync crawlerAsync in _crawlersAsync)
+            foreach (ICrawlerAsync crawlerAsync in _crawlersAsync)
             {
                 var consumer = new BufferBlock<string>(options);
                 var rawDataQueue = new BufferBlock<BasicInfo>(options);
@@ -156,6 +155,8 @@ namespace ThingAppraiser.Crawlers
             _disposed = true;
 
             _cancellationTokenSource.Dispose();
+
+            _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
         }
 
         #endregion

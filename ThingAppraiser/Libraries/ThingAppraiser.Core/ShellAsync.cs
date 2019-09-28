@@ -14,7 +14,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Core
 {
-    public sealed class ShellAsync
+    public sealed class ShellAsync : IDisposable
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ShellAsync>();
 

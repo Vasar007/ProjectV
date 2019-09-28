@@ -4,21 +4,9 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
-    public abstract class CrawlerAsync : CrawlerBase
+    public interface ICrawlerAsync : ICrawlerBase
     {
-        #region ITagable Implementation
-
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(CrawlerAsync);
-
-        #endregion
-
-
-        protected CrawlerAsync()
-        {
-        }
-
-        public abstract Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+        Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
             ITargetBlock<BasicInfo> responsesQueue, bool outputResults);
     }
 }

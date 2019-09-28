@@ -13,7 +13,7 @@ namespace ThingAppraiser.Crawlers.Game.Steam
     /// <summary>
     /// Concrete crawler for Steam service.
     /// </summary>
-    public sealed class SteamCrawler : Crawler
+    public sealed class SteamCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -26,11 +26,24 @@ namespace ThingAppraiser.Crawlers.Game.Steam
         /// </summary>
         private readonly ISteamApiClient _steamApiClient;
 
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(SteamCrawler);
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        #region ITagable Implementation
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(SteamGameInfo);
+        public string Tag { get; } = nameof(SteamCrawler);
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(SteamGameInfo);
+
+        #endregion
 
 
         /// <summary>
@@ -53,7 +66,7 @@ namespace ThingAppraiser.Crawlers.Game.Steam
         #region Crawler Overridden Methods
 
         /// <inheritdoc />
-        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
             bool outputResults)
         {
             if (SteamAppsStorage.IsEmpty)
@@ -98,6 +111,21 @@ namespace ThingAppraiser.Crawlers.Game.Steam
                 searchResults.Add(response);
             }
             return searchResults.ToList();
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases resources of TMDb client.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _steamApiClient.Dispose();
         }
 
         #endregion

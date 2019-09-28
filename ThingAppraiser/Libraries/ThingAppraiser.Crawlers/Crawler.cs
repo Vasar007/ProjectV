@@ -4,26 +4,11 @@ using ThingAppraiser.Models.Data;
 namespace ThingAppraiser.Crawlers
 {
     /// <summary>
-    /// Crawlers base class for sequential service. You should inherit this class if would like to 
-    /// create your own crawler.
+    /// Crawlers base interface for sequential service. You should inherit this class if would like
+    /// to create your own crawler.
     /// </summary>
-    public abstract class Crawler : CrawlerBase
+    public interface ICrawler : ICrawlerBase
     {
-        #region ITagable Implementation
-
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(Crawler);
-
-        #endregion
-
-
-        /// <summary>
-        /// Creates instance with default values.
-        /// </summary>
-        protected Crawler()
-        {
-        }
-
         /// <summary>
         /// Gets response from data storage and process it.
         /// </summary>
@@ -34,7 +19,6 @@ namespace ThingAppraiser.Crawlers
         /// Response collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        public abstract IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
-            bool outputResults);
+        IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities, bool outputResults);
     }
 }

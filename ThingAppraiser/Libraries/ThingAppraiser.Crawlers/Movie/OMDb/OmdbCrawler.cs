@@ -12,7 +12,7 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
     /// <summary>
     /// Concrete crawler for Open Movie Database service.
     /// </summary>
-    public sealed class OmdbCrawler : Crawler
+    public sealed class OmdbCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -25,11 +25,24 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
         /// </summary>
         private readonly IOmdbClient _omdbClient;
 
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(OmdbCrawler);
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        #region ITagable Implementation
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(OmdbMovieInfo);
+        public string Tag { get; } = nameof(OmdbCrawler);
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(OmdbMovieInfo);
+
+        #endregion
 
 
         /// <summary>
@@ -52,7 +65,7 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
         #region Crawler Overridden Methods
 
         /// <inheritdoc />
-        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
             bool outputResults)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
@@ -79,6 +92,21 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
                 searchResults.Add(response);
             }
             return searchResults.ToList();
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases resources of TMDb client.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _omdbClient.Dispose();
         }
 
         #endregion

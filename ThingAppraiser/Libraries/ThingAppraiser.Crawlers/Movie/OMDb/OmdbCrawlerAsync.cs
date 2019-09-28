@@ -13,7 +13,8 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
     /// <summary>
     /// Provides async version of OMDb crawler.
     /// </summary>
-    public sealed class OmdbCrawlerAsync : CrawlerAsync
+    public sealed class OmdbCrawlerAsync : ICrawlerAsync, ICrawlerBase, IDisposable, ITagable,
+        ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -26,11 +27,24 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
         /// </summary>
         private readonly IOmdbClient _omdbClient;
 
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(OmdbCrawlerAsync);
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        #region ITagable Implementation
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(OmdbMovieInfo);
+        public string Tag { get; } = nameof(OmdbCrawlerAsync);
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(OmdbMovieInfo);
+
+        #endregion
 
 
         /// <summary>
@@ -53,7 +67,7 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
         #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
-        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+        public async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
             ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
             // Use HashSet to avoid duplicated data which can produce errors in further work.
@@ -85,6 +99,21 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
                 }
             }
             return searchResults.Count != 0;
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases resources of TMDb client.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _omdbClient.Dispose();
         }
 
         #endregion

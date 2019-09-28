@@ -13,19 +13,53 @@ using ThingAppraiser.TmdbService.Models;
 
 namespace ThingAppraiser.Crawlers.Movie.Tmdb
 {
-    public sealed class TmdbCrawlerAsync : CrawlerAsync
+    /// <summary>
+    /// Provides async version of TMDb crawler.
+    /// </summary>
+    public sealed class TmdbCrawlerAsync : ICrawlerAsync, ICrawlerBase, IDisposable, ITagable,
+        ITypeId
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawlerAsync>();
 
+        /// <summary>
+        /// Adapter class to make a calls to TMDb API.
+        /// </summary>
         private readonly ITmdbClient _tmdbClient;
 
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(TmdbCrawlerAsync);
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        #region ITagable Implementation
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(TmdbMovieInfo);
+        public string Tag { get; } = nameof(TmdbCrawlerAsync);
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(TmdbMovieInfo);
+
+        #endregion
 
 
+        /// <summary>
+        /// Initializes instance according to parameter values.
+        /// </summary>
+        /// <param name="apiKey">Key to get access to TMDb service.</param>
+        /// <param name="maxRetryCount">Maximum retry number to get response from TMDb.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="apiKey" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="apiKey" /> presents empty string or contains only whitespaces.
+        /// </exception>
         public TmdbCrawlerAsync(string apiKey, int maxRetryCount)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
@@ -33,9 +67,10 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             _tmdbClient = TmdbClientFactory.CreateClient(apiKey, maxRetryCount);
         }
 
-        #region CrawlerAsync Overridden Methods
+        #region ICrawlerAsync Implemenation
 
-        public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
+        /// <inheritdoc />
+        public async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
             ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
@@ -76,6 +111,26 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
 
         #endregion
 
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases resources of TMDb client.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _tmdbClient.Dispose();
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets service configuration.
+        /// </summary>
+        /// <param name="outputResults">Flag to define need to output.</param>
+        /// <returns>Transformed configuration of the service.</returns>
         private async Task<TmdbServiceConfigurationInfo> GetServiceConfiguration(
             bool outputResults)
         {

@@ -14,7 +14,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
     /// <summary>
     /// Concrete crawler for The Movie Database service.
     /// </summary>
-    public sealed class TmdbCrawler : Crawler
+    public sealed class TmdbCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -26,11 +26,24 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         /// </summary>
         private readonly ITmdbClient _tmdbClient;
 
-        /// <inheritdoc />
-        public override string Tag { get; } = nameof(TmdbCrawler);
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        #region ITagable Implementation
 
         /// <inheritdoc />
-        public override Type TypeId { get; } = typeof(TmdbMovieInfo);
+        public string Tag { get; } = nameof(TmdbCrawler);
+
+        #endregion
+
+        #region ITypeId Implementation
+
+        /// <inheritdoc />
+        public Type TypeId { get; } = typeof(TmdbMovieInfo);
+
+        #endregion
 
 
         /// <summary>
@@ -51,10 +64,10 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             _tmdbClient = TmdbClientFactory.CreateClient(apiKey, maxRetryCount);
         }
 
-        #region Crawler Overridden Methods
+        #region ICrawler Implementation
 
         /// <inheritdoc />
-        public override IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
+        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
             bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
@@ -86,6 +99,21 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
                 searchResults.Add(searchResult);
             }
             return searchResults.ToList();
+        }
+
+        #endregion
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Releases resources of TMDb client.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _tmdbClient.Dispose();
         }
 
         #endregion

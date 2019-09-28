@@ -52,7 +52,7 @@ namespace ThingAppraiser.TaskService
             ShellAsyncBuilderDirector builderDirector = ShellAsync.CreateBuilderDirector(
                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
             );
-            ShellAsync shell = builderDirector.MakeShell();
+            using ShellAsync shell = builderDirector.MakeShell();
 
             shell.InputManagerAsync.Add(additionalInputterAsync);
             shell.OutputManagerAsync.Add(additionalOutputterAsync);
