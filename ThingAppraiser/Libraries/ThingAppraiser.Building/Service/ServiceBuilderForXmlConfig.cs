@@ -51,9 +51,19 @@ namespace ThingAppraiser.Building.Service
             {
                 case _consoleMessageHandlerParameterName:
                 {
-                    var messageHandlerParametersElement = XDocumentParser.FindSubelement(
+                    XElement? messageHandlerParametersElement = XDocumentParser.FindSubelement(
                         messageHandlerElement, _setUnicodeParameterName
                     );
+
+                    if (messageHandlerParametersElement is null)
+                    {
+                        throw new ArgumentException(
+                            "Invalid structure of XML document: cannot find message handler " +
+                            "parameters block.",
+                            nameof(messageHandlerElement)
+                        );
+                    }
+
                     var setUnicode = XDocumentParser.GetElementValue<bool>(
                         messageHandlerParametersElement
                     );
@@ -304,7 +314,7 @@ namespace ThingAppraiser.Building.Service
         /// <c>null</c>.
         /// </exception>
         public DAL.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
-            DAL.DataStorageSettings storageSettings)
+            DAL.DataBaseOptions storageSettings)
         {
             repositoryElement.ThrowIfNull(nameof(repositoryElement));
             storageSettings.ThrowIfNull(nameof(storageSettings));

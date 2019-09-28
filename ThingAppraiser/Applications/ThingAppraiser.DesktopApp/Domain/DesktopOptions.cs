@@ -15,11 +15,11 @@ namespace ThingAppraiser.DesktopApp.Domain
         {
             public static string StartPage { get; } = "Start page";
 
-            public static string TmdbPage => ConfigOptions.BeautifiedServices.TmdbServiceName;
+            public static string TmdbPage => ConfigNames.BeautifiedServices.TmdbServiceName;
 
-            public static string OmdbPage => ConfigOptions.BeautifiedServices.OmdbServiceName;
+            public static string OmdbPage => ConfigNames.BeautifiedServices.OmdbServiceName;
 
-            public static string SteamPage => ConfigOptions.BeautifiedServices.SteamServiceName;
+            public static string SteamPage => ConfigNames.BeautifiedServices.SteamServiceName;
 
             public static string ExpertModePage { get; } = "Expert mode";
 

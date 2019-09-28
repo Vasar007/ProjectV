@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Xml.Linq;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
@@ -112,7 +111,7 @@ namespace ThingAppraiser.Configuration
                         MessageHandlerParameters = new[]
                         {
                             ConfigModule.GetConfigForMessageHandlerParameter(
-                                ConfigOptions.MessageHandlerParameters
+                                ConfigNames.MessageHandlerParameters
                                     .ConsoleMessageHandlerSetUnicodeName
                             )
                         }
@@ -123,7 +122,7 @@ namespace ThingAppraiser.Configuration
                         Inputters = new[]
                         {
                             ConfigModule.GetConfigForInputter(
-                                ConfigOptions.Inputters.LocalFileReaderSimpleName
+                                ConfigNames.Inputters.LocalFileReaderSimpleName
                             ),
                         }
                     },
@@ -132,12 +131,8 @@ namespace ThingAppraiser.Configuration
                         CrawlersOutputFlag = false,
                         Crawlers = new[]
                         {
-                            ConfigModule.GetConfigForCrawler(
-                                ConfigOptions.Crawlers.TmdbCrawlerName
-                            ),
-                            ConfigModule.GetConfigForCrawler(
-                                ConfigOptions.Crawlers.OmdbCrawlerName
-                            )
+                            ConfigModule.GetConfigForCrawler(ConfigNames.Crawlers.TmdbCrawlerName),
+                            ConfigModule.GetConfigForCrawler(ConfigNames.Crawlers.OmdbCrawlerName)
                         }
                     },
                     AppraisersManager = new AppraisersManagerConfig
@@ -146,10 +141,10 @@ namespace ThingAppraiser.Configuration
                         Appraisers = new[]
                         {
                             ConfigModule.GetConfigForAppraiser(
-                                ConfigOptions.Appraisers.TmdbAppraiserCommonName
+                                ConfigNames.Appraisers.TmdbAppraiserCommonName
                             ),
                             ConfigModule.GetConfigForAppraiser(
-                                ConfigOptions.Appraisers.OmdbAppraiserCommonName
+                                ConfigNames.Appraisers.OmdbAppraiserCommonName
                             )
                         }
                     },
@@ -159,17 +154,16 @@ namespace ThingAppraiser.Configuration
                         Outputters = new[]
                         {
                             ConfigModule.GetConfigForOutputter(
-                                ConfigOptions.Outputters.LocalFileWriterName
+                                ConfigNames.Outputters.LocalFileWriterName
                             ),
                         }
                     },
                     DataBaseManager = new DataBaseManagerConfig
                     {
-                        ConnectionString = ConfigurationManager.AppSettings["ConnectionString"],
                         Repositories = new[]
                         {
                             ConfigModule.GetConfigForRepository(
-                                ConfigOptions.Repositories.TmdbMovieRepositoryName
+                                ConfigNames.Repositories.TmdbMovieRepositoryName
                             )
                         }
                     }
@@ -229,12 +223,9 @@ namespace ThingAppraiser.Configuration
 
             xmlConfigCreator.SetDefaultOutStorageName("appraised_things.csv");
 
-            xmlConfigCreator.SetConnectionString(
-                ConfigurationManager.AppSettings["ConnectionString"]
-            );
             xmlConfigCreator.AddRepository(
                 ConfigModule.GetConfigForRepository(
-                    ConfigOptions.Repositories.BasicInfoRepositoryName
+                    ConfigNames.Repositories.BasicInfoRepositoryName
                 )
             );
 
@@ -535,24 +526,6 @@ namespace ThingAppraiser.Configuration
             outputter.ThrowIfNull(nameof(outputter));
 
             _outputters.Add(outputter);
-        }
-
-        /// <summary>
-        /// Sets connection string for data base manager. Method knows where this attribute value 
-        /// should place, you should only specify value of the connection string.
-        /// </summary>
-        /// <param name="connectionString">Connection string for data base manager.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="connectionString" /> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="connectionString" /> presents empty string.
-        /// </exception>
-        public void SetConnectionString(string connectionString)
-        {
-            connectionString.ThrowIfNullOrEmpty(nameof(connectionString));
-
-            _result.ShellConfig.DataBaseManager.ConnectionString = connectionString;
         }
 
         /// <summary>

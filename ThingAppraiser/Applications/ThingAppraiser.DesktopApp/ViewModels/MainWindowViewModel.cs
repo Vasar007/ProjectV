@@ -430,9 +430,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
-                ConfigModule.GetConfigForInputter(
-                    ConfigOptions.Inputters.GoogleDriveReaderSimpleName
-                )
+                ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
             );
             IReadOnlyList<string> thingNames = await Task.Run(
                 () => googleDriveReader.ReadThingNames(SelectedStorageName)

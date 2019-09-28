@@ -119,7 +119,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _inputManager = new IO.Input.InputManager(defaultStorageName);
 
-            foreach (var element in inputManagerElement.Elements())
+            foreach (XElement element in inputManagerElement.Elements())
             {
                 IO.Input.IInputter inputter = _serviceBuilder.CreateInputter(element);
                 _inputManager.Add(inputter);
@@ -147,7 +147,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _crawlersManager = new Crawlers.CrawlersManager(crawlersOutput);
 
-            foreach (var element in crawlerManagerElement.Elements())
+            foreach (XElement element in crawlerManagerElement.Elements())
             {
                 Crawlers.Crawler crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
@@ -175,7 +175,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _appraisersManager = new Appraisers.AppraisersManager(appraisersOutput);
 
-            foreach (var element in appraiserManagerElement.Elements())
+            foreach (XElement element in appraiserManagerElement.Elements())
             {
                 Appraisers.IAppraiser crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
@@ -203,7 +203,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _outputManager = new IO.Output.OutputManager(defaultStorageName);
 
-            foreach (var element in outputManagerElement.Elements())
+            foreach (XElement element in outputManagerElement.Elements())
             {
                 IO.Output.IOutputter outputter = _serviceBuilder.CreateOutputter(element);
                 _outputManager.Add(outputter);
@@ -226,19 +226,16 @@ namespace ThingAppraiser.Core.ShellBuilders
                 );
             }
 
-            string connectionString = XDocumentParser.GetAttributeValue(
-                dataBaseManagerElement, _connectionStringParameterName
-            );
-            var dataBaseSettings = new DAL.DataStorageSettings(connectionString);
+            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DAL.DataBaseOptions>();
             _dataBaseManager = new DAL.DataBaseManager(
-                new DAL.Repositories.ResultInfoRepository(dataBaseSettings),
-                new DAL.Repositories.RatingRepository(dataBaseSettings)
+                new DAL.Repositories.ResultInfoRepository(dataBaseOptions),
+                new DAL.Repositories.RatingRepository(dataBaseOptions)
             );
 
-            foreach (var element in dataBaseManagerElement.Elements())
+            foreach (XElement element in dataBaseManagerElement.Elements())
             {
                 DAL.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
-                    element, dataBaseSettings
+                    element, dataBaseOptions
                 );
                 _dataBaseManager.DataRepositoriesManager.Add(repository);
             }

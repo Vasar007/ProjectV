@@ -8,10 +8,10 @@ namespace ThingAppraiser.DAL.Repositories
 {
     public sealed class DataProcessor : IDataProcessor
     {
-        private readonly DataStorageSettings _dbSettings;
+        private readonly DataBaseOptions _dbSettings;
 
 
-        public DataProcessor(DataStorageSettings dbSettings)
+        public DataProcessor(DataBaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }

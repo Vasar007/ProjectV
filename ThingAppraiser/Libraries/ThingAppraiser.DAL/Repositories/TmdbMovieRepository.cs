@@ -12,7 +12,7 @@ namespace ThingAppraiser.DAL.Repositories
     public sealed class TmdbMovieRepository : IDataRepository, IRepository<BasicInfo, int>, 
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataStorageSettings _dbSettings;
+        private readonly DataBaseOptions _dbSettings;
 
         private readonly BasicInfoRepository _basicInfoRepository;
 
@@ -41,7 +41,7 @@ namespace ThingAppraiser.DAL.Repositories
         #endregion
 
 
-        public TmdbMovieRepository(DataStorageSettings dbSettings)
+        public TmdbMovieRepository(DataBaseOptions dbSettings)
         {
             _dbSettings = dbSettings;
             _basicInfoRepository = new BasicInfoRepository(dbSettings);

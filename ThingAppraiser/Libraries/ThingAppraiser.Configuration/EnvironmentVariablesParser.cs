@@ -13,7 +13,7 @@ namespace ThingAppraiser
         /// <summary>
         /// Stores parsed values from environment variable.
         /// </summary>
-        private static readonly Dictionary<string, string> _values;
+        private static readonly IReadOnlyDictionary<string, string> _values;
 
         /// <summary>
         /// Name of the environment variable to read.
@@ -115,7 +115,7 @@ namespace ThingAppraiser
                 string stringValue = GetValue(variableName);
                 return (T) Convert.ChangeType(stringValue, typeof(T));
             }
-            catch
+            catch (Exception)
             {
                 return defaultValue;
             }
@@ -126,7 +126,7 @@ namespace ThingAppraiser
         /// </summary>
         /// <param name="environmentVariableValue">Raw value of environment variable.</param>
         /// <returns>Dictionary with parsed values.</returns>
-        private static Dictionary<string, string> ParseEnvironmentVariableValue(
+        private static IReadOnlyDictionary<string, string> ParseEnvironmentVariableValue(
             string environmentVariableValue)
         {
             if (string.IsNullOrEmpty(environmentVariableValue))
@@ -134,13 +134,11 @@ namespace ThingAppraiser
                 return new Dictionary<string, string>();
             }
 
-            string[] keyValuePairsRaw = environmentVariableValue.Split(';');
+            IReadOnlyList<string> keyValuePairsRaw = environmentVariableValue.Split(';');
 
-            Dictionary<string, string> result = keyValuePairsRaw
+            return keyValuePairsRaw
                 .Select(kv => ProcessKeyValuePair(kv))
-                .ToDictionary(kv => kv.key, kv => kv.value);
-
-            return result;
+                .ToReadOnlyDictionary(kv => kv.key, kv => kv.value);
         }
 
         /// <summary>
@@ -163,11 +161,11 @@ namespace ThingAppraiser
         {
             rawKeyValuePair.ThrowIfNullOrEmpty(nameof(rawKeyValuePair));
 
-            string[] keyValuePair = rawKeyValuePair.Split('=');
-            if (keyValuePair.Length != 2)
+            IReadOnlyList<string> keyValuePair = rawKeyValuePair.Split('=');
+            if (keyValuePair.Count != 2)
             {
                 throw new InvalidOperationException(
-                    $"Environment variable has invalid format: {rawKeyValuePair}"
+                    $"Environment variable has invalid format: '{rawKeyValuePair}'."
                 );
             }
 
@@ -175,14 +173,14 @@ namespace ThingAppraiser
             {
                 throw new InvalidOperationException(
                     "Environment variable has empty value among keys: " +
-                    $"{keyValuePair[0]}"
+                    $"'{keyValuePair[0]}'."
                 );
             }
             if (string.IsNullOrWhiteSpace(keyValuePair[1]))
             {
                 throw new InvalidOperationException(
                     "Environment variable has empty value among values: " +
-                    $"{keyValuePair[1]}"
+                    $"'{keyValuePair[1]}'."
                 );
             }
 

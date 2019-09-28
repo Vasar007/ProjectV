@@ -11,7 +11,7 @@ namespace ThingAppraiser.DAL.Repositories
     public sealed class RatingRepository : IRatingRepository, IRepository<Rating, Guid>,
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataStorageSettings _dbSettings;
+        private readonly DataBaseOptions _dbSettings;
 
         public IReadOnlyList<string> Columns { get; } = new List<string>
         {
@@ -35,7 +35,7 @@ namespace ThingAppraiser.DAL.Repositories
         #endregion
 
 
-        public RatingRepository(DataStorageSettings dbSettings)
+        public RatingRepository(DataBaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }

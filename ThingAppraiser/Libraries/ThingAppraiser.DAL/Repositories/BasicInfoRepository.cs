@@ -12,7 +12,7 @@ namespace ThingAppraiser.DAL.Repositories
     public sealed class BasicInfoRepository : IDataRepository, IRepository<BasicInfo, int>, 
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataStorageSettings _dbSettings;
+        private readonly DataBaseOptions _dbSettings;
 
         private readonly DataProcessor _dataProcessor;
 
@@ -38,7 +38,7 @@ namespace ThingAppraiser.DAL.Repositories
         #endregion
 
 
-        public BasicInfoRepository(DataStorageSettings dbSettings)
+        public BasicInfoRepository(DataBaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
             _dataProcessor = new DataProcessor(_dbSettings);

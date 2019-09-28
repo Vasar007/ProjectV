@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Models.WebService;
+using ThingAppraiser.Configuration;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {
@@ -23,8 +23,8 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 
         public ServiceProxy()
         {
-            _baseAddress = ConfigurationManager.AppSettings["ThingAppraiserServiceBaseAddress"];
-            _apiUrl = ConfigurationManager.AppSettings["ThingAppraiserServiceApiUrl"];
+            _baseAddress = ConfigOptions.ThingAppraiserService.CommunicationServiceBaseAddress;
+            _apiUrl = ConfigOptions.ThingAppraiserService.CommunicationServiceApiUrl;
 
             _logger.Info($"ThingAppraiser service url: {_baseAddress}");
 

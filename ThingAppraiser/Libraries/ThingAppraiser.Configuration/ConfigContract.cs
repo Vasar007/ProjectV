@@ -8,15 +8,15 @@ namespace ThingAppraiser.Configuration
     {
         public static IReadOnlyList<string> AvailableMessageHandlers { get; } = new List<string>
         {
-            ConfigOptions.MessageHandlers.ConsoleMessageHandlerName
+            ConfigNames.MessageHandlers.ConsoleMessageHandlerName
         };
 
         public static IReadOnlyList<string> AvailableInput { get; } = new List<string>
         {
-            ConfigOptions.Inputters.LocalFileReaderSimpleName,
-            ConfigOptions.Inputters.LocalFileReaderFilterName,
-            ConfigOptions.Inputters.GoogleDriveReaderSimpleName,
-            ConfigOptions.Inputters.GoogleDriveReaderFilterName
+            ConfigNames.Inputters.LocalFileReaderSimpleName,
+            ConfigNames.Inputters.LocalFileReaderFilterName,
+            ConfigNames.Inputters.GoogleDriveReaderSimpleName,
+            ConfigNames.Inputters.GoogleDriveReaderFilterName
         };
 
         /// <summary>
@@ -27,30 +27,30 @@ namespace ThingAppraiser.Configuration
         /// </remarks>
         public static IReadOnlyList<string> AvailableServices { get; } = new List<string>
         {
-            ConfigOptions.Crawlers.TmdbCrawlerName,
-            ConfigOptions.Crawlers.OmdbCrawlerName,
-            ConfigOptions.Crawlers.SteamCrawlerName
+            ConfigNames.Crawlers.TmdbCrawlerName,
+            ConfigNames.Crawlers.OmdbCrawlerName,
+            ConfigNames.Crawlers.SteamCrawlerName
         };
 
         public static IReadOnlyList<string> AvailableAppraisals { get; } = new List<string>
         {
-            ConfigOptions.Appraisers.TmdbAppraiserCommonName,
-            ConfigOptions.Appraisers.TmdbAppraiserFuzzyName,
-            ConfigOptions.Appraisers.OmdbAppraiserCommonName,
-            ConfigOptions.Appraisers.SteamAppraiserCommonName
+            ConfigNames.Appraisers.TmdbAppraiserCommonName,
+            ConfigNames.Appraisers.TmdbAppraiserFuzzyName,
+            ConfigNames.Appraisers.OmdbAppraiserCommonName,
+            ConfigNames.Appraisers.SteamAppraiserCommonName
         };
 
         public static IReadOnlyList<string> AvailableOutput { get; } = new List<string>
         {
-            ConfigOptions.Outputters.LocalFileWriterName,
-            ConfigOptions.Outputters.GoogleDriveWriterName
+            ConfigNames.Outputters.LocalFileWriterName,
+            ConfigNames.Outputters.GoogleDriveWriterName
         };
 
         public static IReadOnlyList<string> AvailableBeautifiedServices { get; } = new List<string>
         {
-            ConfigOptions.BeautifiedServices.TmdbServiceName,
-            ConfigOptions.BeautifiedServices.OmdbServiceName,
-            ConfigOptions.BeautifiedServices.SteamServiceName
+            ConfigNames.BeautifiedServices.TmdbServiceName,
+            ConfigNames.BeautifiedServices.OmdbServiceName,
+            ConfigNames.BeautifiedServices.SteamServiceName
         };
 
         public static IReadOnlyList<string> AvailableServicesToLower { get; } =

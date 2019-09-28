@@ -72,11 +72,6 @@ namespace ThingAppraiser.Core.ShellBuilders
         protected static readonly string _dataBaseManagerParameterName =
             nameof(ConfigurationXml.ShellConfig.DataBaseManager);
 
-        /// <summary>
-        /// Attribute name for connection string for data base component.
-        /// </summary>
-        protected static readonly string _connectionStringParameterName =
-            nameof(ConfigurationXml.ShellConfig.DataBaseManager.ConnectionString);
 
         /// <summary>
         /// Initilizes base class.

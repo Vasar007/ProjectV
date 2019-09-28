@@ -120,7 +120,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _inputManager = new IO.Input.InputManagerAsync(defaultStorageName);
 
-            foreach (var element in inputManagerElement.Elements())
+            foreach (XElement element in inputManagerElement.Elements())
             {
                 IO.Input.IInputterAsync inputter = _serviceBuilder.CreateInputter(element);
                 _inputManager.Add(inputter);
@@ -148,7 +148,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _crawlersManager = new Crawlers.CrawlersManagerAsync(crawlersOutput);
 
-            foreach (var element in crawlerManagerElement.Elements())
+            foreach (XElement element in crawlerManagerElement.Elements())
             {
                 Crawlers.CrawlerAsync crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
@@ -176,7 +176,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _appraisersManager = new Appraisers.AppraisersManagerAsync(appraisersOutput);
 
-            foreach (var element in appraiserManagerElement.Elements())
+            foreach (XElement element in appraiserManagerElement.Elements())
             {
                 Appraisers.IAppraiserAsync crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
@@ -204,7 +204,7 @@ namespace ThingAppraiser.Core.ShellBuilders
             );
             _outputManager = new IO.Output.OutputManagerAsync(defaultStorageName);
 
-            foreach (var element in outputManagerElement.Elements())
+            foreach (XElement element in outputManagerElement.Elements())
             {
                 IO.Output.IOutputterAsync outputter = _serviceBuilder.CreateOutputter(element);
                 _outputManager.Add(outputter);

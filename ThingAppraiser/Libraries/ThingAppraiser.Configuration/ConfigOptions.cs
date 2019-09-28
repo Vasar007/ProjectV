@@ -1,92 +1,40 @@
-﻿namespace ThingAppraiser.Configuration
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using Microsoft.Extensions.Configuration;
+
+namespace ThingAppraiser.Configuration
 {
-    public static class ConfigOptions
+    public static partial class ConfigOptions
     {
-        public static class MessageHandlers
+        private static readonly Lazy<IConfigurationRoot> Root = new Lazy<IConfigurationRoot>(LoadOptions);
+
+        public static ApiOptions Api => GetOptions<ApiOptions>();
+
+        public static ThingAppraiserServiceOptions ThingAppraiserService =>
+            GetOptions<ThingAppraiserServiceOptions>();
+
+
+        public static T GetOptions<T>()
+            where T : IOptions, new()
         {
-            public static string ConsoleMessageHandlerName { get; } = "ConsoleMessageHandler";
+            T section = Root.Value.GetSection(typeof(T).Name).Get<T>();
+            if (section == null)
+                return new T();
+
+            return section;
         }
 
-        public static class MessageHandlerParameters
+        private static IConfigurationRoot LoadOptions()
         {
-            public static string ConsoleMessageHandlerSetUnicodeName { get; } =
-                "ConsoleMessageHandlerSetUnicode";
-        }
+            var configurationBuilder = new ConfigurationBuilder();
 
-        public static class Inputters
-        {
-            public static string LocalFileReaderSimpleName { get; } = "LocalFileReaderSimple";
+            string configPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json")
+                : "/etc/thingappraiser/config.json";
 
-            public static string GoogleDriveReaderSimpleName { get; } = "GoogleDriveReaderSimple";
-
-            public static string LocalFileReaderFilterName { get; } = "LocalFileReaderFilter";
-
-            public static string GoogleDriveReaderFilterName { get; } = "GoogleDriveReaderFilter";
-        }
-
-        /// <summary>
-        /// Crawler names in service registry.
-        /// </summary>
-        /// <remarks>
-        /// Crawler names are equal to service names (not beautified). It is used to simplify
-        /// creating appraisers list for service crawler because appraiser names start with service
-        /// names too.
-        /// </remarks>
-        public static class Crawlers
-        {
-            public static string TmdbCrawlerName { get; } = "Tmdb";
-
-            public static string OmdbCrawlerName { get; } = "Omdb";
-
-            public static string SteamCrawlerName { get; } = "Steam";
-        }
-
-        public static class Appraisers
-        {
-            public static string TmdbAppraiserCommonName { get; } = "TmdbCommon";
-
-            public static string TmdbAppraiserFuzzyName { get; } = "TmdbFuzzy";
-
-            public static string OmdbAppraiserCommonName { get; } = "OmdbCommon";
-
-            public static string SteamAppraiserCommonName { get; } = "SteamCommon";
-        }
-
-        public static class Outputters
-        {
-            public static string LocalFileWriterName { get; } = "LocalFileWriter";
-
-            public static string GoogleDriveWriterName { get; } = "GoogleDriveWriter";
-        }
-
-        /// <summary>
-        /// Repository names in service registry.
-        /// </summary>
-        /// <remarks>
-        /// There are contract that all repositories (except base) must have same name as
-        /// appropriate crawlers.
-        /// </remarks>
-        public static class Repositories
-        {
-            public static string BasicInfoRepositoryName { get; } = "BasicInfo";
-
-            public static string TmdbMovieRepositoryName => Crawlers.TmdbCrawlerName;
-
-            public static string OmdbMovieRepositoryName => Crawlers.OmdbCrawlerName;
-
-            public static string SteamGameRepositoryName => Crawlers.SteamCrawlerName;
-        }
-
-        /// <summary>
-        /// Beautified service names. It is used in user interface part of the ThingAppraiser.
-        /// </summary>
-        public static class BeautifiedServices
-        {
-            public static string TmdbServiceName { get; } = "TMDb";
-
-            public static string OmdbServiceName { get; } = "OMDb";
-
-            public static string SteamServiceName { get; } = "Steam";
+            configurationBuilder.AddJsonFile(configPath, optional: true, reloadOnChange: true);
+            return configurationBuilder.Build();
         }
     }
 }

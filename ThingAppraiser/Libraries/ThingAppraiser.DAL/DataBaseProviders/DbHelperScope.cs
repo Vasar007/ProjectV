@@ -20,14 +20,14 @@ namespace ThingAppraiser.DAL.DataBaseProviders
         private bool _disposed;
 
 
-        public DbHelperScope(DataStorageSettings settings)
+        public DbHelperScope(DataBaseOptions settings)
         {
             settings.ThrowIfNull(nameof(settings));
-            settings.DbConnectionString.ThrowIfNull(nameof(settings.DbConnectionString));
+            settings.ConnectionString.ThrowIfNull(nameof(settings.ConnectionString));
 
             try
             {
-                _connection = new SqlConnection(settings.DbConnectionString);
+                _connection = new SqlConnection(settings.ConnectionString);
                 _connection.Open();
                 _transaction = _connection.BeginTransaction();
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -96,8 +97,16 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             int number = XDocumentParser.GetAttributeValue<int>(xmlBlock,
                                                                 nameof(ToplistBlock.Number));
 
-            XElement itemsXml = XDocumentParser.FindSubelement(xmlBlock,
-                                                               nameof(ToplistBlock.Items));
+            XElement? itemsXml = XDocumentParser.FindSubelement(xmlBlock,
+                                                                nameof(ToplistBlock.Items));
+
+            if (itemsXml is null)
+            {
+                throw new ArgumentException(
+                    "Invalid strcuture of XML document: cannot find toplist items block.",
+                    nameof(xmlBlock)
+                );
+            }
 
             var result = new ToplistBlock(title, number);
             result.UpdateItems(
