@@ -38,8 +38,6 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         public override async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
             ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
         {
-            throw new Exception("THIS IS A CRITICAL EXCEPTION.");
-
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );

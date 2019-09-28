@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
@@ -18,6 +20,11 @@ namespace ThingAppraiser.Crawlers
         private readonly List<CrawlerAsync> _crawlersAsync = new List<CrawlerAsync>();
 
         private readonly bool _outputResults;
+
+        private readonly CancellationTokenSource _cancellationTokenSource =
+            new CancellationTokenSource();
+
+        private bool _disposed;
 
 
         public CrawlersManagerAsync(bool outputResults)
@@ -56,7 +63,12 @@ namespace ThingAppraiser.Crawlers
                 var rawDataQueue = new BufferBlock<BasicInfo>(options);
 
                 rawDataQueues.Add(crawlerAsync.TypeId, rawDataQueue);
-                producers.Add(crawlerAsync.GetResponse(consumer, rawDataQueue, _outputResults));
+
+                Task<bool> producerTask = crawlerAsync
+                    .GetResponse(consumer, rawDataQueue, _outputResults)
+                    .CancelIfFaulted(_cancellationTokenSource);
+
+                producers.Add(producerTask);
                 consumers.Add(consumer);
             }
 
@@ -64,22 +76,29 @@ namespace ThingAppraiser.Crawlers
                 TaskHelper.WhenAllResultsOrExceptions(producers);
 
             Task consumersTasks = Task.WhenAll(consumers.Select(consumer => consumer.Completion));
-            Task splitQueueTask = SplitQueue(entitiesQueue, consumers);
 
-            await Task.WhenAll(splitQueueTask, consumersTasks, statusesTask);
+            Task splitQueueTask = SplitQueue(entitiesQueue, consumers,
+                                             _cancellationTokenSource.Token);
 
-            (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
-                statusesTask.Result.UnwrapResultsOrExceptions();
-
-            // Need to release queues before results and exceptions processing.
-            MarkAsCompleteQueues(rawDataQueues.Values);
-
-            CheckExceptions(taskExceptions);
-
-            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+            try
             {
-                _logger.Info("Crawlers have finished work.");
-                return true;
+                await Task.WhenAll(splitQueueTask, consumersTasks, statusesTask);
+
+                (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
+                    statusesTask.Result.UnwrapResultsOrExceptions();
+
+                CheckExceptions(taskExceptions);
+
+                if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+                {
+                    _logger.Info("Crawlers have finished work.");
+                    return true;
+                }
+            }
+            finally
+            {
+                // Need to release queues before results and exceptions processing.
+                rawDataQueues.Values.MarkAsCompleted();
             }
 
             _logger.Info("Crawlers have not received some data.");
@@ -87,35 +106,29 @@ namespace ThingAppraiser.Crawlers
         }
 
         private async Task SplitQueue(ISourceBlock<string> entitiesQueue,
-            IReadOnlyList<ITargetBlock<string>> consumers)
+            IReadOnlyList<ITargetBlock<string>> consumers, CancellationToken cancellationToken)
         {
-            while (await entitiesQueue.OutputAvailableAsync())
+            try
             {
-                string entity = await entitiesQueue.ReceiveAsync();
-
-                if (_outputResults)
+                while (await entitiesQueue.OutputAvailableAsync(cancellationToken))
                 {
-                    GlobalMessageHandler.OutputMessage(
-                        $"Got {entity} and transmitted to crawling."
+                    string entity = await entitiesQueue.ReceiveAsync(cancellationToken);
+
+                    if (_outputResults)
+                    {
+                        GlobalMessageHandler.OutputMessage(
+                            $"Got {entity} and transmitted to crawling."
+                        );
+                    }
+
+                    await Task.WhenAll(
+                        consumers.Select(consumer => consumer.SendAsync(entity, cancellationToken))
                     );
                 }
-
-                await Task.WhenAll(
-                    consumers.Select(async consumer => await consumer.SendAsync(entity))
-                );
             }
-
-            foreach (ITargetBlock<string> consumer in consumers)
+            finally
             {
-                consumer.Complete();
-            }
-        }
-
-        private static void MarkAsCompleteQueues(IEnumerable<BufferBlock<BasicInfo>> queues)
-        {
-            foreach (BufferBlock<BasicInfo> rawDataQueue in queues)
-            {
-                rawDataQueue.Complete();
+                consumers.MarkAsCompleted();
             }
         }
 
@@ -135,10 +148,16 @@ namespace ThingAppraiser.Crawlers
         }
 
 
+        #region IDisposable Implementation
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (_disposed) return;
+            _disposed = true;
+
+            _cancellationTokenSource.Dispose();
         }
+
+        #endregion
     }
 }

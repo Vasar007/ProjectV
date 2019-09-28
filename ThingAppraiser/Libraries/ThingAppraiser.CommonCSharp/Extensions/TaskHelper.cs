@@ -8,8 +8,20 @@ namespace ThingAppraiser.Extensions
 {
     public static class TaskHelper
     {
-        public static Task<ResultOrException<T>[]> WhenAllResultsOrExceptions<T>(
-            IEnumerable<Task<T>> tasks)
+        public static Task<ResultOrException<TResult>[]> WhenAllResultsOrExceptions<TResult>(
+            params Task<TResult>[] tasks)
+        {
+            return Task.WhenAll(tasks.Select(task => task.WrapResultOrExceptionAsync()));
+        }
+
+        public static Task<ResultOrException<TResult>[]> WhenAllResultsOrExceptions<TResult>(
+            IEnumerable<Task<TResult>> tasks)
+        {
+            return Task.WhenAll(tasks.Select(task => task.WrapResultOrExceptionAsync()));
+        }
+
+        public static Task<ResultOrException<NoneResult>[]> WhenAllResultsOrExceptions(
+            params Task[] tasks)
         {
             return Task.WhenAll(tasks.Select(task => task.WrapResultOrExceptionAsync()));
         }
@@ -20,7 +32,7 @@ namespace ThingAppraiser.Extensions
             return Task.WhenAll(tasks.Select(task => task.WrapResultOrExceptionAsync()));
         }
 
-            public static Task WhenAllTasks(params Task[] tasks)
+        public static Task WhenAllTasks(params Task[] tasks)
         {
             return WhenAllTasks(tasks);
         }

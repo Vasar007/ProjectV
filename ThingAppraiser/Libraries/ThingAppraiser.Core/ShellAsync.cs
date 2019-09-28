@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
@@ -29,6 +30,11 @@ namespace ThingAppraiser.Core
 
         public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
 
+        private readonly CancellationTokenSource _cancellationTokenSource =
+            new CancellationTokenSource();
+
+        private bool _disposed;
+
 
         public ShellAsync(
             IO.Input.InputManagerAsync inputManagerAsync,
@@ -44,7 +50,11 @@ namespace ThingAppraiser.Core
             OutputManagerAsync = outputManagerAsync.ThrowIfNull(nameof(outputManagerAsync));
 
             _boundedCapacity = boundedCapacity;
-            _dataFlowOptions = new DataflowBlockOptions { BoundedCapacity = _boundedCapacity };
+            _dataFlowOptions = new DataflowBlockOptions
+            { 
+                BoundedCapacity = _boundedCapacity,
+                CancellationToken = _cancellationTokenSource.Token
+            };
         }
 
         public static ShellAsyncBuilderDirector CreateBuilderDirector(XDocument configuration)
@@ -69,6 +79,8 @@ namespace ThingAppraiser.Core
             }
             catch (Exception ex)
             {
+                _cancellationTokenSource.Cancel();
+
                 _logger.Error(ex, "Exception occured during input work.");
                 return ServiceStatus.InputError;
             }
@@ -97,6 +109,8 @@ namespace ThingAppraiser.Core
             }
             catch (Exception ex)
             {
+                _cancellationTokenSource.Cancel();
+
                 _logger.Error(ex, "Exception occured during collecting data.");
                 return ServiceStatus.RequestError;
             }
@@ -126,6 +140,8 @@ namespace ThingAppraiser.Core
             }
             catch (Exception ex)
             {
+                _cancellationTokenSource.Cancel();
+
                 _logger.Error(ex, "Exception occured during appraising work.");
                 return ServiceStatus.AppraiseError;
             }
@@ -149,6 +165,8 @@ namespace ThingAppraiser.Core
             }
             catch (Exception ex)
             {
+                _cancellationTokenSource.Cancel();
+
                 _logger.Error(ex, "Exception occured during output work.");
                 return ServiceStatus.OutputError;
             }
@@ -207,5 +225,19 @@ namespace ThingAppraiser.Core
             GlobalMessageHandler.OutputMessage("Shell finished work successfully.");
             return ServiceStatus.Ok;
         }
+
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _cancellationTokenSource.Dispose();
+
+            CrawlersManagerAsync.Dispose();
+        }
+
+        #endregion
     }
 }

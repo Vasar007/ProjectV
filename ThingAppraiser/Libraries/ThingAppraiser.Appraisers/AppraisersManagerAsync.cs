@@ -59,6 +59,8 @@ namespace ThingAppraiser.Appraisers
             IList<BufferBlock<RatingDataContainer>> appraisedDataQueues,
             DataflowBlockOptions options)
         {
+            // TODO: add exception handling for this method.
+
             var producers = new List<Task<bool>>(rawDataQueues.Count);
             var consumersTasks = new List<Task>(rawDataQueues.Count);
             var splitQueueTasks = new List<Task>(rawDataQueues.Count);
@@ -126,9 +128,7 @@ namespace ThingAppraiser.Appraisers
                     );
                 }
 
-                await Task.WhenAll(
-                    consumers.Select(async consumer => await consumer.SendAsync(entity))
-                );
+                await Task.WhenAll(consumers.Select(consumer => consumer.SendAsync(entity)));
             }
 
             foreach (ITargetBlock<BasicInfo> consumer in consumers)
