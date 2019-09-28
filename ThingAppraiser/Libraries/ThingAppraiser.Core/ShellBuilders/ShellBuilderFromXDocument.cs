@@ -149,7 +149,7 @@ namespace ThingAppraiser.Core.ShellBuilders
 
             foreach (XElement element in crawlerManagerElement.Elements())
             {
-                Crawlers.Crawler crawler = _serviceBuilder.CreateCrawler(element);
+                Crawlers.ICrawler crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
             }
         }

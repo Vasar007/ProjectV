@@ -139,7 +139,7 @@ namespace ThingAppraiser.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="crawlerElement" /> is <c>null</c>.
         /// </exception>
-        public Crawlers.CrawlerAsync CreateCrawler(XElement crawlerElement)
+        public Crawlers.ICrawlerAsync CreateCrawler(XElement crawlerElement)
         {
             crawlerElement.ThrowIfNull(nameof(crawlerElement));
 

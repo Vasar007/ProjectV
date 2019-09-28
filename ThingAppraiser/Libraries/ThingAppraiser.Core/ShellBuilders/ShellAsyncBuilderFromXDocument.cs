@@ -150,7 +150,7 @@ namespace ThingAppraiser.Core.ShellBuilders
 
             foreach (XElement element in crawlerManagerElement.Elements())
             {
-                Crawlers.CrawlerAsync crawler = _serviceBuilder.CreateCrawler(element);
+                Crawlers.ICrawlerAsync crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
             }
         }
