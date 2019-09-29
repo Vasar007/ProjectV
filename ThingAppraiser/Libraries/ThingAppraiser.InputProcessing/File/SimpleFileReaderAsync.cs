@@ -34,7 +34,7 @@ namespace ThingAppraiser.IO.Input.File
             using var engine = new FileHelperAsyncEngine<InputFileData>();
             using (engine.BeginReadFile(filename))
             {
-                foreach (var record in engine)
+                foreach (InputFileData record in engine)
                 {
                     if (result.Add(record.thingName))
                     {

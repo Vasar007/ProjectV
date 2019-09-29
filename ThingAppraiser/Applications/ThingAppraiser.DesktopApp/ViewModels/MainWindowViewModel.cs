@@ -396,9 +396,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 );
             }
 
-            IReadOnlyList<string> thingNames = await Task.Run(
-                () => _thingProducer.ReadThingNames("Service request")
-            );
+            IReadOnlyList<string> thingNames = await Task
+                .Run(() => _thingProducer.ReadThingNames("Service request"))
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfInvalidData(thingNames);
             return new RequestParams
@@ -413,9 +413,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             CreateBasicRequirements();
 
             var localFileReader = new LocalFileReader(new SimpleFileReader());
-            IReadOnlyList<string> thingNames = await Task.Run(
-                () => localFileReader.ReadThingNames(SelectedStorageName)
-            );
+            IReadOnlyList<string> thingNames = await Task
+                .Run(() => localFileReader.ReadThingNames(SelectedStorageName))
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfInvalidData(thingNames);
             return new RequestParams
@@ -433,9 +433,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
             );
-            IReadOnlyList<string> thingNames = await Task.Run(
-                () => googleDriveReader.ReadThingNames(SelectedStorageName)
-            );
+
+            IReadOnlyList<string> thingNames = await Task
+                .Run(() => googleDriveReader.ReadThingNames(SelectedStorageName))
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfInvalidData(thingNames);
             return new RequestParams

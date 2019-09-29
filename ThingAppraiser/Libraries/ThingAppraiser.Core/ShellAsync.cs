@@ -153,7 +153,7 @@ namespace ThingAppraiser.Core
             try
             {
                 bool status = await OutputManagerAsync.SaveResults(appraisedDataQueues,
-                                                                   string.Empty);
+                                                                   storageName: string.Empty);
                 if (status)
                 {
                     GlobalMessageHandler.OutputMessage("Ratings was saved successfully.");
@@ -209,7 +209,7 @@ namespace ThingAppraiser.Core
             await Task.WhenAll(statusesTask, inputQueue.Completion, rawDataQueuesTasks,
                                appraisedDataQueuesTasks);
 
-            // FIX ME: if there are error statuses need to create aggregate status which contains
+            // TODO: if there are error statuses need to create aggregate status which contains
             // more details then simple ServiceStatus.Error value.
             IReadOnlyList<ServiceStatus> statuses = await statusesTask;
             if (statuses.Any(status => status != ServiceStatus.Ok))
