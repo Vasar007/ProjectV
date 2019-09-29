@@ -63,7 +63,7 @@ namespace ThingAppraiser.IO.Input
             IReadOnlyList<bool> statuses = await Task.WhenAll(producers);
             queueToWrite.Complete();
 
-            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+            if (statuses.Any() && statuses.All(r => r))
             {
                 _logger.Info($"{statuses.Count} Thing names queues were read.");
                 return true;
@@ -82,7 +82,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Couldn't get access to the storage.");
+                _logger.Warn(ex, "Could not get access to the storage.");
                 return false;
             }
             return true;

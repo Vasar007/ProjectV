@@ -86,7 +86,7 @@ namespace ThingAppraiser.IO.Output
             ).ToReadOnlyList();
 
             IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
-            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+            if (statuses.Any() && statuses.All(r => r))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;

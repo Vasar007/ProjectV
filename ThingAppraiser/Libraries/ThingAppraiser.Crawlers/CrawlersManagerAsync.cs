@@ -88,7 +88,7 @@ namespace ThingAppraiser.Crawlers
 
                 CheckExceptions(taskExceptions);
 
-                if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+                if (statuses.Any() && statuses.All(r => r))
                 {
                     _logger.Info("Crawlers have finished work.");
                     return true;
@@ -96,7 +96,7 @@ namespace ThingAppraiser.Crawlers
             }
             finally
             {
-                // Need to release queues before results and exceptions processing.
+                // Need to release queues in any cases.
                 rawDataQueues.Values.MarkAsCompleted();
             }
 

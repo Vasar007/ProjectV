@@ -104,7 +104,7 @@ namespace ThingAppraiser.Appraisers
                 appraisedQueue.Complete();
             }
 
-            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+            if (statuses.Any() && statuses.All(r => r))
             {
                 _logger.Info("Appraisers have finished work.");
                 return true;
