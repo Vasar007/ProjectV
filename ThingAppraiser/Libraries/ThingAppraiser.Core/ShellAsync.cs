@@ -211,7 +211,7 @@ namespace ThingAppraiser.Core
 
             // FIX ME: if there are error statuses need to create aggregate status which contains
             // more details then simple ServiceStatus.Error value.
-            ServiceStatus[] statuses = await statusesTask;
+            IReadOnlyList<ServiceStatus> statuses = await statusesTask;
             if (statuses.Any(status => status != ServiceStatus.Ok))
             {
                 GlobalMessageHandler.OutputMessage(
