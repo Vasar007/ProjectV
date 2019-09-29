@@ -94,9 +94,9 @@ namespace ThingAppraiser.Appraisers
                 if (!(e is T result))
                 {
                     throw new ArgumentException(
-                        $"Element '{e.Title}' (ID = {e.ThingId.ToString()}) type " +
-                        $"'{e.GetType().FullName}' is invalid for appraiser with type " +
-                        $"'{TypeId.FullName}'."
+                        $"Element \"{e.Title}\" (ID = {e.ThingId.ToString()}) type " +
+                        $"\"{e.GetType().FullName}\" is invalid for appraiser with type " +
+                        $"\"{TypeId.FullName}\"."
                     );
                 }
                 return result;

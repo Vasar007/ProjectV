@@ -68,9 +68,9 @@ namespace ThingAppraiser.Appraisers
                 if (!(entityInfo is T convertedInfo))
                 {
                     throw new ArgumentException(
-                       $"Element '{entityInfo.Title}' (ID = {entityInfo.ThingId.ToString()}) " +
-                       $"type '{entityInfo.GetType().FullName}' is invalid for appraiser with " +
-                       $"type '{TypeId.FullName}'."
+                       $"Element \"{entityInfo.Title}\" (ID = {entityInfo.ThingId.ToString()}) " +
+                       $"type \"{entityInfo.GetType().FullName}\" is invalid for appraiser with " +
+                       $"type \"{TypeId.FullName}\"."
                    );
                 }
 

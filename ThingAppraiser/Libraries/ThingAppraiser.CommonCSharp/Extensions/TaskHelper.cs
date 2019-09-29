@@ -48,10 +48,12 @@ namespace ThingAppraiser.Extensions
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"{nameof(WhenAllTasks)} Exception: {ex.ToString()}");
+                Trace.TraceError($"[{nameof(WhenAllTasks)}] Exception: {ex.ToString()}");
             }
 
-            Trace.TraceInformation($"{nameof(WhenAllTasks)} status: {allTasks.Status}");
+            Trace.TraceInformation(
+                $"[{nameof(WhenAllTasks)}] status: {allTasks.Status.ToString()}"
+            );
 
             if (allTasks.Exception != null)
             {
@@ -77,10 +79,12 @@ namespace ThingAppraiser.Extensions
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"{nameof(WhenAllTasks)} Exception: {ex.ToString()}");
+                Trace.TraceError($"[{nameof(WhenAllTasks)}] Exception: {ex.ToString()}");
             }
 
-            Trace.TraceInformation($"{nameof(WhenAllTasks)} status: {allTasks.Status.ToString()}.");
+            Trace.TraceInformation(
+                $"[{nameof(WhenAllTasks)}] status: {allTasks.Status.ToString()}"
+            );
 
             if (allTasks.Exception != null)
             {

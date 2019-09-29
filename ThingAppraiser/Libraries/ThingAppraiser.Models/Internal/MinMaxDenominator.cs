@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ThingAppraiser.Exceptions;
 using ThingAppraiser.Extensions;
-using ThingAppraiser.Models.Exceptions;
 
 namespace ThingAppraiser.Models.Internal
 {

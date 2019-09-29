@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
@@ -11,7 +12,7 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {
-    public sealed class AppraisersManagerAsync : IManager<IAppraiserAsync>
+    public sealed class AppraisersManagerAsync : IManager<IAppraiserAsync>, IDisposable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<AppraisersManagerAsync>();
@@ -20,6 +21,11 @@ namespace ThingAppraiser.Appraisers
             new Dictionary<Type, IList<IAppraiserAsync>>();
 
         private readonly bool _outputResults;
+
+        private readonly CancellationTokenSource _cancellationTokenSource =
+            new CancellationTokenSource();
+
+        private bool _disposed;
 
 
         public AppraisersManagerAsync(bool outputResults)
@@ -54,13 +60,23 @@ namespace ThingAppraiser.Appraisers
 
         #endregion
 
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _cancellationTokenSource.Dispose();
+        }
+
+        #endregion
+
         public async Task<bool> GetAllRatings(
             IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues,
             IList<BufferBlock<RatingDataContainer>> appraisedDataQueues,
             DataflowBlockOptions options)
         {
-            // TODO: add exception handling for this method.
-
             var producers = new List<Task<bool>>(rawDataQueues.Count);
             var consumersTasks = new List<Task>(rawDataQueues.Count);
             var splitQueueTasks = new List<Task>(rawDataQueues.Count);
@@ -82,32 +98,59 @@ namespace ThingAppraiser.Appraisers
                     var appraisedDataQueue = new BufferBlock<RatingDataContainer>(options);
 
                     appraisedDataQueues.Add(appraisedDataQueue);
-                    producers.Add(
-                        appraiserAsync.GetRatings(consumer, appraisedDataQueue, _outputResults)
-                    );
+
+                    Task<bool> producerTask = appraiserAsync
+                        .GetRatings(consumer, appraisedDataQueue, _outputResults)
+                        .CancelIfFaulted(_cancellationTokenSource);
+
+                    producers.Add(producerTask);
                     consumers.Add(consumer);
                 }
 
                 consumersTasks.Add(Task.WhenAll(consumers.Select(consumer => consumer.Completion)));
-                splitQueueTasks.Add(SplitQueue(keyValue.Value, consumers));
+
+                Task splitQueueTask = SplitQueue(keyValue.Value, consumers,
+                                                 _cancellationTokenSource.Token);
+                splitQueueTasks.Add(splitQueueTask);
             }
 
-            Task<bool[]> statusesTask = Task.WhenAll(producers);
+            Task<ResultOrException<bool>[]> statusesTask =
+                TaskHelper.WhenAllResultsOrExceptions(producers);
+
             Task consumersFinalTask = Task.WhenAll(consumersTasks);
             Task splitQueueFinalTask = Task.WhenAll(splitQueueTasks);
 
-            await Task.WhenAll(splitQueueFinalTask, consumersFinalTask, statusesTask);
-
-            IReadOnlyList<bool> statuses = await statusesTask;
-            foreach (BufferBlock<RatingDataContainer> appraisedQueue in appraisedDataQueues)
+            try
             {
-                appraisedQueue.Complete();
+                await Task.WhenAll(splitQueueFinalTask, consumersFinalTask, statusesTask);
+
+                (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
+                    statusesTask.Result.UnwrapResultsOrExceptions();
+
+                CheckExceptions(taskExceptions);
+
+                if (statuses.Any() && statuses.All(r => r))
+                {
+                    _logger.Info("Appraisers have finished work.");
+                    return true;
+                }
             }
-
-            if (statuses.Any() && statuses.All(r => r))
+            catch (TaskCanceledException)
             {
-                _logger.Info("Appraisers have finished work.");
-                return true;
+                if (statusesTask.IsCompleted)
+                {
+                    (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
+                        statusesTask.Result.UnwrapResultsOrExceptions();
+
+                    CheckExceptions(taskExceptions);
+                }
+
+                throw;
+            }
+            finally
+            {
+                // Need to release queues in any cases.
+                appraisedDataQueues.MarkAsCompletedSafe();
             }
 
             _logger.Info("Appraisers have not processed some data.");
@@ -115,26 +158,48 @@ namespace ThingAppraiser.Appraisers
         }
 
         private async Task SplitQueue(ISourceBlock<BasicInfo> rawDataQueue,
-            IReadOnlyList<ITargetBlock<BasicInfo>> consumers)
+            IReadOnlyList<ITargetBlock<BasicInfo>> consumers, CancellationToken cancellationToken)
         {
-            while (await rawDataQueue.OutputAvailableAsync())
+            // No exception should be thrown before try-finally block.
+            try
             {
-                BasicInfo entity = await rawDataQueue.ReceiveAsync();
-
-                if (_outputResults)
+                while (await rawDataQueue.OutputAvailableAsync(cancellationToken))
                 {
-                    GlobalMessageHandler.OutputMessage(
-                        $"Got {entity.Title} and transmitted to appraising."
+                    BasicInfo entity = await rawDataQueue.ReceiveAsync(cancellationToken);
+
+                    if (_outputResults)
+                    {
+                        GlobalMessageHandler.OutputMessage(
+                            $"Got {entity.Title} and transmitted to appraising."
+                        );
+                    }
+
+                    await Task.WhenAll(
+                        consumers.Select(consumer => consumer.SendAsync(entity, cancellationToken))
                     );
                 }
-
-                await Task.WhenAll(consumers.Select(consumer => consumer.SendAsync(entity)));
             }
-
-            foreach (ITargetBlock<BasicInfo> consumer in consumers)
+            finally
             {
-                consumer.Complete();
+                // No exception should be thrown in finally block before consumer queues would be
+                // marked as completed.
+                consumers.MarkAsCompletedSafe();
             }
+        }
+
+        private static void CheckExceptions(IReadOnlyList<Exception> taskExceptions)
+        {
+            if (!taskExceptions.Any()) return;
+
+            if (taskExceptions.Count == 1)
+            {
+                throw new Exception($"One of the appraisers failed.", taskExceptions.Single());
+            }
+
+            throw new AggregateException(
+                $"Some appraisers failed. Exceptions number: {taskExceptions.Count.ToString()}.",
+                taskExceptions
+            );
         }
     }
 }

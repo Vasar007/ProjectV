@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ThingAppraiser.Exceptions;
 
 namespace ThingAppraiser.Extensions
 {
@@ -74,14 +75,27 @@ namespace ThingAppraiser.Extensions
                     switch (task.Status)
                     {
                         case TaskStatus.RanToCompletion:
+                        {
                             return task.Result;
+                        }
 
                         case TaskStatus.Faulted:
+                        {
                             cancellationTokenSource.Cancel();
-                            return default!;
+
+                            Exception exception =
+                                ExceptionsHelper.UnwrapAggregateExceptionIfCan(task.Exception);
+
+                            throw new TaskFaultedException(
+                                "Request cancellation because a task is in the faulted state.",
+                                exception
+                            );
+                        }
 
                         default:
+                        {
                             return default!;
+                        }
                     }
                 }
             );

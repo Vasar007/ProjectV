@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace ThingAppraiser.Models.Exceptions
+namespace ThingAppraiser.Exceptions
 {
     /// <summary>
     /// The exception that is thrown when several arguments provided to a method are not valid.

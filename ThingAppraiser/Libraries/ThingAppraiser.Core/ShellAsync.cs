@@ -236,6 +236,7 @@ namespace ThingAppraiser.Core
             _cancellationTokenSource.Dispose();
 
             CrawlersManagerAsync.Dispose();
+            AppraisersManagerAsync.Dispose();
         }
 
         #endregion

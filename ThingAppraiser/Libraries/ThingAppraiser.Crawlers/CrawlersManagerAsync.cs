@@ -50,6 +50,20 @@ namespace ThingAppraiser.Crawlers
 
         #endregion
 
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _cancellationTokenSource.Dispose();
+
+            _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
+        }
+
+        #endregion
+
         public async Task<bool> CollectAllResponses(ISourceBlock<string> entitiesQueue,
             IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues, DataflowBlockOptions options)
         {
@@ -94,10 +108,22 @@ namespace ThingAppraiser.Crawlers
                     return true;
                 }
             }
+            catch (TaskCanceledException)
+            {
+                if (statusesTask.IsCompleted)
+                {
+                    (IReadOnlyList<bool> statuses, IReadOnlyList<Exception> taskExceptions) =
+                        statusesTask.Result.UnwrapResultsOrExceptions();
+
+                    CheckExceptions(taskExceptions);
+                }
+
+                throw;
+            }
             finally
             {
                 // Need to release queues in any cases.
-                rawDataQueues.Values.MarkAsCompleted();
+                rawDataQueues.Values.MarkAsCompletedSafe();
             }
 
             _logger.Info("Crawlers have not received some data.");
@@ -107,6 +133,7 @@ namespace ThingAppraiser.Crawlers
         private async Task SplitQueue(ISourceBlock<string> entitiesQueue,
             IReadOnlyList<ITargetBlock<string>> consumers, CancellationToken cancellationToken)
         {
+            // No exception should be thrown before try-finally block.
             try
             {
                 while (await entitiesQueue.OutputAvailableAsync(cancellationToken))
@@ -127,7 +154,9 @@ namespace ThingAppraiser.Crawlers
             }
             finally
             {
-                consumers.MarkAsCompleted();
+                // No exception should be thrown in finally block before consumer queues would be
+                // marked as completed.
+                consumers.MarkAsCompletedSafe();
             }
         }
 
@@ -145,20 +174,5 @@ namespace ThingAppraiser.Crawlers
                 taskExceptions
             );
         }
-
-
-        #region IDisposable Implementation
-
-        public void Dispose()
-        {
-            if (_disposed) return;
-            _disposed = true;
-
-            _cancellationTokenSource.Dispose();
-
-            _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
-        }
-
-        #endregion
     }
 }
