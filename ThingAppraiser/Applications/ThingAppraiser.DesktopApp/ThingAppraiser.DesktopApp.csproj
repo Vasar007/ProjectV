@@ -16,6 +16,7 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
     <RootNamespace>ThingAppraiser.DesktopApp</RootNamespace>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
