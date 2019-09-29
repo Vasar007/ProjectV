@@ -82,7 +82,7 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Could not get access to the storage.");
+                _logger.Error(ex, "Could not get access to the storage.");
                 return false;
             }
             return true;

@@ -46,18 +46,18 @@ namespace ThingAppraiser.TaskService
             );
         }
 
-        public Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
+        public async Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
              IInputterAsync additionalInputterAsync, IOutputterAsync additionalOutputterAsync)
         {
             ShellAsyncBuilderDirector builderDirector = ShellAsync.CreateBuilderDirector(
                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
             );
             using ShellAsync shell = builderDirector.MakeShell();
-
+            
             shell.InputManagerAsync.Add(additionalInputterAsync);
             shell.OutputManagerAsync.Add(additionalOutputterAsync);
 
-            return ExecuteSpecifiedNumberOfTimes(shell);
+            return await ExecuteSpecifiedNumberOfTimes(shell);
         }
 
         private async Task<IReadOnlyList<ServiceStatus>> ExecuteSpecifiedNumberOfTimes(

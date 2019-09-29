@@ -47,8 +47,8 @@ namespace ThingAppraiser.IO.Input.File
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
-            var engine = new FileHelperAsyncEngine<FilterInputFileData>();
 
+            using var engine = new FileHelperAsyncEngine<FilterInputFileData>();
             using (engine.BeginReadFile(filename))
             {
                 // The engine is IEnumerable.
@@ -71,25 +71,24 @@ namespace ThingAppraiser.IO.Input.File
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
 
-            using (var reader = new StreamReader(filename))
-            using (var csv = new CsvReader(
-                       reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-                  )
-            )
-            {
-                if (!csv.Read() || !csv.ReadHeader())
-                {
-                    throw new InvalidDataException("CSV file doesn't contain header!");
-                }
-                while (csv.Read())
-                {
-                    string status = csv[_statusHeader];
-                    if (!string.IsNullOrEmpty(status)) continue;
+            using var reader = new StreamReader(filename);
+            using var csv = new CsvReader(
+                reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
+            );
 
-                    string field = csv[_thingNameHeader];
-                    result.Add(field);
-                }
+            if (!csv.Read() || !csv.ReadHeader())
+            {
+                throw new InvalidDataException("CSV file doesn't contain header!");
             }
+            while (csv.Read())
+            {
+                string status = csv[_statusHeader];
+                if (!string.IsNullOrEmpty(status)) continue;
+
+                string field = csv[_thingNameHeader];
+                result.Add(field);
+            }
+
             return result.ToList();
         }
 

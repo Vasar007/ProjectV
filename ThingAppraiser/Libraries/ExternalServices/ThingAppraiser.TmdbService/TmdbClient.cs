@@ -35,12 +35,10 @@ namespace ThingAppraiser.TmdbService
         private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
             new DataMapperTmdbConfig();
 
-#pragma warning disable IDE0069, CA2213 // Disposable fields should be disposed
         /// <summary>
         /// Third-party helper class to make a calls to TMDb API.
         /// </summary>
         private readonly TMDbClient _tmdbClient;
-#pragma warning restore IDE0069, CA2213 // Disposable fields should be disposed
 
         private bool _disposed;
 
@@ -140,10 +138,7 @@ namespace ThingAppraiser.TmdbService
             if (_disposed) return;
             _disposed = true;
 
-            // Disposing TMDb client leads to multiple task cancelled exceptions.
-            // TODO: need to dig deeper in official docs about disposing TMDb client.
-            // May be it somehow would be connected with similar issue with Steam API client.
-            //_tmdbClient.Dispose();
+            _tmdbClient.Dispose();
         }
 
         #endregion
