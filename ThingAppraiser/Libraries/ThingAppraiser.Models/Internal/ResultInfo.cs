@@ -77,8 +77,7 @@ namespace ThingAppraiser.Models.Internal
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            // TODO: replace with System.HashCode.Combine method in .NET Standard 2.1 version.
-            return HashCode.Of(ThingId).And(RatingValue).And(RatingId);
+            return HashCode.Combine(ThingId, RatingValue, RatingId);
         }
 
         #endregion
