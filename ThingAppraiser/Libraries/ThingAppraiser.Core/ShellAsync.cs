@@ -67,7 +67,9 @@ namespace ThingAppraiser.Core
         {
             try
             {
-                bool status = await InputManagerAsync.GetNames(queue, storageName);
+                bool status = await InputManagerAsync.GetNames(
+                    queue, storageName
+                );
                 if (status)
                 {
                     GlobalMessageHandler.OutputMessage("Things were successfully gotten.");
@@ -152,8 +154,9 @@ namespace ThingAppraiser.Core
         {
             try
             {
-                bool status = await OutputManagerAsync.SaveResults(appraisedDataQueues,
-                                                                   storageName: string.Empty);
+                bool status = await OutputManagerAsync.SaveResults(
+                    appraisedDataQueues, storageName: string.Empty
+                );
                 if (status)
                 {
                     GlobalMessageHandler.OutputMessage("Ratings was saved successfully.");

@@ -85,7 +85,7 @@ namespace ThingAppraiser.Appraisers
             {
                 if (!_appraisersAsync.TryGetValue(keyValue.Key, out IList<IAppraiserAsync> values))
                 {
-                    string message = $"Type {keyValue.Key} wasn't used to appraise!";
+                    string message = $"Type {keyValue.Key} was not used to appraise!";
                     _logger.Info(message);
                     GlobalMessageHandler.OutputMessage(message);
                     continue;
@@ -107,7 +107,7 @@ namespace ThingAppraiser.Appraisers
                     consumers.Add(consumer);
                 }
 
-                consumersTasks.Add(Task.WhenAll(consumers.Select(consumer => consumer.Completion)));
+                consumersTasks.AddRange(consumers.Select(consumer => consumer.Completion));
 
                 Task splitQueueTask = SplitQueue(keyValue.Value, consumers,
                                                  _cancellationTokenSource.Token);
