@@ -64,6 +64,7 @@ namespace ThingAppraiser.Appraisers
         {
             while (await entitiesInfoQueue.OutputAvailableAsync())
             {
+                //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
                 BasicInfo entityInfo = await entitiesInfoQueue.ReceiveAsync();
                 if (!(entityInfo is T convertedInfo))
                 {

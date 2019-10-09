@@ -76,6 +76,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );
+            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
 
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var searchResults = new HashSet<BasicInfo>();
@@ -84,6 +85,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
                 string movie = await entitiesQueue.ReceiveAsync();
 
                 TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(movie);
+                //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
 
                 if (response is null || response.Results.IsNullOrEmpty())
                 {
