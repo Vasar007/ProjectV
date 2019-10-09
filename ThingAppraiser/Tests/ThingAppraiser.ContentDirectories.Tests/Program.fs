@@ -1,6 +1,4 @@
-namespace ThingAppraiser.ContentDirectories.Tests
+module ThingAppraiser.ContentDirectories.Tests.Program
 
-module Program =
-
-    [<EntryPoint>]
-    let main _ = 0
+[<EntryPoint>]
+let main _ = 0
