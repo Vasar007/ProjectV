@@ -8,21 +8,21 @@ using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DataPipeline
 {
-    public sealed class InputtersFlow : Dataflow<string, IReadOnlyList<string>>
+    public sealed class InputtersFlow : Dataflow<string, string>
     {
         private readonly ConcurrentDictionary<string, byte> _filteringSet;
 
         private readonly Dataflow<string, string> _inputBroadcaster;
 
-        private readonly Dataflow<IReadOnlyList<string>, IReadOnlyList<string>> _resultTransformer;
+        private readonly Dataflow<string, string> _resultTransformer;
 
         public override ITargetBlock<string> InputBlock => _inputBroadcaster.InputBlock;
 
-        public override ISourceBlock<IReadOnlyList<string>> OutputBlock =>
+        public override ISourceBlock<string> OutputBlock =>
             _resultTransformer.OutputBlock;
 
 
-        public InputtersFlow(IEnumerable<Func<string, IReadOnlyList<string>>> inputters)
+        public InputtersFlow(IEnumerable<Func<string, IEnumerable<string>>> inputters)
             : base(DataflowOptions.Default)
         {
             inputters.ThrowIfNull(nameof(inputters));
@@ -35,17 +35,16 @@ namespace ThingAppraiser.DataPipeline
                 return input;
             }, DataflowOptions.Default);
 
-            _resultTransformer =
-                DataflowUtils.FromDelegate<IReadOnlyList<string>, IReadOnlyList<string>>(
-                    FilterInputData, DataflowOptions.Default
-                );
+            _resultTransformer = DataflowUtils.FromDelegate<string, string>(
+                inputtersData => inputtersData, DataflowOptions.Default
+            );
 
             var inputFlows = inputters
                 .Select(inputter => DataflowUtils.FromDelegate(inputter, DataflowOptions.Default));
             foreach (var inputFlow in inputFlows)
             {
                 _inputBroadcaster.LinkTo(inputFlow);
-                inputFlow.LinkTo(_resultTransformer);
+                inputFlow.LinkTo(_resultTransformer, FilterInputData);
 
                 _resultTransformer.RegisterDependency(inputFlow);
                 RegisterChild(inputFlow);
@@ -62,19 +61,10 @@ namespace ThingAppraiser.DataPipeline
             base.CleanUp(dataflowException);
         }
 
-        private IReadOnlyList<string> FilterInputData(IReadOnlyList<string> inputtersData)
+        private bool FilterInputData(string inputtersData)
         {
-            Console.WriteLine($"Filtering all inputters data. {inputtersData.Count.ToString()}");
-            var result = new List<string>();
-            foreach (string datum in inputtersData)
-            {
-                if (datum.Length > 2 && _filteringSet.TryAdd(datum, default))
-                {
-                    result.Add(datum);
-                }
-            }
-
-            return result;
+            return inputtersData.Length > 2 &&
+                   _filteringSet.TryAdd(inputtersData, default);
         }
     }
 }

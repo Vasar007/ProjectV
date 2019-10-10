@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Models.Internal
@@ -18,6 +19,11 @@ namespace ThingAppraiser.Models.Internal
         /// </summary>
         public double RatingValue { get; }
 
+        /// <summary>
+        /// Rating identifier.
+        /// </summary>
+        public Guid RatingId { get; set; }
+
 
         /// <summary>
         /// Constructor which initializes fields.
@@ -25,10 +31,11 @@ namespace ThingAppraiser.Models.Internal
         /// <param name="dataHandler">Data handler of the Thing.</param>
         /// <param name="ratingValue">Calculated rating value.</param>
         [JsonConstructor]
-        public RatingDataContainer(BasicInfo dataHandler, double ratingValue)
+        public RatingDataContainer(BasicInfo dataHandler, double ratingValue, Guid ratingId)
         {
             DataHandler = dataHandler;
             RatingValue = ratingValue;
+            RatingId = ratingId;
         }
 
         /// <summary>
@@ -37,10 +44,11 @@ namespace ThingAppraiser.Models.Internal
         /// <param name="dataHandler">Variable to write The Thing.</param>
         /// <param name="ratingValue">Variable to write rating value.</param>
         /// <remarks>Need to work with deconstructing user-defined types.</remarks>
-        public void Deconstruct(out BasicInfo dataHandler, out double ratingValue)
+        public void Deconstruct(out BasicInfo dataHandler, out double ratingValue, out Guid ratingId)
         {
             dataHandler = DataHandler;
             ratingValue = RatingValue;
+            ratingId = RatingId;
         }
 
         #region Object Overridden Methods
@@ -48,7 +56,7 @@ namespace ThingAppraiser.Models.Internal
         /// <inheritdoc />
         public override string ToString()
         {
-            return DataHandler.Title + " " + RatingValue;
+            return $"{DataHandler.Title} {RatingValue.ToString()} (Rating ID: '{RatingId.ToString()}')";
         }
 
         #endregion

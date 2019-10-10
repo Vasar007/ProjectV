@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Input.File
 {
     public interface IFileReaderAsync
     {
-        Task ReadFile(ITargetBlock<string> queue, string filename);
+        IEnumerable<string> ReadFile(string filename);
 
-        Task ReadCsvFile(ITargetBlock<string> queue, string filename);
+        IEnumerable<string> ReadCsvFile(string filename);
     }
 }

@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Collections.Generic;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.Crawlers
 {
     public interface ICrawlerAsync : ICrawlerBase
     {
-        Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
-            ITargetBlock<BasicInfo> responsesQueue, bool outputResults);
+        IAsyncEnumerable<BasicInfo> GetResponse(string entitiyName, bool outputResults);
     }
 }

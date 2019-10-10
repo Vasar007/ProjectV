@@ -5,41 +5,39 @@ using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using Gridsum.DataflowEx;
 using ThingAppraiser.Extensions;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DataPipeline
 {
-    public sealed class OutputtersFlow : Dataflow<IReadOnlyList<string>>
+    public sealed class OutputtersFlow : Dataflow<RatingDataContainer>
     {
-        private readonly ConcurrentBag<string> _resultList;
+        private readonly ConcurrentBag<RatingDataContainer> _resultList;
 
-        private readonly Dataflow<IReadOnlyList<string>, IReadOnlyList<string>> _inputConsumer;
+        private readonly Dataflow<RatingDataContainer, RatingDataContainer> _inputConsumer;
 
-        public override ITargetBlock<IReadOnlyList<string>> InputBlock =>
+        public override ITargetBlock<RatingDataContainer> InputBlock =>
             _inputConsumer.InputBlock;
 
-        public IEnumerable<string> Results => _resultList;
+        public IEnumerable<RatingDataContainer> Results => _resultList;
 
 
-        public OutputtersFlow(
-            IEnumerable<Action<IReadOnlyList<string>>> outputters)
+        public OutputtersFlow(IEnumerable<Action<RatingDataContainer>> outputters)
             : base(DataflowOptions.Default)
         {
             outputters.ThrowIfNull(nameof(outputters));
 
-            _resultList = new ConcurrentBag<string>();
+            _resultList = new ConcurrentBag<RatingDataContainer>();
 
-            _inputConsumer = new DataBroadcaster<IReadOnlyList<string>>(appraisersData =>
+            _inputConsumer = new DataBroadcaster<RatingDataContainer>(appraisersData =>
             {
-                Console.WriteLine($"Consuming all appraised data. {appraisersData.Count.ToString()}\n");
-                foreach (string datum in appraisersData)
-                {
-                    _resultList.Add(datum);
-                }
+                Console.WriteLine($"Consuming all appraised data. \n");
+                _resultList.Add(appraisersData);
                 return appraisersData;
             }, DataflowOptions.Default);
 
-            var outputterFlows = outputters
-                .Select(appraiser => DataflowUtils.FromDelegate(appraiser, DataflowOptions.Default));
+            var outputterFlows = outputters.Select(outputters =>
+                DataflowUtils.FromDelegate(outputters, DataflowOptions.Default)
+            );
             foreach (var outputterFlow in outputterFlows)
             {
                 _inputConsumer.LinkTo(outputterFlow);

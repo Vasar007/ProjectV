@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -27,6 +25,12 @@ namespace ThingAppraiser.Crawlers.Game.Steam
         /// Adapter class to make a calls to Steam API.
         /// </summary>
         private readonly ISteamApiClient _steamApiClient;
+
+        /// <summary>
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
+        /// </summary>
+        private readonly HashSet<BasicInfo> _searchResults;
 
         /// <summary>
         /// Boolean flag used to show that object has already been disposed.
@@ -63,61 +67,55 @@ namespace ThingAppraiser.Crawlers.Game.Steam
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
         #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
-        public async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
-            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
             if (SteamAppsStorage.IsEmpty)
             {
                 SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
                 SteamAppsStorage.FillStorage(steamApps);
             }
+           
+            int? appId = SteamAppsStorage.TryGetAppIdByName(entityName);
 
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            while (await entitiesQueue.OutputAvailableAsync())
+            if (!appId.HasValue)
             {
-                string game = await entitiesQueue.ReceiveAsync();
+                string message = $"{entityName} was not find in Steam responses storage.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                int? appId = SteamAppsStorage.TryGetAppIdByName(game);
-
-                if (!appId.HasValue)
-                {
-                    string message = $"{game} was not find in Steam responses storage.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                var response = await _steamApiClient.TryGetSteamAppAsync(
-                    appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
-                );
-
-                if (response is null)
-                {
-                    string message = $"{game} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
-                }
-
-                if (searchResults.Add(response))
-                {
-                    await responsesQueue.SendAsync(response);
-                }
+                yield break;
             }
-            return searchResults.Count != 0;
+
+            var response = await _steamApiClient.TryGetSteamAppAsync(
+                appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
+            );
+
+            if (response is null)
+            {
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
+
+                yield break;
+            }
+
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(response))
+            {
+                yield return response;
+            }
+
+            yield break;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ThingAppraiser.Extensions
 {
@@ -180,6 +181,18 @@ namespace ThingAppraiser.Extensions
             this IEnumerable<TSource> source)
         {
             return source.ToList();
+        }
+
+        public static async Task<IEnumerable<T>> AsEnumerable<T>(
+            this IAsyncEnumerable<T> enumerable)
+        {
+            var result = new List<T>();
+            await foreach (var entity in enumerable)
+            {
+                result.Add(entity);
+            }
+
+            return result;
         }
     }
 }

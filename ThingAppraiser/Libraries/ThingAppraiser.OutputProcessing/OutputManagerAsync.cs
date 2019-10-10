@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
@@ -51,9 +53,7 @@ namespace ThingAppraiser.IO.Output
 
         #endregion
 
-        public async Task<bool> SaveResults(
-            IReadOnlyList<ISourceBlock<RatingDataContainer>> appraisedDataQueues,
-            string storageName)
+        public OutputtersFlow CreateFlow(string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -62,31 +62,47 @@ namespace ThingAppraiser.IO.Output
                 _logger.Info("Storage name is empty, using the default value.");
             }
 
-            var consumers = new List<ActionBlock<RatingDataContainer>>();
-            var results = new List<List<RatingDataContainer>>();
-            foreach (ISourceBlock<RatingDataContainer> appraisedDataQueue in appraisedDataQueues)
+            var outputtersFunc = _outputtersAsync.Select(outputterAsync =>
             {
-                var rating = new List<RatingDataContainer>();
-                results.Add(rating);
+                return new Action<RatingDataContainer>(result => Console.WriteLine("Got result."));
+            });
 
-                var consumer = new ActionBlock<RatingDataContainer>(x => rating.Add(x),
-                                                                     _consumerOptions);
-                consumers.Add(consumer);
-                appraisedDataQueue.LinkTo(consumer, _linkOptions);
+            var outputtersFlow = new OutputtersFlow(outputtersFunc.Take(1));
+
+            _logger.Info("Constructed outputters pipeline.");
+            return outputtersFlow;
+        }
+
+        public async Task<bool> SaveResults(OutputtersFlow outputtersFlow, string storageName)
+        {
+            if (string.IsNullOrWhiteSpace(storageName))
+            {
+                storageName = _defaultStorageName;
+
+                _logger.Info("Storage name is empty, using the default value.");
             }
 
-            await Task.WhenAll(consumers.Select(consumer => consumer.Completion));
+            await outputtersFlow.CompletionTask;
 
-            results.AsParallel().ForAll(
+            IReadOnlyList<RatingDataContainer> results = outputtersFlow.Results.ToReadOnlyList();
+
+            IReadOnlyList<List<RatingDataContainer>> consumedResults = results
+                .GroupBy(
+                    rating => rating.RatingId,
+                    (key, group) => group.ToList()
+                )
+                .ToReadOnlyList();
+
+            consumedResults.AsParallel().ForAll(
                 rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
             );
 
             IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync.Select(
-                outputterAsync => outputterAsync.SaveResults(results, storageName)
+                outputterAsync => outputterAsync.SaveResults(consumedResults, storageName)
             ).ToReadOnlyList();
 
             IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
-            if (statuses.Any() && statuses.All(r => r))
+            if (statuses.Count > 0 && statuses.All(r => r))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;

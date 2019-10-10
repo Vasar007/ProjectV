@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Appraisers.Appraisals;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Extensions;
@@ -59,33 +57,28 @@ namespace ThingAppraiser.Appraisers
 
         #region Appraiser Overriden Methods
 
-        public async Task<bool> GetRatings(ISourceBlock<BasicInfo> entitiesInfoQueue,
-             ITargetBlock<RatingDataContainer> entitiesRatingQueue, bool outputResults)
+        public RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults)
         {
-            while (await entitiesInfoQueue.OutputAvailableAsync())
+            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
+            if (!(entityInfo is T convertedInfo))
             {
-                //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
-                BasicInfo entityInfo = await entitiesInfoQueue.ReceiveAsync();
-                if (!(entityInfo is T convertedInfo))
-                {
-                    throw new ArgumentException(
-                       $"Element \"{entityInfo.Title}\" (ID = {entityInfo.ThingId.ToString()}) " +
-                       $"type \"{entityInfo.GetType().FullName}\" is invalid for appraiser with " +
-                       $"type \"{TypeId.FullName}\"."
-                   );
-                }
-
-                double ratingValue = _appraisal.CalculateRating(convertedInfo);
-
-                var resultInfo = new RatingDataContainer(entityInfo, ratingValue);
-                await entitiesRatingQueue.SendAsync(resultInfo);
-
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage(resultInfo.ToString());
-                }
+                throw new ArgumentException(
+                    $"Element \"{entityInfo.Title}\" (ID = {entityInfo.ThingId.ToString()}) " +
+                    $"type \"{entityInfo.GetType().FullName}\" is invalid for appraiser with " +
+                    $"type \"{TypeId.FullName}\"."
+                );
             }
-            return true;
+
+            double ratingValue = _appraisal.CalculateRating(convertedInfo);
+
+            var resultInfo = new RatingDataContainer(entityInfo, ratingValue, RatingId);
+
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage(resultInfo.ToString());
+            }
+
+            return resultInfo;
         }
 
         #endregion

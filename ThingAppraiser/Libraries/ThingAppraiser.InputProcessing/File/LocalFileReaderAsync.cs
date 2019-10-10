@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+using System.Collections.Generic;
+using System.Linq;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
@@ -28,19 +28,19 @@ namespace ThingAppraiser.IO.Input.File
 
         #region IInputterAsync Implementation
 
-        public async Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName)
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
-            if (string.IsNullOrEmpty(storageName)) return;
+            if (string.IsNullOrEmpty(storageName)) return Enumerable.Empty<string>();
 
             try
             {
                 if (storageName.EndsWith(".csv"))
                 {
-                    await _fileReaderAsync.ReadCsvFile(queueToWrite, storageName);
+                    return _fileReaderAsync.ReadCsvFile(storageName);
                 }
                 else
                 {
-                    await _fileReaderAsync.ReadFile(queueToWrite, storageName);
+                    return _fileReaderAsync.ReadFile(storageName);
                 }
             }
             catch (Exception ex)

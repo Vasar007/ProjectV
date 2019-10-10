@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.IO.Input.WebService
@@ -26,7 +24,7 @@ namespace ThingAppraiser.IO.Input.WebService
 
         #region IInputterAsync Implementation
 
-        public async Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName)
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
             StorageName = storageName;
 
@@ -36,7 +34,7 @@ namespace ThingAppraiser.IO.Input.WebService
             {
                 if (result.Add(thingName))
                 {
-                    await queueToWrite.SendAsync(thingName);
+                    yield return thingName;
                 }
             }
         }

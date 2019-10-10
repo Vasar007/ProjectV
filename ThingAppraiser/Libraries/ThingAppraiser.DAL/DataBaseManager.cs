@@ -55,7 +55,8 @@ namespace ThingAppraiser.DAL
                             thingIdWithRating.ThingId,
                             ratingsStorage.GetTypeByRatingId(rating.RatingId)
                         ),
-                        thingIdWithRating.Rating
+                        thingIdWithRating.Rating,
+                        rating.RatingId
                     )
                 ).ToList();
                 results.Add(dataHandlers);

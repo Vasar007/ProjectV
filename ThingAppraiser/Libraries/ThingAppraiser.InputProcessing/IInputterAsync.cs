@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Collections.Generic;
 
 namespace ThingAppraiser.IO.Input
 {
     public interface IInputterAsync : IInputterBase, ITagable
     {
-        Task ReadThingNames(ITargetBlock<string> queueToWrite, string storageName);
+        IEnumerable<string> ReadThingNames(string storageName);
     }
 }

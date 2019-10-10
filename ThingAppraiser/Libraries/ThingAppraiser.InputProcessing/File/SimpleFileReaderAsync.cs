@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using CsvHelper;
+using CsvHelper.Configuration;
 using FileHelpers;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -24,7 +23,7 @@ namespace ThingAppraiser.IO.Input.File
 
         #region IFileReaderAsync Implementation
 
-        public async Task ReadFile(ITargetBlock<string> queue, string filename)
+        public IEnumerable<string> ReadFile(string filename)
         {
             _logger.Info($"Reading file \"{filename}\".");
 
@@ -38,13 +37,13 @@ namespace ThingAppraiser.IO.Input.File
                 {
                     if (result.Add(record.thingName))
                     {
-                        await queue.SendAsync(record.thingName);
+                        yield return record.thingName;
                     }
                 }
             }
         }
 
-        public async Task ReadCsvFile(ITargetBlock<string> queue, string filename)
+        public IEnumerable<string> ReadCsvFile(string filename)
         {
             _logger.Info($"Reading CSV file \"{filename}\".");
 
@@ -52,9 +51,7 @@ namespace ThingAppraiser.IO.Input.File
             var result = new HashSet<string>();
 
             using var reader = new StreamReader(filename);
-            using var csv = new CsvReader(
-                reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-            );
+            using var csv = new CsvReader(reader, new Configuration { HasHeaderRecord = true });
 
             if (!csv.Read() || !csv.ReadHeader())
             {
@@ -65,7 +62,7 @@ namespace ThingAppraiser.IO.Input.File
                 string thingName = csv[_thingNameHeader];
                 if (result.Add(thingName))
                 {
-                    await queue.SendAsync(thingName);
+                    yield return thingName;
                 }
             }
         }

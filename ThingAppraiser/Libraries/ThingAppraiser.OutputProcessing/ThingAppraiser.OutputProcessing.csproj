@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ThingAppraiser.Communication\ThingAppraiser.Communication.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj" />
     <ProjectReference Include="..\ThingAppraiser.IOHelperClasses\ThingAppraiser.IOHelperClasses.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />

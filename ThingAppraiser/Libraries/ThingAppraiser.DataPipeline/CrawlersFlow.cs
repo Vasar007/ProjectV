@@ -8,36 +8,38 @@ using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DataPipeline
 {
-    public sealed class CrawlersFlow : Dataflow<IReadOnlyList<string>, IReadOnlyList<BasicInfo>>
+    public sealed class CrawlersFlow : Dataflow<string, BasicInfo>
     {
-        private readonly Dataflow<IReadOnlyList<string>, IReadOnlyList<string>> _inputBroadcaster;
+        private readonly Dataflow<string, string> _inputBroadcaster;
 
-        private readonly Dataflow<IReadOnlyList<BasicInfo>, IReadOnlyList<BasicInfo>> _resultConsumer;
+        private readonly Dataflow<BasicInfo, BasicInfo> _resultConsumer;
 
-        public override ITargetBlock<IReadOnlyList<string>> InputBlock =>
+        public override ITargetBlock<string> InputBlock =>
             _inputBroadcaster.InputBlock;
 
-        public override ISourceBlock<IReadOnlyList<BasicInfo>> OutputBlock =>
+        public override ISourceBlock<BasicInfo> OutputBlock =>
             _resultConsumer.OutputBlock;
 
 
-        public CrawlersFlow(IEnumerable<Func<IReadOnlyList<string>, IReadOnlyList<BasicInfo>>> crawlers)
+        public CrawlersFlow(IEnumerable<Func<string, IAsyncEnumerable<BasicInfo>>> crawlers)
             : base(DataflowOptions.Default)
         {
             crawlers.ThrowIfNull(nameof(crawlers));
 
-            _inputBroadcaster = new DataBroadcaster<IReadOnlyList<string>>(filteredData =>
+            _inputBroadcaster = new DataBroadcaster<string>(filteredData =>
             {
-                Console.WriteLine($"Broadcasts all filtered inputters data. {filteredData.Count.ToString()}");
+                Console.WriteLine($"Broadcasts all filtered inputters data.");
                 return filteredData;
             }, DataflowOptions.Default);
 
-            _resultConsumer = new TransformBlock<IReadOnlyList<BasicInfo>, IReadOnlyList<BasicInfo>>(
+            _resultConsumer = new TransformBlock<BasicInfo, BasicInfo>(
                 crawlersData => crawlersData
             ).ToDataflow(DataflowOptions.Default);
 
-            var crawlerFlows = crawlers
-                .Select(crawler => DataflowUtils.FromDelegate(crawler, DataflowOptions.Default));
+            var crawlerFlows = crawlers.Select(crawler =>
+                new TransformManyBlock<string, BasicInfo>(async entity => await crawler(entity).AsEnumerable()
+            ).ToDataflow(DataflowOptions.Default));
+
             foreach (var crawlerFlow in crawlerFlows)
             {
                 _inputBroadcaster.LinkTo(crawlerFlow);

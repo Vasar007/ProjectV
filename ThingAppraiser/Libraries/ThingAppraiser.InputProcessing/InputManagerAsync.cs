@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
+using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
@@ -45,7 +46,7 @@ namespace ThingAppraiser.IO.Input
 
         #endregion
 
-        public async Task<bool> GetNames(ITargetBlock<string> queueToWrite, string storageName)
+        public InputtersFlow GetNames(string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
@@ -56,35 +57,27 @@ namespace ThingAppraiser.IO.Input
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            IReadOnlyList<Task<bool>> producers = _inputtersAsync.Select(
-                inputterAsync => TryReadThingNames(inputterAsync, queueToWrite, storageName)
-            ).ToReadOnlyList();
+            var inputtersFunc = _inputtersAsync.Select(
+                inputterAsync => new Func<string, IEnumerable<string>>(inputterAsync.ReadThingNames)
+            );
 
-            IReadOnlyList<bool> statuses = await Task.WhenAll(producers);
-            queueToWrite.Complete();
+            var inputtersFlow = new InputtersFlow(inputtersFunc);
 
-            if (statuses.Any() && statuses.All(r => r))
-            {
-                _logger.Info($"{statuses.Count} Thing names queues were read.");
-                return true;
-            }
-
-            _logger.Info($"No Things were found in \"{storageName}\".");
-            return false;
+            _logger.Info($"Conctructed inputters pipeline for \"{storageName}\".");
+            return inputtersFlow;
         }
 
-        private static async Task<bool> TryReadThingNames(IInputterAsync inputterAsync,
-            ITargetBlock<string> queueToWrite, string storageName)
+        private static IEnumerable<string> TryReadThingNames(IInputterAsync inputterAsync,
+            string storageName)
         {
             try
             {
-                await inputterAsync.ReadThingNames(queueToWrite, storageName);
-                return true;
+                return inputterAsync.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Could not get access to the storage.");
-                return false;
+                return Enumerable.Empty<string>();
             }
         }
     }

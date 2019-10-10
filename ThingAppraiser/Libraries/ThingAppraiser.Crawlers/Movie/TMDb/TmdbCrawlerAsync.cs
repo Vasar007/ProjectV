@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -28,6 +27,12 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         /// Adapter class to make a calls to TMDb API.
         /// </summary>
         private readonly ITmdbClient _tmdbClient;
+
+        /// <summary>
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
+        /// </summary>
+        private readonly HashSet<BasicInfo> _searchResults;
 
         /// <summary>
         /// Boolean flag used to show that object has already been disposed.
@@ -65,50 +70,44 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _tmdbClient = TmdbClientFactory.CreateClient(apiKey, maxRetryCount);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
         #region ICrawlerAsync Implemenation
 
         /// <inheritdoc />
-        public async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
-            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );
             //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
+           
+            TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(entityName);
+            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
 
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            while (await entitiesQueue.OutputAvailableAsync())
+            if (response is null || response.Results.IsNullOrEmpty())
             {
-                string movie = await entitiesQueue.ReceiveAsync();
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(movie);
-                //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
-
-                if (response is null || response.Results.IsNullOrEmpty())
-                {
-                    string message = $"{movie} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                // Get first search result from response and ignore all the rest.
-                TmdbMovieInfo searchResult = response.Results.First();
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
-                }
-
-                if (searchResults.Add(searchResult))
-                {
-                    await responsesQueue.SendAsync(searchResult);
-                }
+                yield break;
             }
-            return searchResults.Count != 0;
+
+            // Get first search result from response and ignore all the rest.
+            TmdbMovieInfo searchResult = response.Results.First();
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(searchResult))
+            {
+                yield return searchResult;
+            }
+
+            yield break;
         }
 
         #endregion

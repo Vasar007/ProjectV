@@ -28,6 +28,7 @@
     <ProjectReference Include="..\ExternalServices\ThingAppraiser.OmdbService\ThingAppraiser.OmdbService.csproj" />
     <ProjectReference Include="..\ExternalServices\ThingAppraiser.SteamService\ThingAppraiser.SteamService.csproj" />
     <ProjectReference Include="..\ExternalServices\ThingAppraiser.TmdbService\ThingAppraiser.TmdbService.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
     <ProjectReference Include="..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
   </ItemGroup>

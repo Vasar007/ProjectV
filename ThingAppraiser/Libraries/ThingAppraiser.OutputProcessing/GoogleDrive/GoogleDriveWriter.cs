@@ -84,7 +84,7 @@ namespace ThingAppraiser.IO.Output.GoogleDrive
             {
                 _logger.Warn(ex, $"An error occured during uploading \"{storageName}\".");
                 GlobalMessageHandler.OutputMessage("An error occured during uploading " +
-                                                    $"\"{storageName}\" : {ex}");
+                                                   $"\"{storageName}\" : {ex}");
                 return false;
             }
             finally

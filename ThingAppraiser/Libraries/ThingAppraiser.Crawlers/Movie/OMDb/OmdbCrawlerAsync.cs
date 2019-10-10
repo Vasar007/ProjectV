@@ -28,6 +28,12 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
         private readonly IOmdbClient _omdbClient;
 
         /// <summary>
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
+        /// </summary>
+        private readonly HashSet<BasicInfo> _searchResults;
+
+        /// <summary>
         /// Boolean flag used to show that object has already been disposed.
         /// </summary>
         private bool _disposed;
@@ -62,43 +68,38 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _omdbClient = OmdbClientFactory.CreateClient(apiKey);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
         #region CrawlerAsync Overridden Methods
 
         /// <inheritdoc />
-        public async Task<bool> GetResponse(ISourceBlock<string> entitiesQueue,
-            ITargetBlock<BasicInfo> responsesQueue, bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            while (await entitiesQueue.OutputAvailableAsync())
+            OmdbMovieInfo? response = await _omdbClient.TryGetItemByTitleAsync(entityName);
+
+            if (response is null)
             {
-                string movie = await entitiesQueue.ReceiveAsync();
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                OmdbMovieInfo? response = await _omdbClient.TryGetItemByTitleAsync(movie);
-
-                if (response is null)
-                {
-                    string message = $"{movie} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                // Get first search result from response and ignore all the rest.
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
-                }
-
-                if (searchResults.Add(response))
-                {
-                    await responsesQueue.SendAsync(response);
-                }
+                yield break;
             }
-            return searchResults.Count != 0;
+
+            // Get first search result from response and ignore all the rest.
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(response))
+            {
+                yield return response;
+            }
+
+            yield break;
+
         }
 
         #endregion

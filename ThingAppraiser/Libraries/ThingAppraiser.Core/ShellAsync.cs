@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Core.ShellBuilders;
+using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Core
@@ -62,100 +60,12 @@ namespace ThingAppraiser.Core
             return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
         }
 
-        private async Task<ServiceStatus> GetThingNames(ITargetBlock<string> queue,
-            string storageName)
-        {
-            try
-            {
-                bool status = await InputManagerAsync.GetNames(
-                    queue, storageName
-                );
-                if (status)
-                {
-                    GlobalMessageHandler.OutputMessage("Things were successfully gotten.");
-                    return ServiceStatus.Ok;
-                }
-
-                GlobalMessageHandler.OutputMessage($"No Things were found in \"{storageName}\".");
-                return ServiceStatus.Nothing;
-            }
-            catch (Exception ex)
-            {
-                _cancellationTokenSource.Cancel();
-
-                _logger.Error(ex, "Exception occured during input work.");
-                return ServiceStatus.InputError;
-            }
-        }
-
-        private async Task<ServiceStatus> RequestData(ISourceBlock<string> entitiesQueue,
-            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues)
-        {
-            try
-            {
-                bool status = await CrawlersManagerAsync.CollectAllResponses(
-                    entitiesQueue, rawDataQueues, _dataFlowOptions
-                );
-                if (status)
-                {
-                    GlobalMessageHandler.OutputMessage(
-                        "Crawlers have received responses from services."
-                    );
-                    return ServiceStatus.Ok;
-                }
-
-                GlobalMessageHandler.OutputMessage(
-                    "Crawlers have not received responses from services. Result is empty."
-                );
-                return ServiceStatus.Nothing;
-            }
-            catch (Exception ex)
-            {
-                _cancellationTokenSource.Cancel();
-
-                _logger.Error(ex, "Exception occured during collecting data.");
-                return ServiceStatus.RequestError;
-            }
-        }
-
-        private async Task<ServiceStatus> AppraiseThings(
-            IDictionary<Type, BufferBlock<BasicInfo>> rawDataQueues,
-            IList<BufferBlock<RatingDataContainer>> appraisedDataQueues)
-        {
-            try
-            {
-                bool status = await AppraisersManagerAsync.GetAllRatings(
-                    rawDataQueues, appraisedDataQueues, _dataFlowOptions
-                );
-                if (status)
-                {
-                    GlobalMessageHandler.OutputMessage(
-                        "Appraisers have calculated ratings successfully."
-                    );
-                    return ServiceStatus.Ok;
-                }
-
-                GlobalMessageHandler.OutputMessage(
-                    "Appraisers have not calculated ratings. Result is empty."
-                );
-                return ServiceStatus.Nothing;
-            }
-            catch (Exception ex)
-            {
-                _cancellationTokenSource.Cancel();
-
-                _logger.Error(ex, "Exception occured during appraising work.");
-                return ServiceStatus.AppraiseError;
-            }
-        }
-
-        private async Task<ServiceStatus> SaveResults(
-            IReadOnlyList<ISourceBlock<RatingDataContainer>> appraisedDataQueues)
+        private async Task<ServiceStatus> SaveResults(OutputtersFlow outputtersFlow)
         {
             try
             {
                 bool status = await OutputManagerAsync.SaveResults(
-                    appraisedDataQueues, storageName: string.Empty
+                    outputtersFlow, storageName: string.Empty
                 );
                 if (status)
                 {
@@ -180,42 +90,37 @@ namespace ThingAppraiser.Core
             GlobalMessageHandler.OutputMessage("Shell started work.");
             _logger.Info("Shell started work.");
 
-            var inputQueue = new BufferBlock<string>(_dataFlowOptions);
-
-            var rawDataQueues = new Dictionary<Type, BufferBlock<BasicInfo>>();
-
-            var appraisedDataQueues = new List<BufferBlock<RatingDataContainer>>();
-
             // Input component work.
-            Task<ServiceStatus> inputStatus = GetThingNames(inputQueue, storageName);
+            var inputtersFlow = InputManagerAsync.GetNames(storageName);
 
             // Crawlers component work.
-            Task<ServiceStatus> crawlersStatus = RequestData(inputQueue, rawDataQueues);
+            var crawlersFlow = CrawlersManagerAsync.CollectAllResponses();
 
             // Appraisers component work.
-            Task<ServiceStatus> appraisersStatus = AppraiseThings(rawDataQueues,
-                                                                  appraisedDataQueues);
+            var appraisersFlow = AppraisersManagerAsync.GetAllRatings();
 
             // Output component work.
-            Task<ServiceStatus> outputStatus = SaveResults(appraisedDataQueues);
+            var outputtersFlow = OutputManagerAsync.CreateFlow(storageName: string.Empty);
 
-            Task<ServiceStatus[]> statusesTask = Task.WhenAll(inputStatus, crawlersStatus,
-                                                              appraisersStatus, outputStatus);
+            // Constructing pipeline.
+            inputtersFlow.LinkTo(crawlersFlow);
+            crawlersFlow.LinkTo(appraisersFlow);
+            appraisersFlow.LinkTo(outputtersFlow);
 
-            Task rawDataQueuesTasks = Task.WhenAll(
-                rawDataQueues.Values.Select(bufferBlock => bufferBlock.Completion)
-            );
-            Task appraisedDataQueuesTasks = Task.WhenAll(
-                appraisedDataQueues.Select(bufferBlock => bufferBlock.Completion)
-            );
+            // Start processing data.
+            await inputtersFlow.ProcessAsync(new[] { storageName });
 
-            await Task.WhenAll(statusesTask, inputQueue.Completion, rawDataQueuesTasks,
-                               appraisedDataQueuesTasks);
+            // Wait for the last block in the pipeline to process all messages.
+            Task completionTask = outputtersFlow.CompletionTask;
 
+            Task<ServiceStatus> statusTask = SaveResults(outputtersFlow);
+
+            await Task.WhenAll(completionTask, statusTask);
+
+            ServiceStatus status = statusTask.Result;
             // TODO: if there are error statuses need to create aggregate status which contains
             // more details then simple ServiceStatus.Error value.
-            IReadOnlyList<ServiceStatus> statuses = await statusesTask;
-            if (statuses.Any(status => status != ServiceStatus.Ok))
+            if (status != ServiceStatus.Ok)
             {
                 GlobalMessageHandler.OutputMessage(
                     "Shell got error status during data processing."

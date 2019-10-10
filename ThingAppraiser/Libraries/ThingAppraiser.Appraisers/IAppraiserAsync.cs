@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 
@@ -34,7 +32,6 @@ namespace ThingAppraiser.Appraisers
         /// </param>
         /// <param name="outputResults">The flag to define need to output.</param>
         /// <returns>Status of operation at the end of source queue.</returns>
-        Task<bool> GetRatings(ISourceBlock<BasicInfo> entitiesInfoQueue,
-              ITargetBlock<RatingDataContainer> entitiesRatingQueue, bool outputResults);
+        RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults);
     }
 }

@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using Gridsum.DataflowEx;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DataPipeline
 {
-    public sealed class AppraisersFlow : Dataflow<IReadOnlyList<BasicInfo>, IReadOnlyList<string>>
+    public sealed class AppraisersFlow : Dataflow<BasicInfo, RatingDataContainer>
     {
-        private readonly Dataflow<IReadOnlyList<BasicInfo>, IReadOnlyList<BasicInfo>> _inputConsumer;
+        private readonly Dataflow<BasicInfo, BasicInfo> _inputConsumer;
 
-        private readonly Dataflow<IReadOnlyList<string>, IReadOnlyList<string>> _resultConsumer;
+        private readonly Dataflow<RatingDataContainer, RatingDataContainer> _resultConsumer;
 
-        public override ITargetBlock<IReadOnlyList<BasicInfo>> InputBlock =>
+        public override ITargetBlock<BasicInfo> InputBlock =>
             _inputConsumer.InputBlock;
 
-        public override ISourceBlock<IReadOnlyList<string>> OutputBlock =>
+        public override ISourceBlock<RatingDataContainer> OutputBlock =>
             _resultConsumer.OutputBlock;
 
 
@@ -26,32 +26,32 @@ namespace ThingAppraiser.DataPipeline
         {
             appraisers.ThrowIfNull(nameof(appraisers));
 
-            _inputConsumer = new DataBroadcaster<IReadOnlyList<BasicInfo>>(crawlersData =>
+            _inputConsumer = new DataBroadcaster<BasicInfo>(crawlersData =>
             {
-                Console.WriteLine($"Broadcasts all crawlers data. {crawlersData.Count.ToString()}");
+                Console.WriteLine($"Broadcasts all crawlers data.");
                 return crawlersData;
             }, DataflowOptions.Default);
 
-            _resultConsumer = new TransformBlock<IReadOnlyList<string>, IReadOnlyList<string>>(
+            _resultConsumer = new TransformBlock<RatingDataContainer, RatingDataContainer>(
                 appraisedData => appraisedData
             ).ToDataflow(DataflowOptions.Default);
 
-            var usedTypes = new Dictionary<Type, DataBroadcaster<IReadOnlyList<BasicInfo>>>();
+            var usedTypes = new Dictionary<Type, DataBroadcaster<BasicInfo>>();
             foreach (var appraiser in appraisers)
             {
                 if (!usedTypes.TryGetValue(appraiser.DataType, out var broadcaster))
                 {
-                    broadcaster = new DataBroadcaster<IReadOnlyList<BasicInfo>>(crawlersData =>
+                    broadcaster = new DataBroadcaster<BasicInfo>(crawlersData =>
                     {
-                        Console.WriteLine($"Broadcasts specified data of type {appraiser.DataType.Name}. {crawlersData.Count.ToString()}");
+                        Console.WriteLine($"Broadcasts specified data of type {appraiser.DataType.Name}.");
                         return crawlersData;
                     }, DataflowOptions.Default);
 
                     usedTypes.Add(appraiser.DataType, broadcaster);
                     _inputConsumer.TransformAndLink(
                         broadcaster,
-                        l => l,
-                        l => l.All(d => d.GetType().IsAssignableFrom(appraiser.DataType))
+                        info => info,
+                        info => info.GetType().IsAssignableFrom(appraiser.DataType)
                     );
                     RegisterChild(broadcaster);
                 }
