@@ -7,7 +7,8 @@ namespace ThingAppraiser.Configuration
 {
     public static partial class ConfigOptions
     {
-        private static readonly Lazy<IConfigurationRoot> Root = new Lazy<IConfigurationRoot>(LoadOptions);
+        private static readonly Lazy<IConfigurationRoot> Root =
+            new Lazy<IConfigurationRoot>(LoadOptions);
 
         public static ApiOptions Api => GetOptions<ApiOptions>();
 

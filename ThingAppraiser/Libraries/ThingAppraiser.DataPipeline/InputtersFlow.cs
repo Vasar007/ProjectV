@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using Gridsum.DataflowEx;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DataPipeline
 {
@@ -24,10 +25,7 @@ namespace ThingAppraiser.DataPipeline
         public InputtersFlow(IEnumerable<Func<string, IReadOnlyList<string>>> inputters)
             : base(DataflowOptions.Default)
         {
-            if (inputters is null)
-            {
-                throw new ArgumentNullException(nameof(inputters));
-            }
+            inputters.ThrowIfNull(nameof(inputters));
 
             _filteringSet = new ConcurrentDictionary<string, byte>();
 

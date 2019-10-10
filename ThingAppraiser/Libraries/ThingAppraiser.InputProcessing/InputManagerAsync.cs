@@ -79,13 +79,13 @@ namespace ThingAppraiser.IO.Input
             try
             {
                 await inputterAsync.ReadThingNames(queueToWrite, storageName);
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Could not get access to the storage.");
                 return false;
             }
-            return true;
         }
     }
 }

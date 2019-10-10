@@ -162,7 +162,7 @@ namespace ThingAppraiser.Crawlers
 
         private static void CheckExceptions(IReadOnlyList<Exception> taskExceptions)
         {
-            if (!taskExceptions.Any()) return;
+            if (taskExceptions.Count == 0) return;
 
             if (taskExceptions.Count == 1)
             {
