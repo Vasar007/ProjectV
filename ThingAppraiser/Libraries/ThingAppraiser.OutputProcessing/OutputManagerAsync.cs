@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -17,10 +16,6 @@ namespace ThingAppraiser.IO.Output
 
         private readonly string _defaultStorageName;
 
-        private readonly ExecutionDataflowBlockOptions _consumerOptions;
-
-        private readonly DataflowLinkOptions _linkOptions;
-
         private readonly List<IOutputterAsync> _outputtersAsync = new List<IOutputterAsync>();
 
 
@@ -29,9 +24,6 @@ namespace ThingAppraiser.IO.Output
             _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
                 nameof(defaultStorageName)
             );
-
-            _consumerOptions = new ExecutionDataflowBlockOptions { BoundedCapacity = 1 };
-            _linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
         }
 
         #region IManager<IOutputterAsync> Implementation
@@ -82,6 +74,7 @@ namespace ThingAppraiser.IO.Output
                 _logger.Info("Storage name is empty, using the default value.");
             }
 
+            // Make sure that the task is completed.
             await outputtersFlow.CompletionTask;
 
             IReadOnlyList<RatingDataContainer> results = outputtersFlow.Results.ToReadOnlyList();

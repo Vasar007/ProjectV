@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -19,9 +17,6 @@ namespace ThingAppraiser.Crawlers
         private readonly List<ICrawlerAsync> _crawlersAsync = new List<ICrawlerAsync>();
 
         private readonly bool _outputResults;
-
-        private readonly CancellationTokenSource _cancellationTokenSource =
-            new CancellationTokenSource();
 
         private bool _disposed;
 
@@ -57,19 +52,18 @@ namespace ThingAppraiser.Crawlers
             if (_disposed) return;
             _disposed = true;
 
-            _cancellationTokenSource.Dispose();
-
             _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
         }
 
         #endregion
 
-        public CrawlersFlow CollectAllResponses()
+        public CrawlersFlow CreateFlow()
         {
             var crawlersFunc = _crawlersAsync.Select(crawlerAsync =>
-            {
-                return new Func<string, IAsyncEnumerable<BasicInfo>>(entityName => crawlerAsync.GetResponse(entityName, _outputResults));
-            });
+                new Func<string, IAsyncEnumerable<BasicInfo>>(
+                    entityName => crawlerAsync.GetResponse(entityName, _outputResults)
+                )
+            );
 
             var crawlersFlow = new CrawlersFlow(crawlersFunc);
 

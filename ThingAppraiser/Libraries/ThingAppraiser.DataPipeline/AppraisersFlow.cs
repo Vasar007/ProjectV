@@ -14,38 +14,38 @@ namespace ThingAppraiser.DataPipeline
 
         private readonly Dataflow<RatingDataContainer, RatingDataContainer> _resultConsumer;
 
-        public override ITargetBlock<BasicInfo> InputBlock =>
-            _inputConsumer.InputBlock;
+        public override ITargetBlock<BasicInfo> InputBlock => _inputConsumer.InputBlock;
 
         public override ISourceBlock<RatingDataContainer> OutputBlock =>
             _resultConsumer.OutputBlock;
 
 
-        public AppraisersFlow(IEnumerable<Appraiser> appraisers)
+        public AppraisersFlow(IEnumerable<Funcotype> appraisers)
             : base(DataflowOptions.Default)
         {
             appraisers.ThrowIfNull(nameof(appraisers));
 
-            _inputConsumer = new DataBroadcaster<BasicInfo>(crawlersData =>
-            {
-                Console.WriteLine($"Broadcasts all crawlers data.");
-                return crawlersData;
-            }, DataflowOptions.Default);
+            _inputConsumer = new DataBroadcaster<BasicInfo>(
+                crawlersData => crawlersData, DataflowOptions.Default
+            );
 
             _resultConsumer = new TransformBlock<RatingDataContainer, RatingDataContainer>(
                 appraisedData => appraisedData
             ).ToDataflow(DataflowOptions.Default);
 
+            InitFlow(appraisers);
+        }
+
+        private void InitFlow(IEnumerable<Funcotype> appraisers)
+        {
             var usedTypes = new Dictionary<Type, DataBroadcaster<BasicInfo>>();
-            foreach (var appraiser in appraisers)
+            foreach (Funcotype appraiser in appraisers)
             {
                 if (!usedTypes.TryGetValue(appraiser.DataType, out var broadcaster))
                 {
-                    broadcaster = new DataBroadcaster<BasicInfo>(crawlersData =>
-                    {
-                        Console.WriteLine($"Broadcasts specified data of type {appraiser.DataType.Name}.");
-                        return crawlersData;
-                    }, DataflowOptions.Default);
+                    broadcaster = new DataBroadcaster<BasicInfo>(
+                        crawlersData => crawlersData, DataflowOptions.Default
+                    );
 
                     usedTypes.Add(appraiser.DataType, broadcaster);
                     _inputConsumer.TransformAndLink(
@@ -55,7 +55,12 @@ namespace ThingAppraiser.DataPipeline
                     );
                     RegisterChild(broadcaster);
                 }
-                var appraiserFlow = DataflowUtils.FromDelegate(appraiser.Func, DataflowOptions.Default);
+
+                Dataflow<BasicInfo, RatingDataContainer> appraiserFlow = DataflowUtils.FromDelegate(
+                    appraiser.Func, DataflowOptions.Default
+                );
+
+
                 broadcaster.LinkTo(appraiserFlow);
                 appraiserFlow.LinkTo(_resultConsumer);
 

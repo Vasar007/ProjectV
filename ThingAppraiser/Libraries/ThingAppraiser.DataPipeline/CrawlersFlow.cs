@@ -14,11 +14,9 @@ namespace ThingAppraiser.DataPipeline
 
         private readonly Dataflow<BasicInfo, BasicInfo> _resultConsumer;
 
-        public override ITargetBlock<string> InputBlock =>
-            _inputBroadcaster.InputBlock;
+        public override ITargetBlock<string> InputBlock => _inputBroadcaster.InputBlock;
 
-        public override ISourceBlock<BasicInfo> OutputBlock =>
-            _resultConsumer.OutputBlock;
+        public override ISourceBlock<BasicInfo> OutputBlock => _resultConsumer.OutputBlock;
 
 
         public CrawlersFlow(IEnumerable<Func<string, IAsyncEnumerable<BasicInfo>>> crawlers)
@@ -26,21 +24,26 @@ namespace ThingAppraiser.DataPipeline
         {
             crawlers.ThrowIfNull(nameof(crawlers));
 
-            _inputBroadcaster = new DataBroadcaster<string>(filteredData =>
-            {
-                Console.WriteLine($"Broadcasts all filtered inputters data.");
-                return filteredData;
-            }, DataflowOptions.Default);
+            _inputBroadcaster = new DataBroadcaster<string>(
+                filteredData => filteredData, DataflowOptions.Default
+            );
 
             _resultConsumer = new TransformBlock<BasicInfo, BasicInfo>(
                 crawlersData => crawlersData
             ).ToDataflow(DataflowOptions.Default);
 
-            var crawlerFlows = crawlers.Select(crawler =>
-                new TransformManyBlock<string, BasicInfo>(async entity => await crawler(entity).AsEnumerable()
-            ).ToDataflow(DataflowOptions.Default));
+            InitFlow(crawlers);
+        }
 
-            foreach (var crawlerFlow in crawlerFlows)
+        private void InitFlow(IEnumerable<Func<string, IAsyncEnumerable<BasicInfo>>> crawlers)
+        {
+            var crawlerFlows = crawlers.Select(crawler =>
+                new TransformManyBlock<string, BasicInfo>(
+                    async entity => await crawler(entity).AsEnumerable()
+                ).ToDataflow(DataflowOptions.Default)
+            );
+
+            foreach (Dataflow<string, BasicInfo> crawlerFlow in crawlerFlows)
             {
                 _inputBroadcaster.LinkTo(crawlerFlow);
                 crawlerFlow.LinkTo(_resultConsumer);

@@ -81,10 +81,8 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );
-            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
            
             TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(entityName);
-            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
 
             if (response is null || response.Results.IsNullOrEmpty())
             {

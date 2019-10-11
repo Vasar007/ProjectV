@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
@@ -46,7 +44,7 @@ namespace ThingAppraiser.IO.Input
 
         #endregion
 
-        public InputtersFlow GetNames(string storageName)
+        public InputtersFlow CreateFlow(string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {

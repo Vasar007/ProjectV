@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using System.Xml.Linq;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Core.ShellBuilders;
@@ -18,8 +16,6 @@ namespace ThingAppraiser.Core
 
         private readonly int _boundedCapacity;
 
-        private readonly DataflowBlockOptions _dataFlowOptions;
-
         public IO.Input.InputManagerAsync InputManagerAsync { get; }
 
         public Crawlers.CrawlersManagerAsync CrawlersManagerAsync { get; }
@@ -27,9 +23,6 @@ namespace ThingAppraiser.Core
         public Appraisers.AppraisersManagerAsync AppraisersManagerAsync { get; }
 
         public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
-
-        private readonly CancellationTokenSource _cancellationTokenSource =
-            new CancellationTokenSource();
 
         private bool _disposed;
 
@@ -47,18 +40,65 @@ namespace ThingAppraiser.Core
                 appraisersManagerAsync.ThrowIfNull(nameof(appraisersManagerAsync));
             OutputManagerAsync = outputManagerAsync.ThrowIfNull(nameof(outputManagerAsync));
 
-            _boundedCapacity = boundedCapacity;
-            _dataFlowOptions = new DataflowBlockOptions
-            { 
-                BoundedCapacity = _boundedCapacity,
-                CancellationToken = _cancellationTokenSource.Token
-            };
+            _boundedCapacity = boundedCapacity; // Not using this parameter now.
         }
 
         public static ShellAsyncBuilderDirector CreateBuilderDirector(XDocument configuration)
         {
             return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
         }
+
+        public async Task<ServiceStatus> Run(string storageName)
+        {
+            const string startMessage = "Shell started work.";
+            GlobalMessageHandler.OutputMessage(startMessage);
+            _logger.Info(startMessage);
+
+            DataflowPipeline dataflowPipeline;
+            try
+            {
+                dataflowPipeline = ConstructPipeline(storageName);
+
+                // Start processing data.
+                // And wait for the last block in the pipeline to process all messages.
+                await dataflowPipeline.Execute(storageName);
+            }
+            catch (Exception ex)
+            {
+                const string failureMessage = "Shell got an exception during data processing.";
+                _logger.Error(ex, failureMessage);
+                GlobalMessageHandler.OutputMessage(failureMessage);
+                return ServiceStatus.Error;
+            }
+
+            ServiceStatus status = await SaveResults(dataflowPipeline.OutputtersFlow);
+            if (status != ServiceStatus.Ok)
+            {
+                string failureMessage = $"Shell got \"{status.ToString()}\" status " +
+                                        "during data saving.";
+                GlobalMessageHandler.OutputMessage(failureMessage);
+                _logger.Info(failureMessage);
+                return status;
+            }
+
+            const string successfulMessage = "Shell finished work successfully.";
+            _logger.Info(successfulMessage);
+            GlobalMessageHandler.OutputMessage(successfulMessage);
+
+            return ServiceStatus.Ok;
+        }
+
+        #region IDisposable Implementation
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            CrawlersManagerAsync.Dispose();
+        }
+
+        #endregion
 
         private async Task<ServiceStatus> SaveResults(OutputtersFlow outputtersFlow)
         {
@@ -73,80 +113,37 @@ namespace ThingAppraiser.Core
                     return ServiceStatus.Ok;
                 }
 
-                GlobalMessageHandler.OutputMessage("Ratings wasn't saved.");
+                GlobalMessageHandler.OutputMessage("Ratings was not saved.");
                 return ServiceStatus.OutputUnsaved;
             }
             catch (Exception ex)
             {
-                _cancellationTokenSource.Cancel();
-
                 _logger.Error(ex, "Exception occured during output work.");
                 return ServiceStatus.OutputError;
             }
         }
 
-        public async Task<ServiceStatus> Run(string storageName)
+        private DataflowPipeline ConstructPipeline(string storageName)
         {
-            GlobalMessageHandler.OutputMessage("Shell started work.");
-            _logger.Info("Shell started work.");
-
             // Input component work.
-            var inputtersFlow = InputManagerAsync.GetNames(storageName);
+            InputtersFlow inputtersFlow = InputManagerAsync.CreateFlow(storageName);
 
             // Crawlers component work.
-            var crawlersFlow = CrawlersManagerAsync.CollectAllResponses();
+            CrawlersFlow crawlersFlow = CrawlersManagerAsync.CreateFlow();
 
             // Appraisers component work.
-            var appraisersFlow = AppraisersManagerAsync.GetAllRatings();
+            AppraisersFlow appraisersFlow = AppraisersManagerAsync.CreateFlow();
 
             // Output component work.
-            var outputtersFlow = OutputManagerAsync.CreateFlow(storageName: string.Empty);
+            OutputtersFlow outputtersFlow =
+                OutputManagerAsync.CreateFlow(storageName: string.Empty);
 
             // Constructing pipeline.
             inputtersFlow.LinkTo(crawlersFlow);
             crawlersFlow.LinkTo(appraisersFlow);
             appraisersFlow.LinkTo(outputtersFlow);
 
-            // Start processing data.
-            await inputtersFlow.ProcessAsync(new[] { storageName });
-
-            // Wait for the last block in the pipeline to process all messages.
-            Task completionTask = outputtersFlow.CompletionTask;
-
-            Task<ServiceStatus> statusTask = SaveResults(outputtersFlow);
-
-            await Task.WhenAll(completionTask, statusTask);
-
-            ServiceStatus status = statusTask.Result;
-            // TODO: if there are error statuses need to create aggregate status which contains
-            // more details then simple ServiceStatus.Error value.
-            if (status != ServiceStatus.Ok)
-            {
-                GlobalMessageHandler.OutputMessage(
-                    "Shell got error status during data processing."
-                );
-                _logger.Info("Shell got error status during data processing.");
-                return ServiceStatus.Error;
-            }
-
-            _logger.Info("Shell finished work successfully.");
-            GlobalMessageHandler.OutputMessage("Shell finished work successfully.");
-            return ServiceStatus.Ok;
+            return new DataflowPipeline(inputtersFlow, outputtersFlow);
         }
-
-        #region IDisposable Implementation
-
-        public void Dispose()
-        {
-            if (_disposed) return;
-            _disposed = true;
-
-            _cancellationTokenSource.Dispose();
-
-            CrawlersManagerAsync.Dispose();
-            AppraisersManagerAsync.Dispose();
-        }
-
-        #endregion
     }
 }

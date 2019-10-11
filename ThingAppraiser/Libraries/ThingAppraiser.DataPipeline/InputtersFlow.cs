@@ -18,8 +18,9 @@ namespace ThingAppraiser.DataPipeline
 
         public override ITargetBlock<string> InputBlock => _inputBroadcaster.InputBlock;
 
-        public override ISourceBlock<string> OutputBlock =>
-            _resultTransformer.OutputBlock;
+        public override ISourceBlock<string> OutputBlock => _resultTransformer.OutputBlock;
+
+        public int MinWordLength { get; } = 2;
 
 
         public InputtersFlow(IEnumerable<Func<string, IEnumerable<string>>> inputters)
@@ -29,19 +30,30 @@ namespace ThingAppraiser.DataPipeline
 
             _filteringSet = new ConcurrentDictionary<string, byte>();
 
-            _inputBroadcaster = new DataBroadcaster<string>(input =>
-            {
-                Console.WriteLine("Broadcasts input to further blocks.");
-                return input;
-            }, DataflowOptions.Default);
+            _inputBroadcaster = new DataBroadcaster<string>(
+                input => input, DataflowOptions.Default
+            );
 
             _resultTransformer = DataflowUtils.FromDelegate<string, string>(
                 inputtersData => inputtersData, DataflowOptions.Default
             );
 
-            var inputFlows = inputters
-                .Select(inputter => DataflowUtils.FromDelegate(inputter, DataflowOptions.Default));
-            foreach (var inputFlow in inputFlows)
+            InitFlow(inputters);
+        }
+
+        protected override void CleanUp(Exception dataflowException)
+        {
+            _filteringSet.Clear();
+
+            base.CleanUp(dataflowException);
+        }
+
+        private void InitFlow(IEnumerable<Func<string, IEnumerable<string>>> inputters)
+        {
+            var inputFlows = inputters.Select(inputter =>
+                DataflowUtils.FromDelegate(inputter, DataflowOptions.Default)
+            );
+            foreach (Dataflow<string, string> inputFlow in inputFlows)
             {
                 _inputBroadcaster.LinkTo(inputFlow);
                 inputFlow.LinkTo(_resultTransformer, FilterInputData);
@@ -54,16 +66,9 @@ namespace ThingAppraiser.DataPipeline
             RegisterChild(_resultTransformer);
         }
 
-        protected override void CleanUp(Exception dataflowException)
-        {
-            _filteringSet.Clear();
-
-            base.CleanUp(dataflowException);
-        }
-
         private bool FilterInputData(string inputtersData)
         {
-            return inputtersData.Length > 2 &&
+            return inputtersData.Length > MinWordLength &&
                    _filteringSet.TryAdd(inputtersData, default);
         }
     }

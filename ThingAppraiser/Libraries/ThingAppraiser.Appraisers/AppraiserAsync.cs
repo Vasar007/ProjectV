@@ -59,7 +59,6 @@ namespace ThingAppraiser.Appraisers
 
         public RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults)
         {
-            //throw new System.Exception("IT IS A CRITICAL EXCEPTION!");
             if (!(entityInfo is T convertedInfo))
             {
                 throw new ArgumentException(

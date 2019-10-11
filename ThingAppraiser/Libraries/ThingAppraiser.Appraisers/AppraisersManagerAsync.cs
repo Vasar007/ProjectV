@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using ThingAppraiser.Communication;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Models.Data;
-using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {
-    public sealed class AppraisersManagerAsync : IManager<IAppraiserAsync>, IDisposable
+    public sealed class AppraisersManagerAsync : IManager<IAppraiserAsync>
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<AppraisersManagerAsync>();
@@ -22,11 +15,6 @@ namespace ThingAppraiser.Appraisers
             new Dictionary<Type, IList<IAppraiserAsync>>();
 
         private readonly bool _outputResults;
-
-        private readonly CancellationTokenSource _cancellationTokenSource =
-            new CancellationTokenSource();
-
-        private bool _disposed;
 
 
         public AppraisersManagerAsync(bool outputResults)
@@ -61,27 +49,18 @@ namespace ThingAppraiser.Appraisers
 
         #endregion
 
-        #region IDisposable Implementation
-
-        public void Dispose()
+        public AppraisersFlow CreateFlow()
         {
-            if (_disposed) return;
-            _disposed = true;
-
-            _cancellationTokenSource.Dispose();
-        }
-
-        #endregion
-
-        public AppraisersFlow GetAllRatings()
-        {
-            var appraisersFunc = new List<Appraiser>();
+            var appraisersFunc = new List<Funcotype>();
             foreach ((Type type, IList<IAppraiserAsync> appraisersAsync) in _appraisersAsync)
             {
                 foreach (var appraiserAsync in appraisersAsync)
                 {
-                    var appraiser = new Appraiser(entityInfo => appraiserAsync.GetRatings(entityInfo, _outputResults), type);
-                    appraisersFunc.Add(appraiser);
+                    var funcotype = new Funcotype(
+                        entityInfo => appraiserAsync.GetRatings(entityInfo, _outputResults),
+                        type
+                    );
+                    appraisersFunc.Add(funcotype);
                 }
             }
 

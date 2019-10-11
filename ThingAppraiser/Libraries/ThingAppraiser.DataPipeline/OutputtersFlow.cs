@@ -15,8 +15,7 @@ namespace ThingAppraiser.DataPipeline
 
         private readonly Dataflow<RatingDataContainer, RatingDataContainer> _inputConsumer;
 
-        public override ITargetBlock<RatingDataContainer> InputBlock =>
-            _inputConsumer.InputBlock;
+        public override ITargetBlock<RatingDataContainer> InputBlock => _inputConsumer.InputBlock;
 
         public IEnumerable<RatingDataContainer> Results => _resultList;
 
@@ -30,15 +29,24 @@ namespace ThingAppraiser.DataPipeline
 
             _inputConsumer = new DataBroadcaster<RatingDataContainer>(appraisersData =>
             {
-                Console.WriteLine($"Consuming all appraised data. \n");
                 _resultList.Add(appraisersData);
                 return appraisersData;
             }, DataflowOptions.Default);
 
+            InitFlow(outputters);
+        }
+
+        public void Clear()
+        {
+            _resultList.Clear();
+        }
+
+        private void InitFlow(IEnumerable<Action<RatingDataContainer>> outputters)
+        {
             var outputterFlows = outputters.Select(outputters =>
                 DataflowUtils.FromDelegate(outputters, DataflowOptions.Default)
             );
-            foreach (var outputterFlow in outputterFlows)
+            foreach (Dataflow<RatingDataContainer> outputterFlow in outputterFlows)
             {
                 _inputConsumer.LinkTo(outputterFlow);
 
@@ -46,11 +54,6 @@ namespace ThingAppraiser.DataPipeline
             }
 
             RegisterChild(_inputConsumer);
-        }
-
-        public void Clear()
-        {
-            _resultList.Clear();
         }
     }
 }

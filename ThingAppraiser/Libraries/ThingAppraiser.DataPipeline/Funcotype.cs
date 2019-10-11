@@ -5,14 +5,14 @@ using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DataPipeline
 {
-    public sealed class Appraiser
+    public sealed class Funcotype
     {
         public Func<BasicInfo, RatingDataContainer> Func { get; }
 
         public Type DataType { get; }
 
 
-        public Appraiser(Func<BasicInfo, RatingDataContainer> func, Type dataType)
+        public Funcotype(Func<BasicInfo, RatingDataContainer> func, Type dataType)
         {
             Func = func.ThrowIfNull(nameof(func));
             DataType = dataType.ThrowIfNull(nameof(dataType));
