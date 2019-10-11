@@ -69,6 +69,9 @@ namespace ThingAppraiser.Extensions
         public static Task<TResult> CancelIfFaulted<TResult>(
             this Task<TResult> task, CancellationTokenSource cancellationTokenSource)
         {
+            task.ThrowIfNull(nameof(task));
+            cancellationTokenSource.ThrowIfNull(nameof(cancellationTokenSource));
+
             return task.ContinueWith(
                 task =>
                 {

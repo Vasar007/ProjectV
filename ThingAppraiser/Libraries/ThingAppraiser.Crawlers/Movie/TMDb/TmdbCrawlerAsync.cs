@@ -81,7 +81,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
             TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
                 await GetServiceConfiguration(outputResults)
             );
-           
+
             TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(entityName);
 
             if (response is null || response.Results.IsNullOrEmpty())

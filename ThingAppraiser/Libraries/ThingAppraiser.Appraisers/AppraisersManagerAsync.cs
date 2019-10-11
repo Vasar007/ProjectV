@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
+using ThingAppraiser.Models.Data;
+using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.Appraisers
 {
@@ -51,13 +53,13 @@ namespace ThingAppraiser.Appraisers
 
         public AppraisersFlow CreateFlow()
         {
-            var appraisersFunc = new List<Funcotype>();
+            var appraisersFunc = new List<Funcotype>(_appraisersAsync.Count);
             foreach ((Type type, IList<IAppraiserAsync> appraisersAsync) in _appraisersAsync)
             {
-                foreach (var appraiserAsync in appraisersAsync)
+                foreach (IAppraiserAsync appraiserAsync in appraisersAsync)
                 {
                     var funcotype = new Funcotype(
-                        entityInfo => appraiserAsync.GetRatings(entityInfo, _outputResults),
+                        entityInfo => TryGetRatings(appraiserAsync, entityInfo),
                         type
                     );
                     appraisersFunc.Add(funcotype);
@@ -68,6 +70,22 @@ namespace ThingAppraiser.Appraisers
 
             _logger.Info("Constructed appraisers pipeline.");
             return appraisersFlow;
+        }
+
+        private RatingDataContainer TryGetRatings(IAppraiserAsync appraisersAsync,
+           BasicInfo entityInfo)
+        {
+            try
+            {
+                return appraisersAsync.GetRatings(entityInfo, _outputResults);
+            }
+            catch (Exception ex)
+            {
+                string message = $"Appraiser {appraisersAsync.Tag} could not process " +
+                                 $"entity info \"{entityInfo.Title}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

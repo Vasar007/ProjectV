@@ -61,7 +61,7 @@ namespace ThingAppraiser.Crawlers
         {
             var crawlersFunc = _crawlersAsync.Select(crawlerAsync =>
                 new Func<string, IAsyncEnumerable<BasicInfo>>(
-                    entityName => crawlerAsync.GetResponse(entityName, _outputResults)
+                    entityName => TryGetResponse(crawlerAsync, entityName)
                 )
             );
 
@@ -69,6 +69,22 @@ namespace ThingAppraiser.Crawlers
 
             _logger.Info("Constructed crawlers pipeline.");
             return crawlersFlow;
+        }
+
+        private IAsyncEnumerable<BasicInfo> TryGetResponse(ICrawlerAsync crawlerAsync,
+            string entityName)
+        {
+            try
+            {
+                return crawlerAsync.GetResponse(entityName, _outputResults);
+            }
+            catch (Exception ex)
+            {
+                string message = $"Crawler {crawlerAsync.Tag} could not process " +
+                                 $"entity \"{entityName}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ThingAppraiser.Communication;
 using ThingAppraiser.DataPipeline;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -71,7 +72,9 @@ namespace ThingAppraiser.IO.Output
             {
                 storageName = _defaultStorageName;
 
-                _logger.Info("Storage name is empty, using the default value.");
+                const string message = "Storage name is empty, using the default value.";
+                _logger.Info(message);
+                GlobalMessageHandler.OutputMessage(message);
             }
 
             // Make sure that the task is completed.
@@ -79,23 +82,20 @@ namespace ThingAppraiser.IO.Output
 
             IReadOnlyList<RatingDataContainer> results = outputtersFlow.Results.ToReadOnlyList();
 
-            IReadOnlyList<List<RatingDataContainer>> consumedResults = results
-                .GroupBy(
-                    rating => rating.RatingId,
-                    (key, group) => group.ToList()
-                )
+            IReadOnlyList<List<RatingDataContainer>> resultsToSave = results
+                .GroupBy(rating => rating.RatingId, (key, group) => group.ToList())
                 .ToReadOnlyList();
 
-            consumedResults.AsParallel().ForAll(
-                rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue))
-            );
+            resultsToSave
+                .AsParallel()
+                .ForAll(rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue)));
 
-            IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync.Select(
-                outputterAsync => outputterAsync.SaveResults(consumedResults, storageName)
-            ).ToReadOnlyList();
+            IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync
+                .Select(outputterAsync => TryGetRatings(outputterAsync, resultsToSave, storageName))
+                .ToReadOnlyList();
 
             IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
-            if (statuses.Count > 0 && statuses.All(r => r))
+            if (statuses.Count > 0 && statuses.All(statis => statis))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
@@ -103,6 +103,22 @@ namespace ThingAppraiser.IO.Output
 
             _logger.Info($"Could not save some results to \"{storageName}\".");
             return false;
+        }
+
+        private static async Task<bool> TryGetRatings(IOutputterAsync outputterAsync,
+           IReadOnlyList<IReadOnlyList<RatingDataContainer>> resultsToSave, string storageName)
+        {
+            try
+            {
+                return await outputterAsync.SaveResults(resultsToSave, storageName);
+            }
+            catch (Exception ex)
+            {
+                string message = $"Outputter {outputterAsync.Tag} could not save " +
+                                 $"{resultsToSave.Count.ToString()} results to \"{storageName}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

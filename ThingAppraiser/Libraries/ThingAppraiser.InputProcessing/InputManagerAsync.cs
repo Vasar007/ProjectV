@@ -50,13 +50,15 @@ namespace ThingAppraiser.IO.Input
             {
                 storageName = _defaultStorageName;
 
-                string message = "Storage name is empty, using the default value.";
+                const string message = "Storage name is empty, using the default value.";
                 _logger.Info(message);
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            var inputtersFunc = _inputtersAsync.Select(
-                inputterAsync => new Func<string, IEnumerable<string>>(inputterAsync.ReadThingNames)
+            var inputtersFunc = _inputtersAsync.Select(inputterAsync =>
+                new Func<string, IEnumerable<string>>(
+                    input => TryReadThingNames(inputterAsync, input)
+                )
             );
 
             var inputtersFlow = new InputtersFlow(inputtersFunc);
@@ -74,8 +76,10 @@ namespace ThingAppraiser.IO.Input
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Could not get access to the storage.");
-                return Enumerable.Empty<string>();
+                string message = $"Inputter '{inputterAsync.Tag}' could not get access to the " +
+                                 $"storage \"{storageName}\".";
+                _logger.Error(ex, message);
+                throw;
             }
         }
     }

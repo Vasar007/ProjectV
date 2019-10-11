@@ -39,8 +39,8 @@ namespace ThingAppraiser.IO.Output.File
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Couldn't write to the storage.");
-                GlobalMessageHandler.OutputMessage($"Couldn't write to the storage. Error: {ex}");
+                _logger.Warn(ex, "Could not write to the storage.");
+                GlobalMessageHandler.OutputMessage($"Could not write to the storage. Error: {ex}");
                 return false;
             }
         }

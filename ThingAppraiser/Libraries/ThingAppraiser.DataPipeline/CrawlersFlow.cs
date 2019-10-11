@@ -39,7 +39,7 @@ namespace ThingAppraiser.DataPipeline
         {
             var crawlerFlows = crawlers.Select(crawler =>
                 new TransformManyBlock<string, BasicInfo>(
-                    async entity => await crawler(entity).AsEnumerable()
+                    async entity => await crawler(entity).AsEnumerable().LogIfErrorOccured()
                 ).ToDataflow(DataflowOptions.Default)
             );
 
