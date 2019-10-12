@@ -34,9 +34,9 @@ namespace ThingAppraiser.DataPipeline
                 input => input, DataflowOptions.Default
             );
 
-            _resultTransformer = DataflowUtils.FromDelegate<string, string>(
-                inputtersData => inputtersData, DataflowOptions.Default
-            );
+            _resultTransformer = new TransformBlock<string, string>(
+                inputtersData => inputtersData
+            ).ToDataflow(DataflowOptions.Default);
 
             InitFlow(inputters);
         }

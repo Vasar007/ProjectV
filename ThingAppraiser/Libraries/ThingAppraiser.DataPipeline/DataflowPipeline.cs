@@ -9,6 +9,8 @@ namespace ThingAppraiser.DataPipeline
 
         public OutputtersFlow OutputtersFlow { get; }
 
+        // Pipeline does not store neither crawlers nor appraisers flows because they are
+        // implementation details.
 
         public DataflowPipeline(InputtersFlow inputtersFlow, OutputtersFlow outputtersFlow)
         {

@@ -22,9 +22,8 @@ namespace ThingAppraiser.IO.Output
 
         public OutputManagerAsync(string defaultStorageName)
         {
-            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
-                nameof(defaultStorageName)
-            );
+            _defaultStorageName =
+                defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
         #region IManager<IOutputterAsync> Implementation
@@ -77,7 +76,7 @@ namespace ThingAppraiser.IO.Output
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            // Make sure that the task is completed.
+            // Make sure that the final pipeline task is completed.
             await outputtersFlow.CompletionTask;
 
             IReadOnlyList<RatingDataContainer> results = outputtersFlow.Results.ToReadOnlyList();

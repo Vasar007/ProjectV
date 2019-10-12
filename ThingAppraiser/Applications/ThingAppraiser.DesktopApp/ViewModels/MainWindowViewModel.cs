@@ -94,7 +94,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand ForceReturnToStartViewCommand =>
             new RelayCommand<UserControl>(ReturnToStartView);
 
-        public SceneItem[] SceneItems { get; }
+        public IReadOnlyList<SceneItem> SceneItems { get; }
 
         public object DialogIdentifier { get; }
 
@@ -209,7 +209,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
         {
-            if (data.IsNullOrEmpty() || data.Count < 2)
+            const int minItemsNumberToAppraise = 2;
+            if (data.IsNullOrEmpty() || data.Count < minItemsNumberToAppraise)
             {
                 throw new InvalidOperationException("Insufficient amount of data to be processed.");
             }
@@ -369,7 +370,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return dataSource switch
             {
                 DataSource.Nothing => throw new InvalidOperationException(
-                                          "Data source wasn't set."
+                                          "Data source was not set."
                                       ),
 
                 DataSource.InputThing => await CreateRequestWithUserInputData(),
@@ -380,7 +381,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(dataSource), dataSource,
-                         "Couldn't recognize specified data source type."
+                         "Could not recognize specified data source type."
                      )
             };
         }

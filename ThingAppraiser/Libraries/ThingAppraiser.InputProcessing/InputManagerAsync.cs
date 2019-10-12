@@ -20,9 +20,8 @@ namespace ThingAppraiser.IO.Input
 
         public InputManagerAsync(string defaultStorageName)
         {
-            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
-                nameof(defaultStorageName)
-            );
+            _defaultStorageName =
+                defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
         #region IManager<IInputterAsync> Implementation

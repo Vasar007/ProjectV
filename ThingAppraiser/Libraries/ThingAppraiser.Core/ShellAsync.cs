@@ -68,6 +68,7 @@ namespace ThingAppraiser.Core
                 const string failureMessage = "Shell got an exception during data processing.";
                 _logger.Error(ex, failureMessage);
                 GlobalMessageHandler.OutputMessage(failureMessage);
+
                 return ServiceStatus.Error;
             }
 
@@ -78,6 +79,7 @@ namespace ThingAppraiser.Core
                                         "during data saving.";
                 GlobalMessageHandler.OutputMessage(failureMessage);
                 _logger.Info(failureMessage);
+
                 return status;
             }
 
@@ -118,7 +120,7 @@ namespace ThingAppraiser.Core
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occured during output work.");
+                _logger.Error(ex, "Exception occured during saving results work.");
                 return ServiceStatus.OutputError;
             }
         }
