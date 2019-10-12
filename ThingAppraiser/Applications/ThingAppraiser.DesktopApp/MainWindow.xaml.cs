@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp
             MainDialogIdentifier.SetDialogIdentifierAnyway(MainWindowDialogHost.Identifier);
 
             var eventAggregator = _container.Resolve<IEventAggregator>();
-            DataContext = new MainWindowViewModel(container, eventAggregator);
+            DataContext = new MainWindowViewModel(eventAggregator);
 
             _logger.Info("Main window was created.");
         }

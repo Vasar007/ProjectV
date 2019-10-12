@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Ioc;
 using Prism.Mvvm;
 using ThingAppraiser.Building;
 using ThingAppraiser.Building.Service;
@@ -32,8 +31,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
 
         private readonly IEventAggregator _eventAggregator;
-
-        private readonly IContainerProvider _container;
 
         private readonly IRequirementsCreator _requirementsCreator;
 
@@ -102,10 +99,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
 
-        public MainWindowViewModel(IContainerProvider container,
-            IEventAggregator eventAggregator)
+        public MainWindowViewModel(IEventAggregator eventAggregator)
         {
-            _container = container.ThrowIfNull(nameof(container));
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             _eventAggregator.GetEvent<OpenThingsFileMessage>().Subscribe(
