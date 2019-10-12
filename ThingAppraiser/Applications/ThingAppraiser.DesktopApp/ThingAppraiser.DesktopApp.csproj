@@ -20,10 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="1.2.1-ci643" />
-    <PackageReference Include="MaterialDesignThemes" Version="3.0.0-ci643" />
+    <PackageReference Include="MaterialDesignColors" Version="1.2.1-ci663" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.0.0-ci663" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
   </ItemGroup>
 
   <ItemGroup>
