@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ToplistHeaderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             mc:Ignorable="d"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <!--
+        TODO: move this text block with buttons to the top and rotate it (vertical -> horizontal).
+
+        <TextBlock TextWrapping="Wrap"
+                   VerticalAlignment="Top"
+                   Margin="8 8 8 32"
+                   HorizontalAlignment="Center"
+                   FontSize="20">
+            Choose one of the option to work with toplists:
+        </TextBlock>
+        -->
+
+        <Button Width="256"
+                Command="{Binding Path=CreateToplistDialogCommand}"
+                CommandParameter="{Binding Path=.}">
+            Create Toplist
+        </Button>
+
+        <Button Width="256"
+                Margin="8"
+                Command="{Binding Path=OpenToplistFileDialogCommand}">
+            Read from local file
+        </Button>
+
+        <Button Width="256"
+                Margin="8"
+                Command="{Binding Path=OpenToplistFromDriveDialogCommand}">
+            Read from Google Drive
+        </Button>
+    </StackPanel>
+
+</UserControl>

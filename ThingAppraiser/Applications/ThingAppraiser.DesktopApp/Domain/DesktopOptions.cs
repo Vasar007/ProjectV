@@ -38,7 +38,9 @@ namespace ThingAppraiser.DesktopApp.Domain
         public static class BindingNames
         {
             public static string ToplistHeader { get; } = "ToplistHeader";
-            public static string ToplistContent { get; } = "ToplistContent";
+            public static string ToplistEditor { get; } = "ToplistEditor";
+            public static string ContentFinderHeader { get; } = "ContentFinderHeader";
+            public static string ContentFinderResults { get; } = "ContentFinderResults";
         }
     }
 }

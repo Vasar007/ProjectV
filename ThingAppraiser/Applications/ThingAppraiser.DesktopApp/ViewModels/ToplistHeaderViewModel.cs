@@ -9,10 +9,10 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ToplistStartViewModel : BindableBase
+    internal sealed class ToplistHeaderViewModel : BindableBase
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ToplistStartViewModel>();
+            LoggerFactory.CreateLoggerFor<ToplistHeaderViewModel>();
 
         private readonly IEventAggregator _eventAggregator;
 
@@ -25,12 +25,12 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand OpenToplistFromDriveDialogCommand { get; }
 
 
-        public ToplistStartViewModel(IEventAggregator eventAggregator)
+        public ToplistHeaderViewModel(IEventAggregator eventAggregator)
         {
             DialogIdentifier = MainDialogIdentifier.DialogIdentifier;
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            CreateToplistDialogCommand = new DelegateCommand<ToplistStartViewModel>(
+            CreateToplistDialogCommand = new DelegateCommand<ToplistHeaderViewModel>(
                 ExecutableDialogs.ExecuteCreateToplistDialog
             );
             OpenToplistFileDialogCommand = new DelegateCommand(SendLoadToplistFileMessage);

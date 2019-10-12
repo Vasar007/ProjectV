@@ -107,7 +107,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync();
         }
 
-        public static void ExecuteCreateToplistDialog(ToplistStartViewModel toplistStartViewModel)
+        public static void ExecuteCreateToplistDialog(ToplistHeaderViewModel toplistStartViewModel)
         {
             toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
 

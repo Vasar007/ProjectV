@@ -43,7 +43,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             _eventAggregator.GetEvent<LoadToplistFileMessage>().Subscribe(
-                ProcessLoadingToplistFile
+                ProcessLoadingLocalToplistFile
             );
 
             _eventAggregator.GetEvent<ConstructToplistMessage>().Subscribe(
@@ -155,7 +155,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        private void ProcessLoadingToplistFile(string toplistFilename)
+        private void ProcessLoadingLocalToplistFile(string toplistFilename)
         {
             try
             {

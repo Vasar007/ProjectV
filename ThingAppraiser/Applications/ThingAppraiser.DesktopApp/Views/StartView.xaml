@@ -14,7 +14,7 @@
                    Margin="8 8 8 32"
                    HorizontalAlignment="Center"
                    FontSize="20">
-            Choose one of the option:
+            Choose one of the option to appraise The Things:
         </TextBlock>
 
         <Button Width="256"
@@ -25,13 +25,13 @@
         <Button Width="256"
                 Margin="0 32 0 0"
                 Command="{Binding Path=OpenThingsFileDialogCommand}">
-            Read from local file
+            Read The Things from local file
         </Button>
         <Button Width="256"
                 Margin="0 32 0 0"
                 Command="{Binding Path=EnterDataDialogCommand}"
                 CommandParameter="{Binding Path=.}">
-            Read from Google Drive
+            Read The Things from Google Drive
         </Button>
 
         <ComboBox materialDesign:HintAssist.Hint="Service"

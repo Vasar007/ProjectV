@@ -3,11 +3,11 @@
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for ContentFinderView.xaml
+    /// Interaction logic for ToplistHeaderView.xaml
     /// </summary>
-    public partial class ContentFinderView : UserControl
+    public sealed partial class ToplistHeaderView : UserControl
     {
-        public ContentFinderView()
+        public ToplistHeaderView()
         {
             InitializeComponent();
         }
