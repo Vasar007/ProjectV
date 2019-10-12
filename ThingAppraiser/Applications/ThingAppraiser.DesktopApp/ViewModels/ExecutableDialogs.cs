@@ -204,7 +204,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             if (string.IsNullOrWhiteSpace(createToplistViewModel.ToplistName)) return;
 
-            mainWindowViewModel.OpenToplistEditorScene(
+            mainWindowViewModel.ConstructToplistEditor(
                 createToplistViewModel.ToplistName,
                 createToplistViewModel.SelectedToplistType,
                 createToplistViewModel.SelectedToplistFormat

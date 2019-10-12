@@ -16,7 +16,7 @@ namespace ThingAppraiser.TmdbService
         /// <summary>
         /// Back field for correspond property that contains configuration of TMDb service.
         /// </summary>
-        public static TmdbServiceConfigurationInfo? _configuration;
+        private static TmdbServiceConfigurationInfo? _configuration;
 
         /// <summary>
         /// Stores service configuration.
@@ -41,7 +41,7 @@ namespace ThingAppraiser.TmdbService
         /// </summary>
         /// <param name="newConfiguration">New configuration to set.</param>
         /// <returns><c>true</c> if value was set, <c>false</c> otherwise.</returns>
-        public static bool SetServiceConfigurationIfNeed(
+        public static bool SetServiceConfigurationOnce(
             TmdbServiceConfigurationInfo newConfiguration)
         {
             if (_configuration is null)
@@ -62,7 +62,7 @@ namespace ThingAppraiser.TmdbService
         /// Changes configuration of TMDb service.
         /// </summary>
         /// <param name="newConfiguration">New configuration to set.</param>
-        public static void SetServiceConfiguration(
+        public static void SetServiceConfigurationAnyway(
             TmdbServiceConfigurationInfo newConfiguration)
         {
             lock (_syncRoot)

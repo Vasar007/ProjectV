@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Prism.Mvvm;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal abstract class ToplistBase : ModelBase
+    internal abstract class ToplistBase : BindableBase
     {
         private string _name = default!; // Initializes throught property.
-
         public string Name
         {
             get => _name;

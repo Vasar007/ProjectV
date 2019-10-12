@@ -4,6 +4,8 @@ namespace ThingAppraiser.DesktopApp.Domain
 {
     internal static class DesktopOptions
     {
+        public static string Title { get; } = "ThingAppraiser";
+
         /// <summary>
         /// Page names of all views in main menu.
         /// </summary>
@@ -23,8 +25,6 @@ namespace ThingAppraiser.DesktopApp.Domain
 
             public static string ExpertModePage { get; } = "Expert mode";
 
-            public static string ToplistStartPage { get; } = "Toplist editor - start page";
-
             public static string ToplistEditorPage { get; } = "Toplist editor";
 
             public static string ContentFinderPage { get; } = "Content finder";
@@ -33,6 +33,12 @@ namespace ThingAppraiser.DesktopApp.Domain
         public static class HintTexts
         {
             public static string HintTextForGoogleDriveDialog { get; } = "Filename on Google Drive";
+        }
+
+        public static class BindingNames
+        {
+            public static string ToplistHeader { get; } = "ToplistHeader";
+            public static string ToplistContent { get; } = "ToplistContent";
         }
     }
 }

@@ -1,30 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal sealed class ToplistBlock : ModelBase
+    internal sealed class ToplistBlock : BindableBase
     {
         private string _title = default!; // Initializes throught property.
-
-        private int _number;
-
-        private ToplistBoxView _creationToplistBox;
-
         public string Title
         {
             get => _title;
             set => SetProperty(ref _title, value.ThrowIfNull(nameof(value)));
         }
 
+        private int _number;
         public int Number
         {
             get => _number;
             set => SetProperty(ref _number, value);
         }
 
+        private ToplistBoxView _creationToplistBox;
         public ToplistBoxView CreationToplistBox
         {
             get => _creationToplistBox;

@@ -6,8 +6,8 @@
              xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
              xmlns:prism="http://prismlibrary.com/"
+             mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <ScrollViewer>

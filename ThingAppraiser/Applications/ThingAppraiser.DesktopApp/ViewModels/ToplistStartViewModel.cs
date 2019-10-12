@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -19,21 +20,24 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand CreateToplistDialogCommand { get; }
 
-        public ICommand OpenToplistDialogCommand { get; }
+        public ICommand OpenToplistFileDialogCommand { get; }
+
+        public ICommand OpenToplistFromDriveDialogCommand { get; }
 
 
-        public ToplistStartViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
+        public ToplistStartViewModel(IEventAggregator eventAggregator)
         {
-            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            DialogIdentifier = MainDialogIdentifier.DialogIdentifier;
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             CreateToplistDialogCommand = new DelegateCommand<ToplistStartViewModel>(
                 ExecutableDialogs.ExecuteCreateToplistDialog
             );
-            OpenToplistDialogCommand = new DelegateCommand(SendOpenToplistFileMessage);
+            OpenToplistFileDialogCommand = new DelegateCommand(SendLoadToplistFileMessage);
+            OpenToplistFromDriveDialogCommand = new DelegateCommand(OpenToplistFromDrive);
         }
 
-        private void SendOpenToplistFileMessage()
+        private void SendLoadToplistFileMessage()
         {
             string? filename = ExecutableDialogs.ExecuteOpenToplistFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
@@ -42,7 +46,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<OpenToplistFileMessage>().Publish(filename);
+            _eventAggregator.GetEvent<LoadToplistFileMessage>().Publish(filename);
+        }
+
+        private void OpenToplistFromDrive()
+        {
+            MessageBoxHelper.ShowInfo("Work in progress.");
+            // TODO: implement logic to load toplist file from Google Drive and parse it.
         }
     }
 }

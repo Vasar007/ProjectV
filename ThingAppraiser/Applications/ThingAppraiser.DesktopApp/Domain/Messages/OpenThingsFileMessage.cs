@@ -2,7 +2,7 @@
 
 namespace ThingAppraiser.DesktopApp.Domain.Messages
 {
-    public sealed class OpenThingsFileMessage : PubSubEvent<string>
+    internal sealed class OpenThingsFileMessage : PubSubEvent<string>
     {
         public OpenThingsFileMessage()
         {

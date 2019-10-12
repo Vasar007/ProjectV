@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.Extensions;
@@ -41,11 +42,19 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
+            _eventAggregator.GetEvent<LoadToplistFileMessage>().Subscribe(
+                ProcessLoadingToplistFile
+            );
+
+            _eventAggregator.GetEvent<ConstructToplistMessage>().Subscribe(
+                ProcessConstructingNewToplist
+            );
+
             _toplistBlocks = new ObservableCollection<ToplistBlock>();
 
             AddOrUpdateBlockCommand = new DelegateCommand(AddNewBlock);
             RemoveBlockCommand = new DelegateCommand<ToplistBlock>(RemoveBlock);
-            SaveToplistCommand = new DelegateCommand(SendSaveToplistToFileMessage);
+            SaveToplistCommand = new DelegateCommand(SaveToplistToFileCommand);
         }
 
         public void ConstructNewToplist(string toplistName, ToplistType toplistType,
@@ -119,7 +128,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             _toplist.RemoveBlock(block);
         }
 
-        private void SendSaveToplistToFileMessage()
+        private void SaveToplistToFileCommand()
         {
             string? filename = ExecutableDialogs.ExecuteSaveToplistFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
@@ -127,8 +136,51 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 _logger.Info("Skipping saving toplist because got an empty filename value.");
                 return;
             }
-            
-            _eventAggregator.GetEvent<SaveToplistToFileMessage>().Publish(filename);
+
+            ProcessToplistSaving(filename);
+        }
+
+        private void ProcessToplistSaving(string toplistFilename)
+        {
+            try
+            {
+                SaveToplist(toplistFilename);
+
+                MessageBoxHelper.ShowInfo("Toplist was saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist saving.");
+                MessageBoxHelper.ShowError(ex.Message);
+            }
+        }
+
+        private void ProcessLoadingToplistFile(string toplistFilename)
+        {
+            try
+            {
+                LoadToplist(toplistFilename);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist loading.");
+                MessageBoxHelper.ShowError(ex.Message);
+            }
+        }
+
+        private void ProcessConstructingNewToplist(ToplistParametersInfo parameters)
+        {
+            try
+            {
+                ConstructNewToplist(
+                    parameters.ToplistName, parameters.ToplistType, parameters.ToplistFormat
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist creation.");
+                MessageBoxHelper.ShowError(ex.Message);
+            }
         }
     }
 }

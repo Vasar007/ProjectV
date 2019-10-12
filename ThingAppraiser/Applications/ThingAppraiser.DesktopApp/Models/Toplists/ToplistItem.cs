@@ -1,10 +1,11 @@
 ﻿using System.Windows.Input;
 using Prism.Commands;
+using Prism.Mvvm;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
-    internal sealed class ToplistItem : ModelBase
+    internal sealed class ToplistItem : BindableBase
     {
         private string _name = default!; // Initializes throught property.
         public string Name

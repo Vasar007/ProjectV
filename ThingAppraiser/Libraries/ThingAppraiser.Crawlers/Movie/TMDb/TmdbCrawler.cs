@@ -70,7 +70,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
             bool outputResults)
         {
-            TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
+            TmdbServiceConfiguration.SetServiceConfigurationOnce(
                 GetServiceConfiguration(outputResults)
             );
 

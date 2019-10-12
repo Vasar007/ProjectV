@@ -2,9 +2,9 @@
 
 namespace ThingAppraiser.DesktopApp.Domain.Messages
 {
-    public sealed class OpenToplistFileMessage : PubSubEvent<string>
+    internal sealed class LoadToplistFileMessage : PubSubEvent<string>
     {
-        public OpenToplistFileMessage()
+        public LoadToplistFileMessage()
         {
         }
     }

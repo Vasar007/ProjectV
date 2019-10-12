@@ -7,8 +7,8 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
              xmlns:prism="http://prismlibrary.com/"
+             mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Grid Margin="16">

@@ -78,7 +78,7 @@ namespace ThingAppraiser.Crawlers.Movie.Tmdb
         /// <inheritdoc />
         public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            TmdbServiceConfiguration.SetServiceConfigurationIfNeed(
+            TmdbServiceConfiguration.SetServiceConfigurationOnce(
                 await GetServiceConfiguration(outputResults)
             );
 

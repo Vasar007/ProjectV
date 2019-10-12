@@ -1,47 +1,43 @@
 ﻿using System;
+using Prism.Mvvm;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DesktopApp.Models.Things
 {
-    internal sealed class Thing : ModelBase
+    internal sealed class Thing : BindableBase
     {
-        private string _name = string.Empty;
-
-        private int _thingId;
-
-        private double _voteAverage;
-
-        private int _voteCount;
-
-        private string _imageLink = default!; // Initializes throught property.
-
         public Guid InternalId { get; }
 
+        private string _name = string.Empty;
         public string Name
         {
             get => _name;
             set => SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
         }
 
+        private int _thingId;
         public int ThingId
         {
             get => _thingId;
             set => SetProperty(ref _thingId, value);
         }
 
+        private double _voteAverage;
         public double VoteAverage
         {
             get => _voteAverage;
             set => SetProperty(ref _voteAverage, value);
         }
 
+        private int _voteCount;
         public int VoteCount
         {
             get => _voteCount;
             set => SetProperty(ref _voteCount, value);
         }
 
+        private string _imageLink = default!; // Initializes throught property.
         public string ImageLink
         {
             get => _imageLink;

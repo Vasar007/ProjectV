@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using ThingAppraiser.Building;
 using ThingAppraiser.Building.Service;
@@ -33,6 +33,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
 
+        private readonly IContainerProvider _container;
+
         private readonly IRequirementsCreator _requirementsCreator;
 
         private readonly ServiceProxy _serviceProxy;
@@ -41,7 +43,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private ThingProducer? _thingProducer;
 
-        private string _title = "ThingAppraiser";
+        private string _title = DesktopOptions.Title;
         public string Title
         {
             get => _title;
@@ -99,19 +101,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
-        public object DialogIdentifier { get; }
 
-
-        public MainWindowViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
+        public MainWindowViewModel(IContainerProvider container,
+            IEventAggregator eventAggregator)
         {
-            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            _container = container.ThrowIfNull(nameof(container));
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             _eventAggregator.GetEvent<OpenThingsFileMessage>().Subscribe(
                 storageName => SendRequestToService(DataSource.LocalFile, storageName)
             );
-            _eventAggregator.GetEvent<OpenToplistFileMessage>().Subscribe(OpenToplistFile);
-            _eventAggregator.GetEvent<SaveToplistToFileMessage>().Subscribe(SaveToplistToFile);
 
             _requirementsCreator = new RequirementsCreator();
             _serviceProxy = new ServiceProxy();
@@ -127,9 +126,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
-                new StartView(dialogIdentifier, eventAggregator)
+                new StartView()
             );
-            
+
             _scenes.AddScene(
                 DesktopOptions.PageNames.TmdbPage,
                 new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
@@ -139,30 +138,25 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 DesktopOptions.PageNames.OmdbPage,
                 new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
             );
-            
+
             _scenes.AddScene(
                 DesktopOptions.PageNames.SteamPage,
                 new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
             );
-            
+
             _scenes.AddScene(
                 DesktopOptions.PageNames.ExpertModePage,
                 new ProgressView()
             );
-            
-            _scenes.AddScene(
-                DesktopOptions.PageNames.ToplistStartPage,
-                new ToplistStartView(dialogIdentifier, eventAggregator)
-            );
 
             _scenes.AddScene(
                 DesktopOptions.PageNames.ToplistEditorPage,
-                new ProgressView()
+                new ToplistView()
             );
 
             _scenes.AddScene(
                 DesktopOptions.PageNames.ContentFinderPage,
-                new ContentFinderView(dialogIdentifier)
+                new ContentFinderView()
             );
 
             ChangeScene(DesktopOptions.PageNames.StartPage);
@@ -188,27 +182,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ExecuteSending();
         }
 
-        public void OpenToplistEditorScene(string toplistName, ToplistType toplistType,
+        public void ConstructToplistEditor(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
             toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
 
-            ChangeSceneAndConstructNewToplist(DesktopOptions.PageNames.ToplistEditorPage,
-                                              toplistName, toplistType, toplistFormat);
-        }
-
-        public void OpenToplistFile(string toplistFilename)
-        {
-            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
-
-            ChangeSceneAndLoadToplist(DesktopOptions.PageNames.ToplistEditorPage, toplistFilename);
-        }
-
-        public void SaveToplistToFile(string toplistFilename)
-        {
-            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
-
-            ProcessToplistSaving(toplistFilename);
+            var parameters = new ToplistParametersInfo(toplistName, toplistType, toplistFormat);
+            _eventAggregator.GetEvent<ConstructToplistMessage>().Publish(parameters);
         }
 
         private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
@@ -246,91 +226,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 }
                 else
                 {
-                    throw new InvalidOperationException("Cannot found scene to update.");
+                    throw new InvalidOperationException("Cannot find scene to update.");
                 }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during updating items.");
-                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-            }
-        }
-
-        private void ChangeSceneAndConstructNewToplist(string controlIdentifier,
-            string toplistName, ToplistType toplistType, ToplistFormat toplistFormat)
-        {
-            try
-            {
-                SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
-                sceneItem.Content = new ToplistEditorView();
-                if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
-                {
-                    toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType,
-                                                               toplistFormat);
-                    SelectedSceneItem = sceneItem;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot found scene to construct toplist.");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during toplist creation.");
-                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-            }
-        }
-
-        private void ChangeSceneAndLoadToplist(string controlIdentifier,
-            string toplistFilename)
-        {
-            try
-            {
-                SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
-                sceneItem.Content = new ToplistEditorView();
-                if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
-                {
-                    toplistEditorViewModel.LoadToplist(toplistFilename);
-                    SelectedSceneItem = sceneItem;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot found scene to load toplist.");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during toplist loading.");
-                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
-                                MessageBoxImage.Error);
-            }
-        }
-
-        private void ProcessToplistSaving(string toplistFilename)
-        {
-            try
-            {
-                if (CurrentContent.DataContext is ToplistEditorViewModel toplistEditorViewModel)
-                {
-                    toplistEditorViewModel.SaveToplist(toplistFilename);
-
-                    MessageBox.Show("Toplist was saved successfully.", "ThingAppraiser",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        "Cannot found scene to process toplist saving."
-                    );
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during toplist saving.");
-                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
-                                MessageBoxImage.Error);
+                MessageBoxHelper.ShowError(ex.Message);
             }
         }
 
@@ -354,8 +256,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
             else
             {
-                MessageBox.Show("Request to ThingAppraiser service failed.", "ThingAppraiser",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxHelper.ShowInfo("Request to ThingAppraiser service failed.");
                 ForceReturnToStartViewCommand.Execute(null);
             }
         }
@@ -372,8 +273,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
-                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
-                                MessageBoxImage.Error);
+                MessageBoxHelper.ShowError(ex.Message);
+
                 ForceReturnToStartViewCommand.Execute(null);
             }
             finally

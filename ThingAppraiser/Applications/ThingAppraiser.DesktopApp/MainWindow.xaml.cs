@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Prism.Events;
 using Prism.Ioc;
+using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -27,8 +28,10 @@ namespace ThingAppraiser.DesktopApp
 
             _container = container.ThrowIfNull(nameof(container));
 
+            MainDialogIdentifier.SetDialogIdentifierAnyway(MainWindowDialogHost.Identifier);
+
             var eventAggregator = _container.Resolve<IEventAggregator>();
-            DataContext = new MainWindowViewModel(MainWindowDialogHost.Identifier, eventAggregator);
+            DataContext = new MainWindowViewModel(container, eventAggregator);
 
             _logger.Info("Main window was created.");
         }

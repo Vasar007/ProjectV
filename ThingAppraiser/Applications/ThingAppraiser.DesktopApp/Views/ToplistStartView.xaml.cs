@@ -1,7 +1,4 @@
 ﻿using System.Windows.Controls;
-using Prism.Events;
-using ThingAppraiser.DesktopApp.ViewModels;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -10,14 +7,9 @@ namespace ThingAppraiser.DesktopApp.Views
     /// </summary>
     public sealed partial class ToplistStartView : UserControl
     {
-        public ToplistStartView(object dialogIdentifier, IEventAggregator eventAggregator)
+        public ToplistStartView()
         {
-            dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
-            eventAggregator.ThrowIfNull(nameof(eventAggregator));
-
             InitializeComponent();
-
-            DataContext = new ToplistStartViewModel(dialogIdentifier, eventAggregator);
         }
     }
 }

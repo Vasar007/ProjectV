@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.Configuration;
+using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -32,14 +33,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand InputThingDialogCommand { get; }
 
-        public ICommand OpenFileDialogCommand { get; }
+        public ICommand OpenThingsFileDialogCommand { get; }
 
         public ICommand EnterDataDialogCommand { get; }
 
 
-        public StartViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
+        public StartViewModel(IEventAggregator eventAggregator)
         {
-            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            DialogIdentifier = MainDialogIdentifier.DialogIdentifier;
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             SelectedService = AvailableBeautifiedServices.First();
@@ -47,7 +48,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             InputThingDialogCommand =
                 new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
 
-            OpenFileDialogCommand = new DelegateCommand(SendOpenThingsFileMessage);
+            OpenThingsFileDialogCommand = new DelegateCommand(SendOpenThingsFileMessage);
 
             EnterDataDialogCommand =
                 new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);
@@ -62,7 +63,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<OpenToplistFileMessage>().Publish(filename);
+            _eventAggregator.GetEvent<OpenThingsFileMessage>().Publish(filename);
         }
     }
 }

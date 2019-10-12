@@ -4,7 +4,10 @@ using System.Windows;
 using System.Windows.Markup;
 using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Regions;
 using Prism.Unity;
+using ThingAppraiser.DesktopApp.Domain;
+using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp
@@ -34,11 +37,22 @@ namespace ThingAppraiser.DesktopApp
 
         protected override Window CreateShell()
         {
+            var regionManager = Container.Resolve<IRegionManager>();
+            
+            regionManager.RegisterViewWithRegion(
+                DesktopOptions.BindingNames.ToplistHeader, typeof(ToplistStartView)
+            );
+
+            regionManager.RegisterViewWithRegion(
+                DesktopOptions.BindingNames.ToplistContent, typeof(ToplistEditorView)
+            );
+
             return Container.Resolve<MainWindow>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            // TODO: register common domain and models classes here.
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
