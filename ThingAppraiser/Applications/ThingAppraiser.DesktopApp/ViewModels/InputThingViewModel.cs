@@ -1,14 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Prism.Commands;
 using Prism.Mvvm;
-using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class InputThingViewModel : BindableBase
     {
-        private ObservableCollection<string> _thingList = new ObservableCollection<string>();
+        private ObservableCollection<string> _thingList;
         public ObservableCollection<string> ThingList
         {
             get => _thingList;
@@ -26,14 +26,19 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public object DialogContent { get; }
 
-        public ICommand EnterThingNameDialogCommand =>
-            new RelayCommand<InputThingViewModel>(ExecutableDialogs.ExecuteEnterThingNameDialog);
+        public ICommand EnterThingNameDialogCommand { get; }
 
 
         public InputThingViewModel(object dialogIdentifier, object dialogContent)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
             DialogContent = dialogContent.ThrowIfNull(nameof(dialogContent));
+
+            _thingList = new ObservableCollection<string>();
+
+            EnterThingNameDialogCommand = new DelegateCommand<InputThingViewModel>(
+                ExecutableDialogs.ExecuteEnterThingNameDialog
+            );
         }
     }
 }

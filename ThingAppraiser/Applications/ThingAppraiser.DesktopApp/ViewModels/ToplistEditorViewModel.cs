@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.Extensions;
@@ -44,9 +43,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             _toplistBlocks = new ObservableCollection<ToplistBlock>();
 
-            AddOrUpdateBlockCommand = new RelayCommand(AddNewBlock);
-            RemoveBlockCommand = new RelayCommand<ToplistBlock>(RemoveBlock);
-            SaveToplistCommand = new DelegateCommand(SendSaveToplistMessage);
+            AddOrUpdateBlockCommand = new DelegateCommand(AddNewBlock);
+            RemoveBlockCommand = new DelegateCommand<ToplistBlock>(RemoveBlock);
+            SaveToplistCommand = new DelegateCommand(SendSaveToplistToFileMessage);
         }
 
         public void ConstructNewToplist(string toplistName, ToplistType toplistType,
@@ -120,7 +119,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             _toplist.RemoveBlock(block);
         }
 
-        private void SendSaveToplistMessage()
+        private void SendSaveToplistToFileMessage()
         {
             string? filename = ExecutableDialogs.ExecuteSaveToplistFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
@@ -129,7 +128,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
             
-            _eventAggregator.GetEvent<SaveToplistMessage>().Publish(filename);
+            _eventAggregator.GetEvent<SaveToplistToFileMessage>().Publish(filename);
         }
     }
 }

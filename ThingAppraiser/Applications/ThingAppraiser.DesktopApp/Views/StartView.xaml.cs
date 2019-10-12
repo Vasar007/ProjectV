@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Prism.Events;
 using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Extensions;
 
@@ -9,13 +10,14 @@ namespace ThingAppraiser.DesktopApp.Views
     /// </summary>
     public sealed partial class StartView : UserControl
     {
-        public StartView(object dialogIdentifier)
+        public StartView(object dialogIdentifier, IEventAggregator eventAggregator)
         {
             dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             InitializeComponent();
 
-            DataContext = new StartViewModel(dialogIdentifier);
+            DataContext = new StartViewModel(dialogIdentifier, eventAggregator);
         }
     }
 }

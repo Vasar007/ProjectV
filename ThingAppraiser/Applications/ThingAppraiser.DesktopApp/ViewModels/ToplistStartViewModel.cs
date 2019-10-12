@@ -30,10 +30,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             CreateToplistDialogCommand = new DelegateCommand<ToplistStartViewModel>(
                 ExecutableDialogs.ExecuteCreateToplistDialog
             );
-            OpenToplistDialogCommand = new DelegateCommand(SendOpenToplistMessage);
+            OpenToplistDialogCommand = new DelegateCommand(SendOpenToplistFileMessage);
         }
 
-        private void SendOpenToplistMessage()
+        private void SendOpenToplistFileMessage()
         {
             string? filename = ExecutableDialogs.ExecuteOpenToplistFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
@@ -42,7 +42,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<OpenToplistMessage>().Publish(filename);
+            _eventAggregator.GetEvent<OpenToplistFileMessage>().Publish(filename);
         }
     }
 }

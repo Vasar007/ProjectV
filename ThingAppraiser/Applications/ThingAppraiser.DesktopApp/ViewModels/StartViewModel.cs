@@ -1,15 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.Configuration;
-using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class StartViewModel : BindableBase
     {
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ToplistEditorViewModel>();
+
+        private readonly IEventAggregator _eventAggregator;
+
         public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
             ConfigContract.AvailableBeautifiedServices;
 
@@ -22,21 +30,39 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public object DialogIdentifier { get; }
 
-        public ICommand InputThingDialogCommand =>
-            new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
+        public ICommand InputThingDialogCommand { get; }
 
-        public ICommand OpenFileDialogCommand =>
-            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteOpenThingsFileDialog);
+        public ICommand OpenFileDialogCommand { get; }
 
-        public ICommand EnterDataDialogCommand =>
-            new RelayCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);
+        public ICommand EnterDataDialogCommand { get; }
 
 
-        public StartViewModel(object dialogIdentifier)
+        public StartViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             SelectedService = AvailableBeautifiedServices.First();
+
+            InputThingDialogCommand =
+                new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
+
+            OpenFileDialogCommand = new DelegateCommand(SendOpenThingsFileMessage);
+
+            EnterDataDialogCommand =
+                new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);
+        }
+
+        private void SendOpenThingsFileMessage()
+        {
+            string? filename = ExecutableDialogs.ExecuteOpenThingsFileDialog();
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                _logger.Info("Skipping openning things file because got an empty filename value.");
+                return;
+            }
+
+            _eventAggregator.GetEvent<OpenToplistFileMessage>().Publish(filename);
         }
     }
 }

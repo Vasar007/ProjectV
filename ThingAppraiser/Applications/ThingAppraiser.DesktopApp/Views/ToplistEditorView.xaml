@@ -18,10 +18,7 @@
                     Margin="16"
                     HorizontalAlignment="Center"
                     x:Name="SaveToplistButton"
-                    Command="{Binding Path=SaveToplistCommand}"
-                    CommandParameter="{Binding Path=DataContext,
-                                       RelativeSource={RelativeSource Mode=FindAncestor,
-                                                       AncestorType={x:Type Window}}}" />
+                    Command="{Binding Path=SaveToplistCommand}" />
             
             <ItemsControl ItemsSource="{Binding Path=ToplistBlocks}"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"

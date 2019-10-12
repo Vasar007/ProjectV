@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.Building;
@@ -88,17 +89,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        public IAsyncCommand<DataSource> Submit =>
-            new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit);
+        public IAsyncCommand<DataSource> Submit { get; }
 
-        public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
-                                                            ApplicationCloseCommand.CanExecute);
+        public ICommand AppCloseCommand { get; }
 
-        public ICommand ReturnToStartViewCommand =>
-            new RelayCommand<UserControl>(ReturnToStartView, CanReturnToStartView);
+        public ICommand ReturnToStartViewCommand { get; }
 
-        public ICommand ForceReturnToStartViewCommand =>
-            new RelayCommand<UserControl>(ReturnToStartView);
+        public ICommand ForceReturnToStartViewCommand { get; }
 
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
@@ -110,17 +107,27 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            _eventAggregator.GetEvent<OpenToplistMessage>().Subscribe(OpenToplistFile);
-            _eventAggregator.GetEvent<SaveToplistMessage>().Subscribe(SaveToplistToFile);
+            _eventAggregator.GetEvent<OpenThingsFileMessage>().Subscribe(
+                storageName => SendRequestToService(DataSource.LocalFile, storageName)
+            );
+            _eventAggregator.GetEvent<OpenToplistFileMessage>().Subscribe(OpenToplistFile);
+            _eventAggregator.GetEvent<SaveToplistToFileMessage>().Subscribe(SaveToplistToFile);
 
             _requirementsCreator = new RequirementsCreator();
             _serviceProxy = new ServiceProxy();
             _scenes = new SceneItemsCollection();
 
+            Submit = new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit);
+            AppCloseCommand = new DelegateCommand(ApplicationCloseCommand.Execute,
+                                                  ApplicationCloseCommand.CanExecute);
+            ReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView,
+                                                                        CanReturnToStartView);
+            ForceReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView);
+
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
-                new StartView(dialogIdentifier)
+                new StartView(dialogIdentifier, eventAggregator)
             );
             
             _scenes.AddScene(

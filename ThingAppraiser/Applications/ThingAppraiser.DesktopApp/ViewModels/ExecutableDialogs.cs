@@ -1,14 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Win32;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
-using Ookii.Dialogs.Wpf;
-using Prism.Events;
-using ThingAppraiser.DesktopApp.Domain.Messages;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -39,10 +37,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .FireAndForgetSafeAsync();
         }
 
-        public static void ExecuteOpenThingsFileDialog(MainWindowViewModel mainViewModel)
+        public static string? ExecuteOpenThingsFileDialog()
         {
-            mainViewModel.ThrowIfNull(nameof(mainViewModel));
-
             var dialog = new OpenFileDialog
             {
                 Title = "Open things file",
@@ -54,10 +50,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
 
             bool? result = dialog.ShowDialog();
-            if (result.GetValueOrDefault())
-            {
-                mainViewModel.SendRequestToService(DataSource.LocalFile, dialog.FileName);
-            }
+            return result.GetValueOrDefault() ? dialog.FileName : null;
         }
 
         public static string? ExecuteOpenToplistFileDialog()
@@ -91,10 +84,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return result.GetValueOrDefault() ? dialog.FileName : null;
         }
 
-        public static void ExecuteOpenContentDirectoryDialog(MainWindowViewModel mainViewModel)
+        public static string? ExecuteOpenContentDirectoryDialog()
         {
-            mainViewModel.ThrowIfNull(nameof(mainViewModel));
-
             var dialog = new VistaFolderBrowserDialog
             {
                 Description = "Open content directory",
@@ -102,10 +93,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
 
             bool? result = dialog.ShowDialog();
-            if (result.GetValueOrDefault())
-            {
-                System.Console.WriteLine(dialog.SelectedPath);
-            }
+            return result.GetValueOrDefault() ? dialog.SelectedPath : null;
         }
 
         public static void ExecuteEnterDataDialog(StartViewModel startViewModel)
