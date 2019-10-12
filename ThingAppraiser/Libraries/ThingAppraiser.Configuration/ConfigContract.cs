@@ -100,6 +100,14 @@ namespace ThingAppraiser.Configuration
                 service => string.Equals(service, serviceName, StringComparison.OrdinalIgnoreCase)
             );
 
+            if (index == Constants.NotFoundIndex)
+            {
+                throw new ArgumentException(
+                    $"Service name \"{serviceName}\" was not found in the available services.",
+                    nameof(serviceName)
+                );
+            }
+
             return AvailableServices[index];
         }
     }

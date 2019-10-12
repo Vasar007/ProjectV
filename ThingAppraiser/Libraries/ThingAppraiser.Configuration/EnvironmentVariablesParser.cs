@@ -50,7 +50,7 @@ namespace ThingAppraiser
             if (!_values.TryGetValue(variableName, out string value))
             {
                 throw new ArgumentException(
-                    "Specified argument didn't find in environment variable values.",
+                    $"Variable name \"{variableName}\" was not found in the environment values.",
                     nameof(variableName)
                 );
             }

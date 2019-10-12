@@ -75,7 +75,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             bool? result = dialog.ShowDialog();
             if (result.GetValueOrDefault())
             {
-                mainViewModel.OpenToplistEditorScene(dialog.FileName);
+                mainViewModel.OpenToplistToFile(dialog.FileName);
             }
         }
 
@@ -112,7 +112,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             bool? result = dialog.ShowDialog();
             if (result.GetValueOrDefault())
             {
-                mainViewModel.OpenToplistEditorScene(dialog.SelectedPath);
+                mainViewModel.OpenToplistToFile(dialog.SelectedPath);
             }
         }
 

@@ -27,11 +27,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
 
-        private readonly IRequirementsCreator _requirementsCreator = new RequirementsCreator();
+        private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly ServiceProxy _serviceProxy = new ServiceProxy();
+        private readonly ServiceProxy _serviceProxy;
 
-        private readonly Dictionary<string, int> _sceneIdentifiers;
+        private readonly SceneItemsCollection _scenes;
 
         private bool _isNotBusy = true;
 
@@ -94,71 +94,57 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand ForceReturnToStartViewCommand =>
             new RelayCommand<UserControl>(ReturnToStartView);
 
-        public IReadOnlyList<SceneItem> SceneItems { get; }
+        public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
         public object DialogIdentifier { get; }
 
 
         public MainWindowViewModel(object dialogIdentifier)
         {
-            _sceneIdentifiers = new Dictionary<string, int>
-            {
-                { DesktopOptions.PageNames.StartPage, 0 },
-                { DesktopOptions.PageNames.TmdbPage, 1 },
-                { DesktopOptions.PageNames.OmdbPage, 2 },
-                { DesktopOptions.PageNames.SteamPage, 3 },
-                { DesktopOptions.PageNames.ExpertModePage, 4 },
-                { DesktopOptions.PageNames.ToplistStartPage, 5 },
-                { DesktopOptions.PageNames.ToplistEditorPage, 6 },
-                { DesktopOptions.PageNames.ContentFinderPage, 7 }
-            };
+            _requirementsCreator = new RequirementsCreator();
+            _serviceProxy = new ServiceProxy();
+            _scenes = new SceneItemsCollection();
 
-            // TODO: create new scenes for needed views dynamically in separate tabs.
-            SceneItems = new[]
-            {
-                new SceneItem(
-                    DesktopOptions.PageNames.StartPage,
-                    new StartControl(dialogIdentifier)
-                ),
+            // TODO: create new scenes to set views dynamically in separate tabs.
+            _scenes.AddScene(
+                DesktopOptions.PageNames.StartPage,
+                new StartControl(dialogIdentifier)
+            );
+            
+            _scenes.AddScene(
+                DesktopOptions.PageNames.TmdbPage,
+                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+            );
 
-                new SceneItem(
-                    DesktopOptions.PageNames.TmdbPage,
-                    new BrowsingControl(
-                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
-                    )
-                ),
+            _scenes.AddScene(
+                DesktopOptions.PageNames.OmdbPage,
+                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+            );
+            
+            _scenes.AddScene(
+                DesktopOptions.PageNames.SteamPage,
+                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+            );
+            
+            _scenes.AddScene(
+                DesktopOptions.PageNames.ExpertModePage,
+                new ProgressDialog()
+            );
+            
+            _scenes.AddScene(
+                DesktopOptions.PageNames.ToplistStartPage,
+                new ToplistStartControl(dialogIdentifier)
+            );
 
-                new SceneItem(
-                    DesktopOptions.PageNames.OmdbPage,
-                    new BrowsingControl(
-                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
-                    )
-                ),
+            _scenes.AddScene(
+                DesktopOptions.PageNames.ToplistEditorPage,
+                new ProgressDialog()
+            );
 
-                new SceneItem(
-                    DesktopOptions.PageNames.SteamPage,
-                    new BrowsingControl(
-                        new BrowsingViewModel(new ThingSupplier(new ThingGrader()))
-                    )
-                ),
-
-                new SceneItem(DesktopOptions.PageNames.ExpertModePage, new ProgressDialog()),
-
-                new SceneItem(
-                    DesktopOptions.PageNames.ToplistStartPage,
-                    new ToplistStartControl(dialogIdentifier)
-                ),
-
-                new SceneItem(
-                    DesktopOptions.PageNames.ToplistEditorPage,
-                    new ProgressDialog()
-                ),
-
-                new SceneItem(
-                    DesktopOptions.PageNames.ContentFinderPage,
-                    new ContentFinderControl(dialogIdentifier)
-                )
-            };
+            _scenes.AddScene(
+                DesktopOptions.PageNames.ContentFinderPage,
+                new ContentFinderControl(dialogIdentifier)
+            );
 
             ChangeScene(DesktopOptions.PageNames.StartPage);
             DialogIdentifier = dialogIdentifier;
@@ -193,7 +179,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                                               toplistName, toplistType, toplistFormat);
         }
 
-        public void OpenToplistEditorScene(string toplistFilename)
+        public void OpenToplistToFile(string toplistFilename)
         {
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
@@ -216,32 +202,40 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        private string FindServiceNameAtStartControl()
+        private string GetServiceNameFromStartControl()
         {
-            int index = _sceneIdentifiers[DesktopOptions.PageNames.StartPage];
-            SceneItem sceneItem = SceneItems[index];
-            if (sceneItem.Content.DataContext is StartViewModel startControl)
-            {
-                return startControl.SelectedService;
-            }
-            return string.Empty;
+            var startControl = _scenes.GetDataContext<StartViewModel>(
+                DesktopOptions.PageNames.StartPage
+            );
+            return startControl.SelectedService;
         }
 
         private void ChangeScene(string controlIdentifier)
         {
-            int index = _sceneIdentifiers[controlIdentifier];
-            SelectedSceneItem = SceneItems[index];
+            SelectedSceneItem = _scenes.GetSceneItem(controlIdentifier);
         }
 
         private void ChangeSceneAndUpdateItems(string controlIdentifier,
             ProcessingResponse response)
         {
-            int index = _sceneIdentifiers[controlIdentifier];
-            SceneItem sceneItem = SceneItems[index];
-            if (sceneItem.Content.DataContext is BrowsingViewModel controlViewModel)
+            try
             {
-                controlViewModel.Update(response);
-                SelectedSceneItem = sceneItem;
+                SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
+                if (sceneItem.Content.DataContext is BrowsingViewModel controlViewModel)
+                {
+                    controlViewModel.Update(response);
+                    SelectedSceneItem = sceneItem;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot found scene to update.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during updating items.");
+                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
+                                MessageBoxImage.Error);
             }
         }
 
@@ -250,14 +244,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                int index = _sceneIdentifiers[controlIdentifier];
-                SceneItem sceneItem = SceneItems[index];
+                SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
                 sceneItem.Content = new ToplistEditorControl();
                 if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
                 {
                     toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType,
                                                                toplistFormat);
                     SelectedSceneItem = sceneItem;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot found scene to construct toplist.");
                 }
             }
             catch (Exception ex)
@@ -273,13 +270,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                int index = _sceneIdentifiers[controlIdentifier];
-                SceneItem sceneItem = SceneItems[index];
+                SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
                 sceneItem.Content = new ToplistEditorControl();
                 if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
                 {
                     toplistEditorViewModel.LoadToplist(toplistFilename);
                     SelectedSceneItem = sceneItem;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot found scene to load toplist.");
                 }
             }
             catch (Exception ex)
@@ -292,14 +292,28 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ProcessToplistSaving(string toplistFilename)
         {
-            if (CurrentContent.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+            try
             {
-                toplistEditorViewModel.SaveToplist(toplistFilename);
+                if (CurrentContent.DataContext is ToplistEditorViewModel toplistEditorViewModel)
+                {
+                    toplistEditorViewModel.SaveToplist(toplistFilename);
 
-                MessageBox.Show("Toplist was saved successfully.", "ThingAppraiser",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Toplist was saved successfully.", "ThingAppraiser",
+                                    MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Cannot found scene to process toplist saving."
+                    );
+                }
             }
-           
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during toplist saving.");
+                MessageBox.Show(ex.Message, "ThingAppraiser", MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteSending()
@@ -317,7 +331,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             if (response?.Metadata.ResultStatus == ServiceStatus.Ok)
             {
-                string serviceName = FindServiceNameAtStartControl();
+                string serviceName = GetServiceNameFromStartControl();
                 ChangeSceneAndUpdateItems(serviceName, response);
             }
             else
@@ -449,7 +463,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void CreateBasicRequirements()
         {
-            string serviceName = FindServiceNameAtStartControl();
+            string serviceName = GetServiceNameFromStartControl();
             serviceName = ConfigContract.GetProperServiceName(serviceName);
 
             _requirementsCreator.Reset();
