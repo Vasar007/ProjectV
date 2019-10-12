@@ -2,41 +2,31 @@
 using System.Linq;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.DesktopApp.Models.Toplists;
+using Prism.Mvvm;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class CreateToplistViewModel : ViewModelBase
+    internal sealed class CreateToplistViewModel : BindableBase
     {
+        public IReadOnlyList<ToplistType> ToplistTypes => ToplistOptions.ToplistTypes;
+
+        public IReadOnlyList<ToplistFormat> ToplistFormats => ToplistOptions.ToplistFormats;
+
         private string _toplistName = string.Empty;
-
-        private ToplistType _selectedToplistType;
-
-        private ToplistFormat _selectedToplistFormat;
-
-        public IReadOnlyList<ToplistType> ToplistTypes { get; } = new List<ToplistType>
-        {
-            ToplistType.Score,
-            ToplistType.Simple
-        };
-
-        public IReadOnlyList<ToplistFormat> ToplistFormats { get; } = new List<ToplistFormat>
-        {
-            ToplistFormat.Forward,
-            ToplistFormat.Reverse
-        };
-
         public string ToplistName
         {
             get => _toplistName;
             set => SetProperty(ref _toplistName, value.ThrowIfNull(nameof(value)));
         }
 
+        private ToplistType _selectedToplistType;
         public ToplistType SelectedToplistType
         {
             get => _selectedToplistType;
             set => SetProperty(ref _selectedToplistType, value);
         }
 
+        private ToplistFormat _selectedToplistFormat;
         public ToplistFormat SelectedToplistFormat
         {
             get => _selectedToplistFormat;

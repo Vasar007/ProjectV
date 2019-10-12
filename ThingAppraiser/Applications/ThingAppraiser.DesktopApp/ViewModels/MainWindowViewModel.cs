@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Prism.Events;
+using Prism.Mvvm;
 using ThingAppraiser.Building;
 using ThingAppraiser.Building.Service;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataProducers;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
@@ -22,10 +25,12 @@ using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class MainWindowViewModel : ViewModelBase
+    internal sealed class MainWindowViewModel : BindableBase
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
+
+        private readonly IEventAggregator _eventAggregator;
 
         private readonly IRequirementsCreator _requirementsCreator;
 
@@ -33,44 +38,46 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private readonly SceneItemsCollection _scenes;
 
-        private bool _isNotBusy = true;
-
-        // Initializes throught property (in SelectedSceneItem when ChangeScene called in ctor).
-        private UserControl _currentContent = default!;
-
-        private string _selectedStorageName = string.Empty;
-
-        private DataSource _selectedDataSource = DataSource.Nothing;
-
-        // Initializes throught property (in ChangeScene which called in ctor).
-        private SceneItem _selectedSceneItem = default!;
-
         private ThingProducer? _thingProducer;
 
+        private string _title = "ThingAppraiser";
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value.ThrowIfNull(nameof(value)));
+        }
+
+        private bool _isNotBusy = true;
         public bool IsNotBusy
         {
             get => _isNotBusy;
             private set => SetProperty(ref _isNotBusy, value);
         }
 
+        // Initializes throught property (in SelectedSceneItem when ChangeScene called in ctor).
+        private UserControl _currentContent = default!; 
         public UserControl CurrentContent
         {
             get => _currentContent;
             set => SetProperty(ref _currentContent, value.ThrowIfNull(nameof(value)));
         }
 
+        private string _selectedStorageName = string.Empty;
         public string SelectedStorageName
         {
             get => _selectedStorageName;
             private set => SetProperty(ref _selectedStorageName, value.ThrowIfNull(nameof(value)));
         }
 
+        private DataSource _selectedDataSource = DataSource.Nothing;
         public DataSource SelectedDataSource
         {
             get => _selectedDataSource;
             private set => SetProperty(ref _selectedDataSource, value);
         }
 
+        // Initializes throught property (in ChangeScene which called in ctor).
+        private SceneItem _selectedSceneItem = default!;
         public SceneItem SelectedSceneItem
         {
             get => _selectedSceneItem;
@@ -82,8 +89,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         }
 
         public IAsyncCommand<DataSource> Submit =>
-            new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit,
-                                              new CommonErrorHandler());
+            new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit);
 
         public ICommand AppCloseCommand => new RelayCommand(ApplicationCloseCommand.Execute,
                                                             ApplicationCloseCommand.CanExecute);
@@ -99,8 +105,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public object DialogIdentifier { get; }
 
 
-        public MainWindowViewModel(object dialogIdentifier)
+        public MainWindowViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
         {
+            DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
+
+            _eventAggregator.GetEvent<OpenToplistMessage>().Subscribe(OpenToplistFile);
+            _eventAggregator.GetEvent<SaveToplistMessage>().Subscribe(SaveToplistToFile);
+
             _requirementsCreator = new RequirementsCreator();
             _serviceProxy = new ServiceProxy();
             _scenes = new SceneItemsCollection();
@@ -108,46 +120,45 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
-                new StartControl(dialogIdentifier)
+                new StartView(dialogIdentifier)
             );
             
             _scenes.AddScene(
                 DesktopOptions.PageNames.TmdbPage,
-                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+                new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
             );
 
             _scenes.AddScene(
                 DesktopOptions.PageNames.OmdbPage,
-                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+                new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
             );
             
             _scenes.AddScene(
                 DesktopOptions.PageNames.SteamPage,
-                new BrowsingControl(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
+                new BrowsingView(new BrowsingViewModel(new ThingSupplier(new ThingGrader())))
             );
             
             _scenes.AddScene(
                 DesktopOptions.PageNames.ExpertModePage,
-                new ProgressDialog()
+                new ProgressView()
             );
             
             _scenes.AddScene(
                 DesktopOptions.PageNames.ToplistStartPage,
-                new ToplistStartControl(dialogIdentifier)
+                new ToplistStartView(dialogIdentifier, eventAggregator)
             );
 
             _scenes.AddScene(
                 DesktopOptions.PageNames.ToplistEditorPage,
-                new ProgressDialog()
+                new ProgressView()
             );
 
             _scenes.AddScene(
                 DesktopOptions.PageNames.ContentFinderPage,
-                new ContentFinderControl(dialogIdentifier)
+                new ContentFinderView(dialogIdentifier)
             );
 
             ChangeScene(DesktopOptions.PageNames.StartPage);
-            DialogIdentifier = dialogIdentifier;
         }
 
         public void SendRequestToService(DataSource dataSource, string storageName)
@@ -179,7 +190,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                                               toplistName, toplistType, toplistFormat);
         }
 
-        public void OpenToplistToFile(string toplistFilename)
+        public void OpenToplistFile(string toplistFilename)
         {
             toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
@@ -245,7 +256,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             try
             {
                 SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
-                sceneItem.Content = new ToplistEditorControl();
+                sceneItem.Content = new ToplistEditorView();
                 if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
                 {
                     toplistEditorViewModel.ConstructNewToplist(toplistName, toplistType,
@@ -271,7 +282,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             try
             {
                 SceneItem sceneItem = _scenes.GetSceneItem(controlIdentifier);
-                sceneItem.Content = new ToplistEditorControl();
+                sceneItem.Content = new ToplistEditorView();
                 if (sceneItem.Content.DataContext is ToplistEditorViewModel toplistEditorViewModel)
                 {
                     toplistEditorViewModel.LoadToplist(toplistFilename);
@@ -323,7 +334,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             Console.WriteLine(message);
             _logger.Debug(message);
 
-            CurrentContent = new ProgressDialog();
+            CurrentContent = new ProgressView();
             Submit.ExecuteAsync(SelectedDataSource);
         }
 
@@ -376,7 +387,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private bool CanReturnToStartView(UserControl currentContent)
         {
-            return !(currentContent is StartControl) && IsNotBusy;
+            return !(currentContent is StartView) && IsNotBusy;
         }
 
         private async Task<RequestParams> ConfigureServiceRequest(DataSource dataSource)

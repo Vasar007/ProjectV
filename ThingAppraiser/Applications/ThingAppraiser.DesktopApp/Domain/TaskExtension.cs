@@ -12,6 +12,8 @@ namespace ThingAppraiser.DesktopApp.Domain
         public static async void FireAndForgetSafeAsync(this Task task,
             IErrorHandler? handler = null)
         {
+            handler ??= new CommonErrorHandler();
+
             try
             {
                 await task;
@@ -19,7 +21,7 @@ namespace ThingAppraiser.DesktopApp.Domain
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occured during async execution.");
-                handler?.HandleError(ex);
+                handler.HandleError(ex);
             }
         }
     }

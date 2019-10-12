@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prism.Mvvm;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ContentFinderViewModel : ViewModelBase
+    internal sealed class ContentFinderViewModel : BindableBase
     {
         public object DialogIdentifier { get; }
 

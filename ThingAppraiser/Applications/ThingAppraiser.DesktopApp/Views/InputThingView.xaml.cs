@@ -4,11 +4,11 @@ using ThingAppraiser.DesktopApp.ViewModels;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for InputThing.xaml
+    /// Interaction logic for InputThingView.xaml
     /// </summary>
-    public sealed partial class InputThingDialog : UserControl
+    public sealed partial class InputThingView : UserControl
     {
-        public InputThingDialog()
+        public InputThingView()
         {
             InitializeComponent();
 

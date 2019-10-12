@@ -1,23 +1,48 @@
 ﻿using System.Windows.Input;
-using ThingAppraiser.DesktopApp.Domain.Commands;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ToplistStartViewModel : ViewModelBase
+    internal sealed class ToplistStartViewModel : BindableBase
     {
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ToplistStartViewModel>();
+
+        private readonly IEventAggregator _eventAggregator;
+
         public object DialogIdentifier { get; }
 
-        public ICommand CreateToplistDialogCommand =>
-            new RelayCommand<ToplistStartViewModel>(ExecutableDialogs.ExecuteCreateToplistDialog);
+        public ICommand CreateToplistDialogCommand { get; }
 
-        public ICommand OpenToplistDialogCommand =>
-            new RelayCommand<ToplistStartViewModel>(ExecutableDialogs.ExecuteOpenToplistDialog);
+        public ICommand OpenToplistDialogCommand { get; }
 
 
-        public ToplistStartViewModel(object dialogIdentifier)
+        public ToplistStartViewModel(object dialogIdentifier, IEventAggregator eventAggregator)
         {
             DialogIdentifier = dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
+            _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
+
+            CreateToplistDialogCommand = new DelegateCommand<ToplistStartViewModel>(
+                ExecutableDialogs.ExecuteCreateToplistDialog
+            );
+            OpenToplistDialogCommand = new DelegateCommand(SendOpenToplistMessage);
+        }
+
+        private void SendOpenToplistMessage()
+        {
+            string? filename = ExecutableDialogs.ExecuteOpenToplistFileDialog();
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                _logger.Info("Skipping openning toplist because got an empty filename value.");
+                return;
+            }
+
+            _eventAggregator.GetEvent<OpenToplistMessage>().Publish(filename);
         }
     }
 }

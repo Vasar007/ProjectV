@@ -5,17 +5,17 @@ using ThingAppraiser.Extensions;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for StartView.xaml
+    /// Interaction logic for ContentFinderView.xaml
     /// </summary>
-    public sealed partial class StartControl : UserControl
+    public partial class ContentFinderView : UserControl
     {
-        public StartControl(object dialogIdentifier)
+        public ContentFinderView(object dialogIdentifier)
         {
             dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
 
             InitializeComponent();
 
-            DataContext = new StartViewModel(dialogIdentifier);
+            DataContext = new ContentFinderViewModel(dialogIdentifier);
         }
     }
 }

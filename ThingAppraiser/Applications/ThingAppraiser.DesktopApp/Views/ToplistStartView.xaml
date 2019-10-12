@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ToplistStartControl"
+﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ToplistStartView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,11 +21,16 @@
                 CommandParameter="{Binding Path=.}">
             Create Toplist
         </Button>
+
         <Button Width="256"
                 Margin="0 32 0 0"
-                Command="{Binding Path=OpenToplistDialogCommand}"
-                CommandParameter="{Binding Path=.}">
-            Open Toplist
+                Command="{Binding Path=OpenToplistDialogCommand}">
+            Read from local file
+        </Button>
+
+        <Button Width="256"
+                Margin="0 32 0 0">
+            Read from Google Drive
         </Button>
 
     </StackPanel>

@@ -4,17 +4,17 @@ using ThingAppraiser.Extensions;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Models.WebService;
+using Prism.Mvvm;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class BrowsingViewModel : ViewModelBase
+    internal sealed class BrowsingViewModel : BindableBase
     {
         private readonly IThingSupplier _thingSupplier;
 
-        private Thing? _selectedThing;
-
         public ObservableCollection<Thing> Things { get; private set; }
 
+        private Thing? _selectedThing;
         public Thing? SelectedThing
         {
             get => _selectedThing;

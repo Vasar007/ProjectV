@@ -1,22 +1,21 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class InputThingViewModel : ViewModelBase
+    internal sealed class InputThingViewModel : BindableBase
     {
         private ObservableCollection<string> _thingList = new ObservableCollection<string>();
-
-        private string _thingName = string.Empty;
-
         public ObservableCollection<string> ThingList
         {
             get => _thingList;
             set => SetProperty(ref _thingList, value.ThrowIfNull(nameof(value)));
         }
 
+        private string _thingName = string.Empty;
         public string ThingName
         {
             get => _thingName;

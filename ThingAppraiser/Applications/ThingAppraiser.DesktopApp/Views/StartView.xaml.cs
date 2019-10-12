@@ -5,17 +5,17 @@ using ThingAppraiser.Extensions;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for ToplistStartControl.xaml
+    /// Interaction logic for StartView.xaml
     /// </summary>
-    public sealed partial class ToplistStartControl : UserControl
+    public sealed partial class StartView : UserControl
     {
-        public ToplistStartControl(object dialogIdentifier)
+        public StartView(object dialogIdentifier)
         {
             dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
 
             InitializeComponent();
 
-            DataContext = new ToplistStartViewModel(dialogIdentifier);
+            DataContext = new StartViewModel(dialogIdentifier);
         }
     }
 }

@@ -4,35 +4,49 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.Extensions;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ToplistEditorViewModel : ViewModelBase
+    internal sealed class ToplistEditorViewModel : BindableBase
     {
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<ToplistEditorViewModel>();
+
+        private readonly IEventAggregator _eventAggregator;
+
         private ToplistBase? _toplist;
 
-        private ObservableCollection<ToplistBlock> _toplistBlocks =
-            new ObservableCollection<ToplistBlock>();
-
+        private ObservableCollection<ToplistBlock> _toplistBlocks;
         public ObservableCollection<ToplistBlock> ToplistBlocks
         {
             get => _toplistBlocks;
             set => SetProperty(ref _toplistBlocks, value.ThrowIfNull(nameof(value)));
         }
 
-        public ICommand AddOrUpdateBlockCommand => new RelayCommand(AddNewBlock);
+        public ICommand AddOrUpdateBlockCommand { get; }
 
-        public ICommand RemoveBlockCommand => new RelayCommand<ToplistBlock>(RemoveBlock);
+        public ICommand RemoveBlockCommand { get; }
 
-        public ICommand SaveToplistCommand =>
-            new RelayCommand<MainWindowViewModel>(ExecutableDialogs.ExecuteSaveToplistFileDialog);
+        public ICommand SaveToplistCommand { get; }
 
 
-        public ToplistEditorViewModel()
+        public ToplistEditorViewModel(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
+
+            _toplistBlocks = new ObservableCollection<ToplistBlock>();
+
+            AddOrUpdateBlockCommand = new RelayCommand(AddNewBlock);
+            RemoveBlockCommand = new RelayCommand<ToplistBlock>(RemoveBlock);
+            SaveToplistCommand = new DelegateCommand(SendSaveToplistMessage);
         }
 
         public void ConstructNewToplist(string toplistName, ToplistType toplistType,
@@ -104,6 +118,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (_toplist is null) return;
 
             _toplist.RemoveBlock(block);
+        }
+
+        private void SendSaveToplistMessage()
+        {
+            string? filename = ExecutableDialogs.ExecuteSaveToplistFileDialog();
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                _logger.Info("Skipping saving toplist because got an empty filename value.");
+                return;
+            }
+            
+            _eventAggregator.GetEvent<SaveToplistMessage>().Publish(filename);
         }
     }
 }

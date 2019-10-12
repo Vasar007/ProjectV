@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Prism.Mvvm;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain.Commands;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class StartViewModel : ViewModelBase
+    internal sealed class StartViewModel : BindableBase
     {
-        private string _selectedService = default!; // Initializes throught property.
-
         public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
             ConfigContract.AvailableBeautifiedServices;
 
+        private string _selectedService = default!; // Initializes throught property.
         public string SelectedService
         {
             get => _selectedService;

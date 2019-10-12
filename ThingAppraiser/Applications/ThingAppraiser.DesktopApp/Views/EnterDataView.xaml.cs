@@ -5,11 +5,11 @@ using ThingAppraiser.Extensions;
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for EnterDataDialog.xaml
+    /// Interaction logic for EnterDataView.xaml
     /// </summary>
-    public sealed partial class EnterDataDialog : UserControl
+    public sealed partial class EnterDataView : UserControl
     {
-        public EnterDataDialog(string hintText)
+        public EnterDataView(string hintText)
         {
             hintText.ThrowIfNullOrEmpty(nameof(hintText));
 

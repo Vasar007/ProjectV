@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
-using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models
@@ -89,7 +88,6 @@ namespace ThingAppraiser.DesktopApp.Models
         }
 
         public T GetDataContext<T>(string sceneName)
-            where T : ViewModelBase
         {
             sceneName.ThrowIfNullOrEmpty(nameof(sceneName));
 

@@ -11,7 +11,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         private int _number;
 
-        private ToplistBox _creationToplistBox;
+        private ToplistBoxView _creationToplistBox;
 
         public string Title
         {
@@ -25,7 +25,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set => SetProperty(ref _number, value);
         }
 
-        public ToplistBox CreationToplistBox
+        public ToplistBoxView CreationToplistBox
         {
             get => _creationToplistBox;
             set => SetProperty(ref _creationToplistBox, value.ThrowIfNull(nameof(value)));
@@ -40,7 +40,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             Title = title;
             Number = number;
 
-            _creationToplistBox = new ToplistBox(new ToplistItem(string.Empty, null, this));
+            _creationToplistBox = new ToplistBoxView(new ToplistItem(string.Empty, null, this));
         }
 
         public void UpdateItems(IEnumerable<ToplistItem> items)

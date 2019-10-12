@@ -1,9 +1,10 @@
-﻿namespace ThingAppraiser.DesktopApp.ViewModels
+﻿using Prism.Mvvm;
+
+namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ProgressViewModel : ViewModelBase
+    internal sealed class ProgressViewModel : BindableBase
     {
         private int _progressBarSize;
-
         public int ProgressBarSize
         {
             get => _progressBarSize;
@@ -17,7 +18,7 @@
         }
 
         public ProgressViewModel()
-            : this(64)
+            : this(progressBarSize: 64)
         {
         }
     }

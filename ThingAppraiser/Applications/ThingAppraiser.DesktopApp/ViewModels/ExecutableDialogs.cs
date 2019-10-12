@@ -7,6 +7,8 @@ using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using Ookii.Dialogs.Wpf;
+using Prism.Events;
+using ThingAppraiser.DesktopApp.Domain.Messages;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
@@ -20,10 +22,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             startViewModel.ThrowIfNull(nameof(startViewModel));
 
-            var view = new InputThingDialog();
+            var view = new InputThingView();
 
             ShowDialog(view, startViewModel.DialogIdentifier, InputThingClosingEventHandler)
-                .FireAndForgetSafeAsync(new CommonErrorHandler());
+                .FireAndForgetSafeAsync();
         }
 
         public static void ExecuteEnterThingNameDialog(InputThingViewModel inputThingViewModel)
@@ -34,7 +36,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             ShowDialog(inputThingViewModel.DialogContent, inputThingViewModel.DialogIdentifier,
                        EnterThingNameClosingEventHandler)
-                .FireAndForgetSafeAsync(new CommonErrorHandler());
+                .FireAndForgetSafeAsync();
         }
 
         public static void ExecuteOpenThingsFileDialog(MainWindowViewModel mainViewModel)
@@ -58,10 +60,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        public static void ExecuteOpenToplistFileDialog(MainWindowViewModel mainViewModel)
+        public static string? ExecuteOpenToplistFileDialog()
         {
-            mainViewModel.ThrowIfNull(nameof(mainViewModel));
-
             var dialog = new OpenFileDialog
             {
                 Title = "Open toplist file",
@@ -73,16 +73,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
 
             bool? result = dialog.ShowDialog();
-            if (result.GetValueOrDefault())
-            {
-                mainViewModel.OpenToplistToFile(dialog.FileName);
-            }
+            return result.GetValueOrDefault() ? dialog.FileName : null;
         }
 
-        public static void ExecuteSaveToplistFileDialog(MainWindowViewModel mainViewModel)
+        public static string? ExecuteSaveToplistFileDialog()
         {
-            mainViewModel.ThrowIfNull(nameof(mainViewModel));
-
             var dialog = new SaveFileDialog
             {
                 Title = "Save toplist file",
@@ -93,10 +88,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
 
             bool? result = dialog.ShowDialog();
-            if (result.GetValueOrDefault())
-            {
-                mainViewModel.SaveToplistToFile(dialog.FileName);
-            }
+            return result.GetValueOrDefault() ? dialog.FileName : null;
         }
 
         public static void ExecuteOpenContentDirectoryDialog(MainWindowViewModel mainViewModel)
@@ -112,7 +104,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             bool? result = dialog.ShowDialog();
             if (result.GetValueOrDefault())
             {
-                mainViewModel.OpenToplistToFile(dialog.SelectedPath);
+                System.Console.WriteLine(dialog.SelectedPath);
             }
         }
 
@@ -120,32 +112,22 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             startViewModel.ThrowIfNull(nameof(startViewModel));
 
-            var view = new EnterDataDialog(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
+            var view = new EnterDataView(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
             ShowDialogExtended(view, startViewModel.DialogIdentifier, EnterDataOpenedEventHandler,
                                EnterDataClosingEventHandler)
-                .FireAndForgetSafeAsync(new CommonErrorHandler());
+                .FireAndForgetSafeAsync();
         }
 
         public static void ExecuteCreateToplistDialog(ToplistStartViewModel toplistStartViewModel)
         {
             toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
 
-            var view = new CreateToplistDialog();
+            var view = new CreateToplistView();
 
             ShowDialog(view, toplistStartViewModel.DialogIdentifier,
                        CreateToplistClosingEventHandler)
-                .FireAndForgetSafeAsync(new CommonErrorHandler());
-        }
-
-        public static void ExecuteOpenToplistDialog(ToplistStartViewModel toplistStartViewModel)
-        {
-            toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
-
-            var view = new OpenToplistDialog(toplistStartViewModel.DialogIdentifier);
-
-            ShowDialog(view, toplistStartViewModel.DialogIdentifier, OpenToplistClosingEventHandler)
-                .FireAndForgetSafeAsync(new CommonErrorHandler());
+                .FireAndForgetSafeAsync();
         }
 
         private static async Task ShowDialog(object content, object dialogIdentifier,
@@ -176,7 +158,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (Equals(eventArgs.Parameter, false)) return;
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is InputThingDialog inputThingDialog)) return;
+            if (!(eventArgs.Session.Content is InputThingView inputThingDialog)) return;
             if (!(inputThingDialog.DataContext is InputThingViewModel inputThingViewModel)) return;
 
             if (inputThingViewModel.ThingList.IsNullOrEmpty()) return;
@@ -210,7 +192,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (Equals(eventArgs.Parameter, false)) return;
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is EnterDataDialog enterDataDialog)) return;
+            if (!(eventArgs.Session.Content is EnterDataView enterDataDialog)) return;
             if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel)) return;
 
             if (string.IsNullOrWhiteSpace(enterDataViewModel.Name)) return;
@@ -226,7 +208,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (Equals(eventArgs.Parameter, false)) return;
 
             if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is CreateToplistDialog createToplistDialog)) return;
+            if (!(eventArgs.Session.Content is CreateToplistView createToplistDialog)) return;
             if (!(createToplistDialog.DataContext is CreateToplistViewModel createToplistViewModel))
             {
                 return;
@@ -239,18 +221,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 createToplistViewModel.SelectedToplistType,
                 createToplistViewModel.SelectedToplistFormat
             );
-        }
-
-        private static void OpenToplistClosingEventHandler(object sender,
-            DialogClosingEventArgs eventArgs)
-        {
-            if (Equals(eventArgs.Parameter, false)) return;
-
-            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is OpenToplistDialog openToplistDialog)) return;
-            if (!(openToplistDialog.DataContext is OpenToplistViewModel _)) return;
-
-            ExecuteOpenToplistFileDialog(mainWindowViewModel);
         }
     }
 }

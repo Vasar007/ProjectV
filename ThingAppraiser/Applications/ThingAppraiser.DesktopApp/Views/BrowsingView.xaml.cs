@@ -1,22 +1,18 @@
 ﻿using System.Windows.Controls;
-using ThingAppraiser.DesktopApp.Models.Toplists;
+using Prism.Mvvm;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for ToplistBox.xaml
+    /// Interaction logic for BrowsingView.xaml
     /// </summary>
-    public sealed partial class ToplistBox : UserControl
+    public sealed partial class BrowsingView : UserControl
     {
-        public ToplistBox()
+        public BrowsingView(BindableBase dataContext)
         {
             InitializeComponent();
-        }
 
-        internal ToplistBox(ToplistItem dataContext)
-            : this()
-        {
             DataContext = dataContext.ThrowIfNull(nameof(dataContext));
         }
     }

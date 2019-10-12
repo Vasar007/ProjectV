@@ -1,18 +1,22 @@
 ﻿using System.Windows.Controls;
-using ThingAppraiser.DesktopApp.ViewModels;
+using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
-    /// Interaction logic for BrowsingControl.xaml
+    /// Interaction logic for ToplistBoxView.xaml
     /// </summary>
-    public sealed partial class BrowsingControl : UserControl
+    public sealed partial class ToplistBoxView : UserControl
     {
-        public BrowsingControl(ViewModelBase dataContext)
+        public ToplistBoxView()
         {
             InitializeComponent();
+        }
 
+        internal ToplistBoxView(ToplistItem dataContext)
+            : this()
+        {
             DataContext = dataContext.ThrowIfNull(nameof(dataContext));
         }
     }
