@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using ThingAppraiser.Extensions;
 
@@ -7,10 +6,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
     internal sealed class ScoreToplist : ToplistBase
     {
-        // TODO: may be need to delete this dictionary later.
-        private Dictionary<int, ToplistBlock> _blocks = new Dictionary<int, ToplistBlock>();
-
-
         public ScoreToplist(string name, ToplistFormat format)
             : base(name, ToplistType.Score, format)
         {
@@ -24,7 +19,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
             int insertIndex = CalculateInsertIndex(block.Number);
             Blocks.Insert(insertIndex, block);
-            _blocks.Add(block.Number, block);
 
             return true;
         }
@@ -33,13 +27,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             block.ThrowIfNull(nameof(block));
 
-            bool internalRemove = _blocks.Remove(block.Number);
-            bool baseRemove = Blocks.Remove(block);
-
-            if (internalRemove == baseRemove) return internalRemove;
-
-            throw new InvalidOperationException("Removal operation in this and base class has " +
-                                                "different results.");
+            return Blocks.Remove(block);
         }
 
         public override void UpdateBlocks(IEnumerable<ToplistBlock> blocks)
@@ -47,8 +35,6 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             blocks.ThrowIfNull(nameof(blocks));
 
             base.UpdateBlocks(blocks);
-
-            _blocks = blocks.ToDictionary(block => block.Number, block => block);
         }
 
         #endregion

@@ -75,7 +75,7 @@ namespace ThingAppraiser.ConsoleApp
         /// Console application start point.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
-        private static async Task Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             try
             {
@@ -84,10 +84,12 @@ namespace ThingAppraiser.ConsoleApp
                 await MainXDocument(args);
                 //TestEntityFrameworkCore();
                 //TestConentDirectories();
+                return 0;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+                return -1;
             }
             finally
             {

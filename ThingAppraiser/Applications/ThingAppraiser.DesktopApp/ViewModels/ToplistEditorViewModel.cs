@@ -107,12 +107,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 ? 1
                 : _toplist.Blocks.Count + 1;
 
-            for (int i = 1; i < existsNumbers.Count; ++i)
+            if (blockNumber != 1)
             {
-                if (existsNumbers[i] - existsNumbers[i - 1] != 1)
+                // This loop needs to check exists numbers and update result block to insert.
+                for (int i = 1; i < existsNumbers.Count; ++i)
                 {
-                    blockNumber = existsNumbers[i - 1] + 1;
-                    break;
+                    if (existsNumbers[i] - existsNumbers[i - 1] != 1)
+                    {
+                        blockNumber = existsNumbers[i - 1] + 1;
+                        break;
+                    }
                 }
             }
 
