@@ -82,7 +82,7 @@
                     Margin="16"
                     HorizontalAlignment="Center"
                     x:Name="AddNewBlockButton"
-                    Command="{Binding Path=AddOrUpdateBlockCommand}" />
+                    Command="{Binding Path=AddBlockCommand}" />
         </StackPanel>
     </ScrollViewer>
 

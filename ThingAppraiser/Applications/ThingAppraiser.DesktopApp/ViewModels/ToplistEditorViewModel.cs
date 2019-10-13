@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
@@ -22,7 +19,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
 
-        private ToplistBase? _toplist;
+        private ToplistWrapper? _toplistWrapper;
 
         private ObservableCollection<ToplistBlock> _toplistBlocks;
         public ObservableCollection<ToplistBlock> ToplistBlocks
@@ -31,7 +28,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             set => SetProperty(ref _toplistBlocks, value.ThrowIfNull(nameof(value)));
         }
 
-        public ICommand AddOrUpdateBlockCommand { get; }
+        public ICommand AddBlockCommand { get; }
 
         public ICommand RemoveBlockCommand { get; }
 
@@ -52,88 +49,31 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             _toplistBlocks = new ObservableCollection<ToplistBlock>();
 
-            AddOrUpdateBlockCommand = new DelegateCommand(AddNewBlock);
+            AddBlockCommand = new DelegateCommand(AddNewBlock);
             RemoveBlockCommand = new DelegateCommand<ToplistBlock>(RemoveBlock);
             SaveToplistCommand = new DelegateCommand(SaveToplistToFileCommand);
         }
 
-        public void ConstructNewToplist(string toplistName, ToplistType toplistType,
-            ToplistFormat toplistFormat)
-        {
-            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
-
-            _toplist = ToplistFactory.Create(toplistName, toplistType, toplistFormat);
-            ToplistBlocks = _toplist.Blocks;
-
-            AddNewBlock();
-        }
-
-        public void LoadToplist(string toplistFilename)
-        {
-            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
-
-            _toplist = ToplistFactory.LoadFromFile(toplistFilename);
-            ToplistBlocks = _toplist.Blocks;
-        }
-
-        public void SaveToplist(string toplistFilename)
-        {
-            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
-
-            if (_toplist is null)
-            {
-                throw new InvalidOperationException(
-                    $"Toplist ({nameof(_toplist)}) should be initialized at first."
-                );
-            }
-
-            string toplistData = ToplistBase.Serialize(_toplist);
-            File.WriteAllText(toplistFilename, toplistData);
-        }
-
         private void AddNewBlock()
         {
-            if (_toplist is null) return;
+            if (_toplistWrapper is null) return;
 
-            // Find first inconsistent block number in sorted sequence and select it as block number
-            // to add.
-
-            IReadOnlyList<int> existsNumbers = _toplist.Blocks
-                .Select(block => block.Number)
-                .OrderBy(number => number)
-                .ToReadOnlyList();
-
-            int blockNumber = existsNumbers.Count > 0 && existsNumbers.First() != 1
-                ? 1
-                : _toplist.Blocks.Count + 1;
-
-            if (blockNumber != 1)
-            {
-                // This loop needs to check exists numbers and update result block to insert.
-                for (int i = 1; i < existsNumbers.Count; ++i)
-                {
-                    if (existsNumbers[i] - existsNumbers[i - 1] != 1)
-                    {
-                        blockNumber = existsNumbers[i - 1] + 1;
-                        break;
-                    }
-                }
-            }
-
-            _toplist.AddBlock(new ToplistBlock(blockNumber.ToString(), blockNumber));
+            _toplistWrapper.AddNewBlock();
         }
 
         private void RemoveBlock(ToplistBlock block)
         {
             block.ThrowIfNull(nameof(block));
 
-            if (_toplist is null) return;
+            if (_toplistWrapper is null) return;
 
-            _toplist.RemoveBlock(block);
+            _toplistWrapper.RemoveBlock(block);
         }
 
         private void SaveToplistToFileCommand()
         {
+            if (_toplistWrapper is null) return;
+
             string? filename = ExecutableDialogs.ExecuteSaveToplistFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
             {
@@ -146,9 +86,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ProcessToplistSaving(string toplistFilename)
         {
+            if (_toplistWrapper is null) return;
+
             try
             {
-                SaveToplist(toplistFilename);
+                _toplistWrapper.SaveToplist(toplistFilename);
 
                 MessageBoxHelper.ShowInfo("Toplist was saved successfully.");
             }
@@ -172,6 +114,15 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
+        private void LoadToplist(string toplistFilename)
+        {
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+
+            ToplistBase toplist = ToplistFactory.LoadFromFile(toplistFilename);
+            _toplistWrapper = new ToplistWrapper(toplist);
+            ToplistBlocks = _toplistWrapper.Blocks;
+        }
+
         private void ProcessConstructingNewToplist(ToplistParametersInfo parameters)
         {
             try
@@ -185,6 +136,18 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 _logger.Error(ex, "Exception occurred during toplist creation.");
                 MessageBoxHelper.ShowError(ex.Message);
             }
+        }
+
+        private void ConstructNewToplist(string toplistName, ToplistType toplistType,
+          ToplistFormat toplistFormat)
+        {
+            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+
+            ToplistBase toplist = ToplistFactory.Create(toplistName, toplistType, toplistFormat);
+            _toplistWrapper = new ToplistWrapper(toplist);
+            ToplistBlocks = _toplistWrapper.Blocks;
+
+            AddNewBlock();
         }
     }
 }
