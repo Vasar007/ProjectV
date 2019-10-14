@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prism.Mvvm;
 
-namespace ThingAppraiser.DesktopApp.Models.ContentFinder
+namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 {
     // TODO: implement model for content finder lib.
     internal sealed class ContentFinderInfo : BindableBase

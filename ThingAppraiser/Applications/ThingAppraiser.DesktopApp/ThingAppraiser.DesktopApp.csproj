@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Building\ThingAppraiser.Building.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Configuration\ThingAppraiser.Configuration.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.ContentDirectories\ThingAppraiser.ContentDirectories.fsproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ThingAppraiser.Core.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
     <ProjectReference Include="..\..\Libraries\ThingAppraiser.InputProcessing\ThingAppraiser.InputProcessing.csproj" />

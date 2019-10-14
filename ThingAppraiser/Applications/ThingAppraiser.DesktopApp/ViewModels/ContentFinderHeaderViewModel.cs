@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain;
+using ThingAppraiser.DesktopApp.Models.ContentDirectories;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
@@ -11,6 +12,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<ContentFinderHeaderViewModel>();
+
+        private readonly ContentFinderWrapper _contentFinder;
 
         public ICommand ProcessContentDirectoryLocalDialogCommand { get; }
         
@@ -21,6 +24,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ContentFinderHeaderViewModel()
         {
+            _contentFinder = new ContentFinderWrapper();
+
             ProcessContentDirectoryLocalDialogCommand = new DelegateCommand(
                 OpenLocalContentDirectory
             );
@@ -51,7 +56,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                // TODO: implement local content directory processing.
+                var result = _contentFinder.GetAllDirectoryContent(
+                    contentDirectoryPath, ContentTypeToFind.Text
+                );
+
+                _contentFinder.PrintResultToOutput(result);
+
+                // TODO: finish local content directory processing.
                 MessageBoxHelper.ShowInfo("Work in progress.");
             }
             catch (Exception ex)
@@ -63,14 +74,14 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void ProcessContentDirectoryFromDrive()
         {
-            MessageBoxHelper.ShowInfo("Work in progress.");
             // TODO: implement Google Drive content directory processing.
+            MessageBoxHelper.ShowInfo("Work in progress.");
         }
 
         private void OpenContentFinderResults()
         {
-            MessageBoxHelper.ShowInfo("Work in progress.");
             // TODO: implement loading content finder results from different sources.
+            MessageBoxHelper.ShowInfo("Work in progress.");
         }
     }
 }
