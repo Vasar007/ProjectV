@@ -18,8 +18,12 @@
         </TextBlock>
 
         <Button Width="256"
-                Command="{Binding Path=InputThingDialogCommand}"
-                CommandParameter="{Binding Path=.}">
+                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                materialDesign:DialogHost.DialogOpenedAttached="InputThing_DialogOpened"
+                materialDesign:DialogHost.DialogClosingAttached="InputThing_DialogClosing">
+            <Button.CommandParameter>
+                <ContentControl prism:RegionManager.RegionName="InputThing" />
+            </Button.CommandParameter>
             Enter The Things
         </Button>
         <Button Width="256"
@@ -29,8 +33,12 @@
         </Button>
         <Button Width="256"
                 Margin="0 32 0 0"
-                Command="{Binding Path=EnterDataDialogCommand}"
-                CommandParameter="{Binding Path=.}">
+                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                materialDesign:DialogHost.DialogOpenedAttached="EnterData_DialogOpened"
+                materialDesign:DialogHost.DialogClosingAttached="EnterData_DialogClosing">
+            <Button.CommandParameter>
+                <ContentControl prism:RegionManager.RegionName="EnterData" />
+            </Button.CommandParameter>
             Read The Things from Google Drive
         </Button>
 

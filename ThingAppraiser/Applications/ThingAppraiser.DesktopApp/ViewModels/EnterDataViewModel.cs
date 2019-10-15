@@ -1,11 +1,12 @@
 ﻿using Prism.Mvvm;
+using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class EnterDataViewModel : BindableBase
     {
-        private string _name = string.Empty;
+        private string _name;
         public string Name
         {
             get => _name;
@@ -15,9 +16,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public string HintText { get; }
         
 
-        public EnterDataViewModel(string hintText)
+        public EnterDataViewModel(GoogleDriveData googleDriveData)
         {
-            HintText = hintText.ThrowIfNullOrEmpty(nameof(hintText));
+            googleDriveData.ThrowIfNull(nameof(googleDriveData));
+
+            _name = string.Empty;
+
+            HintText = googleDriveData.HintText.ThrowIfNullOrEmpty(nameof(HintText));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataProducers
 {
     internal sealed class ThingProducer : IInputter, ITagable
     {
-        private readonly List<string> _thingNames;
+        private readonly IReadOnlyList<string> _thingNames;
 
         public string StorageName { get; private set; } = string.Empty;
 
@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataProducers
         #endregion
 
 
-        public ThingProducer(List<string> thingNames)
+        public ThingProducer(IReadOnlyList<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }

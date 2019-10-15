@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -19,9 +21,11 @@
             New appraisal request:
         </TextBlock>
 
-        <TextBox wpf:HintAssist.Hint="{Binding Path=HintText}"
+        <TextBox x:Name="NameTextBox"
+                 wpf:HintAssist.Hint="{Binding Path=HintText}"
                  Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"
                  Margin="0 6 0 0"
+                 MinWidth="250"
                  FontSize="18"
                  Grid.Row="1">
             <TextBox.Text>
@@ -42,10 +46,7 @@
             <Button IsDefault="True"
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                    CommandParameter="{Binding
-                                       RelativeSource={RelativeSource Mode=FindAncestor,
-                                                       AncestorType={x:Type Window}},
-                                       Path=DataContext}">
+                    CommandParameter="{Binding .}">
                 APPRAISE
             </Button>
             <Button IsCancel="True"

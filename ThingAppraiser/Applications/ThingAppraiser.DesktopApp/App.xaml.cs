@@ -38,7 +38,17 @@ namespace ThingAppraiser.DesktopApp
         protected override Window CreateShell()
         {
             var regionManager = Container.Resolve<IRegionManager>();
-            
+
+            regionManager.RegisterViewWithRegion(
+               DesktopOptions.BindingNames.EnterData,
+               typeof(EnterDataView)
+            );
+
+            regionManager.RegisterViewWithRegion(
+               DesktopOptions.BindingNames.InputThing,
+               typeof(InputThingView)
+            );
+
             regionManager.RegisterViewWithRegion(
                 DesktopOptions.BindingNames.ToplistHeader,
                 typeof(ToplistHeaderView)

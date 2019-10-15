@@ -1,6 +1,4 @@
 ﻿using System.Windows.Controls;
-using ThingAppraiser.DesktopApp.ViewModels;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -9,13 +7,9 @@ namespace ThingAppraiser.DesktopApp.Views
     /// </summary>
     public sealed partial class EnterDataView : UserControl
     {
-        public EnterDataView(string hintText)
+        public EnterDataView()
         {
-            hintText.ThrowIfNullOrEmpty(nameof(hintText));
-
             InitializeComponent();
-
-            DataContext = new EnterDataViewModel(hintText);
         }
     }
 }

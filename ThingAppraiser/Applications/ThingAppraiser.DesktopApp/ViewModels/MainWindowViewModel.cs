@@ -103,8 +103,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            _eventAggregator.GetEvent<OpenThingsFileMessage>().Subscribe(
+            _eventAggregator.GetEvent<AppraiseInputThingsMessage>().Subscribe(
+                storageName => SendRequestToService(DataSource.InputThing, storageName)
+            );
+
+            _eventAggregator.GetEvent<AppraiseLocalThingsFileMessage>().Subscribe(
                 storageName => SendRequestToService(DataSource.LocalFile, storageName)
+            );
+
+            _eventAggregator.GetEvent<AppraiseGoogleDriveThingsFileMessage>().Subscribe(
+                storageName => SendRequestToService(DataSource.GoogleDrive, storageName)
             );
 
             _requirementsCreator = new RequirementsCreator();
@@ -121,7 +129,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
-                new StartView()
+                new StartView(eventAggregator)
             );
 
             _scenes.AddScene(
@@ -157,7 +165,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
-        public void SendRequestToService(DataSource dataSource, string storageName)
+        private void SendRequestToService(DataSource dataSource, string storageName)
         {
             storageName.ThrowIfNullOrEmpty(nameof(storageName));
 
@@ -166,7 +174,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ExecuteSending();
         }
 
-        public void SendRequestToService(DataSource dataSource, List<string> thingList)
+        public void SendRequestToService(DataSource dataSource, IReadOnlyList<string> thingList)
         {
             thingList.ThrowIfNull(nameof(thingList));
 

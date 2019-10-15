@@ -31,11 +31,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public object DialogIdentifier { get; }
 
-        public ICommand InputThingDialogCommand { get; }
-
         public ICommand OpenThingsFileDialogCommand { get; }
-
-        public ICommand EnterDataDialogCommand { get; }
 
 
         public StartViewModel(IEventAggregator eventAggregator)
@@ -45,13 +41,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             SelectedService = AvailableBeautifiedServices.First();
 
-            InputThingDialogCommand =
-                new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteInputThingDialog);
-
             OpenThingsFileDialogCommand = new DelegateCommand(SendOpenThingsFileMessage);
-
-            EnterDataDialogCommand =
-                new DelegateCommand<StartViewModel>(ExecutableDialogs.ExecuteEnterDataDialog);
         }
 
         private void SendOpenThingsFileMessage()
@@ -63,7 +53,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<OpenThingsFileMessage>().Publish(filename);
+            _eventAggregator.GetEvent<AppraiseLocalThingsFileMessage>().Publish(filename);
         }
     }
 }

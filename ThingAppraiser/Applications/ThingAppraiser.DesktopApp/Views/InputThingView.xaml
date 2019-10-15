@@ -96,15 +96,13 @@
                 </Button>
 
                 <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
                             HorizontalAlignment="Center"
                             Grid.Row="2"
                             Margin="0 16 0 16">
                     <Button IsDefault="True"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                            CommandParameter="{Binding
-                                               RelativeSource={RelativeSource Mode=FindAncestor,
-                                                               AncestorType={x:Type Window}},
-                                               Path=DataContext}">
+                            CommandParameter="{Binding .}">
                         APPRAISE
                     </Button>
                     <Button IsCancel="True"

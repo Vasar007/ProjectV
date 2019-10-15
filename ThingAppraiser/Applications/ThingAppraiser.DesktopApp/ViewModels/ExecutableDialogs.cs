@@ -74,34 +74,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return result.GetValueOrDefault() ? dialog.SelectedPath : null;
         }
 
-        public static void ExecuteInputThingDialog(StartViewModel startViewModel)
-        {
-            startViewModel.ThrowIfNull(nameof(startViewModel));
-
-            var view = new InputThingView();
-
-            DialogHostProvider
-                .ShowDialog(
-                    view, startViewModel.DialogIdentifier,
-                    InputThingClosingEventHandler
-                )
-                .FireAndForgetSafeAsync();
-        }
-
-        public static void ExecuteEnterDataDialog(StartViewModel startViewModel)
-        {
-            startViewModel.ThrowIfNull(nameof(startViewModel));
-
-            var view = new EnterDataView(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
-
-            DialogHostProvider
-                .ShowDialogExtended(
-                    view, startViewModel.DialogIdentifier,
-                    EnterDataOpenedEventHandler, EnterDataClosingEventHandler
-                )
-                .FireAndForgetSafeAsync();
-        }
-
         public static void ExecuteCreateToplistDialog(ToplistHeaderViewModel toplistStartViewModel)
         {
             toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
@@ -114,48 +86,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                     CreateToplistClosingEventHandler
                 )
                 .FireAndForgetSafeAsync();
-        }
-
-        private static void InputThingClosingEventHandler(object sender,
-            DialogClosingEventArgs eventArgs)
-        {
-            if (Equals(eventArgs.Parameter, false)) return;
-
-            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is InputThingView inputThingDialog)) return;
-            if (!(inputThingDialog.DataContext is InputThingViewModel inputThingViewModel)) return;
-
-            if (inputThingViewModel.ThingList.IsNullOrEmpty()) return;
-
-            mainWindowViewModel.SendRequestToService(
-                DataSource.InputThing, inputThingViewModel.ThingList.ToList()
-            );
-        }
-
-        private static void EnterDataOpenedEventHandler(object sender,
-            DialogOpenedEventArgs eventArgs)
-        {
-            _logger.Debug("Dialog was opened.");
-        }
-
-        private static void EnterDataClosingEventHandler(object sender,
-            DialogClosingEventArgs eventArgs)
-        {
-            if (Equals(eventArgs.Parameter, false)) return;
-
-            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is EnterDataView enterDataDialog)) return;
-            if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel)) return;
-
-            if (string.IsNullOrWhiteSpace(enterDataViewModel.Name))
-            {
-                eventArgs.Cancel();
-                return;
-            }
-
-            mainWindowViewModel.SendRequestToService(
-                DataSource.GoogleDrive, enterDataViewModel.Name
-            );
         }
 
         private static void CreateToplistClosingEventHandler(object sender,
