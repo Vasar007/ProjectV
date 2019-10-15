@@ -5,7 +5,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Prism.Events;
 using Prism.Ioc;
-using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -27,8 +26,6 @@ namespace ThingAppraiser.DesktopApp
             InitializeComponent();
 
             _container = container.ThrowIfNull(nameof(container));
-
-            MainDialogIdentifier.SetDialogIdentifierAnyway(MainWindowDialogHost.Identifier);
 
             var eventAggregator = _container.Resolve<IEventAggregator>();
             DataContext = new MainWindowViewModel(eventAggregator);
@@ -52,16 +49,15 @@ namespace ThingAppraiser.DesktopApp
 
         private void OnCopy(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (eventArgs.Parameter is string stringValue)
+            if (!(eventArgs.Parameter is string stringValue)) return;
+
+            try
             {
-                try
-                {
-                    Clipboard.SetDataObject(stringValue);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "Data couldn't be copied to clipboard.");
-                }
+                Clipboard.SetDataObject(stringValue);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Data couldn't be copied to clipboard.");
             }
         }
     }

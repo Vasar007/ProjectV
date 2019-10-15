@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         public static ToplistBase LoadFromFile(string toplistFilename)
         {
-            toplistFilename.ThrowIfNullOrWhiteSpace(nameof(toplistFilename));
+            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
 
             _logger.Info($"Loading toplist from file \"{toplistFilename}\".");
 
