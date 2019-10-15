@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
@@ -16,32 +15,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             LoggerFactory.CreateLoggerFor(typeof(ExecutableDialogs));
 
 
-        public static void ExecuteInputThingDialog(StartViewModel startViewModel)
-        {
-            startViewModel.ThrowIfNull(nameof(startViewModel));
-
-            var view = new InputThingView();
-
-            ShowDialog(view, startViewModel.DialogIdentifier, InputThingClosingEventHandler)
-                .FireAndForgetSafeAsync();
-        }
-
-        public static void ExecuteEnterThingNameDialog(InputThingViewModel inputThingViewModel)
-        {
-            inputThingViewModel.ThrowIfNull(nameof(inputThingViewModel));
-
-            inputThingViewModel.ThingName = string.Empty;
-
-            ShowDialog(inputThingViewModel.DialogContent, inputThingViewModel.DialogIdentifier,
-                       EnterThingNameClosingEventHandler)
-                .FireAndForgetSafeAsync();
-        }
-
         public static string? ExecuteOpenThingsFileDialog()
         {
             var dialog = new OpenFileDialog
             {
-                Title = "Open things file",
+                Title = "Open Things file",
                 FileName = "things.txt",
                 DefaultExt = ".csv",
                 Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt",
@@ -96,14 +74,31 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return result.GetValueOrDefault() ? dialog.SelectedPath : null;
         }
 
+        public static void ExecuteInputThingDialog(StartViewModel startViewModel)
+        {
+            startViewModel.ThrowIfNull(nameof(startViewModel));
+
+            var view = new InputThingView();
+
+            DialogHostProvider
+                .ShowDialog(
+                    view, startViewModel.DialogIdentifier,
+                    InputThingClosingEventHandler
+                )
+                .FireAndForgetSafeAsync();
+        }
+
         public static void ExecuteEnterDataDialog(StartViewModel startViewModel)
         {
             startViewModel.ThrowIfNull(nameof(startViewModel));
 
             var view = new EnterDataView(DesktopOptions.HintTexts.HintTextForGoogleDriveDialog);
 
-            ShowDialogExtended(view, startViewModel.DialogIdentifier, EnterDataOpenedEventHandler,
-                               EnterDataClosingEventHandler)
+            DialogHostProvider
+                .ShowDialogExtended(
+                    view, startViewModel.DialogIdentifier,
+                    EnterDataOpenedEventHandler, EnterDataClosingEventHandler
+                )
                 .FireAndForgetSafeAsync();
         }
 
@@ -113,31 +108,12 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             var view = new CreateToplistView();
 
-            ShowDialog(view, toplistStartViewModel.DialogIdentifier,
-                       CreateToplistClosingEventHandler)
+            DialogHostProvider
+                .ShowDialog(
+                    view, toplistStartViewModel.DialogIdentifier,
+                    CreateToplistClosingEventHandler
+                )
                 .FireAndForgetSafeAsync();
-        }
-
-        private static async Task ShowDialog(object content, object dialogIdentifier,
-            DialogClosingEventHandler closingEventHandler)
-        {
-            var result = await DialogHost.Show(content, dialogIdentifier, closingEventHandler);
-
-            _logger.Debug(
-                $"Dialog was closed, the CommandParameter used to close it was: {result ?? "NULL"}"
-            );
-        }
-
-        private static async Task ShowDialogExtended(object content, object dialogIdentifier,
-            DialogOpenedEventHandler openedEventHandler,
-            DialogClosingEventHandler closingEventHandler)
-        {
-            var result = await DialogHost.Show(content, dialogIdentifier, openedEventHandler,
-                                               closingEventHandler);
-
-            _logger.Debug(
-                $"Dialog was closed, the CommandParameter used to close it was: {result ?? "NULL"}"
-            );
         }
 
         private static void InputThingClosingEventHandler(object sender,
@@ -154,18 +130,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             mainWindowViewModel.SendRequestToService(
                 DataSource.InputThing, inputThingViewModel.ThingList.ToList()
             );
-        }
-
-        private static void EnterThingNameClosingEventHandler(object sender,
-            DialogClosingEventArgs eventArgs)
-        {
-            if (Equals(eventArgs.Parameter, false)) return;
-
-            if (!(eventArgs.Parameter is InputThingViewModel inputThingViewModel)) return;
-
-            if (string.IsNullOrWhiteSpace(inputThingViewModel.ThingName)) return;
-
-            inputThingViewModel.ThingList.Add(inputThingViewModel.ThingName.Trim());
         }
 
         private static void EnterDataOpenedEventHandler(object sender,

@@ -3,7 +3,7 @@ using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {
-    internal static class MessageBoxHelper
+    internal static class MessageBoxProvider
     {
         public static MessageBoxResult ShowInfo(string messageText, string caption)
         {

@@ -227,7 +227,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during updating items.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
             }
         }
 
@@ -251,7 +251,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
             else
             {
-                MessageBoxHelper.ShowInfo("Request to ThingAppraiser service failed.");
+                MessageBoxProvider.ShowInfo("Request to ThingAppraiser service failed.");
                 ForceReturnToStartViewCommand.Execute(null);
             }
         }
@@ -268,7 +268,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
 
                 ForceReturnToStartViewCommand.Execute(null);
             }

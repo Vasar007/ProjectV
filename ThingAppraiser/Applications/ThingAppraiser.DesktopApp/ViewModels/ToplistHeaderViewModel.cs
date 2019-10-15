@@ -51,7 +51,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private void OpenToplistFromDrive()
         {
-            MessageBoxHelper.ShowInfo("Work in progress.");
+            MessageBoxProvider.ShowInfo("Work in progress.");
             // TODO: implement logic to load toplist file from Google Drive and parse it.
         }
     }

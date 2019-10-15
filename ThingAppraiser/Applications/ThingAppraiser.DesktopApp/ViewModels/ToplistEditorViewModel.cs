@@ -92,12 +92,12 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             {
                 _toplistWrapper.SaveToplist(toplistFilename);
 
-                MessageBoxHelper.ShowInfo("Toplist was saved successfully.");
+                MessageBoxProvider.ShowInfo("Toplist was saved successfully.");
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during toplist saving.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
             }
         }
 
@@ -110,7 +110,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during toplist loading.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
             }
         }
 
@@ -134,7 +134,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during toplist creation.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
             }
         }
 

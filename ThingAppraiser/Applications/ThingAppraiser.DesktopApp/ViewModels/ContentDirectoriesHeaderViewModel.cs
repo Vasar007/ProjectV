@@ -56,32 +56,32 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                var result = _contentFinder.GetAllDirectoryContent(
+                ContentFinderInfo result = _contentFinder.GetAllDirectoryContent(
                     contentDirectoryPath, ContentTypeToFind.Text
                 );
 
-                _contentFinder.PrintResultToOutput(result);
+                result.PrintResultToOutput();
 
                 // TODO: finish local content directory processing.
-                MessageBoxHelper.ShowInfo("Work in progress.");
+                MessageBoxProvider.ShowInfo("Work in progress.");
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during content directory processing.");
-                MessageBoxHelper.ShowError(ex.Message);
+                MessageBoxProvider.ShowError(ex.Message);
             }
         }
 
         private void ProcessContentDirectoryFromDrive()
         {
             // TODO: implement Google Drive content directory processing.
-            MessageBoxHelper.ShowInfo("Work in progress.");
+            MessageBoxProvider.ShowInfo("Work in progress.");
         }
 
         private void OpenContentFinderResults()
         {
             // TODO: implement loading content finder results from different sources.
-            MessageBoxHelper.ShowInfo("Work in progress.");
+            MessageBoxProvider.ShowInfo("Work in progress.");
         }
     }
 }

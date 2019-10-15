@@ -12,7 +12,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
         {
         }
 
-        public IReadOnlyDictionary<string, IReadOnlyList<string>> GetAllDirectoryContent(
+        public ContentFinderInfo GetAllDirectoryContent(
             string directoryPath, ContentTypeToFind contentType)
         {
             directoryPath.ThrowIfNullOrWhiteSpace(nameof(directoryPath));
@@ -21,21 +21,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
                 .findContentForDir(directoryPath, contentType.ConvertToLibraryEnum())
                 .ToReadOnlyDictionary(tuple => tuple.Item1, tuple => tuple.Item2.ToReadOnlyList());
 
-            return result;
-        }
-
-        public void PrintResultToOutput(IReadOnlyDictionary<string, IReadOnlyList<string>> result)
-        {
-            result.ThrowIfNull(nameof(result));
-
-            foreach ((string directoryName, IReadOnlyList<string> files) in result)
-            {
-                Debug.WriteLine(directoryName);
-
-                Debug.WriteLine(
-                    $"{string.Join($"{Environment.NewLine}", files)}{Environment.NewLine}"
-                );
-            }
+            return new ContentFinderInfo(result);
         }
     }
 }
