@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
 using Prism.Events;
+using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
+using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.DesktopApp.ViewModels;
 using ThingAppraiser.Extensions;
 
@@ -26,11 +28,10 @@ namespace ThingAppraiser.DesktopApp.Views
         private void InputThing_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
             if (!(eventArgs.Session.Content is ContentControl contentControl)) return;
-            if (!(contentControl.Content is InputThingView inputThingDialog)) return;
-            if (!(inputThingDialog.DataContext is InputThingViewModel inputThingViewModel)) return;
+            if (!(contentControl.Content is InputThingView inputThingView)) return;
 
             // Make sure that items list is clear when we start new dialog.
-            inputThingViewModel.ThingList.Clear();
+            inputThingView.Clear(clearItemList: true);
         }
 
         private void InputThing_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
@@ -39,21 +40,24 @@ namespace ThingAppraiser.DesktopApp.Views
 
             if (!(eventArgs.Parameter is InputThingViewModel inputThingViewModel)) return;
 
-            if (inputThingViewModel.ThingList.IsNullOrEmpty()) return;
+            IReadOnlyList<string> thingList = inputThingViewModel.ThingList.ToReadOnlyList();
+            if (thingList.IsNullOrEmpty()) return;
 
-            _eventAggregator.GetEvent<AppraiseInputThingsMessage>()
-                .Publish(inputThingViewModel.ThingList.ToList());
+            var thingsData = ThingsDataToAppraise.Create(
+                DataSource.InputThing, "User input", thingList
+            );
+            _eventAggregator
+                .GetEvent<AppraiseInputThingsMessage>()
+                .Publish(thingsData);
         }
 
         private void EnterData_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
             if (!(eventArgs.Session.Content is ContentControl contentControl)) return;
-            if (!(contentControl.Content is EnterDataView enterDataDialog)) return;
-            if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel)) return;
+            if (!(contentControl.Content is EnterDataView enterDataView)) return;
 
             // Make sure that text box is clear when we start new dialog.
-            enterDataViewModel.Name = string.Empty;
-            enterDataDialog.NameTextBox.Clear();
+            enterDataView.Clear();
         }
 
         private void EnterData_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
@@ -62,14 +66,19 @@ namespace ThingAppraiser.DesktopApp.Views
 
             if (!(eventArgs.Parameter is EnterDataViewModel enterDataViewModel)) return;
 
-            if (string.IsNullOrWhiteSpace(enterDataViewModel.Name))
+            string googleDriveFilename = enterDataViewModel.Name;
+            if (string.IsNullOrWhiteSpace(googleDriveFilename))
             {
                 eventArgs.Cancel();
                 return;
             }
 
-            _eventAggregator.GetEvent<AppraiseGoogleDriveThingsFileMessage>()
-                .Publish(enterDataViewModel.Name);
+            var thingsData = ThingsDataToAppraise.Create(
+                DataSource.GoogleDrive, googleDriveFilename
+            );
+            _eventAggregator
+                .GetEvent<AppraiseGoogleDriveThingsFileMessage>()
+                .Publish(thingsData);
         }
     }
 }

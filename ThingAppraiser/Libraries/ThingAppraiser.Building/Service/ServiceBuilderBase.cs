@@ -251,7 +251,7 @@ namespace ThingAppraiser.Building.Service
                     IO.GoogleDriveWorker.ApplicationName,
                     CancellationToken.None,
                     new FileDataStore(credPath, true)
-                ).Result;
+                ).GetAwaiter().GetResult();
 
                 _logger.Info($"Credential file saved to: \"{credPath}\".");
             }

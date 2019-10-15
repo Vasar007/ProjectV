@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
@@ -7,6 +8,7 @@ using Prism.Mvvm;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
+using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
@@ -29,14 +31,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             set => SetProperty(ref _selectedService, value.ThrowIfNull(nameof(value)));
         }
 
-        public object DialogIdentifier { get; }
-
         public ICommand OpenThingsFileDialogCommand { get; }
 
 
         public StartViewModel(IEventAggregator eventAggregator)
         {
-            DialogIdentifier = MainDialogIdentifier.DialogIdentifier;
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             SelectedService = AvailableBeautifiedServices.First();
@@ -53,7 +52,10 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<AppraiseLocalThingsFileMessage>().Publish(filename);
+            var thingsData = ThingsDataToAppraise.Create(DataSource.LocalFile, filename);
+            _eventAggregator
+                .GetEvent<AppraiseLocalThingsFileMessage>()
+                .Publish(thingsData);
         }
     }
 }

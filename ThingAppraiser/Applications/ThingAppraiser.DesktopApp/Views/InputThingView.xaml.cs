@@ -14,18 +14,26 @@ namespace ThingAppraiser.DesktopApp.Views
             InitializeComponent();
         }
 
-        private void EnterThingName_DialogOpened(object sender,
-            DialogOpenedEventArgs eventArgs)
+        public void Clear(bool clearItemList)
         {
             // Make sure that text box is clear when we start new dialog.
             if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
-            
+
             inputThingViewModel.ThingName = string.Empty;
             ThingNameTextBox.Clear();
+
+            if (clearItemList)
+            {
+                inputThingViewModel.ThingList.Clear();
+            }
         }
 
-        private void EnterThingName_DialogClosing(object sender,
-            DialogClosingEventArgs eventArgs)
+        private void EnterThingName_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            Clear(clearItemList: false);
+        }
+
+        private void EnterThingName_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
         {
             if (Equals(eventArgs.Parameter, false)) return;
 

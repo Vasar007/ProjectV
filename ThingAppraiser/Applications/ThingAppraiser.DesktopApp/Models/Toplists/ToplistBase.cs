@@ -24,7 +24,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         protected ToplistBase(string name, ToplistType type, ToplistFormat format)
         {
-            Name = name;
+            Name = name.ThrowIfNullOrWhiteSpace(nameof(name));
             Type = type;
             Format = format;
         }

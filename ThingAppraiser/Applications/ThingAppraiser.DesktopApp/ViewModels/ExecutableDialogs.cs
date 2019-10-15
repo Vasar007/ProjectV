@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-using ThingAppraiser.DesktopApp.Domain;
-using ThingAppraiser.DesktopApp.Views;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
+    // TODO: may be need to create methods with common logic and provide the remaining methods as
+    // wrappers (they should specify parameters for dialogs).
     internal static class ExecutableDialogs
     {
         private static readonly ILogger _logger =
@@ -17,6 +14,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static string? ExecuteOpenThingsFileDialog()
         {
+            _logger.Info("Executing open things file dialog.");
+
             var dialog = new OpenFileDialog
             {
                 Title = "Open Things file",
@@ -33,6 +32,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static string? ExecuteOpenToplistFileDialog()
         {
+            _logger.Info("Executing open toplist file dialog.");
+
             var dialog = new OpenFileDialog
             {
                 Title = "Open toplist file",
@@ -49,6 +50,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static string? ExecuteSaveToplistFileDialog()
         {
+            _logger.Info("Executing save toplist file dialog.");
+
             var dialog = new SaveFileDialog
             {
                 Title = "Save toplist file",
@@ -64,6 +67,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public static string? ExecuteOpenContentDirectoryDialog()
         {
+            _logger.Info("Executing open content directory dialog.");
+
             var dialog = new VistaFolderBrowserDialog
             {
                 Description = "Open content directory",
@@ -72,41 +77,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
             bool? result = dialog.ShowDialog();
             return result.GetValueOrDefault() ? dialog.SelectedPath : null;
-        }
-
-        public static void ExecuteCreateToplistDialog(ToplistHeaderViewModel toplistStartViewModel)
-        {
-            toplistStartViewModel.ThrowIfNull(nameof(toplistStartViewModel));
-
-            var view = new CreateToplistView();
-
-            DialogHostProvider
-                .ShowDialog(
-                    view, toplistStartViewModel.DialogIdentifier,
-                    CreateToplistClosingEventHandler
-                )
-                .FireAndForgetSafeAsync();
-        }
-
-        private static void CreateToplistClosingEventHandler(object sender,
-            DialogClosingEventArgs eventArgs)
-        {
-            if (Equals(eventArgs.Parameter, false)) return;
-
-            if (!(eventArgs.Parameter is MainWindowViewModel mainWindowViewModel)) return;
-            if (!(eventArgs.Session.Content is CreateToplistView createToplistDialog)) return;
-            if (!(createToplistDialog.DataContext is CreateToplistViewModel createToplistViewModel))
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(createToplistViewModel.ToplistName)) return;
-
-            mainWindowViewModel.ConstructToplistEditor(
-                createToplistViewModel.ToplistName,
-                createToplistViewModel.SelectedToplistType,
-                createToplistViewModel.SelectedToplistFormat
-            );
         }
     }
 }

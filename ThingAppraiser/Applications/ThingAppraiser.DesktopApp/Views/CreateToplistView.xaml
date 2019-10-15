@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
@@ -23,7 +23,8 @@
             New Toplist parameters:
         </TextBlock>
 
-        <TextBox wpf:HintAssist.Hint="Toplist name"
+        <TextBox x:Name="ToplistNameTextBox"
+                 wpf:HintAssist.Hint="Toplist name"
                  Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"
                  Margin="0 6 0 0"
                  FontSize="18"
@@ -80,10 +81,7 @@
             <Button IsDefault="True"
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                    CommandParameter="{Binding
-                                       RelativeSource={RelativeSource Mode=FindAncestor,
-                                                       AncestorType={x:Type Window}},
-                                       Path=DataContext}">
+                    CommandParameter="{Binding .}">
                 CREATE
             </Button>
             <Button IsCancel="True"

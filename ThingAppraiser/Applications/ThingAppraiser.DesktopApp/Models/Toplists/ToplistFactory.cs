@@ -13,7 +13,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         public static ToplistBase Create(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
-            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+            toplistName.ThrowIfNullOrWhiteSpace(nameof(toplistName));
 
             _logger.Info($"Creating toplist [Name: {toplistName}, Type: {toplistType.ToString()} " +
                          $"Format: {toplistFormat.ToString()}].");
@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
 
         public static ToplistBase LoadFromFile(string toplistFilename)
         {
-            toplistFilename.ThrowIfNullOrEmpty(nameof(toplistFilename));
+            toplistFilename.ThrowIfNullOrWhiteSpace(nameof(toplistFilename));
 
             _logger.Info($"Loading toplist from file \"{toplistFilename}\".");
 

@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
-             xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
+             xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 

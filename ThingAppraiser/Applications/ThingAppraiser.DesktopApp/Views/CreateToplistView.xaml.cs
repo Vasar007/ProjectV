@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using ThingAppraiser.DesktopApp.ViewModels;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -10,6 +11,14 @@ namespace ThingAppraiser.DesktopApp.Views
         public CreateToplistView()
         {
             InitializeComponent();
+        }
+
+        public void Clear()
+        {
+            if (!(DataContext is CreateToplistViewModel createToplistViewModel)) return;
+
+            createToplistViewModel.ToplistName = string.Empty;
+            ToplistNameTextBox.Clear();
         }
     }
 }

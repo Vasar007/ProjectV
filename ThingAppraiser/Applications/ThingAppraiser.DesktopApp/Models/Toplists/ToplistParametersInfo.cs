@@ -14,7 +14,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         public ToplistParametersInfo(string toplistName, ToplistType toplistType,
             ToplistFormat toplistFormat)
         {
-            ToplistName = toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+            ToplistName = toplistName.ThrowIfNullOrWhiteSpace(nameof(toplistName));
             ToplistType = toplistType;
             ToplistFormat = toplistFormat;
         }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
@@ -21,8 +22,12 @@
         -->
 
         <Button Width="256"
-                Command="{Binding Path=CreateToplistDialogCommand}"
-                CommandParameter="{Binding Path=.}">
+                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                materialDesign:DialogHost.DialogOpenedAttached="CreateToplist_DialogOpened"
+                materialDesign:DialogHost.DialogClosingAttached="CreateToplist_DialogClosing">
+            <Button.CommandParameter>
+                <ContentControl prism:RegionManager.RegionName="CreateToplist" />
+            </Button.CommandParameter>
             Create Toplist
         </Button>
 

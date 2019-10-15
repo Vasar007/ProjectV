@@ -15,6 +15,7 @@ using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.DataProducers;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
+using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
@@ -103,27 +104,29 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            _eventAggregator.GetEvent<AppraiseInputThingsMessage>().Subscribe(
-                storageName => SendRequestToService(DataSource.InputThing, storageName)
-            );
+            _eventAggregator
+                .GetEvent<AppraiseInputThingsMessage>()
+                .Subscribe(SendRequestToService);
 
-            _eventAggregator.GetEvent<AppraiseLocalThingsFileMessage>().Subscribe(
-                storageName => SendRequestToService(DataSource.LocalFile, storageName)
-            );
+            _eventAggregator
+                .GetEvent<AppraiseLocalThingsFileMessage>()
+                .Subscribe(SendRequestToService);
 
-            _eventAggregator.GetEvent<AppraiseGoogleDriveThingsFileMessage>().Subscribe(
-                storageName => SendRequestToService(DataSource.GoogleDrive, storageName)
-            );
+            _eventAggregator
+                .GetEvent<AppraiseGoogleDriveThingsFileMessage>()
+                .Subscribe(SendRequestToService);
 
             _requirementsCreator = new RequirementsCreator();
             _serviceProxy = new ServiceProxy();
             _scenes = new SceneItemsCollection();
 
             Submit = new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit);
-            AppCloseCommand = new DelegateCommand(ApplicationCloseCommand.Execute,
-                                                  ApplicationCloseCommand.CanExecute);
-            ReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView,
-                                                                        CanReturnToStartView);
+            AppCloseCommand = new DelegateCommand(
+                ApplicationCloseCommand.Execute, ApplicationCloseCommand.CanExecute
+            );
+            ReturnToStartViewCommand = new DelegateCommand<UserControl>(
+                ReturnToStartView, CanReturnToStartView
+            );
             ForceReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView);
 
             // TODO: create new scenes to set views dynamically in separate tabs.
@@ -165,33 +168,15 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
-        private void SendRequestToService(DataSource dataSource, string storageName)
+        private void SendRequestToService(ThingsDataToAppraise thigsData)
         {
-            storageName.ThrowIfNullOrEmpty(nameof(storageName));
+            thigsData.ThrowIfNull(nameof(thigsData));
 
-            SelectedStorageName = storageName;
-            SelectedDataSource = dataSource;
+            _thingProducer = new ThingProducer(thigsData.ThingNames);
+
+            SelectedStorageName = thigsData.StorageName;
+            SelectedDataSource = thigsData.DataSource;
             ExecuteSending();
-        }
-
-        public void SendRequestToService(DataSource dataSource, IReadOnlyList<string> thingList)
-        {
-            thingList.ThrowIfNull(nameof(thingList));
-
-            _thingProducer = new ThingProducer(thingList);
-
-            SelectedStorageName = "User input";
-            SelectedDataSource = dataSource;
-            ExecuteSending();
-        }
-
-        public void ConstructToplistEditor(string toplistName, ToplistType toplistType,
-            ToplistFormat toplistFormat)
-        {
-            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
-
-            var parameters = new ToplistParametersInfo(toplistName, toplistType, toplistFormat);
-            _eventAggregator.GetEvent<ConstructToplistMessage>().Publish(parameters);
         }
 
         private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
@@ -309,7 +294,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                                           "Data source was not set."
                                       ),
 
-                DataSource.InputThing => await CreateRequestWithUserInputData(),
+                DataSource.InputThing => CreateRequestWithUserInputData(),
 
                 DataSource.LocalFile => await CreateRequestWithLocalFileData(),
 
@@ -322,10 +307,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             };
         }
 
-        private async Task<RequestParams> CreateRequestWithUserInputData()
+        private RequestParams CreateRequestWithUserInputData()
         {
-            CreateBasicRequirements();
-
             if (_thingProducer is null)
             {
                 throw new InvalidOperationException(
@@ -333,9 +316,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 );
             }
 
-            IReadOnlyList<string> thingNames = await Task
-                .Run(() => _thingProducer.ReadThingNames("Service request"))
-                .ConfigureAwait(continueOnCapturedContext: false);
+            CreateBasicRequirements();
+
+            IReadOnlyList<string> thingNames = _thingProducer.ReadThingNames("Service request");
 
             ThrowIfInvalidData(thingNames);
             return new RequestParams

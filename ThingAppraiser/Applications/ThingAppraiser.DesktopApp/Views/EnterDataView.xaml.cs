@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using ThingAppraiser.DesktopApp.ViewModels;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -10,6 +11,14 @@ namespace ThingAppraiser.DesktopApp.Views
         public EnterDataView()
         {
             InitializeComponent();
+        }
+
+        public void Clear()
+        {
+            if (!(DataContext is EnterDataViewModel enterDataViewModel)) return;
+
+            enterDataViewModel.Name = string.Empty;
+            NameTextBox.Clear();
         }
     }
 }

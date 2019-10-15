@@ -39,13 +39,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            _eventAggregator.GetEvent<LoadToplistFileMessage>().Subscribe(
-                ProcessLoadingLocalToplistFile
-            );
+            _eventAggregator
+                .GetEvent<LoadToplistFileMessage>()
+                .Subscribe(ProcessLoadingLocalToplistFile);
 
-            _eventAggregator.GetEvent<ConstructToplistMessage>().Subscribe(
-                ProcessConstructingNewToplist
-            );
+            _eventAggregator
+                .GetEvent<ConstructToplistMessage>()
+                .Subscribe(ProcessConstructingNewToplist);
 
             _toplistBlocks = new ObservableCollection<ToplistBlock>();
 
@@ -141,7 +141,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void ConstructNewToplist(string toplistName, ToplistType toplistType,
           ToplistFormat toplistFormat)
         {
-            toplistName.ThrowIfNullOrEmpty(nameof(toplistName));
+            toplistName.ThrowIfNullOrWhiteSpace(nameof(toplistName));
 
             ToplistBase toplist = ToplistFactory.Create(toplistName, toplistType, toplistFormat);
             _toplistWrapper = new ToplistWrapper(toplist);

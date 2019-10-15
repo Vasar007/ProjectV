@@ -153,7 +153,8 @@ namespace ThingAppraiser.IO
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(filename), filename,
-                         $"Not found MIME type for extension '{extension}' for file '{filename}'."
+                         $"Not found MIME type for extension \"{extension}\" for " +
+                         $"file \"{filename}\"."
                      )
             };
         }
@@ -171,8 +172,8 @@ namespace ThingAppraiser.IO
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, $"Couldn't delete downloaded file \"{filename}\".");
-                GlobalMessageHandler.OutputMessage("Couldn't delete downloaded file " +
+                _logger.Warn(ex, $"Could not delete downloaded file \"{filename}\".");
+                GlobalMessageHandler.OutputMessage("Could not delete downloaded file " +
                                                     $" \"{filename}\". Error: {ex}");
                 return false;
             }

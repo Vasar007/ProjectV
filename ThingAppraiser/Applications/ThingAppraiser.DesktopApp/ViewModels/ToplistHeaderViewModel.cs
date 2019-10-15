@@ -16,10 +16,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
 
-        public object DialogIdentifier { get; }
-
-        public ICommand CreateToplistDialogCommand { get; }
-
         public ICommand OpenToplistFileDialogCommand { get; }
 
         public ICommand OpenToplistFromDriveDialogCommand { get; }
@@ -27,12 +23,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ToplistHeaderViewModel(IEventAggregator eventAggregator)
         {
-            DialogIdentifier = MainDialogIdentifier.DialogIdentifier;
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
-            CreateToplistDialogCommand = new DelegateCommand<ToplistHeaderViewModel>(
-                ExecutableDialogs.ExecuteCreateToplistDialog
-            );
             OpenToplistFileDialogCommand = new DelegateCommand(SendLoadToplistFileMessage);
             OpenToplistFromDriveDialogCommand = new DelegateCommand(OpenToplistFromDrive);
         }
@@ -46,7 +38,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            _eventAggregator.GetEvent<LoadToplistFileMessage>().Publish(filename);
+            _eventAggregator
+                .GetEvent<LoadToplistFileMessage>()
+                .Publish(filename);
         }
 
         private void OpenToplistFromDrive()

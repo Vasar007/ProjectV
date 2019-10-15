@@ -50,6 +50,11 @@ namespace ThingAppraiser.DesktopApp
             );
 
             regionManager.RegisterViewWithRegion(
+               DesktopOptions.BindingNames.CreateToplist,
+               typeof(CreateToplistView)
+            );
+
+            regionManager.RegisterViewWithRegion(
                 DesktopOptions.BindingNames.ToplistHeader,
                 typeof(ToplistHeaderView)
             );
