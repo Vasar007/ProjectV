@@ -40,19 +40,23 @@ namespace ThingAppraiser.DesktopApp
             var regionManager = Container.Resolve<IRegionManager>();
             
             regionManager.RegisterViewWithRegion(
-                DesktopOptions.BindingNames.ToplistHeader, typeof(ToplistHeaderView)
+                DesktopOptions.BindingNames.ToplistHeader,
+                typeof(ToplistHeaderView)
             );
 
             regionManager.RegisterViewWithRegion(
-                DesktopOptions.BindingNames.ToplistEditor, typeof(ToplistEditorView)
+                DesktopOptions.BindingNames.ToplistEditor,
+                typeof(ToplistEditorView)
             );
 
             regionManager.RegisterViewWithRegion(
-                DesktopOptions.BindingNames.ContentFinderHeader, typeof(ContentFinderHeaderView)
+                DesktopOptions.BindingNames.ContentDirectoriesHeader,
+                typeof(ContentDirectoriesHeaderView)
             );
 
             regionManager.RegisterViewWithRegion(
-                DesktopOptions.BindingNames.ContentFinderResults, typeof(ContentFinderResultsView)
+                DesktopOptions.BindingNames.ContentDirectoriesResults,
+                typeof(ContentDirectoriesResultsView)
             );
 
             return Container.Resolve<MainWindow>();

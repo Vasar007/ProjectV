@@ -150,8 +150,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             );
 
             _scenes.AddScene(
-                DesktopOptions.PageNames.ContentFinderPage,
-                new ContentFinderView()
+                DesktopOptions.PageNames.ContentDirectoriesPage,
+                new ContentDirectoriesView()
             );
 
             ChangeScene(DesktopOptions.PageNames.StartPage);

@@ -27,7 +27,7 @@ namespace ThingAppraiser.DesktopApp.Domain
 
             public static string ToplistEditorPage { get; } = "Toplist editor";
 
-            public static string ContentFinderPage { get; } = "Content finder";
+            public static string ContentDirectoriesPage { get; } = "Content directories";
         }
 
         public static class HintTexts
@@ -39,8 +39,8 @@ namespace ThingAppraiser.DesktopApp.Domain
         {
             public static string ToplistHeader { get; } = "ToplistHeader";
             public static string ToplistEditor { get; } = "ToplistEditor";
-            public static string ContentFinderHeader { get; } = "ContentFinderHeader";
-            public static string ContentFinderResults { get; } = "ContentFinderResults";
+            public static string ContentDirectoriesHeader { get; } = "ContentDirectoriesHeader";
+            public static string ContentDirectoriesResults { get; } = "ContentDirectoriesResults";
         }
     }
 }

@@ -8,10 +8,10 @@ using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
-    internal sealed class ContentFinderHeaderViewModel : BindableBase
+    internal sealed class ContentDirectoriesHeaderViewModel : BindableBase
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ContentFinderHeaderViewModel>();
+            LoggerFactory.CreateLoggerFor<ContentDirectoriesHeaderViewModel>();
 
         private readonly ContentFinderWrapper _contentFinder;
 
@@ -22,7 +22,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand OpenContentFinderResultsDialogCommand { get; }
 
 
-        public ContentFinderHeaderViewModel()
+        public ContentDirectoriesHeaderViewModel()
         {
             _contentFinder = new ContentFinderWrapper();
 

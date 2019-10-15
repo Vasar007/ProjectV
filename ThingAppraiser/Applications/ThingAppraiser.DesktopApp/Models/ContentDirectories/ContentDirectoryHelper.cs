@@ -18,7 +18,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(contentType), contentType,
-                         $"Unknown content type:\"{contentType.ToString()}\"."
+                         $"Unknown content type: \"{contentType.ToString()}\"."
                      )
             };
         }
