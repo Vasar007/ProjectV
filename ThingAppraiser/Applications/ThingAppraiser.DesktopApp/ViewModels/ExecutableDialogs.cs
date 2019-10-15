@@ -147,7 +147,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             if (!(eventArgs.Session.Content is EnterDataView enterDataDialog)) return;
             if (!(enterDataDialog.DataContext is EnterDataViewModel enterDataViewModel)) return;
 
-            if (string.IsNullOrWhiteSpace(enterDataViewModel.Name)) return;
+            if (string.IsNullOrWhiteSpace(enterDataViewModel.Name))
+            {
+                eventArgs.Cancel();
+                return;
+            }
 
             mainWindowViewModel.SendRequestToService(
                 DataSource.GoogleDrive, enterDataViewModel.Name

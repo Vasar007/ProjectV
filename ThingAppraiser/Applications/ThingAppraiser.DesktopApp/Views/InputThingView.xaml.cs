@@ -18,6 +18,9 @@ namespace ThingAppraiser.DesktopApp.Views
             DialogOpenedEventArgs eventArgs)
         {
             // Make sure that text box is clear when we start new dialog.
+            if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+            
+            inputThingViewModel.ThingName = string.Empty;
             ThingNameTextBox.Clear();
         }
 
@@ -28,11 +31,14 @@ namespace ThingAppraiser.DesktopApp.Views
 
             if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
 
-            string thingName = ThingNameTextBox.Text;
-            if (string.IsNullOrWhiteSpace(thingName)) return;
+            string thingName = inputThingViewModel.ThingName;
+            if (string.IsNullOrWhiteSpace(thingName))
+            {
+                eventArgs.Cancel();
+                return;
+            }
 
             inputThingViewModel.ThingList.Add(thingName.Trim());
-            ThingNameTextBox.Clear();
         }
     }
 }

@@ -46,7 +46,7 @@
                                        RelativeSource={RelativeSource Mode=FindAncestor,
                                                        AncestorType={x:Type Window}},
                                        Path=DataContext}">
-                ACCEPT
+                APPRAISE
             </Button>
             <Button IsCancel="True"
                     Margin="8 0 0 0"

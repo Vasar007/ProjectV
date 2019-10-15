@@ -13,10 +13,17 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             set => SetProperty(ref _thingList, value.ThrowIfNull(nameof(value)));
         }
 
+        private string _thingName;
+        public string ThingName
+        {
+            get => _thingName;
+            set => SetProperty(ref _thingName, value.ThrowIfNull(nameof(value)));
+        }
 
         public InputThingViewModel()
         {
             _thingList = new ObservableCollection<string>();
+            _thingName = string.Empty;
         }
     }
 }
