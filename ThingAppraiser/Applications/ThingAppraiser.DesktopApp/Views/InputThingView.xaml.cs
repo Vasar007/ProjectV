@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.ViewModels;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {
@@ -14,23 +15,33 @@ namespace ThingAppraiser.DesktopApp.Views
             InitializeComponent();
         }
 
-        public void Clear(bool clearItemList)
+        public void ClearTextBox()
         {
-            // Make sure that text box is clear when we start new dialog.
             if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+
+            ClearInternal(inputThingViewModel);
+        }
+
+        public void ClearAllView()
+        {
+            if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+
+            ClearInternal(inputThingViewModel);
+            inputThingViewModel.ThingList.Clear();
+        }
+
+        private void ClearInternal(InputThingViewModel inputThingViewModel)
+        {
+            inputThingViewModel.ThrowIfNull(nameof(inputThingViewModel));
 
             inputThingViewModel.ThingName = string.Empty;
             ThingNameTextBox.Clear();
-
-            if (clearItemList)
-            {
-                inputThingViewModel.ThingList.Clear();
-            }
         }
 
         private void EnterThingName_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            Clear(clearItemList: false);
+            // Make sure that text box is clear when we start new dialog.
+            ClearTextBox();
         }
 
         private void EnterThingName_DialogClosing(object sender, DialogClosingEventArgs eventArgs)

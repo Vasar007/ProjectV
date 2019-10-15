@@ -31,7 +31,7 @@ namespace ThingAppraiser.DesktopApp.Views
             if (!(contentControl.Content is InputThingView inputThingView)) return;
 
             // Make sure that items list is clear when we start new dialog.
-            inputThingView.Clear(clearItemList: true);
+            inputThingView.ClearAllView();
         }
 
         private void InputThing_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
