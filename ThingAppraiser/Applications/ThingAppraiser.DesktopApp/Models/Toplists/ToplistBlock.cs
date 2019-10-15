@@ -38,6 +38,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             Title = title;
             Number = number;
 
+            // Initial item (always remains at the end of block).
             _creationToplistBox = new ToplistBoxView(new ToplistItem(string.Empty, null, this));
         }
 

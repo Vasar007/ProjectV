@@ -25,8 +25,7 @@ namespace ThingAppraiser.DesktopApp.Views
 
         private void CreateToplist_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is ContentControl contentControl)) return;
-            if (!(contentControl.Content is CreateToplistView createToplistView)) return;
+            if (!(eventArgs.Session.Content is CreateToplistView createToplistView)) return;
 
             // Make sure that text box is clear when we start new dialog.
             createToplistView.Clear();

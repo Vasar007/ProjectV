@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
@@ -26,7 +27,7 @@
                 materialDesign:DialogHost.DialogOpenedAttached="CreateToplist_DialogOpened"
                 materialDesign:DialogHost.DialogClosingAttached="CreateToplist_DialogClosing">
             <Button.CommandParameter>
-                <ContentControl prism:RegionManager.RegionName="CreateToplist" />
+                <views:CreateToplistView />
             </Button.CommandParameter>
             Create Toplist
         </Button>

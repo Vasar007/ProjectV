@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
@@ -22,7 +23,7 @@
                 materialDesign:DialogHost.DialogOpenedAttached="InputThing_DialogOpened"
                 materialDesign:DialogHost.DialogClosingAttached="InputThing_DialogClosing">
             <Button.CommandParameter>
-                <ContentControl prism:RegionManager.RegionName="InputThing" />
+                <views:InputThingView />
             </Button.CommandParameter>
             Enter The Things
         </Button>
@@ -37,7 +38,7 @@
                 materialDesign:DialogHost.DialogOpenedAttached="EnterData_DialogOpened"
                 materialDesign:DialogHost.DialogClosingAttached="EnterData_DialogClosing">
             <Button.CommandParameter>
-                <ContentControl prism:RegionManager.RegionName="EnterData" />
+                <views:EnterDataView />
             </Button.CommandParameter>
             Read The Things from Google Drive
         </Button>

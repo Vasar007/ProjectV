@@ -27,8 +27,7 @@ namespace ThingAppraiser.DesktopApp.Views
 
         private void InputThing_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is ContentControl contentControl)) return;
-            if (!(contentControl.Content is InputThingView inputThingView)) return;
+            if (!(eventArgs.Session.Content is InputThingView inputThingView)) return;
 
             // Make sure that items list is clear when we start new dialog.
             inputThingView.ClearAllView();
@@ -53,8 +52,7 @@ namespace ThingAppraiser.DesktopApp.Views
 
         private void EnterData_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is ContentControl contentControl)) return;
-            if (!(contentControl.Content is EnterDataView enterDataView)) return;
+            if (!(eventArgs.Session.Content is EnterDataView enterDataView)) return;
 
             // Make sure that text box is clear when we start new dialog.
             enterDataView.Clear();

@@ -56,7 +56,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             try
             {
-                ContentFinderInfo result = _contentFinder.GetAllDirectoryContent(
+                ContentDirectoryInfo result = _contentFinder.GetAllDirectoryContent(
                     contentDirectoryPath, ContentTypeToFind.Text
                 );
 

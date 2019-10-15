@@ -12,7 +12,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
         {
         }
 
-        public ContentFinderInfo GetAllDirectoryContent(
+        public ContentDirectoryInfo GetAllDirectoryContent(
             string directoryPath, ContentTypeToFind contentType)
         {
             directoryPath.ThrowIfNullOrWhiteSpace(nameof(directoryPath));
@@ -21,7 +21,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
                 .findContentForDir(directoryPath, contentType.ConvertToLibraryEnum())
                 .ToReadOnlyDictionary(tuple => tuple.Item1, tuple => tuple.Item2.ToReadOnlyList());
 
-            return new ContentFinderInfo(result);
+            return new ContentDirectoryInfo(directoryPath, contentType, result);
         }
     }
 }
