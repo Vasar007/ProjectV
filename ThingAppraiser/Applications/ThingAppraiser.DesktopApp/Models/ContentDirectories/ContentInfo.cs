@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
@@ -7,8 +8,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
     {
         public string Title { get; }
 
-
-        public IReadOnlyList<string> Paths { get; }
+        public IReadOnlyList<ContentPath> Paths { get; }
 
 
         public ContentInfo(string title, IReadOnlyList<string> paths)
@@ -16,7 +16,10 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
             paths.ThrowIfNullOrEmpty(nameof(paths));
 
             Title = title.ThrowIfNullOrEmpty(nameof(title));
-            Paths = paths;
+
+            Paths = paths
+                .Select(paths => new ContentPath(paths))
+                .ToReadOnlyList();
         }
     }
 }

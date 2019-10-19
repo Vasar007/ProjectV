@@ -12,7 +12,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private readonly IEventAggregator _eventAggregator;
 
         public ICommand ProcessContentDirectoryFromDriveDialogCommand { get; }
-        
+
         public ICommand OpenContentFinderResultsDialogCommand { get; }
 
 

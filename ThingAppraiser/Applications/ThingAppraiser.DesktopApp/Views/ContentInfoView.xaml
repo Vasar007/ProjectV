@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:contentModels="clr-namespace:ThingAppraiser.DesktopApp.Models.ContentDirectories"
              mc:Ignorable="d">
 
     <Grid x:Name="ContentInfoItem">
@@ -16,17 +16,23 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Text="{Binding Path=Title}"
-                    Grid.Column="0"
-                    VerticalAlignment="Top"
-                    Margin="0 0 16 0"
-                    x:Name="ItemName"
-                    materialDesign:HintAssist.Hint="Content item" />
+                   Grid.Column="0"
+                   VerticalAlignment="Top"
+                   Margin="0 0 16 0"
+                   x:Name="ItemName"
+                   materialDesign:HintAssist.Hint="Content item" />
 
         <ItemsControl ItemsSource="{Binding Path=Paths}"
                       Grid.Column="1">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="system:String">
-                    <TextBlock Text="{Binding Path=.}" />
+                <DataTemplate DataType="{x:Type contentModels:ContentPath}">
+                    <TextBlock>
+                        <Hyperlink Command="{Binding Path=GoToPathCommand}"
+                                   TextDecorations="Underline"
+                                   Foreground="Black">
+                            <TextBlock Text="{Binding Path=Path}" />
+                        </Hyperlink>
+                    </TextBlock>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
