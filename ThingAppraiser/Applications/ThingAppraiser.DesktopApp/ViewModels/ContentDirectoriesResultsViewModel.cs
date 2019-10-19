@@ -40,12 +40,12 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             _contentDirectoryResult = new ContentControl();
         }
 
-        private void ProcessContentDirectory(string contentDirectoryPath)
+        private void ProcessContentDirectory(ContentDirectoryParametersInfo parameters)
         {
             try
             {
                 ContentDirectoryInfo result = _contentFinder.GetAllDirectoryContent(
-                    contentDirectoryPath, ContentTypeToFind.Text
+                    parameters.DirectoryPath, parameters.ContentType
                 );
 
                 ContentDirectoryResult.Content = new ContentDirectoryView { DataContext = result };

@@ -14,6 +14,9 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 
         public IReadOnlyList<ContentInfo> ContentPaths { get; }
 
+        public string DisplayString =>
+            $"Found content of type {ContentType.ToString()} in directory: {SourceDirectoryPath}";
+
 
         public ContentDirectoryInfo(string sourceDirectoryPath, ContentTypeToFind contentType,
             IReadOnlyDictionary<string, IReadOnlyList<string>> data)

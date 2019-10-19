@@ -21,7 +21,7 @@
                 <TextBlock Height="25"
                            Margin="0 0 16 0"
                            VerticalAlignment="Top"
-                           Text="{Binding Path=SourceDirectoryPath}" />
+                           Text="{Binding Path=DisplayString}" />
 
             </StackPanel>
 

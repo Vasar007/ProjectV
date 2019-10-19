@@ -102,7 +102,7 @@
                             Margin="0 16 0 16">
                     <Button IsDefault="True"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                            CommandParameter="{Binding .}">
+                            CommandParameter="{Binding Path=.}">
                         APPRAISE
                     </Button>
                     <Button IsCancel="True"

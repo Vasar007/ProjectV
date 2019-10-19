@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.DesktopApp.Models.Toplists;
+using ThingAppraiser.Extensions;
 using Prism.Mvvm;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
@@ -12,7 +12,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public IReadOnlyList<ToplistFormat> ToplistFormats => ToplistOptions.ToplistFormats;
 
-        private string _toplistName = string.Empty;
+        private string _toplistName;
         public string ToplistName
         {
             get => _toplistName;
@@ -36,6 +36,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public CreateToplistViewModel()
         {
+            _toplistName = string.Empty;
+
             SelectedToplistType = ToplistTypes.First();
             SelectedToplistFormat = ToplistFormats.First();
         }

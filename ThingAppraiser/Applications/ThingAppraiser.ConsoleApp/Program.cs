@@ -135,7 +135,7 @@ namespace ThingAppraiser.ConsoleApp
         private static void TestConentDirectories()
         {
             IReadOnlyDictionary<string, IReadOnlyList<string>> result = 
-                ContentFinder.findContentForDir(
+                ContentFinder.FindContentForDir(
                     @"C:\Users\vasar\Documents\GitHub",
                     ContentFinder.ContentType.Text
                 )

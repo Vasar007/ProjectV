@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              mc:Ignorable="d"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
@@ -21,8 +23,12 @@
         -->
 
         <Button Width="256"
-                Margin="8"
-                Command="{Binding Path=ProcessContentDirectoryLocalDialogCommand}">
+                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                materialDesign:DialogHost.DialogOpenedAttached="CreateToplist_DialogOpened"
+                materialDesign:DialogHost.DialogClosingAttached="CreateToplist_DialogClosing">
+            <Button.CommandParameter>
+                <views:ChooseContentDirectoryView />
+            </Button.CommandParameter>
             Choose local directory
         </Button>
 
