@@ -15,7 +15,7 @@
                  Width="560"
                  Margin="0 0 16 0"
                  x:Name="ItemName"
-                 materialDesign:HintAssist.Hint="Top list item">
+                 materialDesign:HintAssist.Hint="Toplist item">
             <TextBox.InputBindings>
                 <KeyBinding Key="Enter"
                             Command="{Binding Path=AddOrUpdateItemByEnterHitCommand}"

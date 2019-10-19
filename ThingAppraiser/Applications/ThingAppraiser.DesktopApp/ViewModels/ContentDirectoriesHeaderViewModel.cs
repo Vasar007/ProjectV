@@ -1,9 +1,10 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain;
-using ThingAppraiser.DesktopApp.Models.ContentDirectories;
+using ThingAppraiser.DesktopApp.Domain.Messages;
+using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
@@ -13,7 +14,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<ContentDirectoriesHeaderViewModel>();
 
-        private readonly ContentFinderWrapper _contentFinder;
+        private readonly IEventAggregator _eventAggregator;
 
         public ICommand ProcessContentDirectoryLocalDialogCommand { get; }
         
@@ -22,9 +23,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         public ICommand OpenContentFinderResultsDialogCommand { get; }
 
 
-        public ContentDirectoriesHeaderViewModel()
+        public ContentDirectoriesHeaderViewModel(IEventAggregator eventAggregator)
         {
-            _contentFinder = new ContentFinderWrapper();
+            _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             ProcessContentDirectoryLocalDialogCommand = new DelegateCommand(
                 OpenLocalContentDirectory
@@ -49,27 +50,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 return;
             }
 
-            ProcessContentDirectory(contentDirectoryPath);
-        }
-
-        private void ProcessContentDirectory(string contentDirectoryPath)
-        {
-            try
-            {
-                ContentDirectoryInfo result = _contentFinder.GetAllDirectoryContent(
-                    contentDirectoryPath, ContentTypeToFind.Text
-                );
-
-                result.PrintResultToOutput();
-
-                // TODO: finish local content directory processing.
-                MessageBoxProvider.ShowInfo("Work in progress.");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during content directory processing.");
-                MessageBoxProvider.ShowError(ex.Message);
-            }
+            _eventAggregator
+                .GetEvent<ProcessContentDirectoryMessage>()
+                .Publish(contentDirectoryPath);
         }
 
         private void ProcessContentDirectoryFromDrive()

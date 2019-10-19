@@ -24,9 +24,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
                 sourceDirectoryPath.ThrowIfNullOrEmpty(nameof(sourceDirectoryPath));
             ContentType = contentType;
 
-            ContentPaths = data
-                .Select(datum => new ContentInfo(datum.Key, datum.Value))
-                .ToReadOnlyList();
+            ContentPaths = TransformToContentModels(data);
         }
 
         public void PrintResultToOutput()
@@ -40,6 +38,16 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
                     $"{string.Join($"{Environment.NewLine}", content.Paths)}{Environment.NewLine}"
                 );
             }
+        }
+
+        private IReadOnlyList<ContentInfo> TransformToContentModels(
+            IReadOnlyDictionary<string, IReadOnlyList<string>> data)
+        {
+            data.ThrowIfNull(nameof(data));
+
+            return data
+                .Select(datum => new ContentInfo(datum.Key, datum.Value))
+                .ToReadOnlyList();
         }
     }
 }

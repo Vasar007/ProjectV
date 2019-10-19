@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.ContentDirectoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
+             xmlns:modelsContent="clr-namespace:ThingAppraiser.DesktopApp.Models.ContentDirectories"
+             mc:Ignorable="d">
+
+    <Border Visibility="Visible"
+            BorderThickness="2"
+            CornerRadius="8"
+            Margin="8"
+            BorderBrush="Gray">
+        <StackPanel Margin="4"
+                    Orientation="Vertical">
+
+            <StackPanel Margin="4"
+                        Orientation="Horizontal">
+
+                <TextBlock Height="25"
+                           Margin="0 0 16 0"
+                           VerticalAlignment="Top"
+                           Text="{Binding Path=SourceDirectoryPath}" />
+
+            </StackPanel>
+
+            <Separator Height="5" />
+
+            <ItemsControl ItemsSource="{Binding Path=ContentPaths}"
+                          Grid.IsSharedSizeScope="True">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type modelsContent:ContentInfo}">
+                        <DockPanel>
+                            <views:ContentInfoView Margin="4" 
+                                                   DockPanel.Dock="Top" />
+                            <Separator DockPanel.Dock="Bottom"
+                                       Height="5" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </Border>
+
+</UserControl>

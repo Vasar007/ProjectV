@@ -7,6 +7,7 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
     {
         public string Title { get; }
 
+
         public IReadOnlyList<string> Paths { get; }
 
 
