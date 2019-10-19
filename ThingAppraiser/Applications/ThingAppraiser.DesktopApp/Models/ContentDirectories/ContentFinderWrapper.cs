@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ThingAppraiser.ContentDirectories;
 using ThingAppraiser.Extensions;
 
@@ -15,9 +16,11 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
         {
             directoryPath.ThrowIfNullOrWhiteSpace(nameof(directoryPath));
 
+            IEnumerable<Tuple<string, IEnumerable<string>>> enumerableResults = ContentFinder
+                .FindContentForDir(directoryPath, contentType.ConvertToLibraryEnum());
+
             IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
-                .findContentForDir(directoryPath, contentType.ConvertToLibraryEnum())
-                .ToReadOnlyDictionary(tuple => tuple.Item1, tuple => tuple.Item2.ToReadOnlyList());
+                .ConvertToReadOnly(enumerableResults);
 
             return new ContentDirectoryInfo(directoryPath, contentType, result);
         }

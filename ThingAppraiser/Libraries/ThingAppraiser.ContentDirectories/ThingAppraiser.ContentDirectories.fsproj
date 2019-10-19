@@ -15,10 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Models.fs" />
+    <Compile Include="ContentFinderInternal.fs" />
     <Compile Include="ContentFinder.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
     <ProjectReference Include="..\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj" />
   </ItemGroup>
 

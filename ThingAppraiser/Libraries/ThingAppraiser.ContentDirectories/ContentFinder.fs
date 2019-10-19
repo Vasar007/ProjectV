@@ -2,19 +2,18 @@
 
 open System.IO
 open ThingAppraiser
+open ThingAppraiser.Extensions
+open ThingAppraiser.ContentDirectories
 
 
 type ContentType =
     | Movie = 1
     | Image = 2
-    | Text = 3
+    | Text  = 3
 
-type ScannerArguments = {
-    FileNamePatterns: list<string>
-    DirectoryExceptionHandler: exn -> string -> unit
-}
+type ScannerArguments = Models.ScannerArguments
 
-type FileSeqGenerator = string -> ScannerArguments -> seq<string>
+type FileSeqGenerator = Models.FileSeqGenerator
 
 type ContentFinderArguments = {
     DirectorySeq: seq<string>
@@ -23,16 +22,16 @@ type ContentFinderArguments = {
     DirectoryExceptionHandler: (exn -> string -> unit) option
 }
 
-let private getFolderSeq (directoryName: string) =
-    Directory.EnumerateDirectories(directoryName)
-
-let private getPatterns (contentType: ContentType) =
+let private convertContentType (contentType: ContentType) =
     match contentType with
-        | ContentType.Movie -> [ "*.mkv"; "*.mp4"; "*.flv"; "*.avi"; "*.mov"; "*.3gp" ]
-        | ContentType.Image -> [ "*.png"; "*.jpg"; "*.jpeg"; "*.bmp"; "*.jpe"; "*.jfif" ]
-        | ContentType.Text -> [ "*.txt"; "*.md" ]
-        | _ -> invalidArg "contentType" ("Content type is out of range: " +
-                                            contentType.ToString())
+        | ContentType.Movie -> ContentFinderInternal.ContentTypeInternal.Movie
+        | ContentType.Image -> ContentFinderInternal.ContentTypeInternal.Image
+        | ContentType.Text  -> ContentFinderInternal.ContentTypeInternal.Text
+        | _                 -> invalidArg "contentType" ("Content type is out of range: \"" +
+                                                         contentType.ToString() + "\"")
+
+let private getFolderSeq (directoryName: string) =
+    Directory.EnumerateDirectories directoryName
 
 let private getFileSeq (directoryName: string) (args: ScannerArguments) =
     seq {
@@ -40,7 +39,7 @@ let private getFileSeq (directoryName: string) (args: ScannerArguments) =
             let fileNames =
                 try
                     Directory.EnumerateFiles(directoryName, fileNamePattern,
-                                                SearchOption.AllDirectories)
+                                             SearchOption.AllDirectories)
                 with ex ->
                     args.DirectoryExceptionHandler ex directoryName
                     Seq.empty
@@ -51,34 +50,38 @@ let private getFileSeq (directoryName: string) (args: ScannerArguments) =
 let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
     ()
 
-let convertToReadOnly (collection: seq<string * seq<string>>) =
+let ConvertToReadOnly (collection: seq<string * seq<string>>) =
+    Throw.ifNull collection "collection"
+
     collection
-    |> Seq.map (fun (directoryName, files) -> (directoryName, Seq.toList files))
+    |> Seq.map (fun (directoryName, files) -> (directoryName,
+                                               EnumerableExtensions.ToReadOnlyList files))
     |> readOnlyDict
 
-let findContent (args: ContentFinderArguments) =
+let FindContent (args: ContentFinderArguments) =
+    Throw.ifNullValue args "args"
     Throw.ifNull args.DirectorySeq "args.DirectorySeq"
-
-    let patterns = getPatterns args.ContentType
-
+    
     let exceptionHandler = match args.DirectoryExceptionHandler with
-                                | Some handler -> handler
-                                | None -> defaultDirectoryExceptionHandler
+                               | Some handler -> handler
+                               | None -> defaultDirectoryExceptionHandler
+    
+    let contentType = convertContentType args.ContentType
 
-    let innerArgs = {
-        FileNamePatterns = patterns
+    let (internalArgs: ContentFinderInternal.ContentFinderArgumentsInternal) = {
+        DirectorySeq = args.DirectorySeq
+        FileSeqGen = args.FileSeqGen
+        ContentType = contentType
         DirectoryExceptionHandler = exceptionHandler
     }
-
-    args.DirectorySeq
-    |> Seq.filter (isNull >> not)
-    |> Seq.collect (fun directoryName -> args.FileSeqGen directoryName innerArgs)
-    |> Seq.groupBy (Path.GetDirectoryName >> Path.GetFileName)
-
-let findContentForDirectoryWith (directoryName: string) (fileSeqGen: FileSeqGenerator)
-    (contentType: ContentType) =
     
+    ContentFinderInternal.findContent internalArgs
+
+let FindContentForDirWith (directoryName: string) (fileSeqGen: FileSeqGenerator)
+    (contentType: ContentType) =
+
     Throw.ifNull directoryName "directoryName"
+    Throw.ifNullValue fileSeqGen "fileSeqGen"
 
     let args = {
         DirectorySeq = (getFolderSeq directoryName)
@@ -87,7 +90,7 @@ let findContentForDirectoryWith (directoryName: string) (fileSeqGen: FileSeqGene
         DirectoryExceptionHandler = None
     }
 
-    findContent args
+    FindContent args
 
-let findContentForDir (directoryName: string) (contentType: ContentType) =
-    findContentForDirectoryWith directoryName (getFileSeq) contentType
+let FindContentForDir (directoryName: string) (contentType: ContentType) =
+    FindContentForDirWith directoryName getFileSeq contentType
