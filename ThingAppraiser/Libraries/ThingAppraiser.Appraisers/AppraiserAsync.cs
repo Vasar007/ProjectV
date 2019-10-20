@@ -55,8 +55,6 @@ namespace ThingAppraiser.Appraisers
             _appraisal = appraisal.ThrowIfNull(nameof(appraisal));
         }
 
-        #region Appraiser Overriden Methods
-
         public RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults)
         {
             if (!(entityInfo is T convertedInfo))
@@ -79,7 +77,5 @@ namespace ThingAppraiser.Appraisers
 
             return resultInfo;
         }
-
-        #endregion
     }
 }

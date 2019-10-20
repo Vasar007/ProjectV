@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Models.fs" />
+    <Compile Include="ContentModels.fs" />
     <Compile Include="ContentFinderInternal.fs" />
     <Compile Include="ContentFinder.fs" />
   </ItemGroup>

@@ -6,20 +6,16 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using ThingAppraiser.Building;
-using ThingAppraiser.Building.Service;
-using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Commands;
+using ThingAppraiser.DesktopApp.Domain.Executor;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models;
-using ThingAppraiser.DesktopApp.Models.DataProducers;
+using ThingAppraiser.DesktopApp.Models.ContentDirectories;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Models.Things;
-using ThingAppraiser.DesktopApp.Models.Toplists;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
-using ThingAppraiser.IO.Input.File;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.WebService;
@@ -33,22 +29,16 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
 
-        private readonly IRequirementsCreator _requirementsCreator;
-
-        private readonly ServiceProxy _serviceProxy;
-
         private readonly SceneItemsCollection _scenes;
 
-        private ThingProducer? _thingProducer;
-
-        private string _title = DesktopOptions.Title;
+        private string _title;
         public string Title
         {
             get => _title;
             set => SetProperty(ref _title, value.ThrowIfNull(nameof(value)));
         }
 
-        private bool _isNotBusy = true;
+        private bool _isNotBusy;
         public bool IsNotBusy
         {
             get => _isNotBusy;
@@ -63,20 +53,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             set => SetProperty(ref _currentContent, value.ThrowIfNull(nameof(value)));
         }
 
-        private string _selectedStorageName = string.Empty;
-        public string SelectedStorageName
-        {
-            get => _selectedStorageName;
-            private set => SetProperty(ref _selectedStorageName, value.ThrowIfNull(nameof(value)));
-        }
-
-        private DataSource _selectedDataSource = DataSource.Nothing;
-        public DataSource SelectedDataSource
-        {
-            get => _selectedDataSource;
-            private set => SetProperty(ref _selectedDataSource, value);
-        }
-
         // Initializes throught property (in ChangeScene which called in ctor).
         private SceneItem _selectedSceneItem = default!;
         public SceneItem SelectedSceneItem
@@ -89,7 +65,9 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        public IAsyncCommand<DataSource> Submit { get; }
+        private IAsyncCommand<ThingPerformerInfo> SubmitThings { get; }
+
+        private IAsyncCommand<ContentDirectoryParametersInfo> SubmitContents { get; }
 
         public ICommand AppCloseCommand { get; }
 
@@ -116,11 +94,21 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 .GetEvent<AppraiseGoogleDriveThingsFileMessage>()
                 .Subscribe(SendRequestToService);
 
-            _requirementsCreator = new RequirementsCreator();
-            _serviceProxy = new ServiceProxy();
+            _eventAggregator
+                .GetEvent<ProcessContentDirectoryMessage>()
+                .Subscribe(ProcessContentDirectory);
+
+            _title = DesktopOptions.Title;
+            _isNotBusy = true;
             _scenes = new SceneItemsCollection();
 
-            Submit = new AsyncRelayCommand<DataSource>(ExecuteSubmitAsync, CanExecuteSubmit);
+            SubmitThings = new AsyncRelayCommand<ThingPerformerInfo>(
+                SubmitThingsAsync, info => IsNotBusy
+            );
+            SubmitContents = new AsyncRelayCommand<ContentDirectoryParametersInfo>(
+                SubmitContentsAsync, parameters => IsNotBusy
+            );
+
             AppCloseCommand = new DelegateCommand(
                 ApplicationCloseCommand.Execute, ApplicationCloseCommand.CanExecute
             );
@@ -168,26 +156,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
-        private void SendRequestToService(ThingsDataToAppraise thigsData)
-        {
-            thigsData.ThrowIfNull(nameof(thigsData));
-
-            _thingProducer = new ThingProducer(thigsData.ThingNames);
-
-            SelectedStorageName = thigsData.StorageName;
-            SelectedDataSource = thigsData.DataSource;
-            ExecuteSending();
-        }
-
-        private static void ThrowIfInvalidData(IReadOnlyCollection<string> data)
-        {
-            const int minItemsNumberToAppraise = 2;
-            if (data.IsNullOrEmpty() || data.Count < minItemsNumberToAppraise)
-            {
-                throw new InvalidOperationException("Insufficient amount of data to be processed.");
-            }
-        }
-
         private string GetServiceNameFromStartControl()
         {
             var startControl = _scenes.GetDataContext<StartViewModel>(
@@ -199,6 +167,79 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private void ChangeScene(string controlIdentifier)
         {
             SelectedSceneItem = _scenes.GetSceneItem(controlIdentifier);
+        }
+
+
+        private void ReturnToStartView(UserControl currentContent)
+        {
+            ChangeScene(DesktopOptions.PageNames.StartPage);
+        }
+
+        private bool CanReturnToStartView(UserControl currentContent)
+        {
+            return !(currentContent is StartView) && IsNotBusy;
+        }
+
+        #region Things Processing
+
+        private void SendRequestToService(ThingsDataToAppraise thingsData)
+        {
+            thingsData.ThrowIfNull(nameof(thingsData));
+
+            string message = $"Selected storage name: {thingsData.StorageName}, " +
+                             $"Selected data source: {thingsData.DataSource.ToString()}";
+            Console.WriteLine(message);
+            _logger.Debug(message);
+
+            string serviceName = GetServiceNameFromStartControl();
+
+            var thingsInfo = new ThingPerformerInfo(serviceName, thingsData);
+
+            CurrentContent = new ProgressView();
+            SubmitThings.ExecuteAsync(thingsInfo);
+        }
+
+        private async Task SubmitThingsAsync(ThingPerformerInfo thingsInfo)
+        {
+            try
+            {
+                IsNotBusy = false;
+
+                var thingPerformer = new ThingPerformer();
+                var asyncExecutor = new AsyncExecutor<ThingPerformerInfo, ThingResultInfo>(
+                    performer: thingPerformer,
+                    successfulCallback: ProcessStatusOperation,
+                    exceptionalCallback: ex => ForceReturnToStartViewCommand.Execute(null)
+                );
+
+                await asyncExecutor.ExecuteAsync(thingsInfo);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occurred during data processing request.");
+                MessageBoxProvider.ShowError(ex.Message);
+
+                ForceReturnToStartViewCommand.Execute(null);
+            }
+            finally
+            {
+                IsNotBusy = true;
+            }
+        }
+
+        private void ProcessStatusOperation(ThingResultInfo result)
+        {
+            result.ThrowIfNull(nameof(result));
+
+            if (result.Response?.Metadata.ResultStatus == ServiceStatus.Ok)
+            {
+                ChangeSceneAndUpdateItems(result.ServiceName, result.Response);
+            }
+            else
+            {
+                MessageBoxProvider.ShowError("Request to ThingAppraiser service failed.");
+                ForceReturnToStartViewCommand.Execute(null);
+            }
         }
 
         private void ChangeSceneAndUpdateItems(string controlIdentifier,
@@ -214,49 +255,49 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 }
                 else
                 {
-                    throw new InvalidOperationException("Cannot find scene to update.");
+                    throw new InvalidOperationException(
+                        $"Cannot find scene \"{controlIdentifier}\" to update."
+                    );
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occurred during updating items.");
+                _logger.Error(ex, "Exception occurred during updating page with things items.");
                 MessageBoxProvider.ShowError(ex.Message);
             }
         }
 
-        private void ExecuteSending()
+        #endregion
+
+        #region Content Directory Processing
+
+        private void ProcessContentDirectory(ContentDirectoryParametersInfo parameters)
         {
-            string message = $"SelectedStorageName={SelectedStorageName}, " +
-                             $"SelectedDataSource={SelectedDataSource.ToString()}";
+            parameters.ThrowIfNull(nameof(parameters));
+
+            string message = $"Selected directory path: {parameters.DirectoryPath}, " +
+                             $"Selected content type: {parameters.ContentType.ToString()}";
             Console.WriteLine(message);
             _logger.Debug(message);
 
             CurrentContent = new ProgressView();
-            Submit.ExecuteAsync(SelectedDataSource);
+            SubmitContents.ExecuteAsync(parameters);
         }
 
-        private void ProcessStatusOperation(ProcessingResponse? response)
-        {
-            if (response?.Metadata.ResultStatus == ServiceStatus.Ok)
-            {
-                string serviceName = GetServiceNameFromStartControl();
-                ChangeSceneAndUpdateItems(serviceName, response);
-            }
-            else
-            {
-                MessageBoxProvider.ShowInfo("Request to ThingAppraiser service failed.");
-                ForceReturnToStartViewCommand.Execute(null);
-            }
-        }
-
-        private async Task ExecuteSubmitAsync(DataSource dataSource)
+        private async Task SubmitContentsAsync(ContentDirectoryParametersInfo parameters)
         {
             try
             {
                 IsNotBusy = false;
-                RequestParams requestParams = await ConfigureServiceRequest(dataSource);
-                ProcessingResponse? response = await _serviceProxy.SendPostRequest(requestParams);
-                ProcessStatusOperation(response);
+
+                var contentDirectoryPerformer = new ContentDirectoryPerformer();
+                var asyncExecutor = new AsyncExecutor<ContentDirectoryParametersInfo, ContentDirectoryInfo>(
+                    performer: contentDirectoryPerformer,
+                    successfulCallback: ProcessContentDirectoryResults,
+                    exceptionalCallback: ex => { }
+                );
+
+                await asyncExecutor.ExecuteAsync(parameters);
             }
             catch (Exception ex)
             {
@@ -271,109 +312,42 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             }
         }
 
-        private bool CanExecuteSubmit(DataSource dataSource)
+        private void ProcessContentDirectoryResults(ContentDirectoryInfo result)
         {
-            return IsNotBusy;
+            result.ThrowIfNull(nameof(result));
+
+            _eventAggregator
+                .GetEvent<UpdateContentDirectoryInfoMessage>()
+                .Publish(result);
+
+            SetContentDirectoryView();
         }
 
-        private void ReturnToStartView(UserControl currentContent)
+        private void SetContentDirectoryView()
         {
-            ChangeScene(DesktopOptions.PageNames.StartPage);
-        }
-
-        private bool CanReturnToStartView(UserControl currentContent)
-        {
-            return !(currentContent is StartView) && IsNotBusy;
-        }
-
-        private async Task<RequestParams> ConfigureServiceRequest(DataSource dataSource)
-        {
-            return dataSource switch
+            try
             {
-                DataSource.Nothing => throw new InvalidOperationException(
-                                          "Data source was not set."
-                                      ),
-
-                DataSource.InputThing => CreateRequestWithUserInputData(),
-
-                DataSource.LocalFile => await CreateRequestWithLocalFileData(),
-
-                DataSource.GoogleDrive => await CreateGoogleDriveRequest(),
-
-                _ => throw new ArgumentOutOfRangeException(
-                         nameof(dataSource), dataSource,
-                         "Could not recognize specified data source type."
-                     )
-            };
-        }
-
-        private RequestParams CreateRequestWithUserInputData()
-        {
-            if (_thingProducer is null)
-            {
-                throw new InvalidOperationException(
-                    $"Thing producer ({nameof(_thingProducer)}) should be initialized at first."
-                );
+                SceneItem sceneItem =
+                    _scenes.GetSceneItem(DesktopOptions.PageNames.ContentDirectoriesPage);
+                if (sceneItem.Content is ContentDirectoriesView contentDirectoriesView)
+                {
+                    SelectedSceneItem = sceneItem;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot find scene \"{DesktopOptions.PageNames.ContentDirectoriesPage}\"" +
+                        " to update."
+                    );
+                }
             }
-
-            CreateBasicRequirements();
-
-            IReadOnlyList<string> thingNames = _thingProducer.ReadThingNames("Service request");
-
-            ThrowIfInvalidData(thingNames);
-            return new RequestParams
+            catch (Exception ex)
             {
-                ThingNames = thingNames,
-                Requirements = _requirementsCreator.GetResult()
-            };
+                _logger.Error(ex, "Exception occurred during updating content directory page.");
+                MessageBoxProvider.ShowError(ex.Message);
+            }
         }
 
-        private async Task<RequestParams> CreateRequestWithLocalFileData()
-        {
-            CreateBasicRequirements();
-
-            var localFileReader = new LocalFileReader(new SimpleFileReader());
-            IReadOnlyList<string> thingNames = await Task
-                .Run(() => localFileReader.ReadThingNames(SelectedStorageName))
-                .ConfigureAwait(continueOnCapturedContext: false);
-
-            ThrowIfInvalidData(thingNames);
-            return new RequestParams
-            {
-                ThingNames = thingNames,
-                Requirements = _requirementsCreator.GetResult()
-            };
-        }
-
-        private async Task<RequestParams> CreateGoogleDriveRequest()
-        {
-            CreateBasicRequirements();
-
-            var serviceBuilder = new ServiceBuilderForXmlConfig();
-            var googleDriveReader = serviceBuilder.CreateInputter(
-                ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
-            );
-
-            IReadOnlyList<string> thingNames = await Task
-                .Run(() => googleDriveReader.ReadThingNames(SelectedStorageName))
-                .ConfigureAwait(continueOnCapturedContext: false);
-
-            ThrowIfInvalidData(thingNames);
-            return new RequestParams
-            {
-                ThingNames = thingNames,
-                Requirements = _requirementsCreator.GetResult()
-            };
-        }
-
-        private void CreateBasicRequirements()
-        {
-            string serviceName = GetServiceNameFromStartControl();
-            serviceName = ConfigContract.GetProperServiceName(serviceName);
-
-            _requirementsCreator.Reset();
-            _requirementsCreator.AddServiceRequirement(serviceName);
-            _requirementsCreator.AddAppraisalRequirement($"{serviceName}Common");
-        }
+        #endregion
     }
 }

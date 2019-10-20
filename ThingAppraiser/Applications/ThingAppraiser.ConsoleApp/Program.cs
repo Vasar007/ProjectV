@@ -6,7 +6,6 @@ using ThingAppraiser.Communication;
 using ThingAppraiser.Configuration;
 using ThingAppraiser.ContentDirectories;
 using ThingAppraiser.DAL.EntityFramework;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -83,7 +82,7 @@ namespace ThingAppraiser.ConsoleApp
 
                 await MainXDocument(args);
                 //TestEntityFrameworkCore();
-                //TestConentDirectories();
+                //await TestConentDirectories();
                 return 0;
             }
             catch (Exception ex)
@@ -132,17 +131,16 @@ namespace ThingAppraiser.ConsoleApp
             }
         }
 
-        private static void TestConentDirectories()
+        private static async Task TestConentDirectories()
         {
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = 
-                ContentFinder.FindContentForDir(
+            IEnumerable<Tuple<string, IEnumerable<string>>> enumerableResults = await ContentFinder
+                .FindContentForDirAsync(
                     @"C:\Users\vasar\Documents\GitHub",
-                    ContentFinder.ContentType.Text
-                )
-                .ToReadOnlyDictionary(
-                    tuple => tuple.Item1,
-                    tuple => tuple.Item2.ToReadOnlyList()
+                    ContentModels.ContentType.Text
                 );
+
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
+               .ConvertToReadOnly(enumerableResults);
 
             foreach ((string directoryName, IReadOnlyList<string> files) in result)
             {

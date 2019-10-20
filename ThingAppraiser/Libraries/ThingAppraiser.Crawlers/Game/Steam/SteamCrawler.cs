@@ -63,7 +63,7 @@ namespace ThingAppraiser.Crawlers.Game.Steam
             _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
         }
 
-        #region Crawler Overridden Methods
+        #region ICrawler Implementation
 
         /// <inheritdoc />
         public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,

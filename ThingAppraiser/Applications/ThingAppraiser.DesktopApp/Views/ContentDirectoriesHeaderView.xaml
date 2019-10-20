@@ -24,8 +24,8 @@
 
         <Button Width="256"
                 Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                materialDesign:DialogHost.DialogOpenedAttached="CreateToplist_DialogOpened"
-                materialDesign:DialogHost.DialogClosingAttached="CreateToplist_DialogClosing">
+                materialDesign:DialogHost.DialogOpenedAttached="ChooseContentDirectory_DialogOpened"
+                materialDesign:DialogHost.DialogClosingAttached="ChooseContentDirectory_DialogClosing">
             <Button.CommandParameter>
                 <views:ChooseContentDirectoryView />
             </Button.CommandParameter>

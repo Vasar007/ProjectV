@@ -1,24 +1,16 @@
-﻿using System;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Prism.Events;
 using Prism.Mvvm;
-using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.ContentDirectories;
 using ThingAppraiser.DesktopApp.Views;
 using ThingAppraiser.Extensions;
-using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {
     internal sealed class ContentDirectoriesResultsViewModel : BindableBase
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ContentDirectoriesResultsViewModel>();
-
         private readonly IEventAggregator _eventAggregator;
-
-        private readonly ContentFinderWrapper _contentFinder;
 
         private ContentControl _contentDirectoryResult;
         public ContentControl ContentDirectoryResult
@@ -33,28 +25,20 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
 
             _eventAggregator
-                .GetEvent<ProcessContentDirectoryMessage>()
-                .Subscribe(ProcessContentDirectory);
+                .GetEvent<UpdateContentDirectoryInfoMessage>()
+                .Subscribe(Update);
 
-            _contentFinder = new ContentFinderWrapper();
             _contentDirectoryResult = new ContentControl();
         }
 
-        private void ProcessContentDirectory(ContentDirectoryParametersInfo parameters)
+        public void Update(ContentDirectoryInfo directoryInfo)
         {
-            try
-            {
-                ContentDirectoryInfo result = _contentFinder.GetAllDirectoryContent(
-                    parameters.DirectoryPath, parameters.ContentType
-                );
+            directoryInfo.ThrowIfNull(nameof(directoryInfo));
 
-                ContentDirectoryResult.Content = new ContentDirectoryView { DataContext = result };
-            }
-            catch (Exception ex)
+            ContentDirectoryResult.Content = new ContentDirectoryInfoView
             {
-                _logger.Error(ex, "Exception occurred during content directory processing.");
-                MessageBoxProvider.ShowError(ex.Message);
-            }
+                DataContext = directoryInfo
+            };
         }
     }
 }

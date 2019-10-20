@@ -5,16 +5,16 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 {
     internal static class ContentDirectoryHelper
     {
-        public static ContentFinder.ContentType ConvertToLibraryEnum(
+        public static ContentModels.ContentType ConvertToLibraryEnum(
             this ContentTypeToFind contentType)
         {
             return contentType switch
             {
-                ContentTypeToFind.Movie => ContentFinder.ContentType.Movie,
+                ContentTypeToFind.Movie => ContentModels.ContentType.Movie,
 
-                ContentTypeToFind.Image => ContentFinder.ContentType.Image,
+                ContentTypeToFind.Image => ContentModels.ContentType.Image,
 
-                ContentTypeToFind.Text => ContentFinder.ContentType.Text,
+                ContentTypeToFind.Text => ContentModels.ContentType.Text,
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(contentType), contentType,

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
@@ -71,7 +69,7 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
             _searchResults = new HashSet<BasicInfo>();
         }
 
-        #region CrawlerAsync Overridden Methods
+        #region ICrawlerAsync Implementation
 
         /// <inheritdoc />
         public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)

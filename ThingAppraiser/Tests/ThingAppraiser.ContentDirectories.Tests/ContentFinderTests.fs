@@ -9,65 +9,68 @@ open ThingAppraiser.ContentDirectories
 
 [<Fact>]
 let ``Content directory path does not exist`` () =
-    let contentType = ContentFinder.ContentType.Movie
+    let contentType = ContentModels.ContentType.Movie
 
-    raises<DirectoryNotFoundException> <@ ContentFinder.FindContentForDir @"Z:\abc" contentType @>
+    raises<DirectoryNotFoundException>
+        <@ ContentFinder.FindContentForDirAsync @"Z:\abc" contentType @>
 
 [<Fact>]
 let ``Content directory path contains invalid disk label`` () =
-    let contentType = ContentFinder.ContentType.Movie
+    let contentType = ContentModels.ContentType.Movie
 
-    raises<IOException> <@ ContentFinder.FindContentForDir @"ZaZ:\abc" contentType @>
+    raises<IOException> <@ ContentFinder.FindContentForDirAsync @"ZaZ:\abc" contentType @>
 
 [<Fact>]
 let ``Content directory path contains invalid characters`` () =
-    let contentType = ContentFinder.ContentType.Movie
+    let contentType = ContentModels.ContentType.Movie
 
-    raises<IOException> <@ ContentFinder.FindContentForDir "a<b>c?" contentType @>
+    raises<IOException> <@ ContentFinder.FindContentForDirAsync "a<b>c?" contentType @>
 
 [<Fact>]
-let ``Content directory path is too long`` () =
-    let contentType = ContentFinder.ContentType.Movie
+let ``Content directory path is too long and invalid`` () =
+    let contentType = ContentModels.ContentType.Movie
     let path = String.replicate 10_000 "qwerty"
 
-    raises<IOException> <@ ContentFinder.FindContentForDir path contentType @>
+    raises<IOException> <@ ContentFinder.FindContentForDirAsync path contentType @>
 
 [<Fact>]
 let ``Content directory path is empty`` () =
-    let contentType = ContentFinder.ContentType.Movie
+    let contentType = ContentModels.ContentType.Movie
 
-    raises<ArgumentException> <@ ContentFinder.FindContentForDir String.Empty contentType @>
+    raises<ArgumentException> <@ ContentFinder.FindContentForDirAsync String.Empty contentType @>
 
 [<Fact>]
 let ``Content type is out of range`` () =
-    let (contentType: ContentFinder.ContentType) = enum -1
+    let (contentType: ContentModels.ContentType) = enum -1
 
-    raises<ArgumentException> <@ ContentFinder.FindContentForDir "." contentType @>
-
-[<Fact>]
-let ``Content directory path is null for "FindContentForDir" call`` () =
-    let contentType = ContentFinder.ContentType.Movie
-
-    raises<ArgumentNullException> <@ ContentFinder.FindContentForDir null contentType @>
+    raises<ArgumentException> <@ ContentFinder.FindContentForDirAsync "." contentType @>
 
 [<Fact>]
-let ``Directory sequence is null for "FindContentForDirWith" call`` () =
-    let contentType = ContentFinder.ContentType.Movie
-    let f = fun (_: string) (_: ContentFinder.ScannerArguments) -> Seq.empty<string>
+let ``Content directory path is null for "FindContentForDirAsync" call`` () =
+    let contentType = ContentModels.ContentType.Movie
+
+    raises<ArgumentNullException> <@ ContentFinder.FindContentForDirAsync null contentType @>
+
+[<Fact>]
+let ``Directory sequence is null for "FindContentForDirWithAsync" call`` () =
+    let contentType = ContentModels.ContentType.Movie
+    let f = fun (_: string) (_: ContentModels.ScannerArguments) -> Seq.empty<string>
+
+    let seqGen = ContentModels.FileSeqGenerator.Sync(f)
 
     raises<ArgumentNullException>
-        <@ ContentFinder.FindContentForDirWith null f contentType @>
+        <@ ContentFinder.FindContentForDirWithAsync null seqGen contentType @>
 
 [<Fact>]
-let ``Directory sequence is null for "FindContent" call`` () =
-    let contentType = ContentFinder.ContentType.Movie
-    let f = fun (_: string) (_: ContentFinder.ScannerArguments) -> Seq.empty<string>
+let ``Directory sequence is null for "FindContentAsync" call`` () =
+    let contentType = ContentModels.ContentType.Movie
+    let f = fun (_: string) (_: ContentModels.ScannerArguments) -> Seq.empty<string>
 
-    let (args: ContentFinder.ContentFinderArguments) = {
+    let (args: ContentModels.ContentFinderArguments) = {
         DirectorySeq = null
-        FileSeqGen = f
+        FileSeqGen = ContentModels.FileSeqGenerator.Sync(f)
         ContentType = contentType
         DirectoryExceptionHandler = None
     }
 
-    raises<ArgumentNullException> <@ ContentFinder.FindContent args @>
+    raises<ArgumentNullException> <@ ContentFinder.FindContentAsync args @>

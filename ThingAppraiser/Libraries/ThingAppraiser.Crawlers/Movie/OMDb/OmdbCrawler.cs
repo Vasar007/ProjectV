@@ -62,7 +62,7 @@ namespace ThingAppraiser.Crawlers.Movie.Omdb
             _omdbClient = OmdbClientFactory.CreateClient(apiKey);
         }
 
-        #region Crawler Overridden Methods
+        #region ICrawler Implementation
 
         /// <inheritdoc />
         public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,

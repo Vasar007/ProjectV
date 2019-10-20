@@ -23,7 +23,8 @@ namespace ThingAppraiser.DesktopApp.Views
             InitializeComponent();
         }
 
-        private void CreateToplist_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
+        private void ChooseContentDirectory_DialogOpened(object sender,
+            DialogOpenedEventArgs eventArgs)
         {
             if (!(eventArgs.Session.Content is ChooseContentDirectoryView chooseContentDirectoryView)) return;
 
@@ -31,7 +32,8 @@ namespace ThingAppraiser.DesktopApp.Views
             chooseContentDirectoryView.Clear();
         }
 
-        private void CreateToplist_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        private void ChooseContentDirectory_DialogClosing(object sender,
+            DialogClosingEventArgs eventArgs)
         {
             if (Equals(eventArgs.Parameter, false)) return;
 

@@ -6,49 +6,36 @@ open ThingAppraiser.Extensions
 open ThingAppraiser.ContentDirectories
 
 
-type ContentType =
-    | Movie = 1
-    | Image = 2
-    | Text  = 3
-
-type ScannerArguments = Models.ScannerArguments
-
-type FileSeqGenerator = Models.FileSeqGenerator
-
-type ContentFinderArguments = {
-    DirectorySeq: seq<string>
-    FileSeqGen: FileSeqGenerator
-    ContentType: ContentType
-    DirectoryExceptionHandler: (exn -> string -> unit) option
-}
-
-let private convertContentType (contentType: ContentType) =
+let private convertContentType (contentType: ContentModels.ContentType) =
     match contentType with
-        | ContentType.Movie -> ContentFinderInternal.ContentTypeInternal.Movie
-        | ContentType.Image -> ContentFinderInternal.ContentTypeInternal.Image
-        | ContentType.Text  -> ContentFinderInternal.ContentTypeInternal.Text
-        | _                 -> invalidArg "contentType" ("Content type is out of range: \"" +
-                                                         contentType.ToString() + "\"")
+        | ContentModels.ContentType.Movie -> ContentFinderInternal.ContentTypeInternal.Movie
+        | ContentModels.ContentType.Image -> ContentFinderInternal.ContentTypeInternal.Image
+        | ContentModels.ContentType.Text  -> ContentFinderInternal.ContentTypeInternal.Text
+        | _                               -> invalidArg "contentType"
+                                                        ("Content type is out of range: \"" +
+                                                         contentType.ToString() + "\".")
+
+let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
+    ()
 
 let private getFolderSeq (directoryName: string) =
     Directory.EnumerateDirectories directoryName
 
-let private getFileSeq (directoryName: string) (args: ScannerArguments) =
-    seq {
-        for fileNamePattern in args.FileNamePatterns do
-            let fileNames =
-                try
-                    Directory.EnumerateFiles(directoryName, fileNamePattern,
-                                             SearchOption.AllDirectories)
-                with ex ->
-                    args.DirectoryExceptionHandler ex directoryName
-                    Seq.empty
+let private getFileSeqAsync (directoryName: string) (args: ContentModels.ScannerArguments) =
+    async {
+        return seq {
+            for fileNamePattern in args.FileNamePatterns do
+                let fileNames =
+                    try
+                        Directory.EnumerateFiles(directoryName, fileNamePattern,
+                                                    SearchOption.AllDirectories)
+                    with ex ->
+                        args.DirectoryExceptionHandler ex directoryName
+                        Seq.empty
 
-            yield! fileNames
-    }
-
-let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
-    ()
+                yield! fileNames
+        }
+    } |> Async.StartAsTask
 
 let ConvertToReadOnly (collection: seq<string * seq<string>>) =
     Throw.ifNull collection "collection"
@@ -58,14 +45,14 @@ let ConvertToReadOnly (collection: seq<string * seq<string>>) =
                                                EnumerableExtensions.ToReadOnlyList files))
     |> readOnlyDict
 
-let FindContent (args: ContentFinderArguments) =
+let FindContentAsync (args: ContentModels.ContentFinderArguments) =
     Throw.ifNullValue args "args"
     Throw.ifNull args.DirectorySeq "args.DirectorySeq"
     
     let exceptionHandler = match args.DirectoryExceptionHandler with
                                | Some handler -> handler
                                | None -> defaultDirectoryExceptionHandler
-    
+
     let contentType = convertContentType args.ContentType
 
     let (internalArgs: ContentFinderInternal.ContentFinderArgumentsInternal) = {
@@ -74,23 +61,24 @@ let FindContent (args: ContentFinderArguments) =
         ContentType = contentType
         DirectoryExceptionHandler = exceptionHandler
     }
-    
-    ContentFinderInternal.findContent internalArgs
 
-let FindContentForDirWith (directoryName: string) (fileSeqGen: FileSeqGenerator)
-    (contentType: ContentType) =
+    ContentFinderInternal.findContentAsync internalArgs
+
+let FindContentForDirWithAsync (directoryName: string) (fileSeqGen: ContentModels.FileSeqGenerator)
+    (contentType: ContentModels.ContentType) =
 
     Throw.ifNull directoryName "directoryName"
     Throw.ifNullValue fileSeqGen "fileSeqGen"
 
-    let args = {
+    let (args: ContentModels.ContentFinderArguments) = {
         DirectorySeq = (getFolderSeq directoryName)
         FileSeqGen = fileSeqGen
         ContentType = contentType
         DirectoryExceptionHandler = None
     }
 
-    FindContent args
+    FindContentAsync args
 
-let FindContentForDir (directoryName: string) (contentType: ContentType) =
-    FindContentForDirWith directoryName getFileSeq contentType
+let FindContentForDirAsync (directoryName: string) (contentType: ContentModels.ContentType) =
+    let fileSeqGen = ContentModels.FileSeqGenerator.Async(getFileSeqAsync)
+    FindContentForDirWithAsync directoryName fileSeqGen contentType
