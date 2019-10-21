@@ -28,13 +28,13 @@ let private getFileSeqAsync (directoryName: string) (args: ContentModels.Scanner
                 let fileNames =
                     try
                         Directory.EnumerateFiles(directoryName, fileNamePattern,
-                                                    SearchOption.AllDirectories)
+                                                 SearchOption.AllDirectories)
                     with ex ->
                         args.DirectoryExceptionHandler ex directoryName
                         Seq.empty
 
                 yield! fileNames
-        }
+        } |> EnumerableExtensions.ToReadOnlyList :> seq<string> // Execute enumeration of files.
     } |> Async.StartAsTask
 
 let ConvertToReadOnly (collection: seq<string * seq<string>>) =
