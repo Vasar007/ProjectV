@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Compile Include="ThrowsExtensions.fs" />
+    <Compile Include="Utils.fs" />
   </ItemGroup>
 
   <ItemGroup>

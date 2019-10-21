@@ -8,6 +8,7 @@ using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.IO.Output.File;
 using ThingAppraiser.Models.Internal;
+using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.IO.Output.GoogleDrive
 {

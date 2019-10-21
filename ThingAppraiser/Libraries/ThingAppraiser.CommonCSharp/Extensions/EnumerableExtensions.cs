@@ -11,6 +11,20 @@ namespace ThingAppraiser.Extensions
     public static class EnumerableExtensions
     {
         /// <summary>
+        /// Checks if enumerable is <c>null</c> or empty without throwing exception.
+        /// </summary>
+        /// <typeparam name="T">Internal type of <see cref="IEnumerable{T}" />.</typeparam>
+        /// <param name="collection">Enumerable to check.</param>
+        /// <returns>
+        /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty, <c>false</c> 
+        /// otherwise.
+        /// </returns>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? collection)
+        {
+            return collection is null || !collection.Any();
+        }
+
+        /// <summary>
         /// Returns the first element of a sequence, or a specified default value if the sequence
         /// contains no elements.
         /// </summary>

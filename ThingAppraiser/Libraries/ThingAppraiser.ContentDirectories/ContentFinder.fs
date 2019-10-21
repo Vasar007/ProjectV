@@ -6,7 +6,7 @@ open ThingAppraiser.Extensions
 open ThingAppraiser.ContentDirectories
 
 
-let private convertContentType (contentType: ContentModels.ContentType) =
+let private convertContentType contentType =
     match contentType with
         | ContentModels.ContentType.Movie -> ContentFinderInternal.ContentTypeInternal.Movie
         | ContentModels.ContentType.Image -> ContentFinderInternal.ContentTypeInternal.Image
@@ -18,10 +18,10 @@ let private convertContentType (contentType: ContentModels.ContentType) =
 let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
     ()
 
-let private getFolderSeq (directoryName: string) =
+let private getFolderSeq directoryName =
     Directory.EnumerateDirectories directoryName
 
-let private getFileSeqAsync (directoryName: string) (args: ContentModels.ScannerArguments) =
+let private getFileSeqAsync directoryName (args: ContentModels.ScannerArguments) =
     async {
         return seq {
             for fileNamePattern in args.FileNamePatterns do
@@ -36,14 +36,6 @@ let private getFileSeqAsync (directoryName: string) (args: ContentModels.Scanner
                 yield! fileNames
         } |> EnumerableExtensions.ToReadOnlyList :> seq<string> // Execute enumeration of files.
     } |> Async.StartAsTask
-
-let ConvertToReadOnly (collection: seq<string * seq<string>>) =
-    Throw.ifNull collection "collection"
-
-    collection
-    |> Seq.map (fun (directoryName, files) -> (directoryName,
-                                               EnumerableExtensions.ToReadOnlyList files))
-    |> readOnlyDict
 
 let FindContentAsync (args: ContentModels.ContentFinderArguments) =
     Throw.ifNullValue args "args"
@@ -64,8 +56,7 @@ let FindContentAsync (args: ContentModels.ContentFinderArguments) =
 
     ContentFinderInternal.findContentAsync internalArgs
 
-let FindContentForDirWithAsync (directoryName: string) (fileSeqGen: ContentModels.FileSeqGenerator)
-    (contentType: ContentModels.ContentType) =
+let FindContentForDirWithAsync directoryName fileSeqGen contentType =
 
     Throw.ifNull directoryName "directoryName"
     Throw.ifNullValue fileSeqGen "fileSeqGen"
@@ -79,6 +70,6 @@ let FindContentForDirWithAsync (directoryName: string) (fileSeqGen: ContentModel
 
     FindContentAsync args
 
-let FindContentForDirAsync (directoryName: string) (contentType: ContentModels.ContentType) =
+let FindContentForDirAsync directoryName contentType =
     let fileSeqGen = ContentModels.FileSeqGenerator.Async(getFileSeqAsync)
     FindContentForDirWithAsync directoryName fileSeqGen contentType

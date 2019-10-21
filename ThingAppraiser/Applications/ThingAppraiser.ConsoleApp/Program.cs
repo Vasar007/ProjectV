@@ -133,14 +133,11 @@ namespace ThingAppraiser.ConsoleApp
 
         private static async Task TestConentDirectories()
         {
-            IEnumerable<Tuple<string, IEnumerable<string>>> enumerableResults = await ContentFinder
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result = await ContentFinder
                 .FindContentForDirAsync(
                     @"C:\Users\vasar\Documents\GitHub",
                     ContentModels.ContentType.Text
                 );
-
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
-               .ConvertToReadOnly(enumerableResults);
 
             foreach ((string directoryName, IReadOnlyList<string> files) in result)
             {

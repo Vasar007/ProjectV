@@ -1,28 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ThingAppraiser
+namespace ThingAppraiser.Extensions
 {
     /// <summary>
     /// Adds extension methods for convenient.
     /// </summary>
     public static class Utilities
     {
-        /// <summary>
-        /// Checks if enumerable is <c>null</c> or empty without throwing exception.
-        /// </summary>
-        /// <typeparam name="T">Internal type of <see cref="IEnumerable{T}" />.</typeparam>
-        /// <param name="collection">Enumerable to check.</param>
-        /// <returns>
-        /// Returns <c>true</c> in case the enumerable is <c>null</c> or empty, <c>false</c> 
-        /// otherwise.
-        /// </returns>
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T>? collection)
-        {
-            return collection is null || !collection.Any();
-        }
-
         /// <summary>
         /// Compare guid with the empty guid without throwing exception.
         /// </summary>

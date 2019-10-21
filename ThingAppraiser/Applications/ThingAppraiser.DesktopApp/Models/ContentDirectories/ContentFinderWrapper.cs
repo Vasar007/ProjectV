@@ -17,12 +17,9 @@ namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
         {
             directoryPath.ThrowIfNullOrWhiteSpace(nameof(directoryPath));
 
-            IEnumerable<Tuple<string, IEnumerable<string>>> enumerableResults = await ContentFinder
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result = await ContentFinder
                 .FindContentForDirAsync(directoryPath, contentType.ConvertToLibraryEnum())
                 .ConfigureAwait(continueOnCapturedContext: false);
-
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = ContentFinder
-                .ConvertToReadOnly(enumerableResults);
 
             return new ContentDirectoryInfo(directoryPath, contentType, result);
         }
