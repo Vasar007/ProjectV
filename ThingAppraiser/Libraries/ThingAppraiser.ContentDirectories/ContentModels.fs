@@ -17,10 +17,25 @@ type FileSeqGenerator =
     | Sync of generatorSync: (string -> ScannerArguments -> seq<string>)
     | Async of generatorAsync: (string -> ScannerArguments -> Task<seq<string>>)
 
-// TODO: add option to specify paging (offset + count) for results of content finder.
+type PagingInfo = {
+    Offset: int32
+    Count: int32
+}
+
+let internal defaultPagingInfo = {
+    Offset = 0
+    Count = -1
+}
+
+// TODO: add filter spec to order and filtering items.
 type ContentFinderArguments = {
     DirectorySeq: seq<string>
     FileSeqGen: FileSeqGenerator
     ContentType: ContentType
-    DirectoryExceptionHandler: (exn -> string -> unit) option
+    DirectoryExceptionHandler: option<(exn -> string -> unit)>
+    Paging: option<PagingInfo>
 }
+
+let CreateOption<'T when 'T : null> (value: 'T) =
+    if obj.ReferenceEquals(value, null) then None
+    else Some(value)

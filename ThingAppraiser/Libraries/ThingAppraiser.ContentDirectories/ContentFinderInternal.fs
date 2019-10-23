@@ -1,7 +1,9 @@
 ﻿module internal ThingAppraiser.ContentDirectories.ContentFinderInternal
 
+open System
 open System.IO
 open System.Threading.Tasks
+open ThingAppraiser
 open ThingAppraiser.ContentDirectories
 open ThingAppraiser.Extensions
 
@@ -17,6 +19,7 @@ type internal ContentFinderArgumentsInternal = {
     FileSeqGen: ContentModels.FileSeqGenerator
     ContentType: ContentTypeInternal
     DirectoryExceptionHandler: exn -> string -> unit
+    Paging: ContentModels.PagingInfo
 }
 
 let private getPatterns contentType =
@@ -32,8 +35,12 @@ let private convertSeqGenToAsync fileSeqGen =
         | ContentModels.FileSeqGenerator.Async(generatorAsync = genAsync) ->
             genAsync
 
-let private convertToReadOnlyList files =
-    EnumerableExtensions.ToReadOnlyList files
+let private convertToReadOnlyList files  =
+    files
+    |> EnumerableExtensions.ToReadOnlyList
+
+let private transformGrouppedPairs (directoryName, files) =
+    (directoryName, convertToReadOnlyList files)
 
 let internal findContentAsync args =
     async {
@@ -51,9 +58,22 @@ let internal findContentAsync args =
                          |> Seq.map (fun directoryName -> fileSeqGenAsync directoryName innerArgs)
 
         let! dirResults = Task.WhenAll(seqResults) |> Async.AwaitTask
+
+        // If count is negative, then tries get as many items as possible.
+        let pagingInfo = {
+            args.Paging
+            with Count = if args.Paging.Count < 0 then Int32.MaxValue else args.Paging.Count
+        }
+
         return dirResults
+               // Step 1: collecting all items.
                |> Seq.collect (fun resultForOneDir -> resultForOneDir)
+               // Step 2: applying paging to items.
+               |> SeqEx.skipSafe pagingInfo.Offset
+               |> Seq.truncate pagingInfo.Count
+               // Step 3: groupping items by directory name.
                |> Seq.groupBy (Path.GetDirectoryName >> Path.GetFileName)
-               |> Seq.map (fun (directoryName, files) -> (directoryName, convertToReadOnlyList files))
+               // Step 4: transforming items to result object.
+               |> Seq.map transformGrouppedPairs
                |> readOnlyDict
     } |> Async.StartAsTask

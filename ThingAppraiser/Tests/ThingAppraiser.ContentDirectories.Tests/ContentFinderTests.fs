@@ -71,6 +71,7 @@ let ``Directory sequence is null for "FindContentAsync" call`` () =
         FileSeqGen = ContentModels.FileSeqGenerator.Sync(f)
         ContentType = contentType
         DirectoryExceptionHandler = None
+        Paging = None
     }
 
     raises<ArgumentNullException> <@ ContentFinder.FindContentAsync args @>

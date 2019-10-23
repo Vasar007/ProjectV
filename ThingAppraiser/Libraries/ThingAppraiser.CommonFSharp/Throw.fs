@@ -1,7 +1,8 @@
 ﻿module ThingAppraiser.Throw
 
+
 let private (|NotNull|_|) value = 
-    if obj.ReferenceEquals(value, null) then None 
+    if obj.ReferenceEquals(value, null) then None
     else Some()
 
 let ifNullValue value (paramName: string) =
@@ -10,7 +11,7 @@ let ifNullValue value (paramName: string) =
 
     match value with
         | NotNull -> ()
-        | _ -> nullArg paramName
+        | _       -> nullArg paramName
 
 let ifNull obj (paramName: string) =
     if isNull paramName then

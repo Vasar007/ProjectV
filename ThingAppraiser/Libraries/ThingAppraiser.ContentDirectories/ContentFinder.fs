@@ -43,21 +43,25 @@ let FindContentAsync (args: ContentModels.ContentFinderArguments) =
     
     let exceptionHandler = match args.DirectoryExceptionHandler with
                                | Some handler -> handler
-                               | None -> defaultDirectoryExceptionHandler
+                               | None         -> defaultDirectoryExceptionHandler
 
     let contentType = convertContentType args.ContentType
+
+    let paging = match args.Paging with
+                     | Some pagingInfo -> pagingInfo
+                     | None            -> ContentModels.defaultPagingInfo
 
     let (internalArgs: ContentFinderInternal.ContentFinderArgumentsInternal) = {
         DirectorySeq = args.DirectorySeq
         FileSeqGen = args.FileSeqGen
         ContentType = contentType
         DirectoryExceptionHandler = exceptionHandler
+        Paging = paging
     }
 
     ContentFinderInternal.findContentAsync internalArgs
 
-let FindContentForDirWithAsync directoryName fileSeqGen contentType =
-
+let FindContentForDirWithAsync directoryName fileSeqGen contentType pagingInfo =
     Throw.ifNull directoryName "directoryName"
     Throw.ifNullValue fileSeqGen "fileSeqGen"
 
@@ -66,10 +70,15 @@ let FindContentForDirWithAsync directoryName fileSeqGen contentType =
         FileSeqGen = fileSeqGen
         ContentType = contentType
         DirectoryExceptionHandler = None
+        Paging = pagingInfo
     }
 
     FindContentAsync args
 
 let FindContentForDirAsync directoryName contentType =
     let fileSeqGen = ContentModels.FileSeqGenerator.Async(getFileSeqAsync)
-    FindContentForDirWithAsync directoryName fileSeqGen contentType
+    FindContentForDirWithAsync directoryName fileSeqGen contentType None
+
+let FindContentForDirWithPagingAsync directoryName contentType pagingInfo =
+    let fileSeqGen = ContentModels.FileSeqGenerator.Async(getFileSeqAsync)
+    FindContentForDirWithAsync directoryName fileSeqGen contentType pagingInfo
