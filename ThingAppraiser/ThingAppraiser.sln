@@ -53,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.OmdbService"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D27F98B1-E100-42F1-A514-69C92FFA9609}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.CommonTests", "Tests\ThingAppraiser.CommonTests\ThingAppraiser.CommonTests.csproj", "{46007638-699C-41F9-9578-6E177A4CB599}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Common.Tests", "Tests\ThingAppraiser.Common.Tests\ThingAppraiser.Common.Tests.csproj", "{46007638-699C-41F9-9578-6E177A4CB599}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.Building", "Libraries\ThingAppraiser.Building\ThingAppraiser.Building.csproj", "{2201541E-75ED-40DD-B121-B3195AA946A9}"
 EndProject
@@ -71,7 +71,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ThingAppraiser.CommonFSharp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DesktopApp", "Applications\ThingAppraiser.DesktopApp\ThingAppraiser.DesktopApp.csproj", "{21EA00DC-FCBA-430B-9F05-7971785AA17A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingAppraiser.DataPipeline", "Libraries\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj", "{6464A2B5-DBE6-4257-A4B0-425A1B714133}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DataPipeline", "Libraries\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj", "{6464A2B5-DBE6-4257-A4B0-425A1B714133}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

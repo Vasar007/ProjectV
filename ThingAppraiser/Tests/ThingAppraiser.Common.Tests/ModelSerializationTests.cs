@@ -2,7 +2,7 @@ using System.Text.Json;
 using Xunit;
 using ThingAppraiser.Models.Data;
 
-namespace ThingAppraiser.CommonTests
+namespace ThingAppraiser.Common.Tests
 {
     public sealed class ModelSerializationTests
     {
