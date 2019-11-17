@@ -7,7 +7,9 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:views="clr-namespace:ThingAppraiser.DesktopApp.Views"
              xmlns:modelsToplists="clr-namespace:ThingAppraiser.DesktopApp.Models.Toplists"
-             mc:Ignorable="d"
+             xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:ToplistEditorViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <ScrollViewer>

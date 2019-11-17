@@ -8,7 +8,9 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
-             mc:Ignorable="d"
+             xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:InputThingViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <materialDesign:DialogHost x:Name="EnterThingNameDialogHost"

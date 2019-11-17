@@ -3,13 +3,9 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using Prism.Events;
-using Prism.Ioc;
-using ThingAppraiser.DesktopApp.ViewModels;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
-namespace ThingAppraiser.DesktopApp
+namespace ThingAppraiser.DesktopApp.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -18,18 +14,9 @@ namespace ThingAppraiser.DesktopApp
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<MainWindow>();
 
-        private readonly IContainerExtension _container;
-
-
-        public MainWindow(IContainerExtension container)
+        public MainWindow()
         {
             InitializeComponent();
-
-            _container = container.ThrowIfNull(nameof(container));
-
-            var eventAggregator = _container.Resolve<IEventAggregator>();
-            DataContext = new MainWindowViewModel(eventAggregator);
-
             _logger.Info("Main window was created.");
         }
 

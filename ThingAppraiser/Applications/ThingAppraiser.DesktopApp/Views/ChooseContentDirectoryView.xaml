@@ -8,7 +8,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
-             mc:Ignorable="d"
+             xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:ChooseContentDirectoryViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Grid Margin="16">
