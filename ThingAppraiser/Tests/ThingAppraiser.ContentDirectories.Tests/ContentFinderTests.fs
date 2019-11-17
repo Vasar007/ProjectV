@@ -60,7 +60,7 @@ let ``Directory sequence is null for "FindContentForDirWithAsync" call`` () =
     let seqGen = FileSeqGenerator.Sync(f)
 
     raises<ArgumentNullException>
-        <@ ContentFinder.FindContentForDirWithAsync null seqGen contentType @>
+        <@ ContentFinder.FindContentForDirWithAsync null seqGen contentType None @>
 
 [<Fact>]
 let ``Directory sequence is null for "FindContentAsync" call`` () =
