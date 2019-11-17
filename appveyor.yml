@@ -25,7 +25,9 @@ build:
 
 test:
   assemblies:
-    - '**\*.Tests.dll'
+    - ThingAppraiser.Appraisers.Tests.dll
+    - ThingAppraiser.Common.Tests.dll
+    - ThingAppraiser.ContentDirectories.Tests.dll
 
 pull_requests:
     do_not_increment_build_number: true
