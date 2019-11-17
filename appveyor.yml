@@ -25,9 +25,11 @@ build:
 
 test:
   assemblies:
-    - ThingAppraiser.Appraisers.Tests.dll
-    - ThingAppraiser.Common.Tests.dll
-    - ThingAppraiser.ContentDirectories.Tests.dll
+    - '**\*.Tests.dll'
+
+# F# tests does not execute at all.
+after_test:
+  - cmd: dotnet test "C:\projects\thingappraiser\ThingAppraiser\Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration x64/Debug --no-build
 
 pull_requests:
     do_not_increment_build_number: true
