@@ -23,8 +23,6 @@ namespace ThingAppraiser.DesktopApp.Models.Things
 
         private readonly ServiceProxy _serviceProxy;
 
-        public bool IsBusy { get; private set; }
-
 
         public ThingPerformer()
         {

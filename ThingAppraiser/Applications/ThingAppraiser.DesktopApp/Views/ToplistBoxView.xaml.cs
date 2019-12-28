@@ -17,6 +17,8 @@ namespace ThingAppraiser.DesktopApp.Views
         internal ToplistBoxView(ToplistItem dataContext)
             : this()
         {
+            // We use only this ctor but cannot make it public because of
+            // ToplistItem accessibility level.
             DataContext = dataContext.ThrowIfNull(nameof(dataContext));
         }
     }

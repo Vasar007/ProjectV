@@ -180,6 +180,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             return !(currentContent is StartView) && IsNotBusy;
         }
 
+        // TODO: try to move this logic in regions into new classes.
+
         #region Things Processing
 
         private void SendRequestToService(ThingsDataToAppraise thingsData)
@@ -206,13 +208,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 IsNotBusy = false;
 
                 var thingPerformer = new ThingPerformer();
-                var asyncExecutor = new AsyncExecutor<ThingPerformerInfo, ThingResultInfo>(
-                    performer: thingPerformer,
-                    successfulCallback: ProcessStatusOperation,
-                    exceptionalCallback: ex => ForceReturnToStartViewCommand.Execute(null)
-                );
-
-                await asyncExecutor.ExecuteAsync(thingsInfo);
+                ThingResultInfo result = await thingPerformer.PerformAsync(thingsInfo);
+                ProcessStatusOperation(result);
             }
             catch (Exception ex)
             {
@@ -291,17 +288,13 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 IsNotBusy = false;
 
                 var contentDirectoryPerformer = new ContentDirectoryPerformer();
-                var asyncExecutor = new AsyncExecutor<ContentDirectoryParametersInfo, ContentDirectoryInfo>(
-                    performer: contentDirectoryPerformer,
-                    successfulCallback: ProcessContentDirectoryResults,
-                    exceptionalCallback: ex => { }
-                );
-
-                await asyncExecutor.ExecuteAsync(parameters);
+                ContentDirectoryInfo result =
+                    await contentDirectoryPerformer.PerformAsync(parameters);
+                ProcessContentDirectoryResults(result);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occurred during data processing request.");
+                _logger.Error(ex, "Exception occurred during content directory processing request.");
                 MessageBoxProvider.ShowError(ex.Message);
 
                 ForceReturnToStartViewCommand.Execute(null);

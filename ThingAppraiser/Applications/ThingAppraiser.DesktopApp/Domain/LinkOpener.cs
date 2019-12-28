@@ -20,7 +20,7 @@ namespace ThingAppraiser.DesktopApp.Domain
                 return;
             }
 
-            // This Windows-only solution to open folder and select a file by path.
+            // This is Windows-only solution to open folder and select a file by path.
             const string explorerFilename = "explorer.exe";
             string args = $" /select, \"{path}\""; // To proper handle file selecting.
             Process.Start(new ProcessStartInfo(explorerFilename, args));
