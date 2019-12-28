@@ -9,7 +9,7 @@
         xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
-        Title="{Binding Title}"
+        Title="{Binding Path=Title}"
         Height="700"
         Width="850"
         MinHeight="550"
