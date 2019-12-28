@@ -18,10 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="FileHelpers" Version="3.4.1" />
-    <PackageReference Include="Google.Apis" Version="1.41.1" />
-    <PackageReference Include="Google.Apis.Auth" Version="1.41.1" />
-    <PackageReference Include="Google.Apis.Core" Version="1.41.1" />
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.41.1.1729" />
+    <PackageReference Include="Google.Apis" Version="1.42.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.42.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.42.0" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.42.0.1778" />
   </ItemGroup>
 
   <ItemGroup>
