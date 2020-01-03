@@ -7,17 +7,17 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Usage examples
 
-| Desktop app                                                                                     |
-|-------------------------------------------------------------------------------------------------|
-| ![Example of usage desktop app](Media/desktop_example.gif "Usage desktop app")                  |
+| Desktop app                                                                                      |
+|--------------------------------------------------------------------------------------------------|
+| ![Example of usage desktop app](Media/desktop_example.gif "Usage desktop app")                   |
 
-| Telegram bot service                                                                            |
-|-------------------------------------------------------------------------------------------------|
+| Telegram bot service                                                                             |
+|--------------------------------------------------------------------------------------------------|
 | ![Example of usage telegram bot service](Media/telegram_example.gif "Usage telegram bot service")|
 
-| Console app                                                                                     |
-|-------------------------------------------------------------------------------------------------|
-| ![Example of usage console app](Media/console_example.gif "Usage console app")                  |
+| Console app                                                                                      |
+|--------------------------------------------------------------------------------------------------|
+| ![Example of usage console app](Media/console_example.gif "Usage console app")                   |
 
 ## Dependencies
 
@@ -32,3 +32,11 @@ You can read full instruction in project [Wiki](https://github.com/Vasar007/Thin
 ## License information
 
 This project is licensed under the terms of the [Apache License 2.0](LICENSE).
+
+### Third party software and libraries used
+
+Newtonsoft.Json https://www.newtonsoft.com/json
+
+Copyright (c) 2007 James Newton-King
+
+License (MIT) https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md

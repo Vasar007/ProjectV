@@ -8,7 +8,6 @@ using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Commands;
-using ThingAppraiser.DesktopApp.Domain.Executor;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.DesktopApp.Models.ContentDirectories;
