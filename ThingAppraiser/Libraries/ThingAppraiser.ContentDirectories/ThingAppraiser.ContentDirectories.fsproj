@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>4.7</LangVersion>
+    <RootNamespace>ThingAppraiser.ContentDirectories</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ContentModels.fs" />
+    <Compile Include="ContentFinderInternal.fs" />
+    <Compile Include="ContentFinder.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.CommonFSharp\ThingAppraiser.CommonFSharp.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

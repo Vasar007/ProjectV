@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <RootNamespace>ThingAppraiser.Appraisers</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Communication\ThingAppraiser.Communication.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Crawlers\ThingAppraiser.Crawlers.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.DAL\ThingAppraiser.DAL.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.FuzzyLogicSystem\ThingAppraiser.FuzzyLogicSystem.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Logging\ThingAppraiser.Logging.csproj" />
+    <ProjectReference Include="..\ThingAppraiser.Models\ThingAppraiser.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FuzzyControllerIFuzzyController">
+      <HintPath>..\ThingAppraiser.FuzzyLogicSystem\MATLAB libs\FuzzyControllerIFuzzyController.dll</HintPath>
+    </Reference>
+    <Reference Include="FuzzyLogicSystemNative">
+      <HintPath>..\ThingAppraiser.FuzzyLogicSystem\MATLAB libs\FuzzyLogicSystemNative.dll</HintPath>
+    </Reference>
+    <Reference Include="MWArray">
+      <HintPath>..\ThingAppraiser.FuzzyLogicSystem\MATLAB libs\MWArray.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

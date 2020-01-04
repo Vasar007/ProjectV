@@ -7,21 +7,21 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Usage examples
 
-| Desktop app                                                                                     |
-|-------------------------------------------------------------------------------------------------|
-| ![Example of usage desktop app](Media/desktop_example.gif "Usage desktop app")                  |
+| Desktop app                                                                                      |
+|--------------------------------------------------------------------------------------------------|
+| ![Example of usage desktop app](Media/desktop_example.gif "Usage desktop app")                   |
 
-| Telegram bot service                                                                            |
-|-------------------------------------------------------------------------------------------------|
+| Telegram bot service                                                                             |
+|--------------------------------------------------------------------------------------------------|
 | ![Example of usage telegram bot service](Media/telegram_example.gif "Usage telegram bot service")|
 
-| Console app                                                                                     |
-|-------------------------------------------------------------------------------------------------|
-| ![Example of usage console app](Media/console_example.gif "Usage console app")                  |
+| Console app                                                                                      |
+|--------------------------------------------------------------------------------------------------|
+| ![Example of usage console app](Media/console_example.gif "Usage console app")                   |
 
 ## Dependencies
 
-Target .NET Standard is 2.0 for libraries, .NET Core is 2.2 for web services and .NET Framework is 4.7.2 for desktop app. Version of C# is 7.1.
+Target .NET Standard is 2.1 for libraries, .NET Core is 3.0 for web services and for desktop app. Version of C# is 8.0, version of F# is 4.7.
 
 You can install all dependencies using NuGet package manager.
 
@@ -32,3 +32,17 @@ You can read full instruction in project [Wiki](https://github.com/Vasar007/Thin
 ## License information
 
 This project is licensed under the terms of the [Apache License 2.0](LICENSE).
+
+### Third party software and libraries used
+
+#### [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+
+Copyright © 2007 James Newton-King
+
+License: [MIT](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md)
+
+#### [Acolyte.NET](https://github.com/Vasar007/Acolyte.NET)
+
+Copyright © 2020 Vasily Vasilyev (vasar007@yandex.ru)
+
+License: [Apache License 2.0](https://github.com/Vasar007/Acolyte.NET/blob/master/LICENSE)
