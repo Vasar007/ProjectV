@@ -1,6 +1,6 @@
 ﻿using System;
+using Acolyte.Assertions;
 using NLog;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Logging
 {

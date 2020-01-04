@@ -1,7 +1,7 @@
 ﻿using System;
+using Acolyte.Assertions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Appraisers.Appraisals.Movie.Omdb
 {

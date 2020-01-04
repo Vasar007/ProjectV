@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using OMDbApiNet;
 using OMDbApiNet.Model;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.OmdbService.Mappers;

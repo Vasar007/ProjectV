@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -9,7 +9,6 @@ using ThingAppraiser.Configuration;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.Things;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels

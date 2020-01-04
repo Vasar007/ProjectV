@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.Models.Internal
 {

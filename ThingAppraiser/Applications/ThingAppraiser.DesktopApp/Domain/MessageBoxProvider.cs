@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.DesktopApp.Domain
 {

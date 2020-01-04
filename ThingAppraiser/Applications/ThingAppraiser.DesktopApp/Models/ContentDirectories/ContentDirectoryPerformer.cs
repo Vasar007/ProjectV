@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using ThingAppraiser.DesktopApp.Domain.Executor;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 {

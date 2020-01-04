@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Extensions;
+﻿using Acolyte.Assertions;
 using ThingAppraiser.Models.WebService;
 
 namespace ThingAppraiser.DesktopApp.Models.Things

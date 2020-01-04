@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Domain

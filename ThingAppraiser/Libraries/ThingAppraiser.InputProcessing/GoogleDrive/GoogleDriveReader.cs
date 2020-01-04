@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using Acolyte.Collections;
 using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ThingAppraiser.IO.Input.File;
 using ThingAppraiser.Logging;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.IO.Input.GoogleDrive
 {

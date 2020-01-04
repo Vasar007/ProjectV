@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
+using Acolyte.Assertions;
 using Prism.Commands;
 using ThingAppraiser.DesktopApp.Domain;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.ContentDirectories
 {

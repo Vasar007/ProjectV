@@ -1,9 +1,9 @@
 ﻿using System.Windows.Input;
+using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Extensions;
+﻿using Acolyte.Assertions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {
@@ -15,8 +15,8 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             ToplistFormat toplistFormat)
         {
             ToplistName = toplistName.ThrowIfNullOrWhiteSpace(nameof(toplistName));
-            ToplistType = toplistType;
-            ToplistFormat = toplistFormat;
+            ToplistType = toplistType.ThrowIfEnumValueIsUndefined(nameof(toplistType));
+            ToplistFormat = toplistFormat.ThrowIfEnumValueIsUndefined(nameof(toplistFormat));
         }
     }
 }

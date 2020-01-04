@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.DataPipeline
 {

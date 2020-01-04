@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using Acolyte.Assertions;
 using Prism.Mvvm;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

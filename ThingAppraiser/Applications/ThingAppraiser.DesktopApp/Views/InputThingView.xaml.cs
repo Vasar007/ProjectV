@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
+using Acolyte.Assertions;
 using MaterialDesignThemes.Wpf;
 using ThingAppraiser.DesktopApp.ViewModels;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {

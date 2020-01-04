@@ -1,5 +1,5 @@
-﻿using ThingAppraiser.Configuration;
-using ThingAppraiser.Extensions;
+﻿using Acolyte.Assertions;
+using ThingAppraiser.Configuration;
 
 namespace ThingAppraiser.DAL
 {

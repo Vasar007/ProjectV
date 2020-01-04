@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Acolyte.Assertions;
+using Microsoft.Extensions.Options;
 using MihaZupan;
 using Telegram.Bot;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain
 {

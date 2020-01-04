@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
+using Acolyte.Xml;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {

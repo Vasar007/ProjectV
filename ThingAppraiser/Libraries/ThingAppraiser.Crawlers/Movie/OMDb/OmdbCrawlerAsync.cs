@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Acolyte.Assertions;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.OmdbService;

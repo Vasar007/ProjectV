@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Extensions;
+﻿using Acolyte.Assertions;
 
 namespace ThingAppraiser.TmdbService
 {
@@ -7,6 +7,7 @@ namespace ThingAppraiser.TmdbService
         public static ITmdbClient CreateClient(string apiKey, int maxRetryCount)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
+            maxRetryCount.ThrowIfValueIsOutOfRange(nameof(maxRetryCount), 0, int.MaxValue);
 
             return new TmdbClient(apiKey)
             {

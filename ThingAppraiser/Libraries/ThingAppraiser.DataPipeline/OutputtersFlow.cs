@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
+using Acolyte.Assertions;
 using Gridsum.DataflowEx;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.DataPipeline

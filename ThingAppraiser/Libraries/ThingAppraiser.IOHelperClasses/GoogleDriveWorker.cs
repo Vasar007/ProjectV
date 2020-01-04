@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Acolyte.Assertions;
 using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO

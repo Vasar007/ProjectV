@@ -2,12 +2,12 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Newtonsoft.Json;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Exceptions;
 using ThingAppraiser.Models.Internal;
@@ -75,10 +75,10 @@ namespace ThingAppraiser.TmdbService
         public TmdbServiceConfigurationInfo Config => _configMapper.Transform(_tmdbClient.Config);
 
         /// <inheritdoc />
-        public string ApiKey => _tmdbClient.ApiKey;
+        public string ApiKey => _tmdbClient.ApiKey.ThrowIfNull(nameof(ApiKey));
 
         /// <inheritdoc />
-        public IWebProxy WebProxy => _tmdbClient.WebProxy;
+        public IWebProxy WebProxy => _tmdbClient.WebProxy.ThrowIfNull(nameof(WebProxy));
 
 
         public TmdbClient(string apiKey, bool useSsl = false, string baseUrl = "api.themoviedb.org",

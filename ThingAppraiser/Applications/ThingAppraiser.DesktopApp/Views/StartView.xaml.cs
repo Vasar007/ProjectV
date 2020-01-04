@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using Acolyte.Assertions;
+using Acolyte.Collections;
 using MaterialDesignThemes.Wpf;
 using Prism.Events;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
 using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.DesktopApp.ViewModels;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {

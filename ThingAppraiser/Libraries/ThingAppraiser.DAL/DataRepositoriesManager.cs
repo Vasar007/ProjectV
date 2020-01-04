@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Acolyte.Assertions;
+using Acolyte.Collections;
 using ThingAppraiser.Communication;
 using ThingAppraiser.DAL.Repositories;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;

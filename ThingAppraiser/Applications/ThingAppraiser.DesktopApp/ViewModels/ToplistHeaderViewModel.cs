@@ -1,10 +1,10 @@
 ﻿using System.Windows.Input;
+using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Domain;
 using ThingAppraiser.DesktopApp.Domain.Messages;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels

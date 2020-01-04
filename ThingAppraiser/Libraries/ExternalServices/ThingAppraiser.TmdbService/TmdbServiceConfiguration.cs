@@ -1,4 +1,4 @@
-﻿using ThingAppraiser.Extensions;
+﻿using Acolyte.Assertions;
 using ThingAppraiser.Models.Internal;
 
 namespace ThingAppraiser.TmdbService
@@ -23,9 +23,7 @@ namespace ThingAppraiser.TmdbService
         /// </summary>
         public static TmdbServiceConfigurationInfo Configuration
         {
-#pragma warning disable CS8603 // Possible null reference return.
             get => _configuration.ThrowIfNull(nameof(_configuration));
-#pragma warning restore CS8603 // Possible null reference return.
             private set => _configuration = value.ThrowIfNull(nameof(value));
         }
 

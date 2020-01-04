@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.Models.Internal
 {

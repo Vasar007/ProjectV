@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Acolyte.Assertions;
 using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Views;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {

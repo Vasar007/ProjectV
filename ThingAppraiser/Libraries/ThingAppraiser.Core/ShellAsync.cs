@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Acolyte.Assertions;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Core.ShellBuilders;
 using ThingAppraiser.DataPipeline;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
 

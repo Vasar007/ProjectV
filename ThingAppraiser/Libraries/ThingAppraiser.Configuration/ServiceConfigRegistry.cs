@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.Configuration
 {
@@ -90,7 +90,7 @@ namespace ThingAppraiser.Configuration
             return GetConfigForIdenrifier(_repositoriesRegistry, identifier);
         }
 
-        private void Register(Dictionary<string, XElement> registry, string identifier,
+        private static void Register(Dictionary<string, XElement> registry, string identifier,
             XElement element)
         {
             identifier.ThrowIfNullOrEmpty(nameof(identifier));
@@ -99,7 +99,7 @@ namespace ThingAppraiser.Configuration
             registry.Add(identifier, element);
         }
 
-        private XElement GetConfigForIdenrifier(Dictionary<string, XElement> registry,
+        private static XElement GetConfigForIdenrifier(Dictionary<string, XElement> registry,
             string identifier)
         {
             identifier.ThrowIfNullOrEmpty(nameof(identifier));

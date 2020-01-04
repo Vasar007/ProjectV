@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acolyte.Assertions;
 using ThingAppraiser.Communication;
 using ThingAppraiser.DataPipeline;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input

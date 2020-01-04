@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Acolyte.Assertions;
 using ThingAppraiser.DesktopApp.Domain;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Things
 {

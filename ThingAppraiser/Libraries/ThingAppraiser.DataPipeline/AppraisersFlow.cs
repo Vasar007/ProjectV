@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
+using Acolyte.Assertions;
 using Gridsum.DataflowEx;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 

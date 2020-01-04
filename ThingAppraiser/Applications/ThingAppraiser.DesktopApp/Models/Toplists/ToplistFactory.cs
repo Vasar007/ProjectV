@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
@@ -14,6 +14,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             ToplistFormat toplistFormat)
         {
             toplistName.ThrowIfNullOrWhiteSpace(nameof(toplistName));
+            // Enum parameters are checked in implementation classes.
 
             _logger.Info($"Creating toplist [Name: {toplistName}, Type: {toplistType.ToString()} " +
                          $"Format: {toplistFormat.ToString()}].");

@@ -3,9 +3,9 @@
 open System
 open System.IO
 open System.Threading.Tasks
-open ThingAppraiser
+open Acolyte.Functional
+open Acolyte.Collections
 open ThingAppraiser.ContentDirectories
-open ThingAppraiser.Extensions
 
 
 [<Struct>]

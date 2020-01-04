@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Acolyte.Assertions;
+using Prism.Mvvm;
 using ThingAppraiser.DesktopApp.Models;
 using ThingAppraiser.Extensions;
 

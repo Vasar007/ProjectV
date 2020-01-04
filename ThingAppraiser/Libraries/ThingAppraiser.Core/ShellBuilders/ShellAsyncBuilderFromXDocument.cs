@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using Acolyte.Xml;
 using ThingAppraiser.Building.Service;
 using ThingAppraiser.Logging;
 

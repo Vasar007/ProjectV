@@ -11,9 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="SeqEx.fs" />
-    <Compile Include="Throw.fs" />
-    <Compile Include="Utils.fs" />
+    <ProjectReference Include="..\ThingAppraiser.CommonCSharp\ThingAppraiser.CommonCSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.TelegramBotWebService.v1.Domain;
 

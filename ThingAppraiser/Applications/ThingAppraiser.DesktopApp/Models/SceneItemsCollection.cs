@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
+using Acolyte.Collections;
+using Acolyte.Common;
 
 namespace ThingAppraiser.DesktopApp.Models
 {

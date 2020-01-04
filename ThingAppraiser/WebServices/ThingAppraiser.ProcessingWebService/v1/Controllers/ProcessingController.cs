@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.WebService;

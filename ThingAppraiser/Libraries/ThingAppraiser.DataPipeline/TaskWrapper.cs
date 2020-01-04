@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ThingAppraiser.Exceptions;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
+using Acolyte.Exceptions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DataPipeline
@@ -28,7 +28,7 @@ namespace ThingAppraiser.DataPipeline
                         case TaskStatus.Faulted:
                         {
                             Exception exception =
-                                ExceptionsHelper.UnwrapAggregateExceptionIfCan(task.Exception);
+                                ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception);
 
                             _logger.Error(exception, "Task is in the faulted state.");
 

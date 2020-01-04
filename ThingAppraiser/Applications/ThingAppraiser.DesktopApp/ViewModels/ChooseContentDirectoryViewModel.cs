@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ThingAppraiser.DesktopApp.Models.ContentDirectories;
-using ThingAppraiser.Extensions;
-using Prism.Mvvm;
-using ThingAppraiser.Logging;
 using System.Windows.Input;
+using Acolyte.Assertions;
+using Prism.Mvvm;
 using Prism.Commands;
+using ThingAppraiser.DesktopApp.Models.ContentDirectories;
+using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

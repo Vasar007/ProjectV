@@ -1,8 +1,8 @@
 ﻿module ThingAppraiser.ContentDirectories.ContentFinder
 
 open System.IO
-open ThingAppraiser
-open ThingAppraiser.Extensions
+open Acolyte.Assertions
+open Acolyte.Collections
 open ThingAppraiser.ContentDirectories
 
 
@@ -38,8 +38,8 @@ let private getFileSeqAsync directoryName (args: ContentModels.ScannerArguments)
     } |> Async.StartAsTask
 
 let FindContentAsync (args: ContentModels.ContentFinderArguments) =
-    Throw.ifNullValue args "args"
-    Throw.ifNull args.DirectorySeq "args.DirectorySeq"
+    args.ThrowIfNullValue("args", false) |> ignore
+    args.DirectorySeq.ThrowIfNull("args.DirectorySeq") |> ignore
     
     let exceptionHandler = match args.DirectoryExceptionHandler with
                                | Some handler -> handler
@@ -62,8 +62,8 @@ let FindContentAsync (args: ContentModels.ContentFinderArguments) =
     ContentFinderInternal.findContentAsync internalArgs
 
 let FindContentForDirWithAsync directoryName fileSeqGen contentType pagingInfo =
-    Throw.ifNull directoryName "directoryName"
-    Throw.ifNullValue fileSeqGen "fileSeqGen"
+    directoryName.ThrowIfNull("directoryName") |> ignore
+    fileSeqGen.ThrowIfNullValue("fileSeqGen", false) |> ignore
 
     let (args: ContentModels.ContentFinderArguments) = {
         DirectorySeq = (getFolderSeq directoryName)

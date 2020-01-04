@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using Acolyte.Assertions;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.Building.Service

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Acolyte.Assertions;
 using ThingAppraiser.Communication;
 using ThingAppraiser.Core.ShellBuilders;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;

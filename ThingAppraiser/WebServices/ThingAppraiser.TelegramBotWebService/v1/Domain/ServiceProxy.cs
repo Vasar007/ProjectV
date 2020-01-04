@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
+using Microsoft.Extensions.Options;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.WebService;
 

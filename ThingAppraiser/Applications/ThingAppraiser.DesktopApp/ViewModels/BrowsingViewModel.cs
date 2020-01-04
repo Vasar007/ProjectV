@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.DesktopApp.Models.DataSuppliers;
 using ThingAppraiser.DesktopApp.Models.Things;
 using ThingAppraiser.Models.WebService;
 using Prism.Mvvm;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.DesktopApp.ViewModels
 {

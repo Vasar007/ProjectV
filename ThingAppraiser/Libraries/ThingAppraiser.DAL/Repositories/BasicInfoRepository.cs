@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Acolyte.Assertions;
 using ThingAppraiser.DAL.DataBaseProviders;
 using ThingAppraiser.DAL.Mappers;
 using ThingAppraiser.DAL.Properties;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DAL.Repositories

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acolyte.Assertions;
 using ThingAppraiser.Appraisers.Appraisals;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
 

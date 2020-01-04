@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using ThingAppraiser.DesktopApp.Models.Things;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Internal;
 using ThingAppraiser.Models.WebService;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
 {

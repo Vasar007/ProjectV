@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.Communication
 {
@@ -30,8 +30,7 @@ namespace ThingAppraiser.Communication
         {
             lock (_syncRoot)
             {
-                messageHandler.ThrowIfNull(nameof(messageHandler));
-                MessageHandler = messageHandler;
+                MessageHandler = messageHandler.ThrowIfNull(nameof(messageHandler));
             }
         }
 
@@ -46,10 +45,7 @@ namespace ThingAppraiser.Communication
         {
             lock (_syncRoot)
             {
-                MessageHandler.ThrowIfNull(nameof(MessageHandler));
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                return MessageHandler.GetMessage();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                return MessageHandler.ThrowIfNull(nameof(MessageHandler)).GetMessage();
             }
         }
 
@@ -64,10 +60,7 @@ namespace ThingAppraiser.Communication
         {
             lock (_syncRoot)
             {
-                MessageHandler.ThrowIfNull(nameof(MessageHandler));
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                MessageHandler.OutputMessage(message);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                MessageHandler.ThrowIfNull(nameof(MessageHandler)).OutputMessage(message);
             }
         }
 

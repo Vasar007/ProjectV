@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
+using Acolyte.Xml;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Configuration;
 using ThingAppraiser.Models.WebService;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using Acolyte.Assertions;
 using ThingAppraiser.DAL.DataBaseProviders;
 using ThingAppraiser.DAL.Mappers;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DAL.Repositories
 {

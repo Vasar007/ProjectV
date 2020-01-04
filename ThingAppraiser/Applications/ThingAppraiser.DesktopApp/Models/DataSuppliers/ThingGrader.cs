@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acolyte.Assertions;
+using Acolyte.Collections;
 using ThingAppraiser.DesktopApp.Models.Things;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
@@ -26,7 +27,11 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         {
             _logger.Info("Got rating container to process.");
 
-            if (rating.IsNullOrEmpty()) return new List<Thing>();
+            if (rating.IsNullOrEmpty())
+            {
+                _logger.Info("Rating does not contain any results.");
+                return new List<Thing>();
+            }
 
             IImageSupplier imageSupplier = DetermineImageSupplier(rating.First().DataHandler);
 
@@ -37,7 +42,7 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
                 )
             ).ToList();
 
-            _logger.Info("Processing was over.");
+            _logger.Info($"Processing was over. Got {result.Count.ToString()} things.");
             return result;
         }
 

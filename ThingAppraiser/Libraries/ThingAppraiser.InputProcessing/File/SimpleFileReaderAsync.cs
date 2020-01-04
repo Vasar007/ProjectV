@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Acolyte.Assertions;
 using CsvHelper;
 using CsvHelper.Configuration;
 using FileHelpers;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input.File

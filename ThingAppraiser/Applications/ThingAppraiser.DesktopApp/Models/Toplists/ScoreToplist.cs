@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {

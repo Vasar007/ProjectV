@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.Data;
 

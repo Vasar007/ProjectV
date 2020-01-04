@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Google.Apis.Upload;
+using Acolyte.Collections;
 using Google.Apis.Drive.v3;
+using Google.Apis.Upload;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Communication;
 using ThingAppraiser.IO.Output.File;
 using ThingAppraiser.Models.Internal;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.IO.Output.GoogleDrive
 {

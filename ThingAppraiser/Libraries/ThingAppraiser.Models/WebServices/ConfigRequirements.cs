@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Acolyte.Assertions;
 using Newtonsoft.Json;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.Models.WebService
 {

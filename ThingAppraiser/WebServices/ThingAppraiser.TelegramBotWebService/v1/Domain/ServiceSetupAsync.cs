@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.TelegramBotWebService.v1.Domain

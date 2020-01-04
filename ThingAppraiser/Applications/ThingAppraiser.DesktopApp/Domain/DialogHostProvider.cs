@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Acolyte.Assertions;
 using MaterialDesignThemes.Wpf;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DesktopApp.Domain

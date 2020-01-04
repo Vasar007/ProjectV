@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.TmdbService.Models
@@ -15,6 +15,7 @@ namespace ThingAppraiser.TmdbService.Models
         public int TotalResults { get; }
 
 
+        // TODO: add range checks for integers.
         public TmdbSearchContainer(int page, IReadOnlyList<TmdbMovieInfo> results, int totalPages,
             int totalResults)
         {

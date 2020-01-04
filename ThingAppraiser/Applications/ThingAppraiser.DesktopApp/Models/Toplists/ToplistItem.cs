@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
+using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Mvvm;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Models.Toplists
 {

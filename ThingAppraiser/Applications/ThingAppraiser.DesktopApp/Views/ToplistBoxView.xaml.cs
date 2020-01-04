@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
+using Acolyte.Assertions;
 using ThingAppraiser.DesktopApp.Models.Toplists;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {

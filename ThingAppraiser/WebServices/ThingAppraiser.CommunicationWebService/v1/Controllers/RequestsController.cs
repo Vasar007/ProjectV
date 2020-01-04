@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.CommunicationWebService.v1.Domain;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.WebService;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.CommunicationWebService.v1.Controllers
 {

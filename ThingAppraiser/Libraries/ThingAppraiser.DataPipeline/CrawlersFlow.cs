@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
+using Acolyte.Assertions;
+using Acolyte.Collections;
 using Gridsum.DataflowEx;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Models.Data;
 
 namespace ThingAppraiser.DataPipeline

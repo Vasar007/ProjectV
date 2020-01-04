@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
+using Acolyte.Assertions;
 using Prism.Mvvm;
-using ThingAppraiser.Extensions;
 
 namespace ThingAppraiser.DesktopApp.Views
 {

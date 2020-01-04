@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Acolyte.Assertions;
+using Acolyte.Collections;
 using ThingAppraiser.Communication;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.IO.Input

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using Acolyte.Assertions;
 using ThingAppraiser.DAL.Mappers;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 
 namespace ThingAppraiser.DAL.DataBaseProviders
 {
-    // TODO: add command creation method (important).
+    // TODO: add command creation method.
     public sealed class DbHelperScope : IDisposable
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<DbHelperScope>();

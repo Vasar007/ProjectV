@@ -1,7 +1,7 @@
 ﻿using System;
 using ThingAppraiser.Models.Data;
 using ThingAppraiser.Models.Internal;
-using ThingAppraiser.Extensions;
+using Acolyte.Assertions;
 
 namespace ThingAppraiser.Appraisers.Appraisals.Game.Steam
 {

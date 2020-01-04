@@ -2,8 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using ThingAppraiser.Configuration;
-using ThingAppraiser.Extensions;
 using ThingAppraiser.Logging;
 using ThingAppraiser.Models.WebService;
 
