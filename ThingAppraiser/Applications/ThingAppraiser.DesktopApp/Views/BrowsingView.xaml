@@ -91,24 +91,24 @@
                             FontWeight="Bold" />
 
                 <TextBlock Text="Name"
-                            Margin="0 7 0 3"
-                            FontStyle="Italic" />
+                           Margin="0 7 0 3"
+                           FontStyle="Italic" />
                 <TextBlock Text="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Thing ID"
-                            Margin="0 7 0 3"
-                            FontStyle="Italic" />
+                           Margin="0 7 0 3"
+                           FontStyle="Italic" />
                 <TextBlock Text="{Binding Path=ThingId, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Text="Average vote"
-                            Margin="0 7 0 3"
-                            FontStyle="Italic" />
+                           Margin="0 7 0 3"
+                           FontStyle="Italic" />
                 <TextBlock Text="{Binding Path=VoteAverage, UpdateSourceTrigger=PropertyChanged,
                                   StringFormat=N3}" />
 
                 <TextBlock Text="Vote count"
-                            Margin="0 7 0 3"
-                            FontStyle="Italic" />
+                           Margin="0 7 0 3"
+                           FontStyle="Italic" />
                 <TextBlock Text="{Binding Path=VoteCount, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </Grid>
