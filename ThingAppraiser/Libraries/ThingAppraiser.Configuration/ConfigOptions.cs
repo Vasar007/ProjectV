@@ -22,8 +22,8 @@ namespace ThingAppraiser.Configuration
             where T : IOptions, new()
         {
             T section = Root.Value.GetSection(typeof(T).Name).Get<T>();
-            if (section == null)
-                return new T();
+
+            if (section == null) return new T();
 
             return section;
         }
