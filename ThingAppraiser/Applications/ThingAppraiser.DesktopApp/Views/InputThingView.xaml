@@ -7,11 +7,16 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
+             xmlns:validation="clr-namespace:ThingAppraiser.DesktopApp.Domain.Validation"
+             xmlns:converters="clr-namespace:ThingAppraiser.DesktopApp.Domain.Converters"
              xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:InputThingViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <UserControl.Resources>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+    </UserControl.Resources>
 
     <materialDesign:DialogHost x:Name="EnterThingNameDialogHost"
                                Identifier="EnterThingName"
@@ -33,9 +38,11 @@
                          FontSize="18">
                     <TextBox.Text>
                         <Binding Path="ThingName"
-                                 UpdateSourceTrigger="PropertyChanged">
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                <validation:NotEmptyNorWhiteSpaceValidationRule ValidationStep="CommittedValue"
+                                                                                ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -48,6 +55,13 @@
                             IsDefault="True"
                             Margin="0 8 8 0"
                             Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                        <!--<Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
+                                          Mode="TwoWay">
+                                <Binding ElementName="ThingNameTextBox"
+                                         Path="(Validation.HasError)" />
+                            </MultiBinding>
+                        </Button.IsEnabled>-->
                         ADD
                     </Button>
                     <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"

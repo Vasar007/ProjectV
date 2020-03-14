@@ -6,11 +6,16 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
+             xmlns:validation="clr-namespace:ThingAppraiser.DesktopApp.Domain.Validation"
+             xmlns:converters="clr-namespace:ThingAppraiser.DesktopApp.Domain.Converters"
              xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:EnterDataViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <UserControl.Resources>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+    </UserControl.Resources>
 
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -32,9 +37,11 @@
                  Grid.Row="1">
             <TextBox.Text>
                 <Binding Path="Name"
-                         UpdateSourceTrigger="PropertyChanged">
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay">
                     <Binding.ValidationRules>
-                        <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                        <validation:NotEmptyNorWhiteSpaceValidationRule ValidationStep="CommittedValue"
+                                                                        ValidatesOnTargetUpdated="True" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -49,6 +56,13 @@
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                     CommandParameter="{Binding Path=.}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
+                                  Mode="TwoWay">
+                        <Binding ElementName="NameTextBox"
+                                 Path="(Validation.HasError)" />
+                    </MultiBinding>
+                </Button.IsEnabled>
                 APPRAISE
             </Button>
             <Button IsCancel="True"

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
              mc:Ignorable="d" 
@@ -10,17 +11,30 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <StackPanel>
-        <StackPanel Orientation="Horizontal"
-                                    Margin="8">
-            <TextBlock VerticalAlignment="Center">
-                Light
+
+        <materialDesign:Card Padding="8">
+            <StackPanel>
+              <TextBlock Margin="16 16 12 8"
+                         FontSize="16">
+                Appearance
             </TextBlock>
-            <ToggleButton Margin="8 0 16 0"
+
+              <Separator Style="{StaticResource MaterialDesignLightSeparator}" />
+
+                <StackPanel Orientation="Horizontal"
+                    Margin="8">
+                    <TextBlock VerticalAlignment="Center">
+                        Light
+                    </TextBlock>
+                    <ToggleButton Margin="8 0 16 0"
                           Command="{Binding Path=ToggleBaseCommand}"
                           CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsChecked}" />
-            <TextBlock VerticalAlignment="Center">
-                Dark
-            </TextBlock>
-        </StackPanel>
+                    <TextBlock VerticalAlignment="Center">
+                        Dark
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+
     </StackPanel>
 </UserControl>

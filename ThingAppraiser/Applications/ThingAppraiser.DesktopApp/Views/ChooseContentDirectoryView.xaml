@@ -7,12 +7,17 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:domain="clr-namespace:ThingAppraiser.DesktopApp.Domain"
+             xmlns:validation="clr-namespace:ThingAppraiser.DesktopApp.Domain.Validation"
+             xmlns:converters="clr-namespace:ThingAppraiser.DesktopApp.Domain.Converters"
              xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:ChooseContentDirectoryViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
+    <UserControl.Resources>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+    </UserControl.Resources>
+    
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -38,9 +43,11 @@
                      Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}">
                 <TextBox.Text>
                     <Binding Path="DirectoryPath"
-                             UpdateSourceTrigger="PropertyChanged">
+                             UpdateSourceTrigger="PropertyChanged"
+                             Mode="TwoWay">
                         <Binding.ValidationRules>
-                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                            <validation:NotEmptyNorWhiteSpaceValidationRule ValidationStep="CommittedValue"
+                                                                            ValidatesOnTargetUpdated="True" />
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -52,7 +59,6 @@
                     x:Name="OpenContentDirectoryButton"
                     Command="{Binding Path=OpenContentDirectoryDialogCommand}" />
         </StackPanel>
-        
 
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Center"
@@ -83,6 +89,13 @@
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
                     Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
                     CommandParameter="{Binding Path=.}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
+                                  Mode="TwoWay">
+                        <Binding ElementName="DirectoryPathTextBox"
+                                 Path="(Validation.HasError)" />
+                    </MultiBinding>
+                </Button.IsEnabled>
                 FIND CONTENT
             </Button>
             <Button IsCancel="True"
