@@ -84,7 +84,7 @@
                                         CommandParameter="{Binding Path=CurrentContent}">
                                     Return to start page
                                 </Button>
-                                <Button IsEnabled="False">
+                                <Button Command="{Binding Path=GoToSettingsViewCommand}">
                                     Settings
                                 </Button>
                                 <Separator />

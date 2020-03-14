@@ -74,6 +74,8 @@ namespace ThingAppraiser.DesktopApp.ViewModels
 
         public ICommand ForceReturnToStartViewCommand { get; }
 
+        public ICommand GoToSettingsViewCommand { get; }
+
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
 
@@ -115,6 +117,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 ReturnToStartView, CanReturnToStartView
             );
             ForceReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView);
+            GoToSettingsViewCommand = new DelegateCommand(GoToSettingsView);
 
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
@@ -152,6 +155,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 new ContentDirectoriesView()
             );
 
+            _scenes.AddScene(
+                DesktopOptions.PageNames.SettingsPage,
+                new SettingsView()
+            );
+
             ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
@@ -177,6 +185,11 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         private bool CanReturnToStartView(UserControl currentContent)
         {
             return !(currentContent is StartView) && IsNotBusy;
+        }
+
+        private void GoToSettingsView()
+        {
+            ChangeScene(DesktopOptions.PageNames.SettingsPage);
         }
 
         // TODO: try to move this logic in regions into new classes.

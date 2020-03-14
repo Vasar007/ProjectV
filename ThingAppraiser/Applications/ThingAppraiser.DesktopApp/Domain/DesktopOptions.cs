@@ -28,6 +28,8 @@ namespace ThingAppraiser.DesktopApp.Domain
             public static string ToplistEditorPage { get; } = "Toplist editor";
 
             public static string ContentDirectoriesPage { get; } = "Content directories";
+
+            public static string SettingsPage { get; } = "Settings";
         }
 
         public static class HintTexts
