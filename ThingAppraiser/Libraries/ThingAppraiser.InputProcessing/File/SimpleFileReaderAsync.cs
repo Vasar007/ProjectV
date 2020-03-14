@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Acolyte.Assertions;
 using CsvHelper;
@@ -50,8 +51,13 @@ namespace ThingAppraiser.IO.Input.File
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
 
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            {
+                HasHeaderRecord = true
+            };
+
             using var reader = new StreamReader(filename);
-            using var csv = new CsvReader(reader, new Configuration { HasHeaderRecord = true });
+            using var csv = new CsvReader(reader, csvConfig);
 
             if (!csv.Read() || !csv.ReadHeader())
             {

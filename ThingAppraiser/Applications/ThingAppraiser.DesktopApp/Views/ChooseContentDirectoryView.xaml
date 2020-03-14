@@ -38,7 +38,7 @@
                      Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}">
                 <TextBox.Text>
                     <Binding Path="DirectoryPath"
-                         UpdateSourceTrigger="PropertyChanged">
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
                         </Binding.ValidationRules>
