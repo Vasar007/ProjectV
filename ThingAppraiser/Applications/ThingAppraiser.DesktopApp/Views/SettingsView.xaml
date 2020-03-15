@@ -14,8 +14,8 @@
 
         <materialDesign:Card Padding="8">
             <StackPanel>
-                <TextBlock Margin="16 16 12 8"
-                            FontSize="16">
+                <TextBlock Margin="16 16 12 0"
+                           FontSize="16">
                     Appearance
                 </TextBlock>
 
