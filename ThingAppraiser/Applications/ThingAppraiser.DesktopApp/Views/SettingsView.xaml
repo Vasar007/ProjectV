@@ -19,7 +19,7 @@
                 Appearance
             </TextBlock>
 
-              <Separator Style="{StaticResource MaterialDesignLightSeparator}" />
+              <Separator Style="{StaticResource MaterialDesignSeparator}" />
 
                 <StackPanel Orientation="Horizontal"
                     Margin="8">
