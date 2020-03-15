@@ -14,12 +14,12 @@
 
         <materialDesign:Card Padding="8">
             <StackPanel>
-              <TextBlock Margin="16 16 12 8"
-                         FontSize="16">
-                Appearance
-            </TextBlock>
+                <TextBlock Margin="16 16 12 8"
+                            FontSize="16">
+                    Appearance
+                </TextBlock>
 
-              <Separator Style="{StaticResource MaterialDesignSeparator}" />
+                <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
 
                 <StackPanel Orientation="Horizontal"
                     Margin="8">

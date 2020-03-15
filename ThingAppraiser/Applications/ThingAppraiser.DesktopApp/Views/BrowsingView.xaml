@@ -64,7 +64,8 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Image Margin="5" Source="{x:Null}"
+                            <Image Margin="5"
+                                   Source="{x:Null}"
                                    RenderOptions.BitmapScalingMode="Fant"
                                    HorizontalAlignment="Center"
                                    Width="64"
