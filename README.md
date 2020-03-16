@@ -65,6 +65,12 @@ Copyright © 2016 Robin Müller
 
 License: [MIT](https://github.com/TelegramBots/Telegram.Bot/blob/master/LICENSE)
 
+#### [TMDbLib](https://github.com/LordMike/TMDbLib)
+
+Copyright © 2016 Michael Bisbjerg
+
+License: [MIT](https://github.com/LordMike/TMDbLib/blob/master/LICENSE.txt)
+
 #### [OmdbApiNet](https://github.com/torben-w/OMDb-API.NET)
 
 Copyright © 2018-2019 Torben Wagner
