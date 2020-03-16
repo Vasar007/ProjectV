@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Vasar007/ThingAppraiser/blob/master/LICENSE)
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/Vasar007/ThingAppraiser/master.svg)](https://ci.appveyor.com/project/Vasar007/thingappraiser)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser?ref=badge_shield)
 
 Evaluate your things (movies, games, books e.t.c.) automatically based on popular databases with ratings.
 
@@ -32,6 +33,9 @@ You can read full instruction in project [Wiki](https://github.com/Vasar007/Thin
 ## License information
 
 This project is licensed under the terms of the [Apache License 2.0](LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser?ref=badge_large)
 
 ### Third party software and libraries used
 
