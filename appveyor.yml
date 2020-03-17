@@ -1,6 +1,9 @@
 version: '{build}'
 image: Visual Studio 2019
+
 shallow_clone: true
+
+clone_folder: C:/projects/thingappraiser
 
 branches:
   only:
