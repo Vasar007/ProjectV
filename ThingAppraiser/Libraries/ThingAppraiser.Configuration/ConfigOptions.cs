@@ -33,7 +33,7 @@ namespace ThingAppraiser.Configuration
             var configurationBuilder = new ConfigurationBuilder();
 
             string configPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFilename)
+                ? Path.Combine(Directory.GetCurrentDirectory(), ConfigFilename)
                 : $"/etc/thingappraiser/{ConfigFilename}";
 
             configurationBuilder.AddJsonFile(configPath, optional: true, reloadOnChange: true);
