@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:validation="clr-namespace:ThingAppraiser.DesktopApp.Domain.Validation"
              xmlns:converters="clr-namespace:ThingAppraiser.DesktopApp.Domain.Converters"
