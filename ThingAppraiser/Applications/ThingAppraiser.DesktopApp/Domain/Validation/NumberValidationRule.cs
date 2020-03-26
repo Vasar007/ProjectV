@@ -52,24 +52,14 @@ namespace ThingAppraiser.DesktopApp.Domain.Validation
 
         private static int? TryParseInteger(string value, out string? message)
         {
-            int? result = null;
-
-            try
+            if (int.TryParse(value, out int parsedResult))
             {
-                result = int.Parse(value);
                 message = null;
-                return result;
-            }
-            catch (OverflowException)
-            {
-                message = "The value is outside the range.";
-            }
-            catch (FormatException)
-            {
-                message = "The value is not in a recognizable format.";
+                return parsedResult;
             }
 
-            return result;
+            message = "The value is invalid.";
+            return null;
         }
     }
 }
