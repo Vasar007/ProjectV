@@ -59,13 +59,7 @@ namespace ThingAppraiser.Models.Data
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            if (obj is null) return false;
-
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (!(obj is TmdbMovieInfo other)) return false;
-
-            return IsEqual(other);
+            return Equals(obj as TmdbMovieInfo);
         }
 
         /// <inheritdoc />

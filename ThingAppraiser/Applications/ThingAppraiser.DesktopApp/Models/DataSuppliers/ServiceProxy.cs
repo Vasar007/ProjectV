@@ -60,9 +60,10 @@ namespace ThingAppraiser.DesktopApp.Models.DataSuppliers
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _client.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

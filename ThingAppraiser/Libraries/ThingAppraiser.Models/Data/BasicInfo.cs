@@ -62,19 +62,13 @@ namespace ThingAppraiser.Models.Data
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            if (obj is null) return false;
-
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (!(obj is BasicInfo other)) return false;
-
-            return IsEqual(other);
+            return Equals(obj as BasicInfo);
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return ThingId.GetHashCode();
+            return HashCode.Combine(ThingId);
         }
 
         #endregion
