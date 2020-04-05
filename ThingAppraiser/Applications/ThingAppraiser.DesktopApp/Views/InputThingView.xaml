@@ -14,7 +14,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
-        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+        <converters:BooleansToBooleanInverseConverter x:Key="BooleansToBooleanInverseConverter" />
     </UserControl.Resources>
 
     <materialDesign:DialogHost x:Name="EnterThingNameDialogHost"
@@ -54,13 +54,15 @@
                             IsDefault="True"
                             Margin="0 8 8 0"
                             Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
-                        <!--<Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
+                        <!--
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource ResourceKey=BooleansToBooleanInverseConverter}"
                                           Mode="TwoWay">
                                 <Binding ElementName="ThingNameTextBox"
                                          Path="(Validation.HasError)" />
                             </MultiBinding>
-                        </Button.IsEnabled>-->
+                        </Button.IsEnabled>
+                        -->
                         ADD
                     </Button>
                     <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"

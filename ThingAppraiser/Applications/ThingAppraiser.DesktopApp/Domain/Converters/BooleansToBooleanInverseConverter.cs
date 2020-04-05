@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace ThingAppraiser.DesktopApp.Domain.Converters
 {
-    internal class InverseAndBooleansToBooleanConverter : IMultiValueConverter
+    internal class BooleansToBooleanInverseConverter : IMultiValueConverter
     {
-        public InverseAndBooleansToBooleanConverter()
+        public BooleansToBooleanInverseConverter()
         {
         }
 
@@ -22,7 +22,7 @@ namespace ThingAppraiser.DesktopApp.Domain.Converters
 
             if (values.Length > 0)
             {
-                return values.All(value => value is bool booleanValue && !booleanValue);
+                return values.All(value => IsValid(value));
             }
 
             return true;
@@ -35,5 +35,13 @@ namespace ThingAppraiser.DesktopApp.Domain.Converters
         }
 
         #endregion
+
+        private static bool IsValid(object? value)
+        {
+            // booleanValue may be Validation.HasError.
+            if (value is bool booleanValue) return !booleanValue;
+
+            return !(value is null);
+        }
     }
 }

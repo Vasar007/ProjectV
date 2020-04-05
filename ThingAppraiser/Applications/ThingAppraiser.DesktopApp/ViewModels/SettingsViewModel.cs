@@ -29,7 +29,21 @@ namespace ThingAppraiser.DesktopApp.ViewModels
                 throw new ArgumentException("Boolean flag should be specified.", nameof(isDark));
             }
 
-            IBaseTheme newTheme = isDark.Value ? Theme.Dark : Theme.Light;
+            IBaseTheme newTheme;
+            string newThemeName;
+            if (isDark.Value)
+            {
+                newTheme = Theme.Dark;
+                newThemeName = "Dark";
+            }
+            else
+            {
+                newTheme = Theme.Light;
+                newThemeName = "Light";
+            }
+
+            _logger.Info($"Changing application theme. New theme: '{newThemeName}'.");
+
             ModifyTheme(theme => theme.SetBaseTheme(newTheme));
         }
 
@@ -37,7 +51,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
         {
             _logger.Info("Modifying application theme.");
 
-            PaletteHelper paletteHelper = new PaletteHelper();
+            var paletteHelper = new PaletteHelper();
             ITheme theme = paletteHelper.GetTheme();
 
             modificationAction?.Invoke(theme);

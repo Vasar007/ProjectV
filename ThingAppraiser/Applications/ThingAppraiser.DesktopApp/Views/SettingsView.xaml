@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
-    <StackPanel>
+    <StackPanel Orientation="Vertical">
 
         <materialDesign:Card Padding="8">
             <StackPanel>
@@ -37,4 +37,5 @@
         </materialDesign:Card>
 
     </StackPanel>
+
 </UserControl>
