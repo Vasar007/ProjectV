@@ -69,7 +69,7 @@
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <DockPanel>
-                <materialDesign:ColorZone Mode="Inverted"
+                <materialDesign:ColorZone Mode="Standard"
                                           Padding="16"
                                           DockPanel.Dock="Top">
                     <DockPanel>
@@ -79,25 +79,31 @@
                         <materialDesign:PopupBox DockPanel.Dock="Right"
                                                  PlacementMode="BottomAndAlignRightEdges"
                                                  StaysOpen="False">
-                            <StackPanel>
+                            <StackPanel Orientation="Vertical">
                                 <Button Command="{Binding Path=ReturnToStartViewCommand}"
                                         CommandParameter="{Binding Path=CurrentContent}">
                                     Return to start page
                                 </Button>
+
                                 <Button Command="{Binding Path=GoToSettingsViewCommand}">
                                     Settings
                                 </Button>
+
                                 <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
                                 <Button Command="{Binding Path=AppCloseCommand}">
                                     Exit
                                 </Button>
                             </StackPanel>
                         </materialDesign:PopupBox>
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22">
-                                The Thing Appraiser
-                        </TextBlock>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="22"
+                                       Text="{Binding Path=Title}" />
+
+                            <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
+                        </StackPanel>
                     </DockPanel>
                 </materialDesign:ColorZone>
 

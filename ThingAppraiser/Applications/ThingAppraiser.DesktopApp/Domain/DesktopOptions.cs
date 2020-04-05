@@ -4,7 +4,7 @@ namespace ThingAppraiser.DesktopApp.Domain
 {
     internal static class DesktopOptions
     {
-        public static string Title { get; } = "ThingAppraiser";
+        public static string Title { get; } = "The Thing Appraiser";
 
         /// <summary>
         /// Page names of all views in main menu.
