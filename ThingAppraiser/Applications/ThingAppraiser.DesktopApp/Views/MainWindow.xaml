@@ -87,7 +87,7 @@
                                 <Button Command="{Binding Path=GoToSettingsViewCommand}">
                                     Settings
                                 </Button>
-                                <Separator />
+                                <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
                                 <Button Command="{Binding Path=AppCloseCommand}">
                                     Exit
                                 </Button>
