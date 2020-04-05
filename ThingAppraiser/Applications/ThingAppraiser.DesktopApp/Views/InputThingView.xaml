@@ -1,11 +1,10 @@
 ﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.InputThingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:validation="clr-namespace:ThingAppraiser.DesktopApp.Domain.Validation"
              xmlns:converters="clr-namespace:ThingAppraiser.DesktopApp.Domain.Converters"
@@ -32,7 +31,7 @@
                 </TextBlock>
 
                 <TextBox x:Name="ThingNameTextBox"
-                         wpf:HintAssist.Hint="Name of the Thing"
+                         materialDesign:HintAssist.Hint="Name of the Thing"
                          Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"                 
                          Margin="0 6 0 0"
                          FontSize="18">
@@ -54,7 +53,7 @@
                     <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"
                             IsDefault="True"
                             Margin="0 8 8 0"
-                            Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                         <!--<Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
                                           Mode="TwoWay">
@@ -67,7 +66,7 @@
                     <Button Style="{StaticResource ResourceKey=MaterialDesignFlatButton}"
                             IsCancel="True"
                             Margin="0 8 8 0"
-                            Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                         <Button.CommandParameter>
                             <system:Boolean>
                                 False
@@ -117,13 +116,13 @@
                             Grid.Row="2"
                             Margin="0 16 0 16">
                     <Button IsDefault="True"
-                            Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                             CommandParameter="{Binding Path=.}">
                         APPRAISE
                     </Button>
                     <Button IsCancel="True"
                             Margin="8 0 0 0"
-                            Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                         <Button.CommandParameter>
                             <system:Boolean>
                                 False

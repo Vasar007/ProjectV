@@ -1,9 +1,8 @@
 ﻿<UserControl x:Class="ThingAppraiser.DesktopApp.Views.CreateToplistView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
@@ -31,7 +30,7 @@
         </TextBlock>
 
         <TextBox x:Name="ToplistNameTextBox"
-                 wpf:HintAssist.Hint="Toplist name"
+                 materialDesign:HintAssist.Hint="Toplist name"
                  Style="{DynamicResource ResourceKey=MaterialDesignFloatingHintTextBox}"
                  Margin="0 6 0 0"
                  FontSize="18"
@@ -89,7 +88,7 @@
                     Margin="0 16 0 0">
             <Button IsDefault="True"
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
-                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                     CommandParameter="{Binding Path=.}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource ResourceKey=InverseAndBooleansToBooleanConverter}"
@@ -103,7 +102,7 @@
             <Button IsCancel="True"
                     Margin="8 0 0 0"
                     Style="{DynamicResource ResourceKey=MaterialDesignFlatButton}"
-                    Command="{x:Static wpf:DialogHost.CloseDialogCommand}">
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:Boolean>
                         False
