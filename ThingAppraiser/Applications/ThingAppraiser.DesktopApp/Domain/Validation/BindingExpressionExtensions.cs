@@ -45,9 +45,9 @@ namespace ThingAppraiser.DesktopApp.Domain.Validation
             object? resolvedSource = bindingExpression.ResolvedSource;
             if (resolvedSource is null)
             {
-#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 result = default;
-#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
+#pragma warning restore CS8601 // Possible null reference assignment.
                 return false;
             }
 
@@ -65,9 +65,9 @@ namespace ThingAppraiser.DesktopApp.Domain.Validation
                 return true;
             }
 
-#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
+#pragma warning disable CS8601 // Possible null reference assignment.
             result = default;
-#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
+#pragma warning restore CS8601 // Possible null reference assignment.
             return false;
         }
 

@@ -51,7 +51,7 @@
                                   HorizontalAlignment="Right"
                                   Margin="16"
                                   IsChecked="{Binding ElementName=MenuToggleButton,
-                                              Path=IsChecked, Mode=TwoWay}"/>
+                                              Path=IsChecked, Mode=TwoWay}" />
                     <ListBox x:Name="SceneItemsListBox"
                              Margin="0 16 0 16"
                              SelectedIndex="0"                
