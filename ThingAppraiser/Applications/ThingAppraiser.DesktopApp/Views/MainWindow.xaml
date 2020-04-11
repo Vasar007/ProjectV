@@ -40,7 +40,8 @@
 
     <materialDesign:DialogHost x:Name="MainWindowDialogHost"
                                Identifier="RootDialog"
-                               CloseOnClickAway="False">
+                               CloseOnClickAway="False"
+                               DialogTheme="Inherit">
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton,
                                                       Path=IsChecked}"
                                    IsEnabled="{Binding Path=IsNotBusy}">

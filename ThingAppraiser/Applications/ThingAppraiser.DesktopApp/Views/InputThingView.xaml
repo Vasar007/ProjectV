@@ -19,9 +19,10 @@
 
     <materialDesign:DialogHost x:Name="EnterThingNameDialogHost"
                                Identifier="EnterThingName"
+                               CloseOnClickAway="False"
+                               DialogTheme="Inherit"
                                DialogOpened="EnterThingName_DialogOpened"
                                DialogClosing="EnterThingName_DialogClosing"
-                               CloseOnClickAway="False"
                                Height="400"
                                Width="300">
         <materialDesign:DialogHost.DialogContent>
