@@ -14,7 +14,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             set
             {
                 SetProperty(ref _name, value.ThrowIfNull(nameof(value)));
-                ParentBlock.DeleteItemIfNeed(this);
+                ParentBlock.DeleteItemIfNeeded(this);
             }
         }
 

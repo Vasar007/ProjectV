@@ -53,11 +53,12 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
         {
             toplistItem.ThrowIfNull(nameof(toplistItem));
 
-            bool nameIsNullOrWhitespace = string.IsNullOrWhiteSpace(toplistItem.Name);
+            bool isNameNullOrWhitespace = string.IsNullOrWhiteSpace(toplistItem.Name);
 
             if (Items.Contains(toplistItem))
             {
-                if (nameIsNullOrWhitespace)
+                // Remove items without names. This action is required when user press "Enter" key.
+                if (isNameNullOrWhitespace)
                 {
                     RemoveItem(toplistItem);
                 }
@@ -65,7 +66,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
                 return false;
             }
 
-            if (nameIsNullOrWhitespace) return false;
+            if (isNameNullOrWhitespace) return false;
 
             Items.Add(toplistItem.Clone());
             return true;
@@ -78,7 +79,7 @@ namespace ThingAppraiser.DesktopApp.Models.Toplists
             return Items.Remove(toplistItem);
         }
 
-        public bool DeleteItemIfNeed(ToplistItem toplistItem)
+        public bool DeleteItemIfNeeded(ToplistItem toplistItem)
         {
             toplistItem.ThrowIfNull(nameof(toplistItem));
 
