@@ -119,11 +119,11 @@ namespace ThingAppraiser.Models.Data
         /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
         protected bool IsEqual(BasicInfo other)
         {
-            const double eps = 1e-6;
+            const double tolerance = 1e-6;
             return ThingId.Equals(other.ThingId) &&
                    string.Equals(Title, other.Title, StringComparison.Ordinal) &&
                    VoteCount.Equals(other.VoteCount) &&
-                   Math.Abs(VoteAverage - other.VoteAverage) < eps;
+                   Math.Abs(VoteAverage - other.VoteAverage) < tolerance;
         }
     }
 }

@@ -122,9 +122,9 @@ namespace ThingAppraiser.Models.Internal
         /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
         private bool IsEqual(ResultInfo other)
         {
-            const double eps = 1e-6;
+            const double tolerance = 1e-6;
             return ThingId.Equals(other.ThingId) &&
-                   Math.Abs(RatingValue - other.RatingValue) < eps &&
+                   Math.Abs(RatingValue - other.RatingValue) < tolerance &&
                    RatingId.Equals(other.RatingId);
         }
     }

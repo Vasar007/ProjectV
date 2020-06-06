@@ -121,8 +121,8 @@ namespace ThingAppraiser.Models.Data
             // Note: list with genre IDs usually has only few items and that is why comparison
             // using contains method is considered the best option here.
 
-            const double eps = 1e-6;
-            return Math.Abs(Popularity - other.Popularity) < eps &&
+            const double tolerance = 1e-6;
+            return Math.Abs(Popularity - other.Popularity) < tolerance &&
                    Adult.Equals(other.Adult) &&
                    GenreIds.All(genreId => other.GenreIds.Contains(genreId)) &&
                    string.Equals(PosterPath, other.PosterPath, StringComparison.Ordinal);
