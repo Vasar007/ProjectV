@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup Label="Globals">
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+    
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <RootNamespace>ProjectV.DesktopApp</RootNamespace>
+    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="1.2.3" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+    <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1422" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ExternalServices\ThingAppraiser.TmdbService\ProjectV.TmdbService.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Building\ProjectV.Building.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Configuration\ProjectV.Configuration.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.ContentDirectories\ProjectV.ContentDirectories.fsproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Crawlers\ProjectV.Crawlers.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.InputProcessing\ProjectV.InputProcessing.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="..\..\Libraries\ThingAppraiser.OutputProcessing\ProjectV.OutputProcessing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="games.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="thing_names.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
