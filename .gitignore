@@ -332,8 +332,9 @@ ASALocalRun/
 # User defined block
 *.txt
 *.obj
+.ionide
 credentials.json
 token.json/
-/ThingAppraiser/MigrationBackup
-ThingAppraiser/WebServices/ThingAppraiser.ProcessingWebService/credentials.json
-ThingAppraiser/Libraries/ThingAppraiser.Core/credentials.json
+/ProjectV/MigrationBackup
+ProjectV/WebServices/ProjectV.ProcessingWebService/credentials.json
+ProjectV/Libraries/ProjectV.Core/credentials.json
