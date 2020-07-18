@@ -3,7 +3,7 @@ image: Visual Studio 2019
 
 shallow_clone: true
 
-clone_folder: C:/projects/thingappraiser
+clone_folder: C:/projects/projectv
 
 branches:
   only:
@@ -21,7 +21,7 @@ matrix:
   fast_finish: true
 
 before_build:
-  - cmd: cd ThingAppraiser
+  - cmd: cd ProjectV
   - cmd: dotnet restore
 
 build:
@@ -36,11 +36,11 @@ after_test:
   - ps: >-
       if ($env:configuration -eq "Debug")
       {
-        dotnet test "C:/projects/thingappraiser/ThingAppraiser/Tests/ThingAppraiser.ContentDirectories.Tests/ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
+        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
       }
       else
       {
-        dotnet test "C:/projects/thingappraiser/ThingAppraiser/Tests/ThingAppraiser.ContentDirectories.Tests/ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Release --no-build
+        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Release --no-build
       }
 
 pull_requests:
