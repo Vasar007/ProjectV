@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using Acolyte.Assertions;
 
-namespace ThingAppraiser
+namespace ProjectV
 {
     /// <summary>
     /// Class to cast to type <typeparamref name="TTarget"/>.

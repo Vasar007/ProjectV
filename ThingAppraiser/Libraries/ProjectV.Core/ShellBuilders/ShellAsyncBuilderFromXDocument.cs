@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Xml.Linq;
 using Acolyte.Xml;
-using ThingAppraiser.Building.Service;
-using ThingAppraiser.Logging;
+using ProjectV.Building.Service;
+using ProjectV.Logging;
 
-namespace ThingAppraiser.Core.ShellBuilders
+namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="Shell" /> instances from
-    /// <see cref="XDocument" /> config.
+    /// Builder class which provides the way of constructing <see cref="ShellAsync" /> instances
+    /// from <see cref="XDocument" /> config.
     /// </summary>
     /// <remarks>
     /// Structure of XML config must satisfy certain contracts, otherwise different exception could
     /// be thrown.
     /// </remarks>
-    public sealed class ShellBuilderFromXDocument : ShellBuilderBase, IShellBuilder
+    public sealed class ShellAsyncBuilderFromXDocument : ShellBuilderBase, IShellAsyncBuilder
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ShellBuilderFromXDocument>();
+            LoggerFactory.CreateLoggerFor<ShellAsyncBuilderFromXDocument>();
 
         /// <summary>
         /// Provides methods to create instances of service classes.
         /// </summary>
-        private readonly ServiceBuilderForXmlConfig _serviceBuilder =
-            new ServiceBuilderForXmlConfig();
+        private readonly ServiceAsyncBuilderForXmlConfig _serviceBuilder =
+            new ServiceAsyncBuilderForXmlConfig();
 
         /// <summary>
         /// Helper class which contains several methods to parse XML configuration.
@@ -34,44 +34,46 @@ namespace ThingAppraiser.Core.ShellBuilders
         private readonly XDocumentParser _documentParser;
 
         /// <summary>
+        /// Default value of bounded capacity of service.
+        /// </summary>
+        private readonly int _defaultBoundedCapacity = 10;
+
+        /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.InputManager? _inputManager;
+        private IO.Input.InputManagerAsync? _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CrawlersManager? _crawlersManager;
+        private Crawlers.CrawlersManagerAsync? _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.AppraisersManager? _appraisersManager;
+        private Appraisers.AppraisersManagerAsync? _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.OutputManager? _outputManager;
-
-        /// <summary>
-        /// Variables which saves data base manager instance during building process.
-        /// </summary>
-        private DAL.DataBaseManager? _dataBaseManager;
+        private IO.Output.OutputManagerAsync? _outputManager;
 
 
         /// <summary>
         /// Initializes builder instance and associates <see cref="XDocumentParser" /> which
         /// provides deferred parsing of XML configuration.
         /// </summary>
-        /// <param name="configuration">XML configuration of <see cref="Shell" /> class.</param>
-        public ShellBuilderFromXDocument(XDocument configuration)
+        /// <param name="configuration">
+        /// XML configuration of <see cref="ShellAsync" /> class.
+        /// </param>
+        public ShellAsyncBuilderFromXDocument(XDocument configuration)
         {
             _documentParser = new XDocumentParser(
                 new XDocument(configuration.Root.Element(_rootElementName))
             );
         }
 
-        #region IShellBuilder Implementation
+        #region IShellAsyncBuilder Implementation
 
         /// <inheritdoc />
         public void Reset()
@@ -80,7 +82,6 @@ namespace ThingAppraiser.Core.ShellBuilders
             _crawlersManager = null;
             _appraisersManager = null;
             _outputManager = null;
-            _dataBaseManager = null;
         }
 
         /// <inheritdoc />
@@ -118,11 +119,11 @@ namespace ThingAppraiser.Core.ShellBuilders
             string defaultStorageName = XDocumentParser.GetAttributeValue(
                 inputManagerElement, _defaultInStorageNameParameterName
             );
-            _inputManager = new IO.Input.InputManager(defaultStorageName);
+            _inputManager = new IO.Input.InputManagerAsync(defaultStorageName);
 
             foreach (XElement element in inputManagerElement.Elements())
             {
-                IO.Input.IInputter inputter = _serviceBuilder.CreateInputter(element);
+                IO.Input.IInputterAsync inputter = _serviceBuilder.CreateInputter(element);
                 _inputManager.Add(inputter);
             }
         }
@@ -146,11 +147,11 @@ namespace ThingAppraiser.Core.ShellBuilders
             var crawlersOutput = XDocumentParser.GetAttributeValue<bool>(
                 crawlerManagerElement, _crawlersOutputParameterName
             );
-            _crawlersManager = new Crawlers.CrawlersManager(crawlersOutput);
+            _crawlersManager = new Crawlers.CrawlersManagerAsync(crawlersOutput);
 
             foreach (XElement element in crawlerManagerElement.Elements())
             {
-                Crawlers.ICrawler crawler = _serviceBuilder.CreateCrawler(element);
+                Crawlers.ICrawlerAsync crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
             }
         }
@@ -174,11 +175,11 @@ namespace ThingAppraiser.Core.ShellBuilders
             var appraisersOutput = XDocumentParser.GetAttributeValue<bool>(
                 appraiserManagerElement, _appraisersOutputParameterName
             );
-            _appraisersManager = new Appraisers.AppraisersManager(appraisersOutput);
+            _appraisersManager = new Appraisers.AppraisersManagerAsync(appraisersOutput);
 
             foreach (XElement element in appraiserManagerElement.Elements())
             {
-                Appraisers.IAppraiser crawler = _serviceBuilder.CreateAppraiser(element);
+                Appraisers.IAppraiserAsync crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
             }
         }
@@ -202,84 +203,47 @@ namespace ThingAppraiser.Core.ShellBuilders
             string defaultStorageName = XDocumentParser.GetAttributeValue(
                 outputManagerElement, _defaultOutStorageNameParameterName
             );
-            _outputManager = new IO.Output.OutputManager(defaultStorageName);
+            _outputManager = new IO.Output.OutputManagerAsync(defaultStorageName);
 
             foreach (XElement element in outputManagerElement.Elements())
             {
-                IO.Output.IOutputter outputter = _serviceBuilder.CreateOutputter(element);
+                IO.Output.IOutputterAsync outputter = _serviceBuilder.CreateOutputter(element);
                 _outputManager.Add(outputter);
             }
         }
 
         /// <inheritdoc />
-        /// <exception cref="InvalidOperationException">
-        /// XML configuration doesn't contain element for data base manager with specified name.
-        /// </exception>
-        public void BuildDataBaseManager()
-        {
-            XElement? dataBaseManagerElement = _documentParser.FindElement(
-                _dataBaseManagerParameterName
-            );
-            if (dataBaseManagerElement is null)
-            {
-                throw new InvalidOperationException(
-                    $"XML document has not value for {_dataBaseManagerParameterName}."
-                );
-            }
-
-            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DAL.DataBaseOptions>();
-            _dataBaseManager = new DAL.DataBaseManager(
-                new DAL.Repositories.ResultInfoRepository(dataBaseOptions),
-                new DAL.Repositories.RatingRepository(dataBaseOptions)
-            );
-
-            foreach (XElement element in dataBaseManagerElement.Elements())
-            {
-                DAL.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
-                    element, dataBaseOptions
-                );
-                _dataBaseManager.DataRepositoriesManager.Add(repository);
-            }
-        }
-
-        /// <inheritdoc />
-        public Shell GetResult()
+        public ShellAsync GetResult()
         {
             if (_inputManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(IO.Input.InputManager)} was not built."
+                    $"{nameof(IO.Input.InputManagerAsync)} was not built."
                 );
             }
             if (_crawlersManager is null)
             {
                 throw new InvalidOperationException(
-                     $"{nameof(Crawlers.CrawlersManager)} was not built."
+                     $"{nameof(Crawlers.CrawlersManagerAsync)} was not built."
                 );
             }
             if (_appraisersManager is null)
             {
                 throw new InvalidOperationException(
-                     $"{nameof(Appraisers.AppraisersManager)} was not built."
+                     $"{nameof(Appraisers.AppraisersManagerAsync)} was not built."
                 );
             }
             if (_outputManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(IO.Output.OutputManager)} was not built."
-                );
-            }
-            if (_dataBaseManager is null)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(DAL.DataBaseManager)} was not built."
+                    $"{nameof(IO.Output.OutputManagerAsync)} was not built."
                 );
             }
 
-            _logger.Info($"Creating {nameof(Shell)} from user-defined XML config.");
+            _logger.Info($"Creating {nameof(ShellAsync)} from user-defined XML config.");
 
-            return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
-                             _dataBaseManager);
+            return new ShellAsync(_inputManager, _crawlersManager, _appraisersManager,
+                                  _outputManager, _defaultBoundedCapacity);
         }
 
         #endregion

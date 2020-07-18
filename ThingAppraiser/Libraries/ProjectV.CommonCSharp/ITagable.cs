@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser
+﻿namespace ProjectV
 {
     /// <summary>
     /// Adds tag name to class instance.

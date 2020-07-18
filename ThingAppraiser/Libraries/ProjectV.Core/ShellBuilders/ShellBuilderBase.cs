@@ -1,6 +1,6 @@
-﻿using ThingAppraiser.Models.Configuration;
+﻿using ProjectV.Models.Configuration;
 
-namespace ThingAppraiser.Core.ShellBuilders
+namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
     /// Contains identifiers to work with XML configs.

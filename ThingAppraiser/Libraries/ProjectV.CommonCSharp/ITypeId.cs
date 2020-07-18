@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThingAppraiser
+namespace ProjectV
 {
     /// <summary>
     /// Adds type id to track which types can be processed by instance.

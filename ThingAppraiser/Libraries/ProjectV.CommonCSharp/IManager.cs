@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser
+﻿namespace ProjectV
 {
     /// <summary>
     /// Contains common methods for manager classes.

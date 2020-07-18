@@ -1,6 +1,6 @@
 ﻿using Acolyte.Assertions;
 
-namespace ThingAppraiser.Core.ShellBuilders
+namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
     /// Builder director which controls of <see cref="Shell" /> creating process with the help of

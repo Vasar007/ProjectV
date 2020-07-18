@@ -1,4 +1,4 @@
-﻿namespace ThingAppraiser
+﻿namespace ProjectV
 {
     /// <summary>
     /// Contains option to transform value of type <typeparamref name="TIn" /> to 

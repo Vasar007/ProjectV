@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Acolyte.Assertions;
-using ThingAppraiser.Communication;
-using ThingAppraiser.Core.ShellBuilders;
-using ThingAppraiser.DataPipeline;
-using ThingAppraiser.Logging;
-using ThingAppraiser.Models.Internal;
+using ProjectV.Communication;
+using ProjectV.Core.ShellBuilders;
+using ProjectV.DataPipeline;
+using ProjectV.Logging;
+using ProjectV.Models.Internal;
 
-namespace ThingAppraiser.Core
+namespace ProjectV.Core
 {
     public sealed class ShellAsync : IDisposable
     {

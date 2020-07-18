@@ -1,6 +1,6 @@
 ﻿using Acolyte.Assertions;
 
-namespace ThingAppraiser.Core.ShellBuilders
+namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
     /// Builder director which controls of <see cref="ShellAsync" /> creating process with the help

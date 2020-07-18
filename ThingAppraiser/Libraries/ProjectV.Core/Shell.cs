@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Acolyte.Assertions;
-using ThingAppraiser.Communication;
-using ThingAppraiser.Core.ShellBuilders;
-using ThingAppraiser.Logging;
-using ThingAppraiser.Models.Data;
-using ThingAppraiser.Models.Internal;
+using ProjectV.Communication;
+using ProjectV.Core.ShellBuilders;
+using ProjectV.Logging;
+using ProjectV.Models.Data;
+using ProjectV.Models.Internal;
 
-namespace ThingAppraiser.Core
+namespace ProjectV.Core
 {
     /// <summary>
     /// Key class of service that links the rest of the classes into a single entity.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks.Dataflow;
 
-namespace ThingAppraiser.Extensions
+namespace ProjectV.Extensions
 {
     public static class DataflowBlockExtensions
     {
