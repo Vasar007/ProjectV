@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <RootNamespace>ProjectV.DataPipeline</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Gridsum.DataflowEx" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\ProjectV.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="..\ProjectV.Models\ProjectV.Models.csproj" />
+  </ItemGroup>
+
+</Project>
