@@ -13,7 +13,7 @@ namespace ProjectV.Configuration
         public static string ConfigFilename { get; } = "config.json";
 
         public static string AlternativeOptionsPath { get; } =
-            Path.Combine("/etc", "project_v", ConfigFilename);
+            Path.Combine("/etc", "ProjectV", ConfigFilename);
 
         public static ApiOptions Api => GetOptions<ApiOptions>();
 

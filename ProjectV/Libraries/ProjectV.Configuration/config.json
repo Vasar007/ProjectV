@@ -1,6 +1,6 @@
 {
   "DataBaseOptions": {
-    "ConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=project_v;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "ConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ProjectV;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
   },
 
   "ProjectVServiceOptions": {
