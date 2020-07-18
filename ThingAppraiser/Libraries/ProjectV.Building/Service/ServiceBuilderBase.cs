@@ -57,11 +57,6 @@ namespace ProjectV.Building.Service
         protected const string _appraiserTmdbParameterName = "TmdbAppraiser";
 
         /// <summary>
-        /// Attribute value for TMDb appraiser which based on Fuzzy Logic Toolbox.
-        /// </summary>
-        protected const string _fuzzyAppraiserTmdbParameterName = "FuzzyTmdbAppraiser";
-
-        /// <summary>
         /// Attribute value for OMDb appraiser.
         /// </summary>
         protected const string _appraiserOmdbParameterName = "OmdbAppraiser";

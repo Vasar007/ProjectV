@@ -26,7 +26,7 @@ namespace ProjectV.DAL.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            const string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=thing_appraiser;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            const string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=project_v;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
             optionsBuilder.UseSqlServer(connectionString);
         }

@@ -45,8 +45,6 @@
         {
             public static string TmdbAppraiserCommonName { get; } = "TmdbCommon";
 
-            public static string TmdbAppraiserFuzzyName { get; } = "TmdbFuzzy";
-
             public static string OmdbAppraiserCommonName { get; } = "OmdbCommon";
 
             public static string SteamAppraiserCommonName { get; } = "SteamCommon";

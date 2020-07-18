@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ThingAppraiser.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\ThingAppraiser.Communication\ProjectV.Communication.csproj" />
-    <ProjectReference Include="..\..\ThingAppraiser.Logging\ProjectV.Logging.csproj" />
-    <ProjectReference Include="..\..\ThingAppraiser.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="..\..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\..\ProjectV.Communication\ProjectV.Communication.csproj" />
+    <ProjectReference Include="..\..\ProjectV.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="..\..\ProjectV.Models\ProjectV.Models.csproj" />
   </ItemGroup>
 
 </Project>

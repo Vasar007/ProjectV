@@ -214,13 +214,6 @@ namespace ProjectV.Building.Service
                     return new Appraisers.AppraiserAsync<TmdbMovieInfo>(appraisal);
                 }
 
-                case _fuzzyAppraiserTmdbParameterName:
-                {
-                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbFuzzyAppraisal();
-
-                    return new Appraisers.AppraiserAsync<TmdbMovieInfo>(appraisal);
-                }
-
                 case _appraiserOmdbParameterName:
                 {
                     var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();

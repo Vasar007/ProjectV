@@ -38,7 +38,6 @@ namespace ProjectV.Configuration
         public static IReadOnlyList<string> AvailableAppraisals { get; } = new List<string>
         {
             ConfigNames.Appraisers.TmdbAppraiserCommonName,
-            ConfigNames.Appraisers.TmdbAppraiserFuzzyName,
             ConfigNames.Appraisers.OmdbAppraiserCommonName,
             ConfigNames.Appraisers.SteamAppraiserCommonName
         };

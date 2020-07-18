@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.ContentDirectories\ProjectV.ContentDirectories.fsproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.ContentDirectories\ProjectV.ContentDirectories.fsproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

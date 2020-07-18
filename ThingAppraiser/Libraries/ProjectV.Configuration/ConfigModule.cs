@@ -117,10 +117,6 @@ namespace ProjectV.Configuration
                 ConfigNames.Appraisers.TmdbAppraiserCommonName,
                 new XElement("TmdbAppraiser")
             );
-            _serviceConfigRegistry.RegisterAppraiser(
-                ConfigNames.Appraisers.TmdbAppraiserFuzzyName,
-                new XElement("FuzzyTmdbAppraiser")
-            );
 
             _serviceConfigRegistry.RegisterAppraiser(
                 ConfigNames.Appraisers.OmdbAppraiserCommonName,

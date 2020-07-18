@@ -25,17 +25,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ExternalServices\ThingAppraiser.TmdbService\ProjectV.TmdbService.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Building\ProjectV.Building.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Configuration\ProjectV.Configuration.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.ContentDirectories\ProjectV.ContentDirectories.fsproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Core\ProjectV.Core.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Crawlers\ProjectV.Crawlers.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.InputProcessing\ProjectV.InputProcessing.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Logging\ProjectV.Logging.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.Models\ProjectV.Models.csproj" />
-    <ProjectReference Include="..\..\Libraries\ThingAppraiser.OutputProcessing\ProjectV.OutputProcessing.csproj" />
+    <ProjectReference Include="..\..\Libraries\ExternalServices\ProjectV.TmdbService\ProjectV.TmdbService.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Building\ProjectV.Building.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.ContentDirectories\ProjectV.ContentDirectories.fsproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Crawlers\ProjectV.Crawlers.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.InputProcessing\ProjectV.InputProcessing.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.OutputProcessing\ProjectV.OutputProcessing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
