@@ -4,6 +4,8 @@
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/Vasar007/ThingAppraiser/master.svg)](https://ci.appveyor.com/project/Vasar007/thingappraiser)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser?ref=badge_shield)
 
+[![GitHub wiki](https://img.shields.io/badge/Docs-GitHub%20wiki-brightgreen)](https://github.com/Vasar007/ThingAppraiser/wiki)
+
 Evaluate your things (movies, games, books e.t.c.) automatically based on popular databases with ratings.
 
 ## Usage examples
@@ -22,7 +24,7 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET Standard is 2.1 for libraries, .NET Core is 3.0 for web services and for desktop app. Version of C# is 8.0, version of F# is 4.7.
+Target .NET Standard is 2.1 for libraries, .NET Core is 3.1 for web services and for desktop app. Version of C# is 8.0, version of F# is 4.7.
 
 You can install all dependencies using NuGet package manager.
 
@@ -34,19 +36,4 @@ You can read full instruction in project [Wiki](https://github.com/Vasar007/Thin
 
 This project is licensed under the terms of the [Apache License 2.0](LICENSE).
 
-
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FVasar007%2FThingAppraiser?ref=badge_large)
-
-### Third party software and libraries used
-
-#### [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
-
-Copyright © 2007 James Newton-King
-
-License: [MIT](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md)
-
-#### [Acolyte.NET](https://github.com/Vasar007/Acolyte.NET)
-
-Copyright © 2020 Vasily Vasilyev (vasar007@yandex.ru)
-
-License: [Apache License 2.0](https://github.com/Vasar007/Acolyte.NET/blob/master/LICENSE)

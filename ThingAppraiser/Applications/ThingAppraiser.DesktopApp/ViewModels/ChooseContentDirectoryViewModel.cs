@@ -48,7 +48,7 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             string? contentDirectoryPath = ExecutableDialogs.ExecuteOpenContentDirectoryDialog();
             if (string.IsNullOrWhiteSpace(contentDirectoryPath))
             {
-                _logger.Info(
+                _logger.Warn(
                     "Skipping openning content directory because got an empty path value."
                 );
                 return;

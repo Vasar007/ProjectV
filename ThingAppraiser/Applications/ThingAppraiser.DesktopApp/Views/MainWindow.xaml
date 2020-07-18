@@ -7,7 +7,7 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:models="clr-namespace:ThingAppraiser.DesktopApp.Models"
         xmlns:viewModels="clr-namespace:ThingAppraiser.DesktopApp.ViewModels"
-        mc:Ignorable="d" 
+        mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
         Title="{Binding Path=Title}"
         Height="700"
@@ -40,7 +40,8 @@
 
     <materialDesign:DialogHost x:Name="MainWindowDialogHost"
                                Identifier="RootDialog"
-                               CloseOnClickAway="False">
+                               CloseOnClickAway="False"
+                               DialogTheme="Inherit">
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton,
                                                       Path=IsChecked}"
                                    IsEnabled="{Binding Path=IsNotBusy}">
@@ -51,7 +52,7 @@
                                   HorizontalAlignment="Right"
                                   Margin="16"
                                   IsChecked="{Binding ElementName=MenuToggleButton,
-                                              Path=IsChecked, Mode=TwoWay}"/>
+                                              Path=IsChecked, Mode=TwoWay}" />
                     <ListBox x:Name="SceneItemsListBox"
                              Margin="0 16 0 16"
                              SelectedIndex="0"                
@@ -69,7 +70,7 @@
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <DockPanel>
-                <materialDesign:ColorZone Mode="Inverted"
+                <materialDesign:ColorZone Mode="Standard"
                                           Padding="16"
                                           DockPanel.Dock="Top">
                     <DockPanel>
@@ -79,25 +80,31 @@
                         <materialDesign:PopupBox DockPanel.Dock="Right"
                                                  PlacementMode="BottomAndAlignRightEdges"
                                                  StaysOpen="False">
-                            <StackPanel>
+                            <StackPanel Orientation="Vertical">
                                 <Button Command="{Binding Path=ReturnToStartViewCommand}"
                                         CommandParameter="{Binding Path=CurrentContent}">
                                     Return to start page
                                 </Button>
-                                <Button IsEnabled="False">
+
+                                <Button Command="{Binding Path=GoToSettingsViewCommand}">
                                     Settings
                                 </Button>
-                                <Separator />
+
+                                <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
                                 <Button Command="{Binding Path=AppCloseCommand}">
                                     Exit
                                 </Button>
                             </StackPanel>
                         </materialDesign:PopupBox>
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22">
-                                The Thing Appraiser
-                        </TextBlock>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="22"
+                                       Text="{Binding Path=Title}" />
+
+                            <Separator Style="{StaticResource ResourceKey=MaterialDesignSeparator}" />
+                        </StackPanel>
                     </DockPanel>
                 </materialDesign:ColorZone>
 

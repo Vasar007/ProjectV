@@ -26,7 +26,6 @@ namespace ThingAppraiser.DesktopApp.ViewModels
             OpenContentFinderResultsDialogCommand = new DelegateCommand(
                 OpenContentFinderResults
             );
-
         }
 
         private void ProcessContentDirectoryFromDrive()

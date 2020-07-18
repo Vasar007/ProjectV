@@ -1,6 +1,10 @@
 version: '{build}'
 image: Visual Studio 2019
 
+shallow_clone: true
+
+clone_folder: C:/projects/thingappraiser
+
 branches:
   only:
     - master
@@ -25,18 +29,18 @@ build:
 
 test:
   assemblies:
-    - '**\*.Tests.dll'
+    - '**/*.Tests.dll'
 
 # F# tests does not execute at all.
 after_test:
   - ps: >-
       if ($env:configuration -eq "Debug")
       {
-        dotnet test "C:\projects\thingappraiser\ThingAppraiser\Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
+        dotnet test "C:/projects/thingappraiser/ThingAppraiser/Tests/ThingAppraiser.ContentDirectories.Tests/ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
       }
       else
       {
-        dotnet test "C:\projects\thingappraiser\ThingAppraiser\Tests\ThingAppraiser.ContentDirectories.Tests\ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Release --no-build
+        dotnet test "C:/projects/thingappraiser/ThingAppraiser/Tests/ThingAppraiser.ContentDirectories.Tests/ThingAppraiser.ContentDirectories.Tests.fsproj" --configuration Release --no-build
       }
 
 pull_requests:

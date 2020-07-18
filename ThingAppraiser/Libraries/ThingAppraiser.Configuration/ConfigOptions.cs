@@ -10,7 +10,10 @@ namespace ThingAppraiser.Configuration
         private static readonly Lazy<IConfigurationRoot> Root =
             new Lazy<IConfigurationRoot>(LoadOptions);
 
-        public static readonly string ConfigFilename = "config.json";
+        public static string ConfigFilename { get; } = "config.json";
+
+        public static string AlternativeOptionsPath { get; } =
+            Path.Combine("/etc", "thingappraiser", ConfigFilename);
 
         public static ApiOptions Api => GetOptions<ApiOptions>();
 
@@ -22,8 +25,8 @@ namespace ThingAppraiser.Configuration
             where T : IOptions, new()
         {
             T section = Root.Value.GetSection(typeof(T).Name).Get<T>();
-            if (section == null)
-                return new T();
+
+            if (section == null) return new T();
 
             return section;
         }
@@ -33,8 +36,8 @@ namespace ThingAppraiser.Configuration
             var configurationBuilder = new ConfigurationBuilder();
 
             string configPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFilename)
-                : $"/etc/thingappraiser/{ConfigFilename}";
+                ? Path.Combine(Directory.GetCurrentDirectory(), ConfigFilename)
+                : AlternativeOptionsPath;
 
             configurationBuilder.AddJsonFile(configPath, optional: true, reloadOnChange: true);
             return configurationBuilder.Build();

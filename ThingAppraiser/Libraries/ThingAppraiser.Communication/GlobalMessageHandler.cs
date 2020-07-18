@@ -69,7 +69,7 @@ namespace ThingAppraiser.Communication
         /// </summary>
         /// <param name="outputObjects">Additional objects to output.</param>
         /// <exception cref="ArgumentNullException">
-        /// <see cref="outputObjects" /> is <c>null</c>.
+        /// <paramref name="outputObjects"/> is <c>null</c>.
         /// </exception>
         public static void PrintThreadInfoWithParams(params object[] outputObjects)
         {

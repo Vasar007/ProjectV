@@ -65,13 +65,7 @@ namespace ThingAppraiser.Models.Internal
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            if (obj is null) return false;
-
-            if (ReferenceEquals(this, obj)) return true;
-
-            if (!(obj is ResultInfo other)) return false;
-
-            return IsEqual(other);
+            return Equals(obj as ResultInfo);
         }
 
         /// <inheritdoc />
@@ -128,9 +122,9 @@ namespace ThingAppraiser.Models.Internal
         /// <returns><c>true</c> if values are memberwise equals, <c>false</c> otherwise.</returns>
         private bool IsEqual(ResultInfo other)
         {
-            const double eps = 1e-6;
+            const double tolerance = 1e-6;
             return ThingId.Equals(other.ThingId) &&
-                   Math.Abs(RatingValue - other.RatingValue) < eps &&
+                   Math.Abs(RatingValue - other.RatingValue) < tolerance &&
                    RatingId.Equals(other.RatingId);
         }
     }

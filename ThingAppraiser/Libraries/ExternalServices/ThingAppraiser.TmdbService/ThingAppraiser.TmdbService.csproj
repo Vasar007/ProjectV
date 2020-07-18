@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TMDbLib" Version="1.5.0-alpha" />
+    <PackageReference Include="TMDbLib" Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -73,6 +73,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DesktopApp",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThingAppraiser.DataPipeline", "Libraries\ThingAppraiser.DataPipeline\ThingAppraiser.DataPipeline.csproj", "{6464A2B5-DBE6-4257-A4B0-425A1B714133}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B97E92F-1FA2-41BB-8D5A-BD54BF5145E9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

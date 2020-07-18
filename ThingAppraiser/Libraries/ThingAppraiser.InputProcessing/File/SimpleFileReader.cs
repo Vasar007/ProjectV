@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FileHelpers;
 using CsvHelper;
 using ThingAppraiser.Logging;
 using Acolyte.Assertions;
+using CsvHelper.Configuration;
 
 namespace ThingAppraiser.IO.Input.File
 {
@@ -71,10 +73,13 @@ namespace ThingAppraiser.IO.Input.File
             // Use HashSet to avoid duplicated data which can produce errors in further work.
             var result = new HashSet<string>();
 
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            {
+                HasHeaderRecord = true
+            };
+
             using var reader = new StreamReader(filename);
-            using var csv = new CsvReader(
-                reader, new CsvHelper.Configuration.Configuration { HasHeaderRecord = true }
-            );
+            using var csv = new CsvReader(reader, csvConfig);
 
             if (!csv.Read() || !csv.ReadHeader())
             {
