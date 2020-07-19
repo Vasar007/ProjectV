@@ -58,6 +58,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
         private bool _disposed;
 
         public void Dispose()

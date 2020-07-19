@@ -19,8 +19,6 @@ namespace ProjectV.CommunicationWebService.v1.Domain
 
         private readonly HttpClient _client;
 
-        private bool _disposed;
-
 
         public ProcessingResponseReceiverAsync(IOptions<ServiceSettings> settingsOptions)
         {
@@ -66,12 +64,18 @@ namespace ProjectV.CommunicationWebService.v1.Domain
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _client.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

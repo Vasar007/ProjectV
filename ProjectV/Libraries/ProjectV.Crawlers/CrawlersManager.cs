@@ -27,11 +27,6 @@ namespace ProjectV.Crawlers
         /// </summary>
         private readonly bool _outputResults;
 
-        /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
-        /// </summary>
-        private bool _disposed;
-
 
         /// <summary>
         /// Initializes manager for crawlers.
@@ -72,14 +67,20 @@ namespace ProjectV.Crawlers
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases all resources used by crawlers.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _crawlers.ForEach(crawler => crawler.Dispose());
+
+            _disposed = true;
         }
 
         #endregion

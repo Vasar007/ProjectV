@@ -32,11 +32,6 @@ namespace ProjectV.Crawlers.Game.Steam
         /// </summary>
         private readonly HashSet<BasicInfo> _searchResults;
 
-        /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
-        /// </summary>
-        private bool _disposed;
-
         #region ITagable Implementation
 
         /// <inheritdoc />
@@ -123,14 +118,20 @@ namespace ProjectV.Crawlers.Game.Steam
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases resources of TMDb client.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _steamApiClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

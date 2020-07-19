@@ -27,11 +27,6 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         /// </summary>
         private readonly ITmdbClient _tmdbClient;
 
-        /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
-        /// </summary>
-        private bool _disposed;
-
         #region ITagable Implementation
 
         /// <inheritdoc />
@@ -107,14 +102,20 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases resources of TMDb client.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _tmdbClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

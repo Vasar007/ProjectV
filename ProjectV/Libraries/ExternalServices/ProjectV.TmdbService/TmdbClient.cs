@@ -40,8 +40,6 @@ namespace ProjectV.TmdbService
         /// </summary>
         private readonly TMDbClient _tmdbClient;
 
-        private bool _disposed;
-
         /// <inheritdoc />
         public int MaxRetryCount
         {
@@ -133,12 +131,18 @@ namespace ProjectV.TmdbService
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _tmdbClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

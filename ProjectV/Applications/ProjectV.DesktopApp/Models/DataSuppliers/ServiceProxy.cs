@@ -19,8 +19,6 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
         private readonly HttpClient _client;
 
-        private bool _disposed;
-
 
         public ServiceProxy()
         {
@@ -56,6 +54,11 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
         }
 
         #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
 
         public void Dispose()
         {

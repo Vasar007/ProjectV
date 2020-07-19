@@ -24,8 +24,6 @@ namespace ProjectV.Core
 
         public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
 
-        private bool _disposed;
-
 
         public ShellAsync(
             IO.Input.InputManagerAsync inputManagerAsync,
@@ -92,12 +90,18 @@ namespace ProjectV.Core
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             CrawlersManagerAsync.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

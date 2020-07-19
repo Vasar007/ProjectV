@@ -17,8 +17,6 @@ namespace ProjectV.Crawlers
 
         private readonly bool _outputResults;
 
-        private bool _disposed;
-
 
         public CrawlersManagerAsync(bool outputResults)
         {
@@ -46,12 +44,18 @@ namespace ProjectV.Crawlers
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
+
+            _disposed = true;
         }
 
         #endregion

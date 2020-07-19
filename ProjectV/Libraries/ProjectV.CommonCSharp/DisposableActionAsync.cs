@@ -17,6 +17,9 @@ namespace ProjectV
 
         #region IAsyncDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
         private bool _disposed;
 
         public async ValueTask DisposeAsync()

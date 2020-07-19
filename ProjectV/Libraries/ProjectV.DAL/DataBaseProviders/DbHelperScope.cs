@@ -18,8 +18,6 @@ namespace ProjectV.DAL.DataBaseProviders
 
         private readonly SqlTransaction _transaction;
 
-        private bool _disposed;
-
 
         public DbHelperScope(DataBaseOptions settings)
         {
@@ -78,15 +76,21 @@ namespace ProjectV.DAL.DataBaseProviders
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _transaction?.Dispose();
 
             _connection?.Close();
             _connection?.Dispose();
+
+            _disposed = true;
         }
 
         #endregion
