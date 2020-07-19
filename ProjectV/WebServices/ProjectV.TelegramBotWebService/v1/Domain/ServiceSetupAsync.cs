@@ -23,13 +23,15 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #region IServiceSetupAsync Implementation
 
-        public async Task SetWebhookAsync()
+        public async Task<DisposableActionAsync> SetWebhookAsync()
         {
             string serviceUrl = _settings.NgrokUrl + _settings.ServiceApiUrl;
 
             _logger.Info($"Try to set webhook to {serviceUrl}");
             await _botService.Client.SetWebhookAsync(serviceUrl);
             _logger.Info("Webhook was set.");
+
+            return new DisposableActionAsync(() => DeleteWebhookAsync());
         }
 
         public async Task DeleteWebhookAsync()

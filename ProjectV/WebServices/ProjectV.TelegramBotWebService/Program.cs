@@ -19,8 +19,9 @@ namespace ProjectV.TelegramBotWebService
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                       .UseStartup<Startup>();
+            return WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
         }
 
         private static async Task Main(string[] args)
@@ -33,13 +34,11 @@ namespace ProjectV.TelegramBotWebService
 
                 // Set web hook to get messages from Telegram Bot.
                 var serviceSetup = webHost.Services.GetRequiredService<IServiceSetupAsync>();
-                await serviceSetup.SetWebhookAsync();
+                await using var webhookHandler = await serviceSetup.SetWebhookAsync();
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
                 await webHost.RunAsync();
-
-                await serviceSetup.DeleteWebhookAsync();
             }
             catch (Exception ex)
             {

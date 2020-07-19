@@ -7,15 +7,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>4.7</LangVersion>
-    <RootNamespace>ProjectV</RootNamespace>
+    <RootNamespace>ProjectV.Policies</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="FSharpHelper.fs" />
+    <Compile Include="PolicyModels.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\ProjectV.CommonFSharp\ProjectV.CommonFSharp.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

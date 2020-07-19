@@ -35,7 +35,7 @@ let private convertSeqGenToAsync fileSeqGen =
         | ContentModels.FileSeqGenerator.Async(generatorAsync = genAsync) ->
             genAsync
 
-let private convertToReadOnlyList files  =
+let private convertToReadOnlyList files =
     files
     |> EnumerableExtensions.ToReadOnlyList
 

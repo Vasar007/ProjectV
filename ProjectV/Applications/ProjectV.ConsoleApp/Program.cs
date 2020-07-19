@@ -7,8 +7,8 @@ using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
 using ProjectV.DAL.EntityFramework;
 using ProjectV.Logging;
-using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.DAL;
 
 namespace ProjectV.ConsoleApp
 {
@@ -87,7 +87,9 @@ namespace ProjectV.ConsoleApp
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
+                const string message = "Exception occurred during execution.";
+                _logger.Error(ex, message);
+                Console.WriteLine($"{message}{Environment.NewLine}{ex}");
                 return -1;
             }
             finally
@@ -96,37 +98,39 @@ namespace ProjectV.ConsoleApp
             }
         }
 
+        #region Debug-only Code
+
+#if DEBUG
+
         private static void TestEntityFrameworkCore()
         {
-            using (var context = new ProjectVContext())
+            var storageSettings = ConfigOptions.GetOptions<DataBaseOptions>();
+            using (var context = new ProjectVDbContext(storageSettings))
             {
-                var tmdbMovie = new TmdbMovieInfo(
-                    thingId:     1,
-                    title:       "Test",
-                    voteCount:   100,
-                    voteAverage: 10.0,
-                    overview:    "Overview",
-                    releaseDate: DateTime.UtcNow,
-                    popularity:  50.0,
-                    adult:       true,
-                    genreIds:    new List<int> { 1, 2, 4 },
-                    posterPath:  "None"
+                var task = new TaskDbModel(
+                    id: Guid.NewGuid(),
+                    name: "TaskName",
+                    state: 1,
+                    result: 2,
+                    config: "TaskConfig"
                 );
 
-                context.Add(tmdbMovie);
+                context.GetTasksDbSet().Add(task);
 
                 int count = context.SaveChanges();
                 Console.WriteLine($"{count.ToString()} records saved to database.");
             }
 
-            using (var context = new ProjectVContext())
+            using (var context = new ProjectVDbContext(storageSettings))
             {
-                foreach (TmdbMovieInfo tmdbMovie in context.TmdbMovies)
+                foreach (TaskDbModel task in context.GetTasksDbSet())
                 {
-                    Console.WriteLine(
-                        $"TMDB movie: {tmdbMovie.ThingId.ToString()}, {tmdbMovie.Title}, " +
-                        $"{tmdbMovie.Popularity.ToString()}"
-                    );
+                    string message =
+                        $"Task info: {task.Id.ToString()}, {task.Name}, " +
+                        $"{task.State.ToString()}, {task.Result.ToString()}, " +
+                        $"{task.Config.ToString()}";
+
+                    Console.WriteLine(message);
                 }
             }
         }
@@ -148,5 +152,9 @@ namespace ProjectV.ConsoleApp
                 );
             }
         }
+
+#endif
+
+        #endregion
     }
 }

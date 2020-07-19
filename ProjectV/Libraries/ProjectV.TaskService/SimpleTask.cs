@@ -4,17 +4,19 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Configuration;
 using ProjectV.Core;
-using ProjectV.Core.ShellBuilders;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
+using ProjectV.Models.Internal.Tasks;
 using ProjectV.Models.WebService;
 
 namespace ProjectV.TaskService
 {
     public sealed class SimpleTask : IExecutableTask
     {
-        public Guid Id { get; }
+        private readonly TaskInfo _taskInfo;
+
+        public TaskId Id => _taskInfo.Id;
 
         public int ExecutionsNumber { get; }
 
@@ -23,7 +25,10 @@ namespace ProjectV.TaskService
         public RestartPointKind RestartPoint { get; } = RestartPointKind.None;
 
 
-        public SimpleTask(Guid id, int executionsNumber, TimeSpan delayTime)
+        public SimpleTask(
+            TaskInfo taskInfo,
+            int executionsNumber,
+            TimeSpan delayTime)
         {
             if (executionsNumber <= 0)
             {
@@ -31,7 +36,7 @@ namespace ProjectV.TaskService
                                                       "Executions number must be positive.");
             }
 
-            Id = id.ThrowIfEmpty(nameof(id));
+            _taskInfo = taskInfo.ThrowIfNull(nameof(taskInfo));
             ExecutionsNumber = executionsNumber;
             DelayTime = delayTime;
         }
@@ -46,10 +51,11 @@ namespace ProjectV.TaskService
             );
         }
 
+        // TODO: remove this method later.
         public async Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
              IInputterAsync additionalInputterAsync, IOutputterAsync additionalOutputterAsync)
         {
-            ShellAsyncBuilderDirector builderDirector = ShellAsync.CreateBuilderDirector(
+            var builderDirector = ShellAsync.CreateBuilderDirector(
                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
             );
             using ShellAsync shell = builderDirector.MakeShell();

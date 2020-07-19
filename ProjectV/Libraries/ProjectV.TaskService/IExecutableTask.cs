@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
+using ProjectV.Models.Internal.Tasks;
 using ProjectV.Models.WebService;
 
 namespace ProjectV.TaskService
 {
     public interface IExecutableTask
     {
-        Guid Id { get; }
+        TaskId Id { get; }
 
         int ExecutionsNumber { get; }
 

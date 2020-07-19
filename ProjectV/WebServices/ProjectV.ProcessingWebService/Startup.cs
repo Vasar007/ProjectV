@@ -1,4 +1,5 @@
 ﻿using System;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ProjectV.DAL;
+using ProjectV.DAL.EntityFramework;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService
@@ -18,13 +21,18 @@ namespace ProjectV.ProcessingWebService
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration.ThrowIfNull(nameof(configuration));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
+
+            services.Configure<DataBaseOptions>(Configuration.GetSection("DataBaseOptions"));
+
+            services.AddScoped<ITaskInfoService, DAL.EntityFramework.TaskInfoService>();
+            services.AddDbContext<ProjectVDbContext>();
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

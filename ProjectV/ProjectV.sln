@@ -76,6 +76,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ProjectV.Policies", "Libraries\ProjectV.Policies\ProjectV.Policies.fsproj", "{CC3827A5-480B-4777-BBDD-371517BA67D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -198,6 +200,10 @@ Global
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Debug|x64.Build.0 = Debug|x64
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Release|x64.ActiveCfg = Release|x64
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Release|x64.Build.0 = Release|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Debug|x64.ActiveCfg = Debug|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Debug|x64.Build.0 = Debug|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.ActiveCfg = Release|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +239,7 @@ Global
 		{6A688168-767F-4798-8D56-9BA6131D6CD4} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A} = {A7284513-CE2B-43D7-833E-99752D705D26}
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{CC3827A5-480B-4777-BBDD-371517BA67D6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

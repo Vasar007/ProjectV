@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using ProjectV.CommonFSharp;
 using ProjectV.ContentDirectories;
 
 namespace ProjectV.DesktopApp.Models.ContentDirectories
@@ -22,7 +22,7 @@ namespace ProjectV.DesktopApp.Models.ContentDirectories
                 .FindContentForDirWithPagingAsync(
                     directoryName: directoryPath,
                     contentType: contentType.ConvertToLibraryEnum(),
-                    pagingInfo: ContentModels.CreateOption(new ContentModels.PagingInfo(0, 10))
+                    pagingInfo: FSharpHelper.CreateOption(new ContentModels.PagingInfo(0, 10))
                 )
                 .ConfigureAwait(continueOnCapturedContext: false);
 

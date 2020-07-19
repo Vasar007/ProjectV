@@ -17,8 +17,9 @@ namespace ProjectV.ConfigurationWebService
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                       .UseStartup<Startup>();
+            return WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
         }
 
         private static async Task Main(string[] args)

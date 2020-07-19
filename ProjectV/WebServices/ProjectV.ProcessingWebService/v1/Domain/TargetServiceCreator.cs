@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjectV.DAL.EntityFramework;
 using ProjectV.Models.Configuration;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
@@ -11,13 +12,14 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         #region ITargetServiceCreator Implementation
 
-        public IServiceRequestProcessor CreateRequestProcessor(ServiceType serviceType)
+        public IServiceRequestProcessor CreateRequestProcessor(
+            ServiceType serviceType, ITaskInfoService taskRepository)
         {
             return serviceType switch
             {
                 ServiceType.Sequential => new ServiceRequestProcessor(),
 
-                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(),
+                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(taskRepository),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(serviceType),
                                                            "Not known service type")

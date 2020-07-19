@@ -31,7 +31,7 @@ namespace ProjectV.Models.Internal
 
         #endregion
 
-        #region  IEquatable<Rating> Implementation
+        #region IEquatable<Rating> Implementation
 
         /// <inheritdoc />
         public bool Equals(Rating? other)

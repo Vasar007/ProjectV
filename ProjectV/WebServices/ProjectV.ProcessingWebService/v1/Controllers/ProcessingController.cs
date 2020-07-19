@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Mvc;
+using ProjectV.DAL.EntityFramework;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.WebService;
@@ -18,10 +19,15 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
 
         private readonly ITargetServiceCreator _serviceCreator;
 
+        private readonly ITaskInfoService _taskRepository;
 
-        public ProcessingController(ITargetServiceCreator serviceCreator)
+
+        public ProcessingController(
+            ITargetServiceCreator serviceCreator,
+            ITaskInfoService taskRepository)
         {
             _serviceCreator = serviceCreator.ThrowIfNull(nameof(serviceCreator));
+            _taskRepository = taskRepository.ThrowIfNull(nameof(taskRepository));
         }
 
         [HttpGet]
@@ -39,7 +45,7 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
             try
             {
                 IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(
-                    requestData.ConfigurationXml.ServiceType
+                    requestData.ConfigurationXml.ServiceType, _taskRepository
                 );
 
                 ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);

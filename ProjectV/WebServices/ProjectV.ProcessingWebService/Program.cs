@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using ProjectV.DAL.EntityFramework;
 using ProjectV.Logging;
 
 namespace ProjectV.ProcessingWebService
@@ -17,8 +19,33 @@ namespace ProjectV.ProcessingWebService
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                       .UseStartup<Startup>();
+            return WebHost
+                .CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+        }
+
+        private static async Task CreateDbIfNotExistsAsync(IWebHost webHost)
+        {
+            _logger.Info("Ensuring DB is existing.");
+
+            using var scope = webHost.Services.CreateScope();
+            IServiceProvider services = scope.ServiceProvider;
+
+            try
+            {
+                var context = services.GetRequiredService<ProjectVDbContext>();
+
+                bool wasCreated = await context.Database.EnsureCreatedAsync();
+
+                string message = wasCreated
+                    ? "New DB was created."
+                    : "DB has already existed.";
+                _logger.Info(message);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "An error occurred creating the DB.");
+            }
         }
 
         private static async Task Main(string[] args)
@@ -28,6 +55,8 @@ namespace ProjectV.ProcessingWebService
                 _logger.PrintHeader("Processing web service started.");
 
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
+
+                await CreateDbIfNotExistsAsync(webHost);
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.

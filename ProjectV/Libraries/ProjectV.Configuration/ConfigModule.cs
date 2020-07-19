@@ -135,6 +135,7 @@ namespace ProjectV.Configuration
                 ConfigNames.Outputters.LocalFileWriterName,
                 new XElement("LocalFile")
             );
+
             _serviceConfigRegistry.RegisterOutputter(
                 ConfigNames.Outputters.GoogleDriveWriterName,
                 new XElement("GoogleDrive")
