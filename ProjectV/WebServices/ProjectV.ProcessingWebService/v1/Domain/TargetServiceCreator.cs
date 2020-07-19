@@ -13,13 +13,13 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         #region ITargetServiceCreator Implementation
 
         public IServiceRequestProcessor CreateRequestProcessor(
-            ServiceType serviceType, ITaskInfoService taskRepository)
+            ServiceType serviceType, ITaskInfoService taskInfoService)
         {
             return serviceType switch
             {
                 ServiceType.Sequential => new ServiceRequestProcessor(),
 
-                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(taskRepository),
+                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(taskInfoService),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(serviceType),
                                                            "Not known service type")

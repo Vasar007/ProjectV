@@ -24,13 +24,13 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor(typeof(ServiceAsyncRequestProcessor));
 
-        private readonly ITaskInfoService _taskRepository;
+        private readonly ITaskInfoService _taskInfoService;
 
 
         public ServiceAsyncRequestProcessor(
-            ITaskInfoService taskRepository)
+            ITaskInfoService taskInfoService)
         {
-            _taskRepository = taskRepository.ThrowIfNull(nameof(taskRepository));
+            _taskInfoService = taskInfoService.ThrowIfNull(nameof(taskInfoService));
         }
 
         #region IServiceRequestProcessor Implementation
@@ -82,7 +82,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
                             requestData.ConfigurationXml).ToString()
             );
 
-            await _taskRepository.AddAsync(taskInfo);
+            await _taskInfoService.AddAsync(taskInfo);
 
             return new SimpleTask(
                 taskInfo: taskInfo,
@@ -93,7 +93,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         private async Task LogResult(IExecutableTask executableTask)
         {
-            TaskInfo taskInfo = await _taskRepository.GetByIdAsync(executableTask.Id);
+            TaskInfo taskInfo = await _taskInfoService.GetByIdAsync(executableTask.Id);
 
             _logger.Info($"Final task info: {taskInfo.ToLogString()}");
         }

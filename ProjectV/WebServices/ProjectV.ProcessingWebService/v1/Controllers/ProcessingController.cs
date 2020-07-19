@@ -19,15 +19,15 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
 
         private readonly ITargetServiceCreator _serviceCreator;
 
-        private readonly ITaskInfoService _taskRepository;
+        private readonly ITaskInfoService _taskInfoService;
 
 
         public ProcessingController(
             ITargetServiceCreator serviceCreator,
-            ITaskInfoService taskRepository)
+            ITaskInfoService taskInfoService)
         {
             _serviceCreator = serviceCreator.ThrowIfNull(nameof(serviceCreator));
-            _taskRepository = taskRepository.ThrowIfNull(nameof(taskRepository));
+            _taskInfoService = taskInfoService.ThrowIfNull(nameof(taskInfoService));
         }
 
         [HttpGet]
@@ -45,7 +45,7 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
             try
             {
                 IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(
-                    requestData.ConfigurationXml.ServiceType, _taskRepository
+                    requestData.ConfigurationXml.ServiceType, _taskInfoService
                 );
 
                 ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
