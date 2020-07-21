@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommunicationWebService.v1.Domain;
 using ProjectV.Logging;
@@ -32,12 +33,15 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return "You can get request processing your data by ThingsAppraiser service.";
+            return Ok("You can get request processing your data by ThingsAppraiser service.");
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
             RequestParams requestParams)
         {
@@ -49,13 +53,13 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
                 ProcessingResponse response =
                     await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
 
-                return response;
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during request handling.");
+                return BadRequest(requestParams);
             }
-            return BadRequest(requestParams);
         }
     }
 }

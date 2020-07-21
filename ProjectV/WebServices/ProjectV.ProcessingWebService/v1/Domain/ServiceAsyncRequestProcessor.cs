@@ -7,12 +7,12 @@ using ProjectV.Configuration;
 using ProjectV.DAL.EntityFramework;
 using ProjectV.IO.Input.WebService;
 using ProjectV.IO.Output.WebService;
+using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Tasks;
 using ProjectV.Models.WebService;
 using ProjectV.TaskService;
 using ProjectV.TmdbService;
-using ProjectV.Logging;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
 {

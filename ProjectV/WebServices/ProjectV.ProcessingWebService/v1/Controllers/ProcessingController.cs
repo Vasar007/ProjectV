@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.DAL.EntityFramework;
 using ProjectV.Logging;
@@ -31,12 +32,15 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return "Create procesiing task by POST request";
+            return Ok("Create procesiing task by POST request");
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ProcessingResponse>> PostRequestData(
             RequestData requestData)
         {
@@ -53,13 +57,14 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
                 {
                     return BadRequest(response);
                 }
-                return response;
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing.");
+                return BadRequest(requestData);
             }
-            return BadRequest(requestData);
         }
     }
 }

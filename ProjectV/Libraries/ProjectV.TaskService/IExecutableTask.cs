@@ -19,6 +19,7 @@ namespace ProjectV.TaskService
 
         RestartPointKind RestartPoint { get; }
 
+
         Task<IReadOnlyList<ServiceStatus>> ExecuteAsync();
 
         Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,

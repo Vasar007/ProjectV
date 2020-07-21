@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
 using ProjectV.Logging;
@@ -24,13 +25,16 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return "Interaction API for TelegramBot";
+            return Ok("Interaction API for TelegramBot");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Update update)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Post([FromBody] Update update)
         {
             try
             {
@@ -40,8 +44,8 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during bot service work.");
+                return BadRequest(update);
             }
-            return BadRequest(update);
         }
     }
 }
