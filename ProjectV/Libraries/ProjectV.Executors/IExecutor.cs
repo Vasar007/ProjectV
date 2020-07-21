@@ -7,7 +7,7 @@ using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.Performers
+namespace ProjectV.Executors
 {
     public interface IExecutor
     {
