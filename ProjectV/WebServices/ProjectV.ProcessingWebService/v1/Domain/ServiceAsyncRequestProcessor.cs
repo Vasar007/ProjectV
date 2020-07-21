@@ -24,13 +24,13 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor(typeof(ServiceAsyncRequestProcessor));
 
-        private readonly IJobInfoService _taskInfoService;
+        private readonly IJobInfoService _jobInfoService;
 
 
         public ServiceAsyncRequestProcessor(
-            IJobInfoService taskInfoService)
+            IJobInfoService jobInfoService)
         {
-            _taskInfoService = taskInfoService.ThrowIfNull(nameof(taskInfoService));
+            _jobInfoService = jobInfoService.ThrowIfNull(nameof(jobInfoService));
         }
 
         #region IServiceRequestProcessor Implementation
@@ -76,16 +76,16 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         private async Task<SimpleTask> CreateTaskAsync(RequestData requestData)
         {
             // TODO: refactor this code.
-            var taskInfo = JobInfo.Create(
-                name: "Simple Async Task",
+            var jobInfo = JobInfo.Create(
+                name: "Simple Async Job",
                 config: XmlConfigCreator.TransformConfigToXDocument(
                             requestData.ConfigurationXml).ToString()
             );
 
-            await _taskInfoService.AddAsync(taskInfo);
+            await _jobInfoService.AddAsync(jobInfo);
 
             return new SimpleTask(
-                jobInfo: taskInfo,
+                jobInfo: jobInfo,
                 executionsNumber: 1,
                 delayTime: TimeSpan.Zero
             );
@@ -93,9 +93,9 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         private async Task LogResult(IExecutableTask executableTask)
         {
-            JobInfo taskInfo = await _taskInfoService.GetByIdAsync(executableTask.Id);
+            JobInfo jobInfo = await _jobInfoService.GetByIdAsync(executableTask.Id);
 
-            _logger.Info($"Final task info: {taskInfo.ToLogString()}");
+            _logger.Info($"Final job info: {jobInfo.ToLogString()}");
         }
 
         private IReadOnlyDictionary<string, IOptionalData> CreateOptionalData()

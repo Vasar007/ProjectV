@@ -26,9 +26,7 @@ namespace ProjectV.DAL.EntityFramework
         {
             if (Jobs is null)
             {
-                throw new InvalidOperationException(
-                    $"{nameof(Jobs)} DB set is not initialized."
-                );
+                throw new InvalidOperationException($"{nameof(Jobs)} DB set is not initialized.");
             }
 
             return Jobs;
@@ -41,6 +39,7 @@ namespace ProjectV.DAL.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // The next line is required for PostreSQL DB because MSSQL default schema name is"dbo".
             modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
 

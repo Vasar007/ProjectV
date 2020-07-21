@@ -107,15 +107,15 @@ namespace ProjectV.ConsoleApp
             var storageSettings = ConfigOptions.GetOptions<DataBaseOptions>();
             using (var context = new ProjectVDbContext(storageSettings))
             {
-                var task = new JobDbInfo(
+                var jobInfo = new JobDbInfo(
                     id: Guid.NewGuid(),
-                    name: "TaskName",
+                    name: "JobName",
                     state: 1,
                     result: 2,
                     config: "TaskConfig"
                 );
 
-                context.GetJobDbSet().Add(task);
+                context.GetJobDbSet().Add(jobInfo);
 
                 int count = context.SaveChanges();
                 Console.WriteLine($"{count.ToString()} records saved to database.");
@@ -123,12 +123,12 @@ namespace ProjectV.ConsoleApp
 
             using (var context = new ProjectVDbContext(storageSettings))
             {
-                foreach (JobDbInfo task in context.GetJobDbSet())
+                foreach (JobDbInfo jobInfo in context.GetJobDbSet())
                 {
                     string message =
-                        $"Task info: {task.Id.ToString()}, {task.Name}, " +
-                        $"{task.State.ToString()}, {task.Result.ToString()}, " +
-                        $"{task.Config.ToString()}";
+                        $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
+                        $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
+                        $"{jobInfo.Config.ToString()}";
 
                     Console.WriteLine(message);
                 }

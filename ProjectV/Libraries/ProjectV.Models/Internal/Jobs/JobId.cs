@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Globalization;
+using Acolyte.Assertions;
 
 namespace ProjectV.Models.Internal.Jobs
 {
-    public struct JobId : IEquatable<JobId>
+    public readonly struct JobId : IEquatable<JobId>
     {
         public static JobId None { get; } = new JobId(Guid.Empty);
 
-        public Guid Value { get; }
+        private readonly Guid _value;
+
+        public Guid Value
+        {
+            get
+            {
+#if DEBUG
+                _value.ThrowIfEmpty(nameof(_value));
+#endif
+                return _value;
+            }
+        }
 
         private JobId(Guid value)
         {
-            Value = value;
+            _value = value;
         }
 
         public static JobId Create()
@@ -21,8 +33,7 @@ namespace ProjectV.Models.Internal.Jobs
 
         public static JobId Wrap(Guid id)
         {
-            if (id == Guid.Empty)
-                throw new ArgumentException(nameof(id), "Unique identifier is invalid.");
+            id.ThrowIfEmpty(nameof(id));
 
             return new JobId(id);
         }
@@ -49,7 +60,7 @@ namespace ProjectV.Models.Internal.Jobs
 
         #endregion
 
-        #region IEquatable<Rating> Implementation
+        #region IEquatable<JobId> Implementation
 
         public bool Equals(JobId other)
         {

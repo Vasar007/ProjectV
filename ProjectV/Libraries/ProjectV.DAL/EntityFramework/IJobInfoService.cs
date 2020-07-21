@@ -5,10 +5,10 @@ namespace ProjectV.DAL.EntityFramework
 {
     public interface IJobInfoService
     {
-        Task AddAsync(JobInfo taskInfo);
+        Task AddAsync(JobInfo jobInfo);
 
-        Task<JobInfo?> FindByIdAsync(JobId taskId);
+        Task<JobInfo?> FindByIdAsync(JobId jobId);
 
-        Task<JobInfo> GetByIdAsync(JobId taskId);
+        Task<JobInfo> GetByIdAsync(JobId jobId);
     }
 }
