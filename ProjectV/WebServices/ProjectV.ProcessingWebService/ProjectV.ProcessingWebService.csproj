@@ -41,7 +41,7 @@
     <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
     <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
     <ProjectReference Include="..\..\Libraries\ProjectV.OutputProcessing\ProjectV.OutputProcessing.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.TaskService\ProjectV.TaskService.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.TaskService\ProjectV.Performers.csproj" />
   </ItemGroup>
 
 </Project>

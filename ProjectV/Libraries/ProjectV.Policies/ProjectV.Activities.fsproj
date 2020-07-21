@@ -7,7 +7,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>4.7</LangVersion>
-    <RootNamespace>ProjectV.Policies</RootNamespace>
+    <RootNamespace>ProjectV.Activities</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

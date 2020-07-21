@@ -10,9 +10,9 @@ using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TaskService
+namespace ProjectV.Performers
 {
-    public sealed class SimpleTask : IExecutableTask
+    public sealed class SimpleExecutor : IExecutor
     {
         private readonly JobInfo _jobInfo;
 
@@ -25,7 +25,7 @@ namespace ProjectV.TaskService
         public RestartPointKind RestartPoint { get; } = RestartPointKind.None;
 
 
-        public SimpleTask(
+        public SimpleExecutor(
             JobInfo jobInfo,
             int executionsNumber,
             TimeSpan delayTime)
@@ -47,7 +47,7 @@ namespace ProjectV.TaskService
             // Create Shell.
             // Execute Shell with data.
             throw new NotImplementedException(
-                "Current serivce version cannot have tasks with data in DB."
+                "Current serivce version cannot have job with data in DB."
             );
         }
 

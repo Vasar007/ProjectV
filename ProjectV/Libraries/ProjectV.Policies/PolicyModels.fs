@@ -1,10 +1,11 @@
-﻿module ProjectV.Policies.PolicyModels
+﻿module ProjectV.Activities.PolicyModels
 
 open System
 open Acolyte.Assertions
 
 
 // You should create "PolicyId" through factory functions.
+[<Struct>]
 type PolicyId =
     private {
         Value: Guid
@@ -24,6 +25,7 @@ module PolicyId =
         valueToMatch.Value
 
 
+[<Struct>]
 type PolicyName =
     private {
         Value: string

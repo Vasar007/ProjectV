@@ -9,7 +9,7 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
-    <RootNamespace>ProjectV.TaskService</RootNamespace>
+    <RootNamespace>ProjectV.Performers</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

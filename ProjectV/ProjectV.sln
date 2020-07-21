@@ -57,7 +57,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Building", "Librar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Configuration", "Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj", "{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.TaskService", "Libraries\ProjectV.TaskService\ProjectV.TaskService.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Performers", "Libraries\ProjectV.TaskService\ProjectV.Performers.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Appraisers.Tests", "Tests\ProjectV.Appraisers.Tests\ProjectV.Appraisers.Tests.csproj", "{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}"
 EndProject
@@ -76,7 +76,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ProjectV.Policies", "Libraries\ProjectV.Policies\ProjectV.Policies.fsproj", "{CC3827A5-480B-4777-BBDD-371517BA67D6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ProjectV.Activities", "Libraries\ProjectV.Policies\ProjectV.Activities.fsproj", "{CC3827A5-480B-4777-BBDD-371517BA67D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

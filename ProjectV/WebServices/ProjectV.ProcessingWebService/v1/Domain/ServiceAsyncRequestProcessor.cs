@@ -11,7 +11,7 @@ using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
-using ProjectV.TaskService;
+using ProjectV.Performers;
 using ProjectV.TmdbService;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
@@ -42,15 +42,15 @@ namespace ProjectV.ProcessingWebService.v1.Domain
             var inputTransmitter = new InputTransmitterAsync(requestData.ThingNames);
             var outputTransmitter = new OutputTransmitterAsync();
 
-            SimpleTask simpleTask = await CreateTaskAsync(requestData);
+            SimpleExecutor simpleExecutor = await CreateExecutorAsync(requestData);
 
-            IReadOnlyList<ServiceStatus> resultStatuses = await simpleTask.ExecuteAsync(
+            IReadOnlyList<ServiceStatus> resultStatuses = await simpleExecutor.ExecuteAsync(
                 requestData, inputTransmitter, outputTransmitter
             );
 
             ServiceStatus status = resultStatuses.Single();
 
-            await LogResult(simpleTask);
+            await LogResult(simpleExecutor);
 
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results =
                 outputTransmitter.GetResults();
@@ -73,7 +73,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         #endregion
 
-        private async Task<SimpleTask> CreateTaskAsync(RequestData requestData)
+        private async Task<SimpleExecutor> CreateExecutorAsync(RequestData requestData)
         {
             // TODO: refactor this code.
             var jobInfo = JobInfo.Create(
@@ -84,16 +84,16 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
             await _jobInfoService.AddAsync(jobInfo);
 
-            return new SimpleTask(
+            return new SimpleExecutor(
                 jobInfo: jobInfo,
                 executionsNumber: 1,
                 delayTime: TimeSpan.Zero
             );
         }
 
-        private async Task LogResult(IExecutableTask executableTask)
+        private async Task LogResult(IExecutor executor)
         {
-            JobInfo jobInfo = await _jobInfoService.GetByIdAsync(executableTask.Id);
+            JobInfo jobInfo = await _jobInfoService.GetByIdAsync(executor.Id);
 
             _logger.Info($"Final job info: {jobInfo.ToLogString()}");
         }

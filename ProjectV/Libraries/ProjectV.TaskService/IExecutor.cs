@@ -7,9 +7,9 @@ using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TaskService
+namespace ProjectV.Performers
 {
-    public interface IExecutableTask
+    public interface IExecutor
     {
         JobId Id { get; }
 
