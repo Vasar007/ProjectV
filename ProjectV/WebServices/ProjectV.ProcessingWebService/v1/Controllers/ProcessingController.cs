@@ -20,12 +20,12 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
 
         private readonly ITargetServiceCreator _serviceCreator;
 
-        private readonly ITaskInfoService _taskInfoService;
+        private readonly IJobInfoService _taskInfoService;
 
 
         public ProcessingController(
             ITargetServiceCreator serviceCreator,
-            ITaskInfoService taskInfoService)
+            IJobInfoService taskInfoService)
         {
             _serviceCreator = serviceCreator.ThrowIfNull(nameof(serviceCreator));
             _taskInfoService = taskInfoService.ThrowIfNull(nameof(taskInfoService));

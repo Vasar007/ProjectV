@@ -6,7 +6,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
     public interface ITargetServiceCreator
     {
         IServiceRequestProcessor CreateRequestProcessor(
-            ServiceType serviceType, ITaskInfoService taskInfoService
+            ServiceType serviceType, IJobInfoService taskInfoService
         );
     }
 }

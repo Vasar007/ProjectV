@@ -31,7 +31,7 @@ namespace ProjectV.ProcessingWebService
 
             services.Configure<DataBaseOptions>(Configuration.GetSection("DataBaseOptions"));
 
-            services.AddScoped<ITaskInfoService, DAL.EntityFramework.TaskInfoService>();
+            services.AddScoped<IJobInfoService, DAL.EntityFramework.JobInfoService>();
             services.AddDbContext<ProjectVDbContext>();
 
             services

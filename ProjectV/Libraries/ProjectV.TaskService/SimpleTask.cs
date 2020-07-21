@@ -7,16 +7,16 @@ using ProjectV.Core;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
-using ProjectV.Models.Internal.Tasks;
+using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
 
 namespace ProjectV.TaskService
 {
     public sealed class SimpleTask : IExecutableTask
     {
-        private readonly TaskInfo _taskInfo;
+        private readonly JobInfo _jobInfo;
 
-        public TaskId Id => _taskInfo.Id;
+        public JobId Id => _jobInfo.Id;
 
         public int ExecutionsNumber { get; }
 
@@ -26,7 +26,7 @@ namespace ProjectV.TaskService
 
 
         public SimpleTask(
-            TaskInfo taskInfo,
+            JobInfo jobInfo,
             int executionsNumber,
             TimeSpan delayTime)
         {
@@ -36,7 +36,7 @@ namespace ProjectV.TaskService
                                                       "Executions number must be positive.");
             }
 
-            _taskInfo = taskInfo.ThrowIfNull(nameof(taskInfo));
+            _jobInfo = jobInfo.ThrowIfNull(nameof(jobInfo));
             ExecutionsNumber = executionsNumber;
             DelayTime = delayTime;
         }

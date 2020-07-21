@@ -9,7 +9,7 @@ namespace ProjectV.DAL.EntityFramework
     {
         private readonly DataBaseOptions _storageOptions;
 
-        public DbSet<TaskDbModel>? Tasks { private get; set; }
+        public DbSet<JobDbInfo>? Jobs { private get; set; }
 
 
         public ProjectVDbContext(DataBaseOptions storageOptions)
@@ -22,16 +22,16 @@ namespace ProjectV.DAL.EntityFramework
             _storageOptions = storageOptions.Value.ThrowIfNull(nameof(storageOptions));
         }
 
-        public DbSet<TaskDbModel> GetTasksDbSet()
+        public DbSet<JobDbInfo> GetJobDbSet()
         {
-            if (Tasks is null)
+            if (Jobs is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(Tasks)} DB set is not initialized."
+                    $"{nameof(Jobs)} DB set is not initialized."
                 );
             }
 
-            return Tasks;
+            return Jobs;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -45,7 +45,7 @@ namespace ProjectV.DAL.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             // Key fields have already mapped. Need to set the other fields.
-            modelBuilder.Entity<TaskDbModel>(
+            modelBuilder.Entity<JobDbInfo>(
                 builder =>
                 {
                     builder.HasKey(e => e.Id);

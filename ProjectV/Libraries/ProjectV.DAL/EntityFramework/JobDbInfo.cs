@@ -5,8 +5,8 @@ using Acolyte.Assertions;
 
 namespace ProjectV.DAL.EntityFramework
 {
-    [Table("tasks")]
-    public sealed class TaskDbModel
+    [Table("jobs")]
+    public sealed class JobDbInfo
     {
         [Key, Required]
         [Column("id")]
@@ -29,7 +29,7 @@ namespace ProjectV.DAL.EntityFramework
         public string Config { get; }
 
 
-        public TaskDbModel(
+        public JobDbInfo(
             Guid id,
             string name,
             int state,

@@ -13,7 +13,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         #region ITargetServiceCreator Implementation
 
         public IServiceRequestProcessor CreateRequestProcessor(
-            ServiceType serviceType, ITaskInfoService taskInfoService)
+            ServiceType serviceType, IJobInfoService taskInfoService)
         {
             return serviceType switch
             {

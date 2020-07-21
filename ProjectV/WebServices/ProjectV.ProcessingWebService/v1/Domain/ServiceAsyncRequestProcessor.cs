@@ -9,7 +9,7 @@ using ProjectV.IO.Input.WebService;
 using ProjectV.IO.Output.WebService;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.Internal.Tasks;
+using ProjectV.Models.Internal.Jobs;
 using ProjectV.Models.WebService;
 using ProjectV.TaskService;
 using ProjectV.TmdbService;
@@ -24,11 +24,11 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor(typeof(ServiceAsyncRequestProcessor));
 
-        private readonly ITaskInfoService _taskInfoService;
+        private readonly IJobInfoService _taskInfoService;
 
 
         public ServiceAsyncRequestProcessor(
-            ITaskInfoService taskInfoService)
+            IJobInfoService taskInfoService)
         {
             _taskInfoService = taskInfoService.ThrowIfNull(nameof(taskInfoService));
         }
@@ -76,7 +76,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         private async Task<SimpleTask> CreateTaskAsync(RequestData requestData)
         {
             // TODO: refactor this code.
-            var taskInfo = TaskInfo.Create(
+            var taskInfo = JobInfo.Create(
                 name: "Simple Async Task",
                 config: XmlConfigCreator.TransformConfigToXDocument(
                             requestData.ConfigurationXml).ToString()
@@ -85,7 +85,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
             await _taskInfoService.AddAsync(taskInfo);
 
             return new SimpleTask(
-                taskInfo: taskInfo,
+                jobInfo: taskInfo,
                 executionsNumber: 1,
                 delayTime: TimeSpan.Zero
             );
@@ -93,7 +93,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         private async Task LogResult(IExecutableTask executableTask)
         {
-            TaskInfo taskInfo = await _taskInfoService.GetByIdAsync(executableTask.Id);
+            JobInfo taskInfo = await _taskInfoService.GetByIdAsync(executableTask.Id);
 
             _logger.Info($"Final task info: {taskInfo.ToLogString()}");
         }

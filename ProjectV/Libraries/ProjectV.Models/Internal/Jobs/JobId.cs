@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ProjectV.Models.Internal.Tasks
+namespace ProjectV.Models.Internal.Jobs
 {
-    public struct TaskId : IEquatable<TaskId>
+    public struct JobId : IEquatable<JobId>
     {
-        public static TaskId None { get; } = new TaskId(Guid.Empty);
+        public static JobId None { get; } = new JobId(Guid.Empty);
 
         public Guid Value { get; }
 
-        private TaskId(Guid value)
+        private JobId(Guid value)
         {
             Value = value;
         }
 
-        public static TaskId Create()
+        public static JobId Create()
         {
-            return new TaskId(Guid.NewGuid());
+            return new JobId(Guid.NewGuid());
         }
 
-        public static TaskId Wrap(Guid id)
+        public static JobId Wrap(Guid id)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException(nameof(id), "Unique identifier is invalid.");
 
-            return new TaskId(id);
+            return new JobId(id);
         }
 
         #region Object Overridden Methods
@@ -36,7 +36,7 @@ namespace ProjectV.Models.Internal.Tasks
 
         public override bool Equals(object obj)
         {
-            if (obj != null && obj is TaskId taskId)
+            if (obj != null && obj is JobId taskId)
                 return Equals(taskId);
 
             return false;
@@ -51,17 +51,17 @@ namespace ProjectV.Models.Internal.Tasks
 
         #region IEquatable<Rating> Implementation
 
-        public bool Equals(TaskId other)
+        public bool Equals(JobId other)
         {
             return Value.Equals(other.Value);
         }
 
-        public static bool operator ==(TaskId left, TaskId right)
+        public static bool operator ==(JobId left, JobId right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(TaskId left, TaskId right)
+        public static bool operator !=(JobId left, JobId right)
         {
             return !(left == right);
         }

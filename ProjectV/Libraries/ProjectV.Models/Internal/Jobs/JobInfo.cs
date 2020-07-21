@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using Acolyte.Assertions;
 
-namespace ProjectV.Models.Internal.Tasks
+namespace ProjectV.Models.Internal.Jobs
 {
-    public sealed class TaskInfo
+    public sealed class JobInfo
     {
-        public TaskId Id { get; }
+        public JobId Id { get; }
 
         public string Name { get; }
 
@@ -18,8 +18,8 @@ namespace ProjectV.Models.Internal.Tasks
         public string Config { get; }
 
 
-        public TaskInfo(
-            TaskId id,
+        public JobInfo(
+            JobId id,
             string name,
             int state,
             int result,
@@ -32,12 +32,12 @@ namespace ProjectV.Models.Internal.Tasks
             Config = config.ThrowIfNullOrWhiteSpace(nameof(config));
         }
 
-        public static TaskInfo Create(
+        public static JobInfo Create(
             string name,
             string config)
         {
-            return new TaskInfo(
-               id: TaskId.Create(),
+            return new JobInfo(
+               id: JobId.Create(),
                name: name,
                state: 0,
                result: 0,
@@ -48,7 +48,7 @@ namespace ProjectV.Models.Internal.Tasks
         public string ToLogString()
         {
             var sb = new StringBuilder()
-                .AppendLine($"[{nameof(TaskInfo)}]")
+                .AppendLine($"[{nameof(JobInfo)}]")
                 .AppendLine($"Id: {Id.ToString()}")
                 .AppendLine($"Name: {Name}")
                 .AppendLine($"State: {State.ToString()}")
