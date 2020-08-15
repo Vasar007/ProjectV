@@ -48,7 +48,7 @@ namespace ProjectV.Core
         /// <summary>
         /// Manager to interact with data base.
         /// </summary>
-        public DAL.DataBaseManager DataBaseManager { get; }
+        public DataAccessLayer.DataBaseManager DataBaseManager { get; }
 
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace ProjectV.Core
             Crawlers.CrawlersManager crawlersManager,
             Appraisers.AppraisersManager appraisersManager,
             IO.Output.OutputManager outputManager,
-            DAL.DataBaseManager dataBaseManager)
+            DataAccessLayer.DataBaseManager dataBaseManager)
         {
             InputManager = inputManager.ThrowIfNull(nameof(inputManager));
             CrawlersManager = crawlersManager.ThrowIfNull(nameof(crawlersManager));

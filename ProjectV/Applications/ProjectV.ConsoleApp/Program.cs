@@ -5,10 +5,10 @@ using ProjectV.Core;
 using ProjectV.Communication;
 using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
-using ProjectV.DAL.EntityFramework;
+using ProjectV.DataAccessLayer.Orm;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.DAL;
+using ProjectV.DataAccessLayer;
 
 namespace ProjectV.ConsoleApp
 {

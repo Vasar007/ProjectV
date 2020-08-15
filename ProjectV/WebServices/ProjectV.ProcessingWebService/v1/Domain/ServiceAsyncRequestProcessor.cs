@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Configuration;
-using ProjectV.DAL.EntityFramework;
+using ProjectV.DataAccessLayer.Orm;
 using ProjectV.Executors;
 using ProjectV.IO.Input.WebService;
 using ProjectV.IO.Output.WebService;

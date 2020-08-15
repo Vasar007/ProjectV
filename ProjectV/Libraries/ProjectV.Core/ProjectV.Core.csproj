@@ -22,7 +22,7 @@
     <ProjectReference Include="..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="..\ProjectV.Communication\ProjectV.Communication.csproj" />
     <ProjectReference Include="..\ProjectV.Crawlers\ProjectV.Crawlers.csproj" />
-    <ProjectReference Include="..\ProjectV.DAL\ProjectV.DAL.csproj" />
+    <ProjectReference Include="..\ProjectV.DataAccessLayer\ProjectV.DataAccessLayer.csproj" />
     <ProjectReference Include="..\ProjectV.InputProcessing\ProjectV.InputProcessing.csproj" />
     <ProjectReference Include="..\ProjectV.IOHelperClasses\ProjectV.IOHelperClasses.csproj" />
     <ProjectReference Include="..\ProjectV.Logging\ProjectV.Logging.csproj" />

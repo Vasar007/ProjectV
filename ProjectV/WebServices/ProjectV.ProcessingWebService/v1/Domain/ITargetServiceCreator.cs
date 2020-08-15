@@ -1,4 +1,4 @@
-﻿using ProjectV.DAL.EntityFramework;
+﻿using ProjectV.DataAccessLayer.Orm;
 using ProjectV.Models.Configuration;
 
 namespace ProjectV.ProcessingWebService.v1.Domain

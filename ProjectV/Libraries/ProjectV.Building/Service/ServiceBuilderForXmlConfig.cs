@@ -308,8 +308,8 @@ namespace ProjectV.Building.Service
         /// <paramref name="repositoryElement" /> or <paramref name="storageSettings" /> is 
         /// <c>null</c>.
         /// </exception>
-        public DAL.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
-            DAL.DataBaseOptions storageSettings)
+        public DataAccessLayer.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
+            DataAccessLayer.DataBaseOptions storageSettings)
         {
             repositoryElement.ThrowIfNull(nameof(repositoryElement));
             storageSettings.ThrowIfNull(nameof(storageSettings));
@@ -320,12 +320,12 @@ namespace ProjectV.Building.Service
             {
                 case _basicInfoRepositoryParameterName:
                 {
-                    return new DAL.Repositories.BasicInfoRepository(storageSettings);
+                    return new DataAccessLayer.Repositories.BasicInfoRepository(storageSettings);
                 }
 
                 case _tmdbMovieRepositoryParameterName:
                 {
-                    return new DAL.Repositories.TmdbMovieRepository(storageSettings);
+                    return new DataAccessLayer.Repositories.TmdbMovieRepository(storageSettings);
                 }
 
                 default:

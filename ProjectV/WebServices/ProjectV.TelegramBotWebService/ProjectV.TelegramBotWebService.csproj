@@ -24,14 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Properties\Messages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -44,6 +36,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,8 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using ProjectV.DAL;
-using ProjectV.DAL.EntityFramework;
+using ProjectV.DataAccessLayer;
+using ProjectV.DataAccessLayer.Orm;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService
@@ -31,7 +31,7 @@ namespace ProjectV.ProcessingWebService
 
             services.Configure<DataBaseOptions>(Configuration.GetSection("DataBaseOptions"));
 
-            services.AddScoped<IJobInfoService, DAL.EntityFramework.JobInfoService>();
+            services.AddScoped<IJobInfoService, DataAccessLayer.Orm.JobInfoService>();
             services.AddDbContext<ProjectVDbContext>();
 
             services

@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="..\ProjectV.Communication\ProjectV.Communication.csproj" />
-    <ProjectReference Include="..\ProjectV.DAL\ProjectV.DAL.csproj" />
+    <ProjectReference Include="..\ProjectV.DataAccessLayer\ProjectV.DataAccessLayer.csproj" />
     <ProjectReference Include="..\ExternalServices\ProjectV.OmdbService\ProjectV.OmdbService.csproj" />
     <ProjectReference Include="..\ExternalServices\ProjectV.SteamService\ProjectV.SteamService.csproj" />
     <ProjectReference Include="..\ExternalServices\ProjectV.TmdbService\ProjectV.TmdbService.csproj" />

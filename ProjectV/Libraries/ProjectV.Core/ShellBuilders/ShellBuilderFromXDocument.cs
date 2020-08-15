@@ -56,7 +56,7 @@ namespace ProjectV.Core.ShellBuilders
         /// <summary>
         /// Variables which saves data base manager instance during building process.
         /// </summary>
-        private DAL.DataBaseManager? _dataBaseManager;
+        private DataAccessLayer.DataBaseManager? _dataBaseManager;
 
 
         /// <summary>
@@ -227,15 +227,15 @@ namespace ProjectV.Core.ShellBuilders
                 );
             }
 
-            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DAL.DataBaseOptions>();
-            _dataBaseManager = new DAL.DataBaseManager(
-                new DAL.Repositories.ResultInfoRepository(dataBaseOptions),
-                new DAL.Repositories.RatingRepository(dataBaseOptions)
+            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DataAccessLayer.DataBaseOptions>();
+            _dataBaseManager = new DataAccessLayer.DataBaseManager(
+                new DataAccessLayer.Repositories.ResultInfoRepository(dataBaseOptions),
+                new DataAccessLayer.Repositories.RatingRepository(dataBaseOptions)
             );
 
             foreach (XElement element in dataBaseManagerElement.Elements())
             {
-                DAL.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
+                DataAccessLayer.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
                     element, dataBaseOptions
                 );
                 _dataBaseManager.DataRepositoriesManager.Add(repository);
@@ -272,7 +272,7 @@ namespace ProjectV.Core.ShellBuilders
             if (_dataBaseManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(DAL.DataBaseManager)} was not built."
+                    $"{nameof(DataAccessLayer.DataBaseManager)} was not built."
                 );
             }
 

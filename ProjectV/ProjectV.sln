@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.CommonCSharp", "Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.ConsoleApp", "Applications\ProjectV.ConsoleApp\ProjectV.ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DAL", "Libraries\ProjectV.DAL\ProjectV.DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DataAccessLayer", "Libraries\ProjectV.DataAccessLayer\ProjectV.DataAccessLayer.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebServices", "WebServices", "{178A5A26-091E-4A8D-A385-171C3644A7D4}"
 EndProject
