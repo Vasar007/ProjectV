@@ -9,7 +9,6 @@ using ProjectV.DataAccessLayer.EntityFramework;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.DataAccessLayer;
-using LinqToDB;
 
 namespace ProjectV.ConsoleApp
 {
