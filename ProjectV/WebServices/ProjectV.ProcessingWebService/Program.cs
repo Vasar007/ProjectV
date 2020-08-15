@@ -33,7 +33,7 @@ namespace ProjectV.ProcessingWebService
 
             try
             {
-                var context = services.GetRequiredService<ProjectVDbContextEf>();
+                var context = services.GetRequiredService<ProjectVDbContext>();
 
                 bool wasCreated = await context.Database.EnsureCreatedAsync();
 

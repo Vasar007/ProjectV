@@ -29,13 +29,6 @@ namespace ProjectV.DataAccessLayer.Orm
         public string Config { get; private set; }
 
 
-        // For LinqToDb only.
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-        private JobDbInfo()
-        {
-        }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
         public JobDbInfo(
             Guid id,
             string name,

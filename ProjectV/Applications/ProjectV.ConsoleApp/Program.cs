@@ -82,8 +82,7 @@ namespace ProjectV.ConsoleApp
                 _logger.PrintHeader("Console client application started.");
 
                 //await MainXDocument(args);
-                //TestDbOrmEf();
-                TestDbOrmLinqToDb();
+                TestDbOrmEf();
                 //await TestConentDirectories();
                 return 0;
             }
@@ -107,7 +106,7 @@ namespace ProjectV.ConsoleApp
         private static void TestDbOrmEf()
         {
             var storageSettings = ConfigOptions.GetOptions<DatabaseOptions>();
-            using (var context = new ProjectVDbContextEf(storageSettings))
+            using (var context = new ProjectVDbContext(storageSettings))
             {
                 var jobInfo = new JobDbInfo(
                     id: Guid.NewGuid(),
@@ -123,41 +122,9 @@ namespace ProjectV.ConsoleApp
                 Console.WriteLine($"{count.ToString()} records saved to database.");
             }
 
-            using (var context = new ProjectVDbContextEf(storageSettings))
+            using (var context = new ProjectVDbContext(storageSettings))
             {
                 foreach (JobDbInfo jobInfo in context.GetJobDbSet())
-                {
-                    string message =
-                        $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
-                        $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
-                        $"{jobInfo.Config.ToString()}";
-
-                    Console.WriteLine(message);
-                }
-            }
-        }
-
-        private static void TestDbOrmLinqToDb()
-        {
-            var storageSettings = ConfigOptions.GetOptions<DatabaseOptions>();
-            using (var context = ProjectVLinqToDbContext.CreateForPostgreSQL(storageSettings))
-            {
-                var jobInfo = new JobDbInfo(
-                    id: Guid.NewGuid(),
-                    name: "JobName",
-                    state: 1,
-                    result: 2,
-                    config: "TaskConfig"
-                );
-
-                int count = context.Insert(jobInfo);
-
-                Console.WriteLine($"{count.ToString()} records saved to database.");
-            }
-
-            using (var context = ProjectVLinqToDbContext.CreateForPostgreSQL(storageSettings))
-            {
-                foreach (JobDbInfo jobInfo in context.Jobs)
                 {
                     string message =
                         $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
