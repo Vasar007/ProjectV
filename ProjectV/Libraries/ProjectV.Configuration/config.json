@@ -1,5 +1,5 @@
 {
-  "DataBaseOptions": {
+  "DatabaseOptions": {
     "ConnectionString": "Host=localhost;Port=5432;Database=ProjectV;Username=postgres;Password=postgres"
   },
 

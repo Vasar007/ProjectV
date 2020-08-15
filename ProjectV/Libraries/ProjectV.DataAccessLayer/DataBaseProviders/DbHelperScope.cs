@@ -19,7 +19,7 @@ namespace ProjectV.DataAccessLayer.DataBaseProviders
         private readonly SqlTransaction _transaction;
 
 
-        public DbHelperScope(DataBaseOptions settings)
+        public DbHelperScope(DatabaseOptions settings)
         {
             settings.ThrowIfNull(nameof(settings));
             settings.ConnectionString.ThrowIfNull(nameof(settings.ConnectionString));

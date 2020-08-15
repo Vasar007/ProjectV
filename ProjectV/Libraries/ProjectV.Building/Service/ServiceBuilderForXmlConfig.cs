@@ -309,7 +309,7 @@ namespace ProjectV.Building.Service
         /// <c>null</c>.
         /// </exception>
         public DataAccessLayer.Repositories.IDataRepository CreateRepository(
-            XElement repositoryElement, DataAccessLayer.DataBaseOptions storageSettings)
+            XElement repositoryElement, DataAccessLayer.DatabaseOptions storageSettings)
         {
             repositoryElement.ThrowIfNull(nameof(repositoryElement));
             storageSettings.ThrowIfNull(nameof(storageSettings));

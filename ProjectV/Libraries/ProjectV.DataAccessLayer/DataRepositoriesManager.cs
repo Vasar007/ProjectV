@@ -13,7 +13,7 @@ namespace ProjectV.DataAccessLayer
     public sealed class DataRepositoriesManager : IManager<IDataRepository>
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<DataBaseManager>();
+            LoggerFactory.CreateLoggerFor<DatabaseManager>();
 
         private readonly Dictionary<Type, IDataRepository> _repositories =
             new Dictionary<Type, IDataRepository>();

@@ -56,7 +56,7 @@ namespace ProjectV.Core.ShellBuilders
         /// <summary>
         /// Variables which saves data base manager instance during building process.
         /// </summary>
-        private DataAccessLayer.DataBaseManager? _dataBaseManager;
+        private DataAccessLayer.DatabaseManager? _databaseManager;
 
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace ProjectV.Core.ShellBuilders
             _crawlersManager = null;
             _appraisersManager = null;
             _outputManager = null;
-            _dataBaseManager = null;
+            _databaseManager = null;
         }
 
         /// <inheritdoc />
@@ -227,18 +227,18 @@ namespace ProjectV.Core.ShellBuilders
                 );
             }
 
-            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DataAccessLayer.DataBaseOptions>();
-            _dataBaseManager = new DataAccessLayer.DataBaseManager(
-                new DataAccessLayer.Repositories.ResultInfoRepository(dataBaseOptions),
-                new DataAccessLayer.Repositories.RatingRepository(dataBaseOptions)
+            var databaseOptions = Configuration.ConfigOptions.GetOptions<DataAccessLayer.DatabaseOptions>();
+            _databaseManager = new DataAccessLayer.DatabaseManager(
+                new DataAccessLayer.Repositories.ResultInfoRepository(databaseOptions),
+                new DataAccessLayer.Repositories.RatingRepository(databaseOptions)
             );
 
             foreach (XElement element in dataBaseManagerElement.Elements())
             {
                 DataAccessLayer.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
-                    element, dataBaseOptions
+                    element, databaseOptions
                 );
-                _dataBaseManager.DataRepositoriesManager.Add(repository);
+                _databaseManager.DataRepositoriesManager.Add(repository);
             }
         }
 
@@ -269,17 +269,17 @@ namespace ProjectV.Core.ShellBuilders
                     $"{nameof(IO.Output.OutputManager)} was not built."
                 );
             }
-            if (_dataBaseManager is null)
+            if (_databaseManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(DataAccessLayer.DataBaseManager)} was not built."
+                    $"{nameof(DataAccessLayer.DatabaseManager)} was not built."
                 );
             }
 
             _logger.Info($"Creating {nameof(Shell)} from user-defined XML config.");
 
             return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
-                             _dataBaseManager);
+                             _databaseManager);
         }
 
         #endregion

@@ -1,5 +1,8 @@
 ﻿using System;
 using Acolyte.Assertions;
+using LinqToDB.AspNet;
+using LinqToDB.AspNet.Logging;
+using LinqToDB.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +32,10 @@ namespace ProjectV.ProcessingWebService
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
 
-            services.Configure<DataBaseOptions>(Configuration.GetSection("DataBaseOptions"));
+            services.Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
 
-            services.AddScoped<IJobInfoService, DataAccessLayer.Orm.JobInfoService>();
-            services.AddDbContext<ProjectVDbContext>();
+            services.AddScoped<IJobInfoService, JobInfoService>();
+            services.AddLinqToDbContext<ProjectVLinqToDbContext>(ConfigureLinqToDb);
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -105,6 +108,27 @@ namespace ProjectV.ProcessingWebService
 
             app.UseHttpsRedirection();
             app.UseMvc();
+        }
+
+        private void ConfigureLinqToDb(IServiceProvider provider,
+            LinqToDbConnectionOptionsBuilder options)
+        {
+            var databaseOptions = Configuration
+                .GetSection(nameof(DatabaseOptions))
+                .Get<DatabaseOptions>();
+
+            if (databaseOptions is null)
+            {
+                throw new ApplicationException("Database configuration was not found.");
+            }
+            if (string.IsNullOrEmpty(databaseOptions.ConnectionString))
+            {
+                throw new ApplicationException("Database connection string was not specified.");
+            }
+
+            options
+                .UsePostgreSQL(databaseOptions.ConnectionString)
+                .UseDefaultLogging(provider);
         }
     }
 }

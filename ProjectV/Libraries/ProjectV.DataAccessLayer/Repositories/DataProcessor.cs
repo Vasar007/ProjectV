@@ -9,10 +9,10 @@ namespace ProjectV.DataAccessLayer.Repositories
 {
     public sealed class DataProcessor : IDataProcessor
     {
-        private readonly DataBaseOptions _dbSettings;
+        private readonly DatabaseOptions _dbSettings;
 
 
-        public DataProcessor(DataBaseOptions dbSettings)
+        public DataProcessor(DatabaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }

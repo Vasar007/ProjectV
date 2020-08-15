@@ -9,10 +9,10 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.DataAccessLayer
 {
-    public sealed class DataBaseManager
+    public sealed class DatabaseManager
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<DataBaseManager>();
+            LoggerFactory.CreateLoggerFor<DatabaseManager>();
 
         private readonly IResultRepository _resultRepository;
 
@@ -22,7 +22,7 @@ namespace ProjectV.DataAccessLayer
             new DataRepositoriesManager();
 
 
-        public DataBaseManager(IResultRepository resultRepository, 
+        public DatabaseManager(IResultRepository resultRepository, 
             IRatingRepository ratingRepository)
         {
             _resultRepository = resultRepository.ThrowIfNull(nameof(resultRepository));

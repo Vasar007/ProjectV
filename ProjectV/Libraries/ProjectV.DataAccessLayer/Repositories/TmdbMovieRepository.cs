@@ -12,7 +12,7 @@ namespace ProjectV.DataAccessLayer.Repositories
     public sealed class TmdbMovieRepository : IDataRepository, IRepository<BasicInfo, int>, 
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataBaseOptions _dbSettings;
+        private readonly DatabaseOptions _dbSettings;
 
         private readonly BasicInfoRepository _basicInfoRepository;
 
@@ -41,7 +41,7 @@ namespace ProjectV.DataAccessLayer.Repositories
         #endregion
 
 
-        public TmdbMovieRepository(DataBaseOptions dbSettings)
+        public TmdbMovieRepository(DatabaseOptions dbSettings)
         {
             _dbSettings = dbSettings;
             _basicInfoRepository = new BasicInfoRepository(dbSettings);

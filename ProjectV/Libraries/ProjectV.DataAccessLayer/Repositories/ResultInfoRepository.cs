@@ -12,7 +12,7 @@ namespace ProjectV.DataAccessLayer.Repositories
     public sealed class ResultInfoRepository : IResultRepository, IRepository<ResultInfo, Guid>,
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataBaseOptions _dbSettings;
+        private readonly DatabaseOptions _dbSettings;
 
         public IReadOnlyList<string> Columns { get; } = new List<string>
         {
@@ -36,7 +36,7 @@ namespace ProjectV.DataAccessLayer.Repositories
         #endregion
 
 
-        public ResultInfoRepository(DataBaseOptions dbSettings)
+        public ResultInfoRepository(DatabaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }

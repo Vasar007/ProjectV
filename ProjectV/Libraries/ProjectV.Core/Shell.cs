@@ -46,9 +46,9 @@ namespace ProjectV.Core
         public IO.Output.OutputManager OutputManager { get; }
 
         /// <summary>
-        /// Manager to interact with data base.
+        /// Manager to interact with database.
         /// </summary>
-        public DataAccessLayer.DataBaseManager DataBaseManager { get; }
+        public DataAccessLayer.DatabaseManager DatabaseManager { get; }
 
 
         /// <summary>
@@ -64,13 +64,13 @@ namespace ProjectV.Core
             Crawlers.CrawlersManager crawlersManager,
             Appraisers.AppraisersManager appraisersManager,
             IO.Output.OutputManager outputManager,
-            DataAccessLayer.DataBaseManager dataBaseManager)
+            DataAccessLayer.DatabaseManager databaseManager)
         {
             InputManager = inputManager.ThrowIfNull(nameof(inputManager));
             CrawlersManager = crawlersManager.ThrowIfNull(nameof(crawlersManager));
             AppraisersManager = appraisersManager.ThrowIfNull(nameof(appraisersManager));
             OutputManager = outputManager.ThrowIfNull(nameof(outputManager));
-            DataBaseManager = dataBaseManager.ThrowIfNull(nameof(dataBaseManager));
+            DatabaseManager = databaseManager.ThrowIfNull(nameof(databaseManager));
         }
 
         /// <summary>
@@ -135,8 +135,8 @@ namespace ProjectV.Core
                 }
                 else
                 {
-                    DataBaseManager.DeleteData();
-                    DataBaseManager.PutResultsToDb(results);
+                    DatabaseManager.DeleteData();
+                    DatabaseManager.PutResultsToDb(results);
 
                     GlobalMessageHandler.OutputMessage(
                         "Crawlers have received responses from services."
@@ -160,7 +160,7 @@ namespace ProjectV.Core
             try
             {
                 IReadOnlyList<RawDataContainer> results = 
-                    DataBaseManager.GetResultsFromDbWithAdditionalInfo();
+                    DatabaseManager.GetResultsFromDbWithAdditionalInfo();
                 ProcessedDataContainer ratings = AppraisersManager.GetAllRatings(results);
 
                 ratingsStorage = ratings.RatingsStorage;
@@ -173,8 +173,8 @@ namespace ProjectV.Core
                 }
                 else
                 {
-                    DataBaseManager.DeleteResultAndRatings();
-                    DataBaseManager.PutRatingsToDb(ratings);
+                    DatabaseManager.DeleteResultAndRatings();
+                    DatabaseManager.PutRatingsToDb(ratings);
 
                     GlobalMessageHandler.OutputMessage(
                         "Appraisers have calculated ratings successfully."
@@ -200,7 +200,7 @@ namespace ProjectV.Core
             bool success = false;
             try
             {
-                var ratings = DataBaseManager.GetRatingValuesFromDb(ratingsStorage);
+                var ratings = DatabaseManager.GetRatingValuesFromDb(ratingsStorage);
 
                 if (OutputManager.SaveResults(ratings, string.Empty))
                 {

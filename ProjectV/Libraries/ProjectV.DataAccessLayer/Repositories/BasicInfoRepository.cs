@@ -13,7 +13,7 @@ namespace ProjectV.DataAccessLayer.Repositories
     public sealed class BasicInfoRepository : IDataRepository, IRepository<BasicInfo, int>, 
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataBaseOptions _dbSettings;
+        private readonly DatabaseOptions _dbSettings;
 
         private readonly DataProcessor _dataProcessor;
 
@@ -39,7 +39,7 @@ namespace ProjectV.DataAccessLayer.Repositories
         #endregion
 
 
-        public BasicInfoRepository(DataBaseOptions dbSettings)
+        public BasicInfoRepository(DatabaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
             _dataProcessor = new DataProcessor(_dbSettings);

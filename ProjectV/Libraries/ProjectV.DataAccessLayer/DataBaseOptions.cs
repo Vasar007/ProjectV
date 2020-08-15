@@ -3,17 +3,17 @@ using ProjectV.Configuration;
 
 namespace ProjectV.DataAccessLayer
 {
-    public sealed class DataBaseOptions : IOptions
+    public sealed class DatabaseOptions : IOptions
     {
         public string ConnectionString { get; set; }
 
 
-        public DataBaseOptions()
+        public DatabaseOptions()
         {
             ConnectionString = string.Empty;
         }
 
-        public DataBaseOptions(string dbConnectionString)
+        public DatabaseOptions(string dbConnectionString)
         {
             ConnectionString = dbConnectionString.ThrowIfNullOrEmpty(nameof(dbConnectionString));
         }

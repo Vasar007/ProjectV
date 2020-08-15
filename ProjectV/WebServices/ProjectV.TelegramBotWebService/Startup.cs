@@ -32,8 +32,8 @@ namespace ProjectV.TelegramBotWebService
             services.AddSingleton<IBotService, BotService>();
             services.AddTransient<IUserCache, UserCache>();
 
-            services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
-            services.Configure<ServiceSettings>(Configuration.GetSection("ServiceConfiguration"));
+            services.Configure<BotConfiguration>(Configuration.GetSection(nameof(BotConfiguration)));
+            services.Configure<ServiceSettings>(Configuration.GetSection(nameof(ServiceSettings)));
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

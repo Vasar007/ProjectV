@@ -12,7 +12,7 @@ namespace ProjectV.DataAccessLayer.Repositories
     public sealed class RatingRepository : IRatingRepository, IRepository<Rating, Guid>,
         IRepositoryBase, ITagable, ITypeId
     {
-        private readonly DataBaseOptions _dbSettings;
+        private readonly DatabaseOptions _dbSettings;
 
         public IReadOnlyList<string> Columns { get; } = new List<string>
         {
@@ -36,7 +36,7 @@ namespace ProjectV.DataAccessLayer.Repositories
         #endregion
 
 
-        public RatingRepository(DataBaseOptions dbSettings)
+        public RatingRepository(DatabaseOptions dbSettings)
         {
             _dbSettings = dbSettings.ThrowIfNull(nameof(dbSettings));
         }
