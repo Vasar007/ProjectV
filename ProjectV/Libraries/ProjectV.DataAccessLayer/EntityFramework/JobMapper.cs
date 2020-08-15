@@ -1,6 +1,6 @@
 ﻿using ProjectV.Models.Internal.Jobs;
 
-namespace ProjectV.DataAccessLayer.Orm
+namespace ProjectV.DataAccessLayer.EntityFramework
 {
     internal sealed class JobMapper : IMapper<JobInfo, JobDbInfo>
     {

@@ -3,7 +3,7 @@ using Acolyte.Assertions;
 using Acolyte.Exceptions;
 using ProjectV.Models.Internal.Jobs;
 
-namespace ProjectV.DataAccessLayer.Orm
+namespace ProjectV.DataAccessLayer.EntityFramework
 {
     public sealed class JobInfoService : IJobInfoService
     {

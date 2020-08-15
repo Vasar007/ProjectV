@@ -3,7 +3,7 @@ using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace ProjectV.DataAccessLayer.Orm
+namespace ProjectV.DataAccessLayer.EntityFramework
 {
     public sealed class ProjectVDbContext : DbContext
     {

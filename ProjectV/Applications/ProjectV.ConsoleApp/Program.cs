@@ -5,7 +5,7 @@ using ProjectV.Core;
 using ProjectV.Communication;
 using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
-using ProjectV.DataAccessLayer.Orm;
+using ProjectV.DataAccessLayer.EntityFramework;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.DataAccessLayer;

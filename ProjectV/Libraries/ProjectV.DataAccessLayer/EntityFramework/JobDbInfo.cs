@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Acolyte.Assertions;
 
-namespace ProjectV.DataAccessLayer.Orm
+namespace ProjectV.DataAccessLayer.EntityFramework
 {
     [Table("jobs")]
     public sealed class JobDbInfo

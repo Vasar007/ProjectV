@@ -1,4 +1,4 @@
-﻿namespace ProjectV.DataAccessLayer.Orm
+﻿namespace ProjectV.DataAccessLayer.EntityFramework
 {
     internal interface IMapper<TFirst, TSecond>
     {
