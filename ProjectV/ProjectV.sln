@@ -78,6 +78,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ProjectV.Activities", "Libraries\ProjectV.Activities\ProjectV.Activities.fsproj", "{CC3827A5-480B-4777-BBDD-371517BA67D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectV.CommonWebApi", "WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj", "{27D2BA49-E628-435D-A35E-FD93F4380B4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -204,6 +206,10 @@ Global
 		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Debug|x64.Build.0 = Debug|x64
 		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.ActiveCfg = Release|x64
 		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.Build.0 = Release|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Debug|x64.ActiveCfg = Debug|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Debug|x64.Build.0 = Debug|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.ActiveCfg = Release|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,6 +246,7 @@ Global
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A} = {A7284513-CE2B-43D7-833E-99752D705D26}
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{CC3827A5-480B-4777-BBDD-371517BA67D6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A} = {178A5A26-091E-4A8D-A385-171C3644A7D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

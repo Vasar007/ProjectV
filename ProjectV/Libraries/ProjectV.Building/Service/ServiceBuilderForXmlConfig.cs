@@ -308,8 +308,8 @@ namespace ProjectV.Building.Service
         /// <paramref name="repositoryElement" /> or <paramref name="storageSettings" /> is 
         /// <c>null</c>.
         /// </exception>
-        public DataAccessLayer.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
-            DataAccessLayer.DataBaseOptions storageSettings)
+        public DataAccessLayer.Repositories.IDataRepository CreateRepository(
+            XElement repositoryElement, DataAccessLayer.DataBaseOptions storageSettings)
         {
             repositoryElement.ThrowIfNull(nameof(repositoryElement));
             storageSettings.ThrowIfNull(nameof(storageSettings));

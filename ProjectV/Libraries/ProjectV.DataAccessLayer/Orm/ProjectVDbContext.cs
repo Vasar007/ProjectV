@@ -39,7 +39,8 @@ namespace ProjectV.DataAccessLayer.Orm
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // The next line is required for PostreSQL DB because MSSQL default schema name is"dbo".
+            // The next line is required for PostreSQL DB because
+            // MSSQL default schema name is "dbo".
             modelBuilder.HasDefaultSchema("public");
             base.OnModelCreating(modelBuilder);
 

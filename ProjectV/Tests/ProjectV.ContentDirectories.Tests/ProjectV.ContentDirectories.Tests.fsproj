@@ -5,11 +5,13 @@
   </PropertyGroup>
     
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>4.7</LangVersion>
-    <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
     <RootNamespace>ProjectV.ContentDirectories.Tests</RootNamespace>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
