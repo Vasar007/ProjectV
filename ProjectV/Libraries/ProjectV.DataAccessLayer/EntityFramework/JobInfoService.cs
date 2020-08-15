@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Exceptions;
+using AutoMapper;
 using ProjectV.Models.Internal.Jobs;
 
 namespace ProjectV.DataAccessLayer.EntityFramework
@@ -9,22 +10,22 @@ namespace ProjectV.DataAccessLayer.EntityFramework
     {
         private readonly ProjectVDbContext _context;
 
-        private readonly IMapper<JobInfo, JobDbInfo> _mapper;
+        private readonly IMapper _mapper;
 
 
         public JobInfoService(
-            ProjectVDbContext context)
+            ProjectVDbContext context,
+            IMapper mapper)
         {
             _context = context.ThrowIfNull(nameof(context));
-
-            _mapper = new JobMapper();
+            _mapper = mapper.ThrowIfNull(nameof(mapper));
         }
 
         #region ITaskRepository Implementation
 
         public async Task AddAsync(JobInfo jobInfo)
         {
-            var taskDbModel = _mapper.Map(jobInfo);
+            var taskDbModel = _mapper.Map<JobDbInfo>(jobInfo);
             await _context.GetJobDbSet().AddAsync(taskDbModel);
 
             await _context.SaveChangesAsync();
@@ -34,7 +35,7 @@ namespace ProjectV.DataAccessLayer.EntityFramework
         {
             JobDbInfo? taskDbModel = await _context.GetJobDbSet().FindAsync(jobId.Value);
 
-            return _mapper.Map(taskDbModel);
+            return _mapper.Map<JobInfo>(taskDbModel);
         }
 
         public async Task<JobInfo> GetByIdAsync(JobId jobId)

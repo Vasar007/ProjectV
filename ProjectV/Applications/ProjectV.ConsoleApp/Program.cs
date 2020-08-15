@@ -9,6 +9,8 @@ using ProjectV.DataAccessLayer.EntityFramework;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.DataAccessLayer;
+using AutoMapper;
+using ProjectV.Models.Internal.Jobs;
 
 namespace ProjectV.ConsoleApp
 {
@@ -80,8 +82,9 @@ namespace ProjectV.ConsoleApp
             {
                 _logger.PrintHeader("Console client application started.");
 
-                //await MainXDocument(args);
-                TestDbOrmEf();
+                await MainXDocument(args);
+                //TestDbOrmEf();
+                //TestAutomapper();
                 //await TestConentDirectories();
                 return 0;
             }
@@ -107,7 +110,7 @@ namespace ProjectV.ConsoleApp
             var storageSettings = ConfigOptions.GetOptions<DatabaseOptions>();
             using (var context = new ProjectVDbContext(storageSettings))
             {
-                var jobInfo = new JobDbInfo(
+                var jobDbInfo = new JobDbInfo(
                     id: Guid.NewGuid(),
                     name: "JobName",
                     state: 1,
@@ -115,7 +118,7 @@ namespace ProjectV.ConsoleApp
                     config: "TaskConfig"
                 );
 
-                context.GetJobDbSet().Add(jobInfo);
+                context.GetJobDbSet().Add(jobDbInfo);
 
                 int count = context.SaveChanges();
                 Console.WriteLine($"{count.ToString()} records saved to database.");
@@ -123,16 +126,63 @@ namespace ProjectV.ConsoleApp
 
             using (var context = new ProjectVDbContext(storageSettings))
             {
-                foreach (JobDbInfo jobInfo in context.GetJobDbSet())
+                foreach (JobDbInfo jobDbInfo in context.GetJobDbSet())
                 {
                     string message =
-                        $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
-                        $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
-                        $"{jobInfo.Config.ToString()}";
+                        $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                        $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                        $"{jobDbInfo.Config.ToString()}";
 
                     Console.WriteLine(message);
                 }
             }
+        }
+
+        private static void TestAutomapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<JobDbInfo, JobInfo>();
+                cfg.CreateMap<JobInfo, JobDbInfo>();
+
+                cfg.CreateMap<Guid, JobId>()
+                   .ConvertUsing(guid => JobId.Wrap(guid));
+                cfg.CreateMap<JobId, Guid>()
+                   .ConvertUsing(jobId => jobId.Value);
+            });
+            config.AssertConfigurationIsValid();
+
+            var mapper = config.CreateMapper();
+
+            var jobDbInfo = new JobDbInfo(
+                id: Guid.NewGuid(),
+                name: "JobName",
+                state: 1,
+                result: 2,
+                config: "TaskConfig"
+            );
+            string message =
+                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                $"{jobDbInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
+
+            var jobInfo = mapper.Map<JobInfo>(jobDbInfo);
+            message =
+                $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
+                $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
+                $"{jobInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
+
+            jobDbInfo = mapper.Map<JobDbInfo>(jobInfo);
+            message =
+                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                $"{jobDbInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
         }
 
         private static async Task TestConentDirectories()

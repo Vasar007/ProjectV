@@ -1,5 +1,6 @@
 ﻿using System;
 using Acolyte.Assertions;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace ProjectV.ProcessingWebService
 
             services.Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJobInfoService, JobInfoService>();
             services.AddDbContext<ProjectVDbContext>();
 
