@@ -34,7 +34,8 @@ namespace ProjectV.DataAccessLayer.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_storageOptions.ConnectionString);
+            optionsBuilder
+                 .UseNpgsql(_storageOptions.ConnectionString, o => o.SetPostgresVersion(12, 0));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

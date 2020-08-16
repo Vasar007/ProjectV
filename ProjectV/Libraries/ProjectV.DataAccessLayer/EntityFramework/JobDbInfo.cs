@@ -10,23 +10,23 @@ namespace ProjectV.DataAccessLayer.EntityFramework
     {
         [Key, Required]
         [Column("id")]
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
         [Required]
         [Column("name")]
-        public string Name { get; private set; }
+        public string Name { get; }
 
         [Required]
         [Column("state")]
-        public int State { get; private set; }
+        public int State { get; }
 
         [Required]
         [Column("result")]
-        public int Result { get; private set; }
+        public int Result { get; }
 
         [Required]
         [Column("config")]
-        public string Config { get; private set; }
+        public string Config { get; }
 
 
         public JobDbInfo(
