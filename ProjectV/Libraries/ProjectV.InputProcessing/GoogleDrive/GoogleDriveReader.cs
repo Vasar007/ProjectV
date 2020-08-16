@@ -7,13 +7,14 @@ using Google.Apis.Drive.v3;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProjectV.IO.Input.GoogleDrive
 {
     /// <summary>
     /// Concrete implementation of reader part for Google Drive API.
     /// </summary>
-    public sealed class GoogleDriveReader : GoogleDriveWorker, IInputter, IInputterBase, ITagable
+    public sealed class GoogleDriveReader : GoogleDriveWorker, IInputterAsync, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -24,7 +25,7 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// <summary>
         /// Used to read downloaded file from Google Drive.
         /// </summary>
-        private readonly LocalFileReader _localFileReader;
+        private readonly LocalFileReaderAsync _localFileReader;
 
         #region ITagable Implementation
 
@@ -37,24 +38,27 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// <summary>
         /// Constructor which forwards drive service instance to base class.
         /// </summary>
-        public GoogleDriveReader(DriveService driveService, IFileReader fileReader)
+        /// <param name="driveService">Google drive service instance.</param>
+        /// <param name="fileReaderAsenc">Implementation to read files.</param>
+        public GoogleDriveReader(DriveService driveService, IFileReaderAsync fileReaderAsenc)
             : base(driveService)
         {
-            _localFileReader = new LocalFileReader(fileReader);
+            _localFileReader = new LocalFileReaderAsync(fileReaderAsenc);
         }
 
-        #region IInputter Implementation
+        #region IInputterAsync Implementation
 
         /// <summary>
         /// Sends request to Google Drive API, downloads file and reads it.
         /// </summary>
         /// <param name="storageName">Storage name on Google Drive with Things names.</param>
-        /// <returns>Processed collection of Things names as strings.</returns>
-        public IReadOnlyList<string> ReadThingNames(string storageName)
+        /// <returns>Enumeration of Things names as strings.</returns>
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return new List<string>();
 
             // Get info from API, download file and read it.
+            // TODO: move query logic to separate class.
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
                 { Q = $"name contains '{storageName}'" }).Files;
 
@@ -74,7 +78,7 @@ namespace ProjectV.IO.Input.GoogleDrive
                 _logger.Info($"No files found. Tried to find \"{storageName}\".");
             }
 
-            return new List<string>();
+            return Array.Empty<string>();
         }
 
         #endregion
@@ -130,7 +134,8 @@ namespace ProjectV.IO.Input.GoogleDrive
                 default:
                 {
                     throw new ArgumentOutOfRangeException(
-                        nameof(progress), progress.Status, "Not caught switch statement!"
+                        nameof(progress), progress.Status,
+                        $"Not known status value: '{progress.Status.ToString()}'."
                     );
                 }
             }
@@ -152,6 +157,8 @@ namespace ProjectV.IO.Input.GoogleDrive
             // download is completed or failed.
             request.MediaDownloader.ProgressChanged +=
                 progress => ProgressChanged_Callback(progress, stream, saveTo, string.Empty);
+
+            // TODO: we can use async overload but need to make changes in inputters interface.
             request.Download(stream);
         }
 
@@ -167,6 +174,8 @@ namespace ProjectV.IO.Input.GoogleDrive
 
             request.MediaDownloader.ProgressChanged +=
                 progress => ProgressChanged_Callback(progress, stream, saveTo, mimeType);
+
+            // TODO: we can use async overload but need to make changes in inputters interface.
             request.Download(stream);
         }
 
@@ -176,36 +185,67 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// </summary>
         /// <param name="storageName">Storage name on the Google Drive with Things names.</param>
         /// <param name="fileId">File ID which is used to download file from Google Drive.</param>
-        /// <returns>Collection of Things names as strings.</returns>
+        /// <returns>Enumeration of Things names as strings.</returns>
         /// <remarks>
         /// This method creates and deletes temporary file to store downloaded content.
         /// </remarks>
-        private IReadOnlyList<string> DownloadAndReadFile(string storageName, string fileId)
+        private IEnumerable<string> DownloadAndReadFile(string storageName, string fileId)
+        {
+            string? downloadedFilename = null;
+            try
+            {
+                if (!TryDownloadFileSafe(storageName, fileId, out downloadedFilename))
+                {
+                    yield break;
+                }
+
+                foreach (string thingName in _localFileReader.ReadThingNames(downloadedFilename))
+                {
+                    yield return thingName;
+                }
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(downloadedFilename))
+                {
+                    DeleteFileSafe(downloadedFilename);
+                }
+            }
+        }
+
+        private bool TryDownloadFileSafe(string storageName, string fileId,
+            [MaybeNullWhen(false)] out string downloadedFilename)
         {
             try
             {
+                // Get temporary file name but remove extension because file reading logic depends
+                // on extension.
+                string tempFilename = Path.GetTempFileName();
+                string tempFilepath = Path.Combine(
+                    Path.GetDirectoryName(tempFilename),
+                    Path.GetFileNameWithoutExtension(tempFilename)
+                );
+
                 if (HasExtenstionSafe(storageName))
                 {
-                    DownloadFile(fileId, storageName);
+                    DownloadFile(fileId, tempFilepath);
                 }
                 else
                 {
                     const string mimeType = "text/csv";
-                    ExportFile(fileId, storageName, mimeType);
-                    storageName += GetExtension(mimeType);
+                    ExportFile(fileId, tempFilepath, mimeType);
+                    tempFilepath += GetExtension(mimeType);
                 }
 
-                return _localFileReader.ReadThingNames(storageName);
+                downloadedFilename = tempFilepath;
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "An error occured during downloading and reading file.");
-                return new List<string>();
-            }
-            finally
-            {
-                DeleteFileSafe(storageName);
-                _logger.Debug($"Deleted temporary created file \"{storageName}\".");
+
+                downloadedFilename = null;
+                return false;
             }
         }
     }

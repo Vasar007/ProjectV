@@ -109,9 +109,11 @@ namespace ProjectV.DesktopApp.Models.Things
 
             CreateBasicRequirements(serviceName);
 
-            var localFileReader = new LocalFileReader(new SimpleFileReader());
+            // Read local file, retrieve all things and send them as list to service to crawling
+            // and appaise.
+            var localFileReader = new LocalFileReaderAsync(new SimpleFileReaderAsync());
             IReadOnlyList<string> thingNames = await Task
-                .Run(() => localFileReader.ReadThingNames(storageName))
+                .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);
@@ -130,13 +132,15 @@ namespace ProjectV.DesktopApp.Models.Things
 
             CreateBasicRequirements(serviceName);
 
-            var serviceBuilder = new ServiceBuilderForXmlConfig();
+            // Read file from Google Drive, retrieve all things and send them as list to service to
+            // crawling and appaise.
+            var serviceBuilder = new ServiceAsyncBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
             );
 
             IReadOnlyList<string> thingNames = await Task
-                .Run(() => googleDriveReader.ReadThingNames(storageName))
+                .Run(() => googleDriveReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);

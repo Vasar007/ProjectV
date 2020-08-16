@@ -11,17 +11,41 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output
 {
+    /// <summary>
+    /// Class which controlling results saving.
+    /// </summary>
     public sealed class OutputManagerAsync : IManager<IOutputterAsync>
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<OutputManagerAsync>();
 
+        /// <summary>
+        /// Default storage name if user will not specify it.
+        /// </summary>
         private readonly string _defaultStorageName;
 
+        /// <summary>
+        /// Collection of concrete outputter classes which can save results to specified source.
+        /// </summary>
         private readonly List<IOutputterAsync> _outputtersAsync = new List<IOutputterAsync>();
 
 
-        public OutputManagerAsync(string defaultStorageName)
+        /// <summary>
+        /// Initializes instance according to parameter values.
+        /// </summary>
+        /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="defaultStorageName" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="defaultStorageName" /> presents empty strings or contains only
+        /// whitespaces.
+        /// </exception>
+        public OutputManagerAsync(
+            string defaultStorageName)
         {
             _defaultStorageName =
                 defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
@@ -29,6 +53,10 @@ namespace ProjectV.IO.Output
 
         #region IManager<IOutputterAsync> Implementation
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item" /> is <c>null</c>.
+        /// </exception>
         public void Add(IOutputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
@@ -38,6 +66,10 @@ namespace ProjectV.IO.Output
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item" /> is <c>null</c>.
+        /// </exception>
         public bool Remove(IOutputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
@@ -55,17 +87,30 @@ namespace ProjectV.IO.Output
                 _logger.Info("Storage name is empty, using the default value.");
             }
 
-            var outputtersFunc = _outputtersAsync.Select(outputterAsync =>
+            // A trick to complete pipeline with some pre-actions for outputters.
+            // Now we only logging results because we should process all appraised results
+            // before saving (e.g. sort them). So, may be in the future we will have some additional
+            // logic instead of plain logging here.
+            Action<RatingDataContainer> outputtersFunc = result =>
             {
-                return new Action<RatingDataContainer>(result => Console.WriteLine("Got result."));
-            });
+                _logger.Info($"Got result for Thing:");
+                _logger.Info($"    ThingId: '{result.DataHandler.ThingId.ToString()}'.");
+                _logger.Info($"    Title: '{result.DataHandler.Title.ToString()}'.");
+            };
 
-            var outputtersFlow = new OutputtersFlow(outputtersFunc.Take(1));
+            var outputtersFlow = new OutputtersFlow(new[] { outputtersFunc });
 
             _logger.Info("Constructed outputters pipeline.");
             return outputtersFlow;
         }
 
+        /// <summary>
+        /// Executes saving procedure and get it status as boolean variable. Results will be saved
+        /// when the whole pipeline will be finished.
+        /// </summary>
+        /// <param name="results">Collections of appraised results to save.</param>
+        /// <param name="storageName">Storage name of output source.</param>
+        /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
         public async Task<bool> SaveResults(OutputtersFlow outputtersFlow, string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))

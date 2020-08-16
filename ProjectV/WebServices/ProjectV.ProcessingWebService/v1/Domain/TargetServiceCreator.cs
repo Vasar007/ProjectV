@@ -1,5 +1,5 @@
 ﻿using System;
-using ProjectV.DataAccessLayer.EntityFramework;
+using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Models.Configuration;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
@@ -17,8 +17,6 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         {
             return serviceType switch
             {
-                ServiceType.Sequential => new ServiceRequestProcessor(),
-
                 ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(jobInfoService),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(serviceType),

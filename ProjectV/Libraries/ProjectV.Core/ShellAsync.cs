@@ -10,21 +10,51 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.Core
 {
+    /// <summary>
+    /// Main class of service that links the rest of the classes into a single entity.
+    /// </summary>
     public sealed class ShellAsync : IDisposable
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ShellAsync>();
 
         private readonly int _boundedCapacity;
 
+        /// <summary>
+        /// Manager to interact with input data.
+        /// </summary>
         public IO.Input.InputManagerAsync InputManagerAsync { get; }
 
+        /// <summary>
+        /// Manager to collect data about The Things from different sources.
+        /// </summary>
         public Crawlers.CrawlersManagerAsync CrawlersManagerAsync { get; }
 
+        /// <summary>
+        /// Manager to appraise of information collected.
+        /// </summary>
         public Appraisers.AppraisersManagerAsync AppraisersManagerAsync { get; }
 
+        /// <summary>
+        /// Manager to save service results.
+        /// </summary>
         public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
 
 
+        /// <summary>
+        /// Default constructor which initialize all managers.
+        /// </summary>
+        /// <param name="inputManagerAsync">Initialized input manager.</param>
+        /// <param name="crawlersManagerAsync">Initialized crawlers manager.</param>
+        /// <param name="appraisersManagerAsync">Initialized appraisers manager.</param>
+        /// <param name="outputManagerAsync">Initialized output manager.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="inputManagerAsync" /> or <paramref name="crawlersManagerAsync" /> or
+        /// <paramref name="appraisersManagerAsync" /> or <paramref name="outputManagerAsync" /> is 
+        /// <c>null</c>.
+        /// </exception>
         public ShellAsync(
             IO.Input.InputManagerAsync inputManagerAsync,
             Crawlers.CrawlersManagerAsync crawlersManagerAsync,
@@ -46,6 +76,11 @@ namespace ProjectV.Core
             return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
         }
 
+        /// <summary>
+        /// Launches the whole cycle of collecting and processing data.
+        /// </summary>
+        /// <param name="storageName">Name of the input source.</param>
+        /// <returns>Status value depending on the result of the service.</returns>
         public async Task<ServiceStatus> Run(string storageName)
         {
             const string startMessage = "Shell started work.";
@@ -95,6 +130,9 @@ namespace ProjectV.Core
         /// </summary>
         private bool _disposed;
 
+        /// <summary>
+        /// Releases all acquired resources.
+        /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
@@ -106,6 +144,10 @@ namespace ProjectV.Core
 
         #endregion
 
+        /// <summary>
+        /// Saves ratings to the output sources.
+        /// </summary>
+        /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
         private async Task<ServiceStatus> SaveResults(OutputtersFlow outputtersFlow)
         {
             try

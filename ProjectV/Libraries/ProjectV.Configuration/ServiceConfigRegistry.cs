@@ -22,9 +22,6 @@ namespace ProjectV.Configuration
         private readonly Dictionary<string, XElement> _outputRegistry =
             new Dictionary<string, XElement>();
 
-        private readonly Dictionary<string, XElement> _repositoriesRegistry =
-            new Dictionary<string, XElement>();
-
 
         public ServiceConfigRegistry()
         {
@@ -55,11 +52,6 @@ namespace ProjectV.Configuration
             Register(_outputRegistry, identifier, element);
         }
 
-        public void RegisterRepository(string identifier, XElement element)
-        {
-            Register(_repositoriesRegistry, identifier, element);
-        }
-
         public XElement GetConfigForMessageHandlerParameter(string identifier)
         {
             return GetConfigForIdenrifier(_messageHandlerRegistry, identifier);
@@ -83,11 +75,6 @@ namespace ProjectV.Configuration
         public XElement GetConfigForOutputter(string identifier)
         {
             return GetConfigForIdenrifier(_outputRegistry, identifier);
-        }
-
-        public XElement GetConfigForRepository(string identifier)
-        {
-            return GetConfigForIdenrifier(_repositoriesRegistry, identifier);
         }
 
         private static void Register(Dictionary<string, XElement> registry, string identifier,

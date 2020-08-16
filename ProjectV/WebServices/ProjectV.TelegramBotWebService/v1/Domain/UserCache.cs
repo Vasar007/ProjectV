@@ -24,7 +24,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             return _cache.TryAdd(id, requestParams);
         }
 
-        public bool TryGetUser(long id, [MaybeNullWhen(false)] out RequestParams? requestParams)
+        public bool TryGetUser(long id, [MaybeNullWhen(false)] out RequestParams requestParams)
         {
             return _cache.TryGetValue(id, out requestParams);
         }
@@ -35,10 +35,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             return _cache.TryRemove(id, out RequestParams _);
         }
 
-        public bool TryRemoveUser(long id, [MaybeNullWhen(false)] out RequestParams? requestParams)
+        public bool TryRemoveUser(long id, [MaybeNullWhen(false)] out RequestParams requestParams)
         {
             return _cache.TryRemove(id, out requestParams);
         }
+
         #endregion
     }
 }

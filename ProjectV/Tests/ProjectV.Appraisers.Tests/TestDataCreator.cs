@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acolyte.Assertions;
-using ProjectV.Appraisers.Appraisals;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 
@@ -10,64 +9,29 @@ namespace ProjectV.Appraisers.Tests
 {
     internal static class TestDataCreator
     {
-        private static readonly Random RandomInstance = new Random();
+        private static Random RandomInstance { get; } = new Random();
 
 
-        internal static RawDataContainer CreateRawDataContainerWithBasicInfo(
-            params BasicInfo[]? items)
-        {
-            items ??= Array.Empty<BasicInfo>();
-
-            return CreateRawDataContainerWithBasicInfo(items.AsEnumerable());
-        }
-
-        internal static RawDataContainer CreateRawDataContainerWithBasicInfo(
-            IEnumerable<BasicInfo> items)
+        internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
+            Guid ratingId, params BasicInfo[] items)
         {
             items.ThrowIfNull(nameof(items));
 
-            var container = new RawDataContainer(new List<BasicInfo>(items));
-
-            if (!container.RawData.Any()) return container;
-
-            container.AddParameter(
-                nameof(BasicInfo.VoteCount),
-                MinMaxDenominator.CreateForCollection(container.RawData, basic => basic.VoteCount)
-            );
-
-            container.AddParameter(
-                nameof(BasicInfo.VoteAverage),
-                MinMaxDenominator.CreateForCollection(container.RawData, basic => basic.VoteAverage)
-            );
-
-            return container;
+            return CreateExpectedValueForBasicInfo(ratingId, items.AsEnumerable());
         }
 
-        internal static IReadOnlyList<ResultInfo> CreateExpectedValueForBasicInfo(Guid ratingId,
-            RawDataContainer rawDataContainer, params BasicInfo[] items)
+        internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
+            Guid ratingId, IEnumerable<BasicInfo> items)
         {
-            rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
             items.ThrowIfNull(nameof(items));
 
-            return CreateExpectedValueForBasicInfo(ratingId, rawDataContainer,
-                                                   items.AsEnumerable());
-        }
+            var appraisal = TestAppraisersCreator.CreateBasicAppraisal();
 
-        internal static IReadOnlyList<ResultInfo> CreateExpectedValueForBasicInfo(Guid ratingId,
-            RawDataContainer rawDataContainer, IEnumerable<BasicInfo> items)
-        {
-            rawDataContainer.ThrowIfNull(nameof(rawDataContainer));
-            items.ThrowIfNull(nameof(items));
-
-            var appraisal = new BasicAppraisal();
-
-            appraisal.PrepareCalculation(rawDataContainer);
-
-            var expectedValue = new List<ResultInfo>();
+            var expectedValue = new List<RatingDataContainer>();
             foreach (BasicInfo item in items)
             {
                 double expectedRating = appraisal.CalculateRating(item);
-                var expectedItem = new ResultInfo(item.ThingId, expectedRating, ratingId);
+                var expectedItem = new RatingDataContainer(item, expectedRating, ratingId);
 
                 expectedValue.Add(expectedItem);
             }

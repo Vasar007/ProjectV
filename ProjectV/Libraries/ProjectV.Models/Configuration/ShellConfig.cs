@@ -21,7 +21,7 @@ namespace ProjectV.Models.Configuration
         public OutputManagerConfig OutputManager { get; set; } = default!;
 
         [XmlElement]
-        public DataBaseManagerConfig DataBaseManager { get; set; } = default!;
+        public DatabaseManagerConfig DataBaseManager { get; set; } = default!;
 
 
         public ShellConfig()

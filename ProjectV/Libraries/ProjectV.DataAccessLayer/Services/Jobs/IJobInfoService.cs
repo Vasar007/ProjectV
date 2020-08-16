@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ProjectV.Models.Internal.Jobs;
 
-namespace ProjectV.DataAccessLayer.EntityFramework
+namespace ProjectV.DataAccessLayer.Services.Jobs
 {
     public interface IJobInfoService
     {

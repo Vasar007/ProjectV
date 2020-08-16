@@ -9,13 +9,14 @@ using ProjectV.Logging;
 using ProjectV.Communication;
 using ProjectV.IO.Output.File;
 using ProjectV.Models.Internal;
+using System.Threading.Tasks;
 
 namespace ProjectV.IO.Output.GoogleDrive
 {
     /// <summary>
     /// Concrete implementation of writer part for Google Drive API.
     /// </summary>
-    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputter, IOutputterBase, ITagable
+    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputterAsync, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -31,7 +32,7 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <summary>
         /// Used to write results to local file which would be upload to Google Drive.
         /// </summary>
-        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
+        private readonly LocalFileWriterAsync _localFileWriter;
 
         #region ITagable Implementation
 
@@ -47,9 +48,10 @@ namespace ProjectV.IO.Output.GoogleDrive
         public GoogleDriveWriter(DriveService driveService)
             : base(driveService)
         {
+            _localFileWriter = new LocalFileWriterAsync();
         }
 
-        #region IOutputter Implementation
+        #region IOutputterAsync Implementation
 
         /// <summary>
         /// Saves results to Google Drive file.
@@ -60,20 +62,24 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <remarks>
         /// This method creates and deletes temporary file to store appraised content.
         /// </remarks>
-        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
-            string storageName)
+        public async Task<bool> SaveResults(
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)
         {
             if (string.IsNullOrEmpty(storageName)) return false;
 
-            string tempStorageName = "temp_" + storageName;
-            while (LocalFileWriter.DoesExistFile(tempStorageName))
+            // TODO: move temp filename creation to separate class.
+            string tempStorageName;
+            do
             {
-                tempStorageName = "temp_" + tempStorageName;
+                tempStorageName = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
             }
+            while (LocalFileWriter.DoesExistFile(tempStorageName));
 
             // Save results to local file and upload it.
-            if (!_localFileWriter.SaveResults(results, tempStorageName))
+            var hasSavedSuccessfully = await _localFileWriter.SaveResults(results, tempStorageName);
+            if (!hasSavedSuccessfully)
             {
+                _logger.Warn($"Results for \"{storageName}\" have not been saved.");
                 return false;
             }
 

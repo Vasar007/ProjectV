@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectV.DataAccessLayer.EntityFramework;
+using ProjectV.DataAccessLayer;
 using ProjectV.Logging;
 
 namespace ProjectV.ProcessingWebService

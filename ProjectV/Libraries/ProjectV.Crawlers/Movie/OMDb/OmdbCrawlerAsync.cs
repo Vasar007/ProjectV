@@ -11,8 +11,7 @@ namespace ProjectV.Crawlers.Movie.Omdb
     /// <summary>
     /// Provides async version of OMDb crawler.
     /// </summary>
-    public sealed class OmdbCrawlerAsync : ICrawlerAsync, ICrawlerBase, IDisposable, ITagable,
-        ITypeId
+    public sealed class OmdbCrawlerAsync : ICrawlerAsync, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.

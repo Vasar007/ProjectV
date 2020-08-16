@@ -116,7 +116,14 @@ namespace ProjectV.Building.Service
 
                 case _googleDriveParameterName:
                 {
-                    throw new NotImplementedException("Now GoogleDrive isn't supported.");
+                    string fileReaderName = XDocumentParser.GetAttributeValue(
+                        inputterElement, _fileReaderParameterName + _googleDriveParameterName
+                    );
+
+                    IO.Input.File.IFileReaderAsync fileReader =
+                        CreateFileReaderAsync(fileReaderName);
+
+                    return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
                 }
 
                 default:
@@ -264,7 +271,7 @@ namespace ProjectV.Building.Service
 
                 case _googleDriveParameterName:
                 {
-                    throw new NotImplementedException("Now GoogleDrive isn't supported.");
+                    return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
                 }
 
                 default:

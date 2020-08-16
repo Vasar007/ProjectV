@@ -12,7 +12,7 @@ namespace ProjectV.IO.Output.File
     /// Class which can write to files and process output content. Uses FileHelpers library to
     /// delegate all routine work.
     /// </summary>
-    public sealed class LocalFileWriter : IOutputter, IOutputterBase, ITagable
+    public sealed class LocalFileWriter : ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -22,7 +22,7 @@ namespace ProjectV.IO.Output.File
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "LocalFileWriter";
+        public string Tag { get; } = nameof(LocalFileWriter);
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace ProjectV.IO.Output.File
         {
         }
 
-        /// <inheritdoc cref="System.IO.File..Exists" />
+        /// <inheritdoc cref="System.IO.File.Exists" />
         public static bool DoesExistFile(string path)
         {
             return System.IO.File.Exists(path);
@@ -104,8 +104,8 @@ namespace ProjectV.IO.Output.File
         private static Dictionary<string, IList<double>> ConvertResultsToDict(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results)
         {
-            // TODO: add additional data structure based on Dictionary<string, (CResultInfo, Int32)>
-            // where string is name of the Thing, CResultInfo is meta information and Int32 is place
+            // TODO: add additional data structure based on Dictionary<string, (ResultInfo, Int32)>
+            // where string is name of the Thing, ResultInfo is meta information and Int32 is place
             // in the rating. If appraiser cannot appraise the Thing, then we would have pair
             // <nameof(Thing), null> (yes, ValueType cannot be null, we'd simply have something
             // similar, i.e. default or special value). Such data structure, I think, can help to

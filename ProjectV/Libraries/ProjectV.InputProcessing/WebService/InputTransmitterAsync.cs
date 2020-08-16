@@ -3,9 +3,9 @@ using Acolyte.Assertions;
 
 namespace ProjectV.IO.Input.WebService
 {
-    public sealed class InputTransmitterAsync : IInputterAsync, IInputterBase, ITagable
+    public sealed class InputTransmitterAsync : IInputterAsync, ITagable
     {
-        private readonly IReadOnlyList<string> _thingNames;
+        private readonly IEnumerable<string> _thingNames;
 
         #region ITagable Implementation
 
@@ -17,7 +17,7 @@ namespace ProjectV.IO.Input.WebService
         public string StorageName { get; private set; } = string.Empty;
 
 
-        public InputTransmitterAsync(IReadOnlyList<string> thingNames)
+        public InputTransmitterAsync(IEnumerable<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }

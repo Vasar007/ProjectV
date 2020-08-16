@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ProjectV.DataAccessLayer;
-using ProjectV.DataAccessLayer.EntityFramework;
+using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService

@@ -136,51 +136,6 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates file reader (sequential) instance depend on parameter value (could be read from 
-        /// config file or XML document).
-        /// </summary>
-        /// <param name="fileReaderName">
-        /// Name of the file reader (sequential) class to create.
-        /// </param>
-        /// <returns>Fully initialized instance of file reader (sequential) class.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileReaderName" /> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="fileReaderName" /> isn't specified in method.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="fileReaderName" /> presents empty string.
-        /// </exception>
-        protected IO.Input.File.IFileReader CreateFileReader(string fileReaderName)
-        {
-            fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
-
-            _logger.Info("Creating file reader.");
-
-            switch (fileReaderName)
-            {
-                case _simpleFileReaderParameterName:
-                {
-                    return new IO.Input.File.SimpleFileReader();
-                }
-
-                case _filterFileReaderParameterName:
-                {
-                    return new IO.Input.File.FilterFileReader();
-                }
-
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(fileReaderName), fileReaderName,
-                        "Couldn't recognize file reader type."
-                    );
-                }
-            }
-        }
-
-        /// <summary>
         /// Creates file reader (async) instance depend on parameter value (could be read from 
         /// config file or XML document).
         /// </summary>
@@ -210,7 +165,7 @@ namespace ProjectV.Building.Service
 
                 case _filterFileReaderParameterName:
                 {
-                    throw new NotImplementedException("Now FilterFileReaderAsync isn't supported.");
+                    return new IO.Input.File.FilterFileReader();
                 }
 
                 default:

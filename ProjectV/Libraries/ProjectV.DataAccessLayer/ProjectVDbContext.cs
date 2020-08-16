@@ -2,8 +2,9 @@
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ProjectV.DataAccessLayer.Services.Jobs;
 
-namespace ProjectV.DataAccessLayer.EntityFramework
+namespace ProjectV.DataAccessLayer
 {
     public sealed class ProjectVDbContext : DbContext
     {

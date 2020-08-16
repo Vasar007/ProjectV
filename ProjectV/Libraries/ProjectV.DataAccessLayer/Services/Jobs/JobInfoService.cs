@@ -4,7 +4,7 @@ using Acolyte.Exceptions;
 using AutoMapper;
 using ProjectV.Models.Internal.Jobs;
 
-namespace ProjectV.DataAccessLayer.EntityFramework
+namespace ProjectV.DataAccessLayer.Services.Jobs
 {
     public sealed class JobInfoService : IJobInfoService
     {

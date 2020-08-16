@@ -75,13 +75,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
                                               out IList<double>? ratingValues))
                     {
-                        if (ratingValues is null)
-                        {
-                            throw new InvalidOperationException(
-                                "Rating data container contains null values."
-                            );
-                        }
-
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }
                     else

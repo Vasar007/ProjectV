@@ -91,6 +91,8 @@ namespace ProjectV.IO
         /// <param name="saveTo">Filename (absolute or relative).</param>
         protected static void SaveStream(MemoryStream stream, string saveTo)
         {
+            _logger.Info($"Saving downloaded contnent to file: '{saveTo}'.");
+
             using var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write);
 
             stream.WriteTo(file);
@@ -166,9 +168,13 @@ namespace ProjectV.IO
         /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
         protected static bool DeleteFileSafe(string filename)
         {
+            _logger.Debug($"Deleted downloaded file \"{filename}\".");
+
             try
             {
                 File.Delete(filename);
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -177,7 +183,6 @@ namespace ProjectV.IO
                                                     $" \"{filename}\". Error: {ex}");
                 return false;
             }
-            return true;
         }
 
         /// <summary>

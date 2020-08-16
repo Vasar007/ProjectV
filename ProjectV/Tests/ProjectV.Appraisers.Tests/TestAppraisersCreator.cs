@@ -5,11 +5,14 @@ namespace ProjectV.Appraisers.Tests
 {
     internal static class TestAppraisersCreator
     {
-        public static IAppraiser CreateBasicAppraiser()
+        public static IAppraisal<BasicInfo> CreateBasicAppraisal()
         {
-            var appraisal = new BasicAppraisal();
+            return new BasicAppraisal();
+        }
 
-            return new Appraiser<BasicInfo>(appraisal);
+        public static IAppraiserAsync CreateBasicAppraiser()
+        {
+            return new AppraiserAsync<BasicInfo>(CreateBasicAppraisal());
         }
     }
 }

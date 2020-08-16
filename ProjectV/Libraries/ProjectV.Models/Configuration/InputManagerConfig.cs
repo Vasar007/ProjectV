@@ -9,10 +9,10 @@ namespace ProjectV.Models.Configuration
         [XmlAttribute(DataType = "string")]
         public string DefaultInStorageName { get; set; } = default!;
 
-        [XmlAnyElement(Name = "InputManagerParameters")]
+        [XmlAnyElement(Name = nameof(InputManagerParameters))]
         public XElement[] InputManagerParameters { get; set; } = default!;
 
-        [XmlAnyElement(Name = "Inputters")]
+        [XmlAnyElement(Name = nameof(Inputters))]
         public XElement[] Inputters { get; set; } = default!;
 
 

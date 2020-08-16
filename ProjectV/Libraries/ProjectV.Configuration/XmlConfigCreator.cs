@@ -28,6 +28,12 @@ namespace ProjectV.Configuration
             LoggerFactory.CreateLoggerFor<XmlConfigCreator>();
 
         /// <summary>
+        /// Specifies default service type used in config creation. Default value:
+        /// <see cref="ServiceType.TplDataflow" />.
+        /// </summary>
+        public static ServiceType DefaultServiceType { get; } = ServiceType.TplDataflow;
+
+        /// <summary>
         /// Inner array to hold collection of message handler parameters.
         /// </summary>
         private readonly List<XElement> _messageHandlerParameters = new List<XElement>();
@@ -160,17 +166,12 @@ namespace ProjectV.Configuration
                             ),
                         }
                     },
-                    DataBaseManager = new DataBaseManagerConfig
+                    DataBaseManager = new DatabaseManagerConfig
                     {
-                        Repositories = new[]
-                        {
-                            ConfigModule.GetConfigForRepository(
-                                ConfigNames.Repositories.TmdbMovieRepositoryName
-                            )
-                        }
+                        Repositories = Array.Empty<XElement>()
                     }
                 },
-                ServiceType = ServiceType.TplDataflow
+                ServiceType = DefaultServiceType
             };
 
             return xmlConfig;
@@ -225,12 +226,6 @@ namespace ProjectV.Configuration
 
             xmlConfigCreator.SetDefaultOutStorageName("appraised_things.csv");
 
-            xmlConfigCreator.AddRepository(
-                ConfigModule.GetConfigForRepository(
-                    ConfigNames.Repositories.BasicInfoRepositoryName
-                )
-            );
-
             foreach (var inputItem in configRequirements.Input)
             {
                 ConfigContract.CheckAvailability(inputItem, ConfigContract.AvailableInput);
@@ -246,9 +241,6 @@ namespace ProjectV.Configuration
 
                 xmlConfigCreator.AddCrawler(
                     ConfigModule.GetConfigForCrawler(serviceItem)
-                );
-                xmlConfigCreator.AddRepository(
-                    ConfigModule.GetConfigForRepository(serviceItem)
                 );
             }
 
@@ -270,7 +262,7 @@ namespace ProjectV.Configuration
                 );
             }
 
-            xmlConfigCreator.SetServiceType(ServiceType.TplDataflow);
+            xmlConfigCreator.SetServiceType(DefaultServiceType);
 
             return xmlConfigCreator.GetResult();
         }
@@ -289,7 +281,7 @@ namespace ProjectV.Configuration
                     CrawlersManager = new CrawlersManagerConfig(),
                     AppraisersManager = new AppraisersManagerConfig(),
                     OutputManager = new OutputManagerConfig(),
-                    DataBaseManager = new DataBaseManagerConfig()
+                    DataBaseManager = new DatabaseManagerConfig()
                 }
             };
 
@@ -594,7 +586,7 @@ namespace ProjectV.Configuration
                 _outputManagerParameters.ToArray();
             _result.ShellConfig.OutputManager.Outputters = _outputters.ToArray();
 
-            _result.ShellConfig.DataBaseManager.DataBaseManagerParameters = 
+            _result.ShellConfig.DataBaseManager.DatabaseManagerParameters = 
                 _dataBaseManagerParameters.ToArray();
             _result.ShellConfig.DataBaseManager.Repositories = _repositories.ToArray();
 

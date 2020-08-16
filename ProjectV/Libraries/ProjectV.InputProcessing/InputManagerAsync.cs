@@ -8,16 +8,39 @@ using ProjectV.Logging;
 
 namespace ProjectV.IO.Input
 {
+    /// <summary>
+    /// Class to read The Things name from input.
+    /// </summary>
     public sealed class InputManagerAsync : IManager<IInputterAsync>
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<InputManagerAsync>();
 
+        /// <summary>
+        /// Default storage name if user will not specify it.
+        /// </summary>
         private readonly string _defaultStorageName;
 
+        /// <summary>
+        /// Collection of concrete inputter classes which can save results to specified source.
+        /// </summary>
         private readonly List<IInputterAsync> _inputtersAsync = new List<IInputterAsync>();
 
 
+        /// <summary>
+        /// Initializes instance according to parameter values.
+        /// </summary>
+        /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="defaultStorageName" /> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="defaultStorageName" /> presents empty strings or contains only
+        /// whitespaces.
+        /// </exception>
         public InputManagerAsync(string defaultStorageName)
         {
             _defaultStorageName =
@@ -26,6 +49,10 @@ namespace ProjectV.IO.Input
 
         #region IManager<IInputterAsync> Implementation
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item" /> is <c>null</c>.
+        /// </exception>
         public void Add(IInputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
@@ -35,6 +62,10 @@ namespace ProjectV.IO.Input
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="item" /> is <c>null</c>.
+        /// </exception>
         public bool Remove(IInputterAsync item)
         {
             item.ThrowIfNull(nameof(item));
@@ -66,6 +97,11 @@ namespace ProjectV.IO.Input
             return inputtersFlow;
         }
 
+        /// <summary>
+        /// Get names from inputter with specified storage name.
+        /// </summary>
+        /// <param name="storageName">Input storage name.</param>
+        /// <returns>Enumeration of The Things names as strings.</returns>
         private static IEnumerable<string> TryReadThingNames(IInputterAsync inputterAsync,
             string storageName)
         {

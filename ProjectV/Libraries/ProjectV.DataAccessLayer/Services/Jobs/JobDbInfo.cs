@@ -5,7 +5,7 @@ using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ProjectV.DataAccessLayer.EntityFramework
+namespace ProjectV.DataAccessLayer.Services.Jobs
 {
     [Table("jobs")]
     public sealed class JobDbInfo

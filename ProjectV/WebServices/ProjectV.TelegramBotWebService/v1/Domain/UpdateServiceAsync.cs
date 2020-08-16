@@ -105,8 +105,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams)
-                        || requestParams is null)
+                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
                     {
                         await SendResponseToInvalidMessage(message.Chat.Id);
                         return;

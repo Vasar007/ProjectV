@@ -12,8 +12,7 @@ namespace ProjectV.Crawlers.Game.Steam
     /// <summary>
     /// Provides async version of Steam crawler.
     /// </summary>
-    public sealed class SteamCrawlerAsync : ICrawlerAsync, ICrawlerBase, IDisposable, ITagable,
-        ITypeId
+    public sealed class SteamCrawlerAsync : ICrawlerAsync, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -35,7 +34,7 @@ namespace ProjectV.Crawlers.Game.Steam
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(SteamCrawler);
+        public string Tag { get; } = nameof(SteamCrawlerAsync);
 
         #endregion
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using ProjectV.DataAccessLayer.EntityFramework;
+using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Models.Internal.Jobs;
 
 namespace ProjectV.DataAccessLayer

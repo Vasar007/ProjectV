@@ -16,7 +16,6 @@ namespace ProjectV.Configuration
             RegisterCrawlersConfig();
             RegisterAppraisersConfig();
             RegisterOutputtersConfig();
-            RegisterRepositoriesConfig();
         }
 
         public static XElement GetConfigForMessageHandlerParameter(string identifier)
@@ -42,11 +41,6 @@ namespace ProjectV.Configuration
         public static XElement GetConfigForOutputter(string identifier)
         {
             return _serviceConfigRegistry.GetConfigForOutputter(identifier);
-        }
-
-        public static XElement GetConfigForRepository(string identifier)
-        {
-            return _serviceConfigRegistry.GetConfigForRepository(identifier);
         }
 
         private static void RegisterMessageHandlersConfig()
@@ -139,29 +133,6 @@ namespace ProjectV.Configuration
             _serviceConfigRegistry.RegisterOutputter(
                 ConfigNames.Outputters.GoogleDriveWriterName,
                 new XElement("GoogleDrive")
-            );
-        }
-
-        private static void RegisterRepositoriesConfig()
-        {
-            _serviceConfigRegistry.RegisterRepository(
-                ConfigNames.Repositories.BasicInfoRepositoryName,
-                new XElement("BasicInfoRepository")
-            );
-
-            _serviceConfigRegistry.RegisterRepository(
-                ConfigNames.Repositories.TmdbMovieRepositoryName,
-                new XElement("TmdbMovieRepository")
-            );
-
-            _serviceConfigRegistry.RegisterRepository(
-                ConfigNames.Repositories.OmdbMovieRepositoryName,
-                new XElement("NotImplemented")
-            );
-
-            _serviceConfigRegistry.RegisterRepository(
-                ConfigNames.Repositories.SteamGameRepositoryName,
-                new XElement("NotImplemented")
             );
         }
     }

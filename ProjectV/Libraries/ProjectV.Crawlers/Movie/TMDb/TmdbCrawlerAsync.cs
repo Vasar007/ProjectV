@@ -16,8 +16,7 @@ namespace ProjectV.Crawlers.Movie.Tmdb
     /// <summary>
     /// Provides async version of TMDb crawler.
     /// </summary>
-    public sealed class TmdbCrawlerAsync : ICrawlerAsync, ICrawlerBase, IDisposable, ITagable,
-        ITypeId
+    public sealed class TmdbCrawlerAsync : ICrawlerAsync, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.

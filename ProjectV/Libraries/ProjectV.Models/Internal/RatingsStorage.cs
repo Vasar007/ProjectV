@@ -7,11 +7,12 @@ namespace ProjectV.Models.Internal
 {
     public sealed class RatingsStorage
     {
-        private readonly Dictionary<Rating, Type> _ratingsHelper = new Dictionary<Rating, Type>();
+        private readonly Dictionary<Rating, Type> _ratingsHelper;
 
 
         public RatingsStorage()
         {
+            _ratingsHelper = new Dictionary<Rating, Type>(capacity: 7);
         }
 
         public Guid Register(Type dataHandlerType, string ratingName)
@@ -29,13 +30,22 @@ namespace ProjectV.Models.Internal
 
         public bool Deregister(Guid ratingId)
         {
-            Rating rating = _ratingsHelper.Keys.First(x => x.RatingId == ratingId);
+            Rating rating = GetRatingById(ratingId);
             return _ratingsHelper.Remove(rating);
         }
 
         public Rating GetRatingById(Guid ratingId)
         {
-            return _ratingsHelper.Keys.First(x => x.RatingId == ratingId);
+            Rating? rating = _ratingsHelper.Keys.FirstOrDefault(x => x.RatingId == ratingId);
+            if (rating is null)
+            {
+                throw new ArgumentException(
+                    $"Rating with specified ID '{ratingId.ToString()}' was not registered.",
+                    nameof(ratingId)
+                );
+            }
+
+            return rating;
         }
 
         public IReadOnlyList<Rating> GetAllRatings()
@@ -49,7 +59,7 @@ namespace ProjectV.Models.Internal
             if (!_ratingsHelper.TryGetValue(rating, out Type type))
             {
                 throw new ArgumentException(
-                    $"Rating with specified ID {ratingId.ToString()} was not registered.",
+                    $"Rating with specified ID '{ratingId.ToString()}' was not registered.",
                     nameof(ratingId)
                 );
             }
