@@ -43,19 +43,11 @@ namespace ProjectV.DataAccessLayer.EntityFramework
             // The next line is required for PostreSQL DB because
             // MSSQL default schema name is "dbo".
             modelBuilder.HasDefaultSchema("public");
-            base.OnModelCreating(modelBuilder);
 
-            // Key fields have already mapped. Need to set the other fields.
-            modelBuilder.Entity<JobDbInfo>(
-                builder =>
-                {
-                    builder.HasKey(e => e.Id);
-                    builder.Property(e => e.Name);
-                    builder.Property(e => e.State);
-                    builder.Property(e => e.Result);
-                    builder.Property(e => e.Config);
-                }
-            );
+            // Upload configurations from DAL assembly to work with immutable models.
+            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

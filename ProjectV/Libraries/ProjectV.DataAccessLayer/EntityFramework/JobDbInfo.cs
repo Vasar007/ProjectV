@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Acolyte.Assertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ProjectV.DataAccessLayer.EntityFramework
 {
@@ -42,5 +44,26 @@ namespace ProjectV.DataAccessLayer.EntityFramework
             Result = result;
             Config = config.ThrowIfNullOrWhiteSpace(nameof(config));
         }
+    }
+
+    public sealed class JobDbInfoConfiguration : IEntityTypeConfiguration<JobDbInfo>
+    {
+        public JobDbInfoConfiguration()
+        {
+        }
+
+        #region Implementation of IEntityTypeConfiguration<JobDbInfo>
+
+        public void Configure(EntityTypeBuilder<JobDbInfo> builder)
+        {
+            // Key fields have already mapped. Need to set the other fields.
+            builder.HasKey(e => e.Id);
+            builder.Property(e => e.Name);
+            builder.Property(e => e.State);
+            builder.Property(e => e.Result);
+            builder.Property(e => e.Config);
+        }
+
+        #endregion
     }
 }
