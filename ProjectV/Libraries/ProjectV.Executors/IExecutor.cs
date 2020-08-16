@@ -23,6 +23,6 @@ namespace ProjectV.Executors
         Task<IReadOnlyList<ServiceStatus>> ExecuteAsync();
 
         Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
-            IInputterAsync additionalInputterAsync, IOutputterAsync additionalOutputterAsync);
+            IInputter additionalInputterAsync, IOutputter additionalOutputterAsync);
     }
 }

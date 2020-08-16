@@ -14,7 +14,7 @@ namespace ProjectV.IO.Input.GoogleDrive
     /// <summary>
     /// Concrete implementation of reader part for Google Drive API.
     /// </summary>
-    public sealed class GoogleDriveReader : GoogleDriveWorker, IInputterAsync, ITagable
+    public sealed class GoogleDriveReader : GoogleDriveWorker, IInputter, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -25,7 +25,7 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// <summary>
         /// Used to read downloaded file from Google Drive.
         /// </summary>
-        private readonly LocalFileReaderAsync _localFileReader;
+        private readonly LocalFileReader _localFileReader;
 
         #region ITagable Implementation
 
@@ -40,13 +40,13 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// </summary>
         /// <param name="driveService">Google drive service instance.</param>
         /// <param name="fileReaderAsenc">Implementation to read files.</param>
-        public GoogleDriveReader(DriveService driveService, IFileReaderAsync fileReaderAsenc)
+        public GoogleDriveReader(DriveService driveService, IFileReader fileReaderAsenc)
             : base(driveService)
         {
-            _localFileReader = new LocalFileReaderAsync(fileReaderAsenc);
+            _localFileReader = new LocalFileReader(fileReaderAsenc);
         }
 
-        #region IInputterAsync Implementation
+        #region IInputter Implementation
 
         /// <summary>
         /// Sends request to Google Drive API, downloads file and reads it.

@@ -7,7 +7,7 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.File
 {
-    public sealed class LocalFileWriterAsync : IOutputterAsync, ITagable
+    public sealed class LocalFileWriterAsync : IOutputter, ITagable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<LocalFileWriterAsync>();
@@ -27,7 +27,7 @@ namespace ProjectV.IO.Output.File
             _localFileWriter = new LocalFileWriter();
         }
 
-        #region IOutputterAsync Implementation
+        #region IOutputter Implementation
 
         public async Task<bool> SaveResults(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)

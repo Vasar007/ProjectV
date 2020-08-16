@@ -13,13 +13,13 @@ namespace ProjectV.IO.Input.File
     /// <summary>
     /// Provides simple and common methods to read data from files.
     /// </summary>
-    public sealed class SimpleFileReaderAsync : IFileReaderAsync
+    public sealed class SimpleFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<SimpleFileReaderAsync>();
+            LoggerFactory.CreateLoggerFor<SimpleFileReader>();
 
         /// <summary>
         /// Name of the column with Thing name.
@@ -37,13 +37,13 @@ namespace ProjectV.IO.Input.File
         /// <exception cref="ArgumentException">
         /// <paramref name="thingNameHeader" /> presents empty strings or contains only whitespaces.
         /// </exception>
-        public SimpleFileReaderAsync(
+        public SimpleFileReader(
             string thingNameHeader = "Thing Name")
         {
             _thingNameHeader = thingNameHeader.ThrowIfNullOrWhiteSpace(nameof(thingNameHeader));
         }
 
-        #region IFileReaderAsync Implementation
+        #region IFileReader Implementation
 
         /// <inheritdoc />
         /// <remarks>

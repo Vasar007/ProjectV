@@ -8,22 +8,22 @@ using ProjectV.Models.Data;
 namespace ProjectV.Building.Service
 {
     /// <summary>
-    /// Provides methods to create service classes (async) instances with parameters from XML 
+    /// Provides methods to create service classes instances with parameters from XML 
     /// config.
     /// </summary>
-    public sealed class ServiceAsyncBuilderForXmlConfig : ServiceBuilderBase
+    public sealed class ServiceBuilderForXmlConfig : ServiceBuilderBase
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ServiceAsyncBuilderForXmlConfig>();
+            LoggerFactory.CreateLoggerFor<ServiceBuilderForXmlConfig>();
 
 
         /// <summary>
-        /// Creates service (async) builder to interact with XML config.
+        /// Creates service builder to interact with XML config.
         /// </summary>
-        public ServiceAsyncBuilderForXmlConfig()
+        public ServiceBuilderForXmlConfig()
         {
         }
 
@@ -84,7 +84,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates inputter (async) instance depend on parameter value (could be get from config).
+        /// Creates inputter instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="inputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of inputter interface.</returns>
@@ -94,7 +94,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="inputterElement" /> is <c>null</c>.
         /// </exception>
-        public IO.Input.IInputterAsync CreateInputter(XElement inputterElement)
+        public IO.Input.IInputter CreateInputter(XElement inputterElement)
         {
             inputterElement.ThrowIfNull(nameof(inputterElement));
 
@@ -108,10 +108,10 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.File.IFileReaderAsync fileReader =
-                        CreateFileReaderAsync(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
-                    return new IO.Input.File.LocalFileReaderAsync(fileReader);
+                    return new IO.Input.File.LocalFileReader(fileReader);
                 }
 
                 case _googleDriveParameterName:
@@ -120,8 +120,8 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _googleDriveParameterName
                     );
 
-                    IO.Input.File.IFileReaderAsync fileReader =
-                        CreateFileReaderAsync(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
                     return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
                 }
@@ -137,7 +137,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates crawler (async) instance depend on parameter value (could be get from config).
+        /// Creates crawler instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="crawlerElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of crawler class.</returns>
@@ -147,7 +147,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="crawlerElement" /> is <c>null</c>.
         /// </exception>
-        public Crawlers.ICrawlerAsync CreateCrawler(XElement crawlerElement)
+        public Crawlers.ICrawler CreateCrawler(XElement crawlerElement)
         {
             crawlerElement.ThrowIfNull(nameof(crawlerElement));
 
@@ -164,7 +164,7 @@ namespace ProjectV.Building.Service
                         crawlerElement, _tmdbMaxRetryCountParameterName
                     );
 
-                    return new Crawlers.Movie.Tmdb.TmdbCrawlerAsync(apiKey, maxRetryCount);
+                    return new Crawlers.Movie.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
                 }
 
                 case _omdbCrawlerParameterName:
@@ -173,7 +173,7 @@ namespace ProjectV.Building.Service
                         crawlerElement, _omdbApiKeyParameterName
                     );
 
-                    return new Crawlers.Movie.Omdb.OmdbCrawlerAsync(apiKey);
+                    return new Crawlers.Movie.Omdb.OmdbCrawler(apiKey);
                 }
 
                 case _steamCrawlerParameterName:
@@ -182,7 +182,7 @@ namespace ProjectV.Building.Service
                         crawlerElement, _steamApiKeyParameterName
                     );
 
-                    return new Crawlers.Game.Steam.SteamCrawlerAsync(apiKey);
+                    return new Crawlers.Game.Steam.SteamCrawler(apiKey);
                 }
 
                 default:
@@ -196,7 +196,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates appraiser (async) instance depend on parameter value (could be get from config).
+        /// Creates appraiser instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="appraiserElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of appraiser class.</returns>
@@ -206,7 +206,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="appraiserElement" /> is <c>null</c>.
         /// </exception>
-        public Appraisers.IAppraiserAsync CreateAppraiser(XElement appraiserElement)
+        public Appraisers.IAppraiser CreateAppraiser(XElement appraiserElement)
         {
             appraiserElement.ThrowIfNull(nameof(appraiserElement));
 
@@ -218,21 +218,21 @@ namespace ProjectV.Building.Service
                 {
                     var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbCommonAppraisal();
 
-                    return new Appraisers.AppraiserAsync<TmdbMovieInfo>(appraisal);
+                    return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
                 }
 
                 case _appraiserOmdbParameterName:
                 {
                     var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();
 
-                    return new Appraisers.AppraiserAsync<OmdbMovieInfo>(appraisal);
+                    return new Appraisers.Appraiser<OmdbMovieInfo>(appraisal);
                 }
 
                 case _steamAppraiserParameterName:
                 {
                     var appraisal = new Appraisers.Appraisals.Game.Steam.SteamCommonAppraisal();
 
-                    return new Appraisers.AppraiserAsync<SteamGameInfo>(appraisal);
+                    return new Appraisers.Appraiser<SteamGameInfo>(appraisal);
                 }
 
                 default:
@@ -246,7 +246,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates outputter (async) instance depend on parameter value (could be get from config).
+        /// Creates outputter instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="outputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of outputter interface.</returns>
@@ -256,7 +256,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentNullException">
         /// <paramref name="outputterElement" /> is <c>null</c>.
         /// </exception>
-        public IO.Output.IOutputterAsync CreateOutputter(XElement outputterElement)
+        public IO.Output.IOutputter CreateOutputter(XElement outputterElement)
         {
             outputterElement.ThrowIfNull(nameof(outputterElement));
 

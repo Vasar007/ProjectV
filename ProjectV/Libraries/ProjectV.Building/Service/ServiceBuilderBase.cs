@@ -136,11 +136,11 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates file reader (async) instance depend on parameter value (could be read from 
+        /// Creates file reader instance depend on parameter value (could be read from 
         /// config file or XML document).
         /// </summary>
-        /// <param name="fileReaderName">Name of the file reader (async) class to create.</param>
-        /// <returns>Fully initialized instance of file reader (async) class.</returns>
+        /// <param name="fileReaderName">Name of the file reader class to create.</param>
+        /// <returns>Fully initialized instance of file reader class.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="fileReaderName" /> is <c>null</c>.
         /// </exception>
@@ -150,7 +150,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentException">
         /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
-        protected IO.Input.File.IFileReaderAsync CreateFileReaderAsync(string fileReaderName)
+        protected IO.Input.File.IFileReader CreateFileReader(string fileReaderName)
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
@@ -160,7 +160,7 @@ namespace ProjectV.Building.Service
             {
                 case _simpleFileReaderParameterName:
                 {
-                    return new IO.Input.File.SimpleFileReaderAsync();
+                    return new IO.Input.File.SimpleFileReader();
                 }
 
                 case _filterFileReaderParameterName:

@@ -6,7 +6,7 @@ namespace ProjectV.Appraisers
     /// <summary>
     /// Interface to appraiser async classes.
     /// </summary>
-    public interface IAppraiserAsync : ITagable, ITypeId
+    public interface IAppraiser : ITagable, ITypeId
     {
         /// <summary>
         /// Rating name which describes rating calculation.

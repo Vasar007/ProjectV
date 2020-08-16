@@ -11,18 +11,18 @@ namespace ProjectV.Crawlers
     /// <summary>
     /// Class to control all process of collecting data from services.
     /// </summary>
-    public sealed class CrawlersManagerAsync : IManager<ICrawlerAsync>, IDisposable
+    public sealed class CrawlersManager : IManager<ICrawler>, IDisposable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<CrawlersManagerAsync>();
+            LoggerFactory.CreateLoggerFor<CrawlersManager>();
 
         /// <summary>
         /// Collection of concrete crawler implementations.
         /// </summary>
-        private readonly List<ICrawlerAsync> _crawlersAsync = new List<ICrawlerAsync>();
+        private readonly List<ICrawler> _crawlers = new List<ICrawler>();
 
         /// <summary>
         /// Sets this flag to <c>true</c> if you need to monitor crawlers results.
@@ -34,24 +34,24 @@ namespace ProjectV.Crawlers
         /// Initializes manager for crawlers.
         /// </summary>
         /// <param name="outputResults">Flag to define need to output crawlers results.</param>
-        public CrawlersManagerAsync(
+        public CrawlersManager(
             bool outputResults)
         {
             _outputResults = outputResults;
         }
 
-        #region IManager<CrawlerAsync> Implementation
+        #region IManager<Crawler> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(ICrawlerAsync item)
+        public void Add(ICrawler item)
         {
             item.ThrowIfNull(nameof(item));
-            if (!_crawlersAsync.Contains(item))
+            if (!_crawlers.Contains(item))
             {
-                _crawlersAsync.Add(item);
+                _crawlers.Add(item);
             }
         }
 
@@ -59,10 +59,10 @@ namespace ProjectV.Crawlers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public bool Remove(ICrawlerAsync item)
+        public bool Remove(ICrawler item)
         {
             item.ThrowIfNull(nameof(item));
-            return _crawlersAsync.Remove(item);
+            return _crawlers.Remove(item);
         }
 
         #endregion
@@ -81,7 +81,7 @@ namespace ProjectV.Crawlers
         {
             if (_disposed) return;
 
-            _crawlersAsync.ForEach(crawlerAsync => crawlerAsync.Dispose());
+            _crawlers.ForEach(crawlerAsync => crawlerAsync.Dispose());
 
             _disposed = true;
         }
@@ -90,9 +90,9 @@ namespace ProjectV.Crawlers
 
         public CrawlersFlow CreateFlow()
         {
-            var crawlersFunc = _crawlersAsync.Select(crawlerAsync =>
+            var crawlersFunc = _crawlers.Select(crawler =>
                 new Func<string, IAsyncEnumerable<BasicInfo>>(
-                    entityName => TryGetResponse(crawlerAsync, entityName)
+                    entityName => TryGetResponse(crawler, entityName)
                 )
             );
 
@@ -108,16 +108,16 @@ namespace ProjectV.Crawlers
         /// </summary>
         /// <param name="entityName">Entity name to process.</param>
         /// <returns>Enumeration of results from crawler produced from an entitiy.</returns>
-        private IAsyncEnumerable<BasicInfo> TryGetResponse(ICrawlerAsync crawlerAsync,
+        private IAsyncEnumerable<BasicInfo> TryGetResponse(ICrawler crawler,
             string entityName)
         {
             try
             {
-                return crawlerAsync.GetResponse(entityName, _outputResults);
+                return crawler.GetResponse(entityName, _outputResults);
             }
             catch (Exception ex)
             {
-                string message = $"Crawler {crawlerAsync.Tag} could not process " +
+                string message = $"Crawler {crawler.Tag} could not process " +
                                  $"entity \"{entityName}\".";
                 _logger.Error(ex, message);
                 throw;

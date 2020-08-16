@@ -7,7 +7,7 @@ namespace ProjectV.IO.Output
     /// <summary>
     /// Defines outputter classes interface to use in output component.
     /// </summary>
-    public interface IOutputterAsync : ITagable
+    public interface IOutputter : ITagable
     {
         /// <summary>
         /// Saves results of the processing to the storage. It could be NOT only direct writing to

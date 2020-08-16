@@ -5,7 +5,7 @@ namespace ProjectV.IO.Input
     /// <summary>
     /// Defines inputter classes interface to use in input component.
     /// </summary>
-    public interface IInputterAsync : ITagable
+    public interface IInputter : ITagable
     {
         /// <summary>
         /// Reads Things names from storage. It could be NOT only direct reading from file, you can

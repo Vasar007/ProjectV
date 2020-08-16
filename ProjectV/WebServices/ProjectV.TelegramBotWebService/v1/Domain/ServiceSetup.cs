@@ -5,23 +5,23 @@ using ProjectV.Logging;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
-    public sealed class ServiceSetupAsync : IServiceSetupAsync
+    public sealed class ServiceSetup : IServiceSetup
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
+            LoggerFactory.CreateLoggerFor<UpdateService>();
 
         private readonly ServiceSettings _settings;
 
         private readonly IBotService _botService;
 
 
-        public ServiceSetupAsync(IOptions<ServiceSettings> settings, IBotService botService)
+        public ServiceSetup(IOptions<ServiceSettings> settings, IBotService botService)
         {
             _settings = settings.Value.ThrowIfNull(nameof(settings));
             _botService = botService.ThrowIfNull(nameof(botService));
         }
 
-        #region IServiceSetupAsync Implementation
+        #region IServiceSetup Implementation
 
         public async Task<DisposableActionAsync> SetWebhookAsync()
         {

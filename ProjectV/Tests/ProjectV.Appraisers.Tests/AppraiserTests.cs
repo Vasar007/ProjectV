@@ -20,7 +20,7 @@ namespace ProjectV.Appraisers.Tests
 
             string actualValue = appraiser.Tag;
 
-            string expectedValue = $"AppraiserAsync<{nameof(BasicInfo)}>";
+            string expectedValue = $"Appraiser<{nameof(BasicInfo)}>";
 
             Assert.NotNull(actualValue);
             Assert.NotEmpty(actualValue);

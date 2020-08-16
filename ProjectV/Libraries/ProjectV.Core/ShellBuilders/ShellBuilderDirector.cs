@@ -3,15 +3,15 @@
 namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder director which controls of <see cref="ShellAsync" /> creating process with the help
+    /// Builder director which controls of <see cref="Shell" /> creating process with the help
     /// of specified builder.
     /// </summary>
-    public sealed class ShellAsyncBuilderDirector
+    public sealed class ShellBuilderDirector
     {
         /// <summary>
-        /// Builder which create step by step <see cref="ShellAsync" /> class.
+        /// Builder which create step by step <see cref="Shell" /> class.
         /// </summary>
-        private IShellAsyncBuilder _shellBuilder;
+        private IShellBuilder _shellBuilder;
 
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace ProjectV.Core.ShellBuilders
         /// <exception cref="System.ArgumentNullException">
         /// <paramref name="shellBuilder" /> is <c>null</c>.
         /// </exception>
-        public ShellAsyncBuilderDirector(IShellAsyncBuilder shellBuilder)
+        public ShellBuilderDirector(IShellBuilder shellBuilder)
         {
             _shellBuilder = shellBuilder.ThrowIfNull(nameof(shellBuilder));
         }
@@ -33,7 +33,7 @@ namespace ProjectV.Core.ShellBuilders
         /// <exception cref="System.ArgumentNullException">
         /// <paramref name="newBuilder" /> is <c>null</c>.
         /// </exception>
-        public void ChangeShellBuilder(IShellAsyncBuilder newBuilder)
+        public void ChangeShellBuilder(IShellBuilder newBuilder)
         {
             _shellBuilder = newBuilder.ThrowIfNull(nameof(newBuilder));
         }
@@ -41,8 +41,8 @@ namespace ProjectV.Core.ShellBuilders
         /// <summary>
         /// Executes building process and gets result.
         /// </summary>
-        /// <returns>Fully initialized <see cref="ShellAsync" /> class.</returns>
-        public ShellAsync MakeShell()
+        /// <returns>Fully initialized <see cref="Shell" /> class.</returns>
+        public Shell MakeShell()
         {
             _shellBuilder.Reset();
 

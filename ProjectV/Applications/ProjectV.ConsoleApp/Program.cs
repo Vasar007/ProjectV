@@ -33,7 +33,7 @@ namespace ProjectV.ConsoleApp
         private static async Task MainXDocument(IReadOnlyList<string> args)
         {
             // Show the case when we have a movies to appraise.
-            var builderDirector = ShellAsync.CreateBuilderDirector(
+            var builderDirector = Shell.CreateBuilderDirector(
                 XmlConfigCreator.CreateDefaultXmlConfigAsXDocument()
             );
             var shell = builderDirector.MakeShell();
@@ -46,7 +46,7 @@ namespace ProjectV.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
-        private static async Task Run(IReadOnlyList<string> args, ShellAsync shell)
+        private static async Task Run(IReadOnlyList<string> args, Shell shell)
         {
             ServiceStatus status;
             if (args.Count == 1)

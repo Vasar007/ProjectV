@@ -4,7 +4,7 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.WebService
 {
-    public sealed class OutputTransmitterAsync : IOutputterAsync, ITagable
+    public sealed class OutputTransmitter : IOutputter, ITagable
     {
         private IReadOnlyList<IReadOnlyList<RatingDataContainer>> _transmittingResults =
             new List<IReadOnlyList<RatingDataContainer>>();
@@ -14,18 +14,18 @@ namespace ProjectV.IO.Output.WebService
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(OutputTransmitterAsync);
+        public string Tag { get; } = nameof(OutputTransmitter);
 
         #endregion
 
 
-        public OutputTransmitterAsync()
+        public OutputTransmitter()
         {
         }
 
         public IReadOnlyList<IReadOnlyList<RatingDataContainer>> GetResults()
         {
-            return _transmittingResults ;
+            return _transmittingResults;
         }
 
         #region IOutputter Implementation

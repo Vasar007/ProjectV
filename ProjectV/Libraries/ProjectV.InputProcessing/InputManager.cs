@@ -11,13 +11,13 @@ namespace ProjectV.IO.Input
     /// <summary>
     /// Class to read The Things name from input.
     /// </summary>
-    public sealed class InputManagerAsync : IManager<IInputterAsync>
+    public sealed class InputManager : IManager<IInputter>
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<InputManagerAsync>();
+            LoggerFactory.CreateLoggerFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
@@ -27,7 +27,7 @@ namespace ProjectV.IO.Input
         /// <summary>
         /// Collection of concrete inputter classes which can save results to specified source.
         /// </summary>
-        private readonly List<IInputterAsync> _inputtersAsync = new List<IInputterAsync>();
+        private readonly List<IInputter> _inputters = new List<IInputter>();
 
 
         /// <summary>
@@ -41,24 +41,24 @@ namespace ProjectV.IO.Input
         /// <paramref name="defaultStorageName" /> presents empty strings or contains only
         /// whitespaces.
         /// </exception>
-        public InputManagerAsync(string defaultStorageName)
+        public InputManager(string defaultStorageName)
         {
             _defaultStorageName =
                 defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
-        #region IManager<IInputterAsync> Implementation
+        #region IManager<IInputter> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(IInputterAsync item)
+        public void Add(IInputter item)
         {
             item.ThrowIfNull(nameof(item));
-            if (!_inputtersAsync.Contains(item))
+            if (!_inputters.Contains(item))
             {
-                _inputtersAsync.Add(item);
+                _inputters.Add(item);
             }
         }
 
@@ -66,10 +66,10 @@ namespace ProjectV.IO.Input
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public bool Remove(IInputterAsync item)
+        public bool Remove(IInputter item)
         {
             item.ThrowIfNull(nameof(item));
-            return _inputtersAsync.Remove(item);
+            return _inputters.Remove(item);
         }
 
         #endregion
@@ -85,9 +85,9 @@ namespace ProjectV.IO.Input
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            var inputtersFunc = _inputtersAsync.Select(inputterAsync =>
+            var inputtersFunc = _inputters.Select(inputter =>
                 new Func<string, IEnumerable<string>>(
-                    input => TryReadThingNames(inputterAsync, input)
+                    input => TryReadThingNames(inputter, input)
                 )
             );
 
@@ -102,16 +102,16 @@ namespace ProjectV.IO.Input
         /// </summary>
         /// <param name="storageName">Input storage name.</param>
         /// <returns>Enumeration of The Things names as strings.</returns>
-        private static IEnumerable<string> TryReadThingNames(IInputterAsync inputterAsync,
+        private static IEnumerable<string> TryReadThingNames(IInputter inputter,
             string storageName)
         {
             try
             {
-                return inputterAsync.ReadThingNames(storageName);
+                return inputter.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
-                string message = $"Inputter '{inputterAsync.Tag}' could not get access to the " +
+                string message = $"Inputter '{inputter.Tag}' could not get access to the " +
                                  $"storage \"{storageName}\".";
                 _logger.Error(ex, message);
                 throw;

@@ -14,10 +14,9 @@ using ProjectV.TelegramBotWebService.Properties;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
-    public sealed class UpdateServiceAsync : IUpdateServiceAsync
+    public sealed class UpdateService : IUpdateService
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateServiceAsync>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<UpdateService>();
 
         private readonly IBotService _botService;
 
@@ -26,7 +25,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         private readonly IUserCache _userCache;
 
 
-        public UpdateServiceAsync(IBotService botService, IServiceProxy serviceProxy,
+        public UpdateService(IBotService botService, IServiceProxy serviceProxy,
             IUserCache userCache)
         {
             _botService = botService.ThrowIfNull(nameof(botService));

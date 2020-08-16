@@ -9,23 +9,23 @@ namespace ProjectV.IO.Input.File
     /// <summary>
     /// Class which can read from local files.
     /// </summary>
-    public sealed class LocalFileReaderAsync : IInputterAsync, ITagable
+    public sealed class LocalFileReader : IInputter, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<LocalFileReaderAsync>();
+            LoggerFactory.CreateLoggerFor<LocalFileReader>();
 
         /// <summary>
         /// Helper variable to read data from file with additional processing.
         /// </summary>
-        private readonly IFileReaderAsync _fileReaderAsync;
+        private readonly IFileReader _fileReader;
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(LocalFileReaderAsync);
+        public string Tag { get; } = nameof(LocalFileReader);
 
         #endregion
 
@@ -33,14 +33,14 @@ namespace ProjectV.IO.Input.File
         /// <summary>
         /// Initializes instance with specified reader.
         /// </summary>
-        /// <param name="fileReaderAsync">File reader implementation.</param>
-        public LocalFileReaderAsync(
-            IFileReaderAsync fileReaderAsync)
+        /// <param name="fileReader">File reader implementation.</param>
+        public LocalFileReader(
+            IFileReader fileReader)
         {
-            _fileReaderAsync = fileReaderAsync.ThrowIfNull(nameof(fileReaderAsync));
+            _fileReader = fileReader.ThrowIfNull(nameof(fileReader));
         }
 
-        #region IInputterAsync Implementation
+        #region IInputter Implementation
 
         /// <summary>
         /// Recognizes file extension and calls appropriate reading method.
@@ -55,11 +55,11 @@ namespace ProjectV.IO.Input.File
             {
                 if (storageName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
                 {
-                    return _fileReaderAsync.ReadCsvFile(storageName);
+                    return _fileReader.ReadCsvFile(storageName);
                 }
                 else
                 {
-                    return _fileReaderAsync.ReadFile(storageName);
+                    return _fileReader.ReadFile(storageName);
                 }
             }
             catch (Exception ex)

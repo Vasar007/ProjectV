@@ -3,26 +3,26 @@ using Acolyte.Assertions;
 
 namespace ProjectV.IO.Input.WebService
 {
-    public sealed class InputTransmitterAsync : IInputterAsync, ITagable
+    public sealed class InputTransmitter : IInputter, ITagable
     {
         private readonly IEnumerable<string> _thingNames;
 
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(InputTransmitterAsync);
+        public string Tag { get; } = nameof(InputTransmitter);
 
         #endregion
 
         public string StorageName { get; private set; } = string.Empty;
 
 
-        public InputTransmitterAsync(IEnumerable<string> thingNames)
+        public InputTransmitter(IEnumerable<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }
 
-        #region IInputterAsync Implementation
+        #region IInputter Implementation
 
         public IEnumerable<string> ReadThingNames(string storageName)
         {

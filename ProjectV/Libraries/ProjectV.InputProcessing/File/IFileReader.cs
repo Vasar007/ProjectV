@@ -5,7 +5,7 @@ namespace ProjectV.IO.Input.File
     /// <summary>
     /// Represents common necessary methods to work with files.
     /// </summary>
-    public interface IFileReaderAsync
+    public interface IFileReader
     {
         /// <summary>
         /// Reads local file. File must satisfy a particular

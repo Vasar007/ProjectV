@@ -16,10 +16,10 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<UpdateController>();
 
-        private readonly IUpdateServiceAsync _updateService;
+        private readonly IUpdateService _updateService;
 
 
-        public UpdateController(IUpdateServiceAsync updateService)
+        public UpdateController(IUpdateService updateService)
         {
             _updateService = updateService.ThrowIfNull(nameof(updateService));
         }

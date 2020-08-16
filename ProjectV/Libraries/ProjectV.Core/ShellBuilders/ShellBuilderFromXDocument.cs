@@ -7,26 +7,26 @@ using ProjectV.Logging;
 namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="ShellAsync" /> instances
+    /// Builder class which provides the way of constructing <see cref="Shell" /> instances
     /// from <see cref="XDocument" /> config.
     /// </summary>
     /// <remarks>
     /// Structure of XML config must satisfy certain contracts, otherwise different exception could
     /// be thrown.
     /// </remarks>
-    public sealed class ShellAsyncBuilderFromXDocument : ShellBuilderBase, IShellAsyncBuilder
+    public sealed class ShellBuilderFromXDocument : ShellBuilderBase, IShellBuilder
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ShellAsyncBuilderFromXDocument>();
+            LoggerFactory.CreateLoggerFor<ShellBuilderFromXDocument>();
 
         /// <summary>
         /// Provides methods to create instances of service classes.
         /// </summary>
-        private readonly ServiceAsyncBuilderForXmlConfig _serviceBuilder =
-            new ServiceAsyncBuilderForXmlConfig();
+        private readonly ServiceBuilderForXmlConfig _serviceBuilder =
+            new ServiceBuilderForXmlConfig();
 
         /// <summary>
         /// Helper class which contains several methods to parse XML configuration.
@@ -41,22 +41,22 @@ namespace ProjectV.Core.ShellBuilders
         /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
-        private IO.Input.InputManagerAsync? _inputManager;
+        private IO.Input.InputManager? _inputManager;
 
         /// <summary>
         /// Variables which saves crawlers manager instance during building process.
         /// </summary>
-        private Crawlers.CrawlersManagerAsync? _crawlersManager;
+        private Crawlers.CrawlersManager? _crawlersManager;
 
         /// <summary>
         /// Variables which saves appraisers manager instance during building process.
         /// </summary>
-        private Appraisers.AppraisersManagerAsync? _appraisersManager;
+        private Appraisers.AppraisersManager? _appraisersManager;
 
         /// <summary>
         /// Variables which saves output manager instance during building process.
         /// </summary>
-        private IO.Output.OutputManagerAsync? _outputManager;
+        private IO.Output.OutputManager? _outputManager;
 
 
         /// <summary>
@@ -64,16 +64,16 @@ namespace ProjectV.Core.ShellBuilders
         /// provides deferred parsing of XML configuration.
         /// </summary>
         /// <param name="configuration">
-        /// XML configuration of <see cref="ShellAsync" /> class.
+        /// XML configuration of <see cref="Shell" /> class.
         /// </param>
-        public ShellAsyncBuilderFromXDocument(XDocument configuration)
+        public ShellBuilderFromXDocument(XDocument configuration)
         {
             _documentParser = new XDocumentParser(
                 new XDocument(configuration.Root.Element(_rootElementName))
             );
         }
 
-        #region IShellAsyncBuilder Implementation
+        #region IShellBuilder Implementation
 
         /// <inheritdoc />
         public void Reset()
@@ -119,11 +119,11 @@ namespace ProjectV.Core.ShellBuilders
             string defaultStorageName = XDocumentParser.GetAttributeValue(
                 inputManagerElement, _defaultInStorageNameParameterName
             );
-            _inputManager = new IO.Input.InputManagerAsync(defaultStorageName);
+            _inputManager = new IO.Input.InputManager(defaultStorageName);
 
             foreach (XElement element in inputManagerElement.Elements())
             {
-                IO.Input.IInputterAsync inputter = _serviceBuilder.CreateInputter(element);
+                IO.Input.IInputter inputter = _serviceBuilder.CreateInputter(element);
                 _inputManager.Add(inputter);
             }
         }
@@ -147,11 +147,11 @@ namespace ProjectV.Core.ShellBuilders
             var crawlersOutput = XDocumentParser.GetAttributeValue<bool>(
                 crawlerManagerElement, _crawlersOutputParameterName
             );
-            _crawlersManager = new Crawlers.CrawlersManagerAsync(crawlersOutput);
+            _crawlersManager = new Crawlers.CrawlersManager(crawlersOutput);
 
             foreach (XElement element in crawlerManagerElement.Elements())
             {
-                Crawlers.ICrawlerAsync crawler = _serviceBuilder.CreateCrawler(element);
+                Crawlers.ICrawler crawler = _serviceBuilder.CreateCrawler(element);
                 _crawlersManager.Add(crawler);
             }
         }
@@ -175,11 +175,11 @@ namespace ProjectV.Core.ShellBuilders
             var appraisersOutput = XDocumentParser.GetAttributeValue<bool>(
                 appraiserManagerElement, _appraisersOutputParameterName
             );
-            _appraisersManager = new Appraisers.AppraisersManagerAsync(appraisersOutput);
+            _appraisersManager = new Appraisers.AppraisersManager(appraisersOutput);
 
             foreach (XElement element in appraiserManagerElement.Elements())
             {
-                Appraisers.IAppraiserAsync crawler = _serviceBuilder.CreateAppraiser(element);
+                Appraisers.IAppraiser crawler = _serviceBuilder.CreateAppraiser(element);
                 _appraisersManager.Add(crawler);
             }
         }
@@ -203,46 +203,46 @@ namespace ProjectV.Core.ShellBuilders
             string defaultStorageName = XDocumentParser.GetAttributeValue(
                 outputManagerElement, _defaultOutStorageNameParameterName
             );
-            _outputManager = new IO.Output.OutputManagerAsync(defaultStorageName);
+            _outputManager = new IO.Output.OutputManager(defaultStorageName);
 
             foreach (XElement element in outputManagerElement.Elements())
             {
-                IO.Output.IOutputterAsync outputter = _serviceBuilder.CreateOutputter(element);
+                IO.Output.IOutputter outputter = _serviceBuilder.CreateOutputter(element);
                 _outputManager.Add(outputter);
             }
         }
 
         /// <inheritdoc />
-        public ShellAsync GetResult()
+        public Shell GetResult()
         {
             if (_inputManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(IO.Input.InputManagerAsync)} was not built."
+                    $"{nameof(IO.Input.InputManager)} was not built."
                 );
             }
             if (_crawlersManager is null)
             {
                 throw new InvalidOperationException(
-                     $"{nameof(Crawlers.CrawlersManagerAsync)} was not built."
+                     $"{nameof(Crawlers.CrawlersManager)} was not built."
                 );
             }
             if (_appraisersManager is null)
             {
                 throw new InvalidOperationException(
-                     $"{nameof(Appraisers.AppraisersManagerAsync)} was not built."
+                     $"{nameof(Appraisers.AppraisersManager)} was not built."
                 );
             }
             if (_outputManager is null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(IO.Output.OutputManagerAsync)} was not built."
+                    $"{nameof(IO.Output.OutputManager)} was not built."
                 );
             }
 
-            _logger.Info($"Creating {nameof(ShellAsync)} from user-defined XML config.");
+            _logger.Info($"Creating {nameof(Shell)} from user-defined XML config.");
 
-            return new ShellAsync(_inputManager, _crawlersManager, _appraisersManager,
+            return new Shell(_inputManager, _crawlersManager, _appraisersManager,
                                   _outputManager, _defaultBoundedCapacity);
         }
 

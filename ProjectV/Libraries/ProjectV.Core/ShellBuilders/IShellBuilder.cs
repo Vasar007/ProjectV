@@ -1,9 +1,9 @@
 ﻿namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Creates interface to build <see cref="ShellAsync" /> class step by step.
+    /// Creates interface to build <see cref="Shell" /> class step by step.
     /// </summary>
-    public interface IShellAsyncBuilder
+    public interface IShellBuilder
     {
         /// <summary>
         /// Resets build status and allows to start build process again.
@@ -38,9 +38,9 @@
         void BuildOutputManager();
 
         /// <summary>
-        /// Collects all managers and initializes <see cref="ShellAsync" /> instance.
+        /// Collects all managers and initializes <see cref="Shell" /> instance.
         /// </summary>
         /// <returns>Fully initialized instance.</returns>
-        ShellAsync GetResult();
+        Shell GetResult();
     }
 }

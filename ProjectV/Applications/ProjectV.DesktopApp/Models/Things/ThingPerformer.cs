@@ -111,7 +111,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
             // Read local file, retrieve all things and send them as list to service to crawling
             // and appaise.
-            var localFileReader = new LocalFileReaderAsync(new SimpleFileReaderAsync());
+            var localFileReader = new LocalFileReader(new SimpleFileReader());
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
@@ -134,7 +134,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
             // Read file from Google Drive, retrieve all things and send them as list to service to
             // crawling and appaise.
-            var serviceBuilder = new ServiceAsyncBuilderForXmlConfig();
+            var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
             );

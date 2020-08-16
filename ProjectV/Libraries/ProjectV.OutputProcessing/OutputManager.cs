@@ -14,13 +14,13 @@ namespace ProjectV.IO.Output
     /// <summary>
     /// Class which controlling results saving.
     /// </summary>
-    public sealed class OutputManagerAsync : IManager<IOutputterAsync>
+    public sealed class OutputManager : IManager<IOutputter>
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<OutputManagerAsync>();
+            LoggerFactory.CreateLoggerFor<OutputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
@@ -30,7 +30,7 @@ namespace ProjectV.IO.Output
         /// <summary>
         /// Collection of concrete outputter classes which can save results to specified source.
         /// </summary>
-        private readonly List<IOutputterAsync> _outputtersAsync = new List<IOutputterAsync>();
+        private readonly List<IOutputter> _outputters = new List<IOutputter>();
 
 
         /// <summary>
@@ -44,25 +44,25 @@ namespace ProjectV.IO.Output
         /// <paramref name="defaultStorageName" /> presents empty strings or contains only
         /// whitespaces.
         /// </exception>
-        public OutputManagerAsync(
+        public OutputManager(
             string defaultStorageName)
         {
             _defaultStorageName =
                 defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
-        #region IManager<IOutputterAsync> Implementation
+        #region IManager<IOutputter> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public void Add(IOutputterAsync item)
+        public void Add(IOutputter item)
         {
             item.ThrowIfNull(nameof(item));
-            if (!_outputtersAsync.Contains(item))
+            if (!_outputters.Contains(item))
             {
-                _outputtersAsync.Add(item);
+                _outputters.Add(item);
             }
         }
 
@@ -70,10 +70,10 @@ namespace ProjectV.IO.Output
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item" /> is <c>null</c>.
         /// </exception>
-        public bool Remove(IOutputterAsync item)
+        public bool Remove(IOutputter item)
         {
             item.ThrowIfNull(nameof(item));
-            return _outputtersAsync.Remove(item);
+            return _outputters.Remove(item);
         }
 
         #endregion
@@ -135,8 +135,8 @@ namespace ProjectV.IO.Output
                 .AsParallel()
                 .ForAll(rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue)));
 
-            IReadOnlyList<Task<bool>> resultTasks = _outputtersAsync
-                .Select(outputterAsync => TryGetRatings(outputterAsync, resultsToSave, storageName))
+            IReadOnlyList<Task<bool>> resultTasks = _outputters
+                .Select(outputter => TryGetRatings(outputter, resultsToSave, storageName))
                 .ToReadOnlyList();
 
             IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
@@ -150,16 +150,16 @@ namespace ProjectV.IO.Output
             return false;
         }
 
-        private static async Task<bool> TryGetRatings(IOutputterAsync outputterAsync,
+        private static async Task<bool> TryGetRatings(IOutputter outputter,
            IReadOnlyList<IReadOnlyList<RatingDataContainer>> resultsToSave, string storageName)
         {
             try
             {
-                return await outputterAsync.SaveResults(resultsToSave, storageName);
+                return await outputter.SaveResults(resultsToSave, storageName);
             }
             catch (Exception ex)
             {
-                string message = $"Outputter {outputterAsync.Tag} could not save " +
+                string message = $"Outputter {outputter.Tag} could not save " +
                                  $"{resultsToSave.Count.ToString()} results to \"{storageName}\".";
                 _logger.Error(ex, message);
                 throw;

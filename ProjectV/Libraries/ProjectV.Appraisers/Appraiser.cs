@@ -12,7 +12,7 @@ namespace ProjectV.Appraisers
     /// ratings.
     /// </summary>
     /// <typeparam name="T">The data handler type.</typeparam>
-    public sealed class AppraiserAsync<T> : IAppraiserAsync, ITagable, ITypeId
+    public sealed class Appraiser<T> : IAppraiser, ITagable, ITypeId
         where T : BasicInfo
     {
         /// <summary>
@@ -23,7 +23,7 @@ namespace ProjectV.Appraisers
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = $"AppraiserAsync<{typeof(T).Name}>";
+        public string Tag { get; } = $"Appraiser<{typeof(T).Name}>";
         
         #endregion
 
@@ -47,7 +47,7 @@ namespace ProjectV.Appraisers
         /// <exception cref="ArgumentNullException">
         /// <paramref name="appraisal" /> is <c>null</c>.
         /// </exception>
-        public AppraiserAsync(IAppraisal<T> appraisal)
+        public Appraiser(IAppraisal<T> appraisal)
         {
             _appraisal = appraisal.ThrowIfNull(nameof(appraisal));
         }

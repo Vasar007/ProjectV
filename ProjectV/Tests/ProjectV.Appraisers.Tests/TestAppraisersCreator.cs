@@ -10,10 +10,10 @@ namespace ProjectV.Appraisers.Tests
             return new BasicAppraisalCommon();
         }
 
-        public static IAppraiserAsync CreateBasicAppraiser()
+        public static IAppraiser CreateBasicAppraiser()
         {
             var appraisal = CreateBasicAppraisal();
-            return new AppraiserAsync<BasicInfo>(appraisal);
+            return new Appraiser<BasicInfo>(appraisal);
         }
     }
 }

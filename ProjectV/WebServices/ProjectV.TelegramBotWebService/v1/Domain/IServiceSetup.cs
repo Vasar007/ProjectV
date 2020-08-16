@@ -2,7 +2,7 @@
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
-    public interface IServiceSetupAsync
+    public interface IServiceSetup
     {
         Task<DisposableActionAsync> SetWebhookAsync();
 

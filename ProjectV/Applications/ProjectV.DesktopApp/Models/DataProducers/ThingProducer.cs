@@ -4,7 +4,7 @@ using ProjectV.IO.Input;
 
 namespace ProjectV.DesktopApp.Models.DataProducers
 {
-    internal sealed class ThingProducer : IInputterAsync, ITagable
+    internal sealed class ThingProducer : IInputter, ITagable
     {
         private readonly IEnumerable<string> _thingNames;
 

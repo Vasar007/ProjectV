@@ -16,7 +16,7 @@ namespace ProjectV.IO.Output.GoogleDrive
     /// <summary>
     /// Concrete implementation of writer part for Google Drive API.
     /// </summary>
-    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputterAsync, ITagable
+    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputter, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -51,7 +51,7 @@ namespace ProjectV.IO.Output.GoogleDrive
             _localFileWriter = new LocalFileWriterAsync();
         }
 
-        #region IOutputterAsync Implementation
+        #region IOutputter Implementation
 
         /// <summary>
         /// Saves results to Google Drive file.

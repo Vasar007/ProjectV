@@ -3,7 +3,7 @@ using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
-    public interface IUpdateServiceAsync
+    public interface IUpdateService
     {
         Task ProcessUpdateMessage(Update update);
     }

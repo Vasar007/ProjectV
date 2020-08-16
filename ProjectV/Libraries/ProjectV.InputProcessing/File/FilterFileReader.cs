@@ -12,7 +12,7 @@ namespace ProjectV.IO.Input.File
     /// Provides reading data from files with some filtering. Now this class filters by value of
     /// status field.
     /// </summary>
-    public sealed class FilterFileReader : IFileReaderAsync
+    public sealed class FilterFileReader : IFileReader
     {
         /// <summary>
         /// Logger instance for current class.
@@ -38,7 +38,7 @@ namespace ProjectV.IO.Input.File
         {
         }
 
-        #region IFileReaderAsync Implementation
+        #region IFileReader Implementation
 
         /// <inheritdoc />
         /// <remarks>

@@ -16,12 +16,12 @@ namespace ProjectV.Crawlers.Movie.Tmdb
     /// <summary>
     /// Provides async version of TMDb crawler.
     /// </summary>
-    public sealed class TmdbCrawlerAsync : ICrawlerAsync, IDisposable, ITagable, ITypeId
+    public sealed class TmdbCrawler : ICrawler, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawlerAsync>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<TmdbCrawler>();
 
         /// <summary>
         /// Adapter class to make a calls to TMDb API.
@@ -37,7 +37,7 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(TmdbCrawlerAsync);
+        public string Tag { get; } = nameof(TmdbCrawler);
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> presents empty string or contains only whitespaces.
         /// </exception>
-        public TmdbCrawlerAsync(string apiKey, int maxRetryCount)
+        public TmdbCrawler(string apiKey, int maxRetryCount)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
@@ -68,7 +68,7 @@ namespace ProjectV.Crawlers.Movie.Tmdb
             _searchResults = new HashSet<BasicInfo>();
         }
 
-        #region ICrawlerAsync Implemenation
+        #region ICrawler Implemenation
 
         /// <inheritdoc />
         public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)

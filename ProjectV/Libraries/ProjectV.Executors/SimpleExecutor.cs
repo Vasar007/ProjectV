@@ -53,21 +53,21 @@ namespace ProjectV.Executors
 
         // TODO: remove this method later.
         public async Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
-             IInputterAsync additionalInputterAsync, IOutputterAsync additionalOutputterAsync)
+             IInputter additionalInputter, IOutputter additionalOutputter)
         {
-            var builderDirector = ShellAsync.CreateBuilderDirector(
+            var builderDirector = Shell.CreateBuilderDirector(
                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
             );
-            using ShellAsync shell = builderDirector.MakeShell();
+            using Shell shell = builderDirector.MakeShell();
             
-            shell.InputManagerAsync.Add(additionalInputterAsync);
-            shell.OutputManagerAsync.Add(additionalOutputterAsync);
+            shell.InputManager.Add(additionalInputter);
+            shell.OutputManager.Add(additionalOutputter);
 
             return await ExecuteSpecifiedNumberOfTimes(shell);
         }
 
         private async Task<IReadOnlyList<ServiceStatus>> ExecuteSpecifiedNumberOfTimes(
-            ShellAsync shell)
+            Shell shell)
         {
             var statuses = new List<ServiceStatus>(ExecutionsNumber);
 

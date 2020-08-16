@@ -13,67 +13,66 @@ namespace ProjectV.Core
     /// <summary>
     /// Main class of service that links the rest of the classes into a single entity.
     /// </summary>
-    public sealed class ShellAsync : IDisposable
+    public sealed class Shell : IDisposable
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ShellAsync>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<Shell>();
 
         private readonly int _boundedCapacity;
 
         /// <summary>
         /// Manager to interact with input data.
         /// </summary>
-        public IO.Input.InputManagerAsync InputManagerAsync { get; }
+        public IO.Input.InputManager InputManager { get; }
 
         /// <summary>
         /// Manager to collect data about The Things from different sources.
         /// </summary>
-        public Crawlers.CrawlersManagerAsync CrawlersManagerAsync { get; }
+        public Crawlers.CrawlersManager CrawlersManager { get; }
 
         /// <summary>
         /// Manager to appraise of information collected.
         /// </summary>
-        public Appraisers.AppraisersManagerAsync AppraisersManagerAsync { get; }
+        public Appraisers.AppraisersManager AppraisersManager { get; }
 
         /// <summary>
         /// Manager to save service results.
         /// </summary>
-        public IO.Output.OutputManagerAsync OutputManagerAsync { get; }
+        public IO.Output.OutputManager OutputManager { get; }
 
 
         /// <summary>
         /// Default constructor which initialize all managers.
         /// </summary>
-        /// <param name="inputManagerAsync">Initialized input manager.</param>
-        /// <param name="crawlersManagerAsync">Initialized crawlers manager.</param>
-        /// <param name="appraisersManagerAsync">Initialized appraisers manager.</param>
-        /// <param name="outputManagerAsync">Initialized output manager.</param>
+        /// <param name="inputManager">Initialized input manager.</param>
+        /// <param name="crawlersManager">Initialized crawlers manager.</param>
+        /// <param name="appraisersManager">Initialized appraisers manager.</param>
+        /// <param name="outputManager">Initialized output manager.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="inputManagerAsync" /> or <paramref name="crawlersManagerAsync" /> or
-        /// <paramref name="appraisersManagerAsync" /> or <paramref name="outputManagerAsync" /> is 
+        /// <paramref name="inputManager" /> or <paramref name="crawlersManager" /> or
+        /// <paramref name="appraisersManager" /> or <paramref name="outputManager" /> is 
         /// <c>null</c>.
         /// </exception>
-        public ShellAsync(
-            IO.Input.InputManagerAsync inputManagerAsync,
-            Crawlers.CrawlersManagerAsync crawlersManagerAsync,
-            Appraisers.AppraisersManagerAsync appraisersManagerAsync,
-            IO.Output.OutputManagerAsync outputManagerAsync,
+        public Shell(
+            IO.Input.InputManager inputManager,
+            Crawlers.CrawlersManager crawlersManager,
+            Appraisers.AppraisersManager appraisersManager,
+            IO.Output.OutputManager outputManager,
             int boundedCapacity)
         {
-            InputManagerAsync = inputManagerAsync.ThrowIfNull(nameof(inputManagerAsync));
-            CrawlersManagerAsync = crawlersManagerAsync.ThrowIfNull(nameof(crawlersManagerAsync));
-            AppraisersManagerAsync =
-                appraisersManagerAsync.ThrowIfNull(nameof(appraisersManagerAsync));
-            OutputManagerAsync = outputManagerAsync.ThrowIfNull(nameof(outputManagerAsync));
+            InputManager = inputManager.ThrowIfNull(nameof(inputManager));
+            CrawlersManager = crawlersManager.ThrowIfNull(nameof(crawlersManager));
+            AppraisersManager = appraisersManager.ThrowIfNull(nameof(appraisersManager));
+            OutputManager = outputManager.ThrowIfNull(nameof(outputManager));
 
             _boundedCapacity = boundedCapacity; // Not using this parameter now.
         }
 
-        public static ShellAsyncBuilderDirector CreateBuilderDirector(XDocument configuration)
+        public static ShellBuilderDirector CreateBuilderDirector(XDocument configuration)
         {
-            return new ShellAsyncBuilderDirector(new ShellAsyncBuilderFromXDocument(configuration));
+            return new ShellBuilderDirector(new ShellBuilderFromXDocument(configuration));
         }
 
         /// <summary>
@@ -137,7 +136,7 @@ namespace ProjectV.Core
         {
             if (_disposed) return;
 
-            CrawlersManagerAsync.Dispose();
+            CrawlersManager.Dispose();
 
             _disposed = true;
         }
@@ -152,7 +151,7 @@ namespace ProjectV.Core
         {
             try
             {
-                bool status = await OutputManagerAsync.SaveResults(
+                bool status = await OutputManager.SaveResults(
                     outputtersFlow, storageName: string.Empty
                 );
                 if (status)
@@ -174,17 +173,17 @@ namespace ProjectV.Core
         private DataflowPipeline ConstructPipeline(string storageName)
         {
             // Input component work.
-            InputtersFlow inputtersFlow = InputManagerAsync.CreateFlow(storageName);
+            InputtersFlow inputtersFlow = InputManager.CreateFlow(storageName);
 
             // Crawlers component work.
-            CrawlersFlow crawlersFlow = CrawlersManagerAsync.CreateFlow();
+            CrawlersFlow crawlersFlow = CrawlersManager.CreateFlow();
 
             // Appraisers component work.
-            AppraisersFlow appraisersFlow = AppraisersManagerAsync.CreateFlow();
+            AppraisersFlow appraisersFlow = AppraisersManager.CreateFlow();
 
             // Output component work.
             OutputtersFlow outputtersFlow =
-                OutputManagerAsync.CreateFlow(storageName: string.Empty);
+                OutputManager.CreateFlow(storageName: string.Empty);
 
             // Constructing pipeline.
             inputtersFlow.LinkTo(crawlersFlow);

@@ -33,7 +33,7 @@ namespace ProjectV.TelegramBotWebService
                 IWebHost webHost = CreateWebHostBuilder(args).Build();
 
                 // Set web hook to get messages from Telegram Bot.
-                var serviceSetup = webHost.Services.GetRequiredService<IServiceSetupAsync>();
+                var serviceSetup = webHost.Services.GetRequiredService<IServiceSetup>();
                 await using var webhookHandler = await serviceSetup.SetWebhookAsync();
 
                 // Run the WebHost, and start accepting requests.

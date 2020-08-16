@@ -17,7 +17,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
         {
             return serviceType switch
             {
-                ServiceType.TplDataflow => new ServiceAsyncRequestProcessor(jobInfoService),
+                ServiceType.TplDataflow => new ServiceRequestProcessor(jobInfoService),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(serviceType),
                                                            "Not known service type")

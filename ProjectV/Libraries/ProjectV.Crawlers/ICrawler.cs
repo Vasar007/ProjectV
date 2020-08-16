@@ -8,7 +8,7 @@ namespace ProjectV.Crawlers
     /// Crawlers base interface for sequential service. You should inherit this class if would like
     /// to create your own crawler.
     /// </summary>
-    public interface ICrawlerAsync : IDisposable, ITagable, ITypeId
+    public interface ICrawler : IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Gets response from data storage and process it.

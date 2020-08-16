@@ -4,25 +4,26 @@ using Acolyte.Assertions;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
-using ProjectV.OmdbService;
+using ProjectV.SteamService;
+using ProjectV.SteamService.Models;
 
-namespace ProjectV.Crawlers.Movie.Omdb
+namespace ProjectV.Crawlers.Game.Steam
 {
     /// <summary>
-    /// Provides async version of OMDb crawler.
+    /// Provides async version of Steam crawler.
     /// </summary>
-    public sealed class OmdbCrawlerAsync : ICrawlerAsync, IDisposable, ITagable, ITypeId
+    public sealed class SteamCrawler : ICrawler, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<OmdbCrawlerAsync>();
+            LoggerFactory.CreateLoggerFor<SteamCrawler>();
 
         /// <summary>
-        /// Adapter class to make a calls to OMDb API.
+        /// Adapter class to make a calls to Steam API.
         /// </summary>
-        private readonly IOmdbClient _omdbClient;
+        private readonly ISteamApiClient _steamApiClient;
 
         /// <summary>
         /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
@@ -33,14 +34,14 @@ namespace ProjectV.Crawlers.Movie.Omdb
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = nameof(OmdbCrawlerAsync);
+        public string Tag { get; } = nameof(SteamCrawler);
 
         #endregion
 
         #region ITypeId Implementation
 
         /// <inheritdoc />
-        public Type TypeId { get; } = typeof(OmdbMovieInfo);
+        public Type TypeId { get; } = typeof(SteamGameInfo);
 
         #endregion
 
@@ -48,27 +49,46 @@ namespace ProjectV.Crawlers.Movie.Omdb
         /// <summary>
         /// Initializes instance according to parameter values.
         /// </summary>
-        /// <param name="apiKey">Key to get access to OMDb service.</param>
+        /// <param name="apiKey">Key to get access to Steam service.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="apiKey" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="apiKey" /> presents empty strings or contains only whitespaces.
         /// </exception>
-        public OmdbCrawlerAsync(string apiKey)
+        public SteamCrawler(string apiKey)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _omdbClient = OmdbClientFactory.CreateClient(apiKey);
+            _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
             _searchResults = new HashSet<BasicInfo>();
         }
 
-        #region ICrawlerAsync Implementation
+        #region ICrawler Implementation
 
         /// <inheritdoc />
         public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            OmdbMovieInfo? response = await _omdbClient.TryGetItemByTitleAsync(entityName);
+            if (SteamAppsStorage.IsEmpty)
+            {
+                SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
+                SteamAppsStorage.FillStorage(steamApps);
+            }
+           
+            int? appId = SteamAppsStorage.TryGetAppIdByName(entityName);
+
+            if (!appId.HasValue)
+            {
+                string message = $"{entityName} was not find in Steam responses storage.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
+
+                yield break;
+            }
+
+            var response = await _steamApiClient.TryGetSteamAppAsync(
+                appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
+            );
 
             if (response is null)
             {
@@ -79,10 +99,9 @@ namespace ProjectV.Crawlers.Movie.Omdb
                 yield break;
             }
 
-            // Get first search result from response and ignore all the rest.
             if (outputResults)
             {
-                GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
+                GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
             }
 
             if (_searchResults.Add(response))
@@ -91,7 +110,6 @@ namespace ProjectV.Crawlers.Movie.Omdb
             }
 
             yield break;
-
         }
 
         #endregion
@@ -110,7 +128,7 @@ namespace ProjectV.Crawlers.Movie.Omdb
         {
             if (_disposed) return;
 
-            _omdbClient.Dispose();
+            _steamApiClient.Dispose();
 
             _disposed = true;
         }

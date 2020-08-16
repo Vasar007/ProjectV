@@ -25,10 +25,10 @@ namespace ProjectV.TelegramBotWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IServiceSetupAsync, ServiceSetupAsync>();
+            services.AddSingleton<IServiceSetup, ServiceSetup>();
             services.AddSingleton<IServiceProxy, ServiceProxy>();
 
-            services.AddSingleton<IUpdateServiceAsync, UpdateServiceAsync>();
+            services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();
             services.AddTransient<IUserCache, UserCache>();
 
