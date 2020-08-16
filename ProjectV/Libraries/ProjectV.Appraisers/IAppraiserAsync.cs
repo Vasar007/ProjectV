@@ -1,5 +1,4 @@
-﻿using System;
-using ProjectV.Models.Data;
+﻿using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 
 namespace ProjectV.Appraisers
@@ -13,11 +12,6 @@ namespace ProjectV.Appraisers
         /// Rating name which describes rating calculation.
         /// </summary>
         string RatingName { get; }
-
-        /// <summary>
-        /// Specify rating ID for result.
-        /// </summary>
-        Guid RatingId { get; set; }
 
 
         /// <summary>

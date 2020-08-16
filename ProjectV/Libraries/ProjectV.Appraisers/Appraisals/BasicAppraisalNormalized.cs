@@ -8,7 +8,7 @@ namespace ProjectV.Appraisers.Appraisals
     /// <summary>
     /// Appraisal to get rating for instances of <see cref="BasicInfo" />.
     /// </summary>
-    public sealed class BasicAppraisal : IAppraisal<BasicInfo>
+    public sealed class BasicAppraisalNormalized : IAppraisal<BasicInfo>
     {
         /// <summary>
         /// Provides min, max and denominator values to normalize vote count value.
@@ -27,7 +27,7 @@ namespace ProjectV.Appraisers.Appraisals
         /// <summary>
         /// Initializes instance with default values.
         /// </summary>
-        public BasicAppraisal()
+        public BasicAppraisalNormalized()
         {
         }
 

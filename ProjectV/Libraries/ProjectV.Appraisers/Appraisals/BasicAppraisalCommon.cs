@@ -3,26 +3,25 @@ using Acolyte.Assertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 
-namespace ProjectV.Appraisers.Appraisals.Movie.Omdb
+namespace ProjectV.Appraisers.Appraisals
 {
     /// <summary>
-    /// Appraisal to get rating for instances of <see cref="OmdbMovieInfo" />.
+    /// Appraisal to get rating for instances of <see cref="BasicInfo" />.
     /// </summary>
-    public sealed class OmdbCommonAppraisal : IAppraisal<OmdbMovieInfo>
+    public sealed class BasicAppraisalCommon : IAppraisal<BasicInfo>
     {
         /// <inheritdoc />
-        public string RatingName { get; } = "Rating based on IMDB rating value";
+        public string RatingName { get; } = "Common rating";
 
 
         /// <summary>
-        /// Initializes instance with specified values.
+        /// Initializes instance with default values.
         /// </summary>
-        public OmdbCommonAppraisal()
+        public BasicAppraisalCommon()
         {
-
         }
 
-        #region IAppraisal<OmdbMovieInfo> Implementation
+        #region IAppraisal<BasicInfo> Implementation
 
         /// <summary>
         /// No exctraction will be perfomed because this appraisal no needed in such preparation.
@@ -33,16 +32,14 @@ namespace ProjectV.Appraisers.Appraisals.Movie.Omdb
         }
 
         /// <summary>
-        /// Calculates rating for <see cref="OmdbMovieInfo" /> with specified values.
+        /// Calculates rating for <see cref="BasicInfo" /> with specified values.
         /// </summary>
         /// <param name="entity">Target value to calculate rating.</param>
-        /// <returns>
         /// <returns>Average vote value.</returns>
-        /// </returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="entity" /> is <c>null</c>.
         /// </exception>
-        public double CalculateRating(OmdbMovieInfo entity)
+        public double CalculateRating(BasicInfo entity)
         {
             entity.ThrowIfNull(nameof(entity));
 

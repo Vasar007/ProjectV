@@ -20,7 +20,7 @@ namespace ProjectV.Appraisers.Tests
 
             string actualValue = appraiser.Tag;
 
-            string expectedValue = $"Appraiser<{nameof(BasicInfo)}>";
+            string expectedValue = $"AppraiserAsync<{nameof(BasicInfo)}>";
 
             Assert.NotNull(actualValue);
             Assert.NotEmpty(actualValue);
@@ -55,39 +55,18 @@ namespace ProjectV.Appraisers.Tests
         }
 
         [Fact]
-        public void CheckRatingIdPropertyDefaultValue()
-        {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            Guid actualValue = appraiser.RatingId;
-
-            Guid expectedValue = Guid.Empty;
-            Assert.Equal(expectedValue, actualValue);
-        }
-
-        [Fact]
-        public void SetRatingIdPropertyAndCompare()
-        {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            Guid expectedValue = Guid.NewGuid();
-            appraiser.RatingId = expectedValue;
-
-            Guid actualValue = appraiser.RatingId;
-            Assert.Equal(expectedValue, actualValue);
-        }
-
-        [Fact]
         public void GetRatingsThrowsExceptionBecauseOfNullParameter()
         {
             var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             Assert.Throws<ArgumentNullException>(
+                "entityInfo",
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
                 () => appraiser.GetRatings(entityInfo: null, outputResults: false)
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             );
             Assert.Throws<ArgumentNullException>(
+                "entityInfo",
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
                 () => appraiser.GetRatings(entityInfo: null, outputResults: true)
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -99,8 +78,7 @@ namespace ProjectV.Appraisers.Tests
         {
             var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
-            Guid ratingId = Guid.NewGuid();
-            appraiser.RatingId = ratingId;
+            Guid ratingId = Guid.Empty;
 
             var item = new BasicInfo(
                 thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
@@ -120,8 +98,7 @@ namespace ProjectV.Appraisers.Tests
         {
             var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
-            Guid ratingId = Guid.NewGuid();
-            appraiser.RatingId = ratingId;
+            Guid ratingId = Guid.Empty;
 
             var item1 = new BasicInfo(
                 thingId: 1, title: "Title-1", voteCount: 11, voteAverage: 9.7
@@ -135,7 +112,7 @@ namespace ProjectV.Appraisers.Tests
             var items = new[] { item1, item2, item3 };
 
             var actualValue = new List<RatingDataContainer>();
-            for (int index = 0; index <= items.Length; ++index)
+            for (int index = 0; index < items.Length; ++index)
             {
                 var actualRating = appraiser.GetRatings(items[index], outputResults: false);
                 actualValue.Add(actualRating);
@@ -163,13 +140,12 @@ namespace ProjectV.Appraisers.Tests
         {
             var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
-            Guid ratingId = Guid.NewGuid();
-            appraiser.RatingId = ratingId;
+            Guid ratingId = Guid.Empty;
 
             var items = TestDataCreator.CreateBasicInfoListRandomly(itemsCount);
 
             var actualValue = new List<RatingDataContainer>();
-            for (int index = 0; index <= items.Count; ++index)
+            for (int index = 0; index < items.Count; ++index)
             {
                 var actualRating = appraiser.GetRatings(items[index], outputResults: false);
                 actualValue.Add(actualRating);

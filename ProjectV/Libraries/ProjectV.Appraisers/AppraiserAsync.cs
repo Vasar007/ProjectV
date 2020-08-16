@@ -39,9 +39,6 @@ namespace ProjectV.Appraisers
         /// </summary>
         public string RatingName => _appraisal.RatingName;
 
-        /// <inheritdoc />
-        public Guid RatingId { get; set; }
-
 
         /// <summary>
         /// Creates instance with default values.
@@ -57,6 +54,8 @@ namespace ProjectV.Appraisers
 
         public RatingDataContainer GetRatings(BasicInfo entityInfo, bool outputResults)
         {
+            entityInfo.ThrowIfNull(nameof(entityInfo));
+
             if (!(entityInfo is T convertedInfo))
             {
                 throw new ArgumentException(
@@ -68,7 +67,8 @@ namespace ProjectV.Appraisers
 
             double ratingValue = _appraisal.CalculateRating(convertedInfo);
 
-            var resultInfo = new RatingDataContainer(entityInfo, ratingValue, RatingId);
+            // We do not used ratings now. So, all appraisals will have the same rating ID (empty).
+            var resultInfo = new RatingDataContainer(entityInfo, ratingValue, ratingId: Guid.Empty);
 
             if (outputResults)
             {

@@ -46,9 +46,8 @@ namespace ProjectV.Appraisers.Appraisals.Game.Steam
         {
             entity.ThrowIfNull(nameof(entity));
 
-            double priceValue = decimal.ToDouble(entity.Price) - entity.VoteAverage;
-
-            return priceValue;
+            // We save initial price in "VoteAverage" field.
+            return decimal.ToDouble(entity.Price) - entity.VoteAverage;
         }
 
         #endregion
