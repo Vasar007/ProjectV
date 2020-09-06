@@ -85,7 +85,7 @@ namespace NLog.Extention
         /// <param name="logEvent">Specified parameter which contains exception info.</param>
         protected override void Append(StringBuilder builder, LogEventInfo logEvent)
         {
-            Exception ex = logEvent.Exception;
+            Exception? ex = logEvent.Exception;
             while (ex != null)
             {
                 builder.Append(
