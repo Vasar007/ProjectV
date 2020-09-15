@@ -15,13 +15,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
 
 
-        public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
+        public static Task ScheduleRequestAsync(IBotService botService, IServiceProxy serviceProxy,
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
             // Otherwise Telegram will retry to send event again untill service send a response.
-            Task.Run(
+            return Task.Run(
                 () => ScheduleRequestImplementation(botService, serviceProxy,
                                                     chatId, requestParams),
                 token

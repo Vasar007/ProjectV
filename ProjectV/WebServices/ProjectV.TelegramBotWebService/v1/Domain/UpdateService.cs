@@ -222,8 +222,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 replyMarkup: new ReplyKeyboardRemove()
             );
 
-            ProcessingResponseReceiver.ScheduleRequest(_botService, _serviceProxy,
-                                                       chatId, requestParams);
+            // Shedule task for request and waiting for service response.
+            _ = ProcessingResponseReceiver.ScheduleRequestAsync(
+                _botService, _serviceProxy, chatId, requestParams
+            );
 
             _userCache.TryRemoveUser(chatId);
         }
