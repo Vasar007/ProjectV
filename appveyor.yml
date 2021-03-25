@@ -1,9 +1,10 @@
 version: '{build}'
 image: Visual Studio 2019
 
-shallow_clone: true
+# Do not build on tags (GitHub, Bitbucket, GitLab, Gitea).
+skip_tags: true
 
-clone_folder: C:/projects/projectv
+shallow_clone: true
 
 branches:
   only:
@@ -21,8 +22,8 @@ matrix:
   fast_finish: true
 
 before_build:
-  - cmd: cd ProjectV
-  - cmd: dotnet restore
+  - ps: cd ProjectV
+  - ps: dotnet restore
 
 build:
   verbosity: minimal
@@ -33,15 +34,7 @@ test:
 
 # F# tests does not execute at all.
 after_test:
-  - ps: >-
-      if ($env:configuration -eq "Debug")
-      {
-        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
-      }
-      else
-      {
-        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Release --no-build
-      }
+  - ps: dotnet test "Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration $env:configuration --no-build
 
 pull_requests:
     do_not_increment_build_number: true
