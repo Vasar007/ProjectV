@@ -5,7 +5,7 @@ using NLog.LayoutRenderers;
 using NLog.LayoutRenderers.Wrappers;
 using NLog.Layouts;
 
-namespace NLog.Extention
+namespace NLog.Extension
 {
     /// <remarks>
     /// <see href="https://stackoverflow.com/questions/34333794/print-a-multi-line-message-with-nlog" />

@@ -5,7 +5,7 @@ using System.Text;
 using NLog.Config;
 using NLog.LayoutRenderers;
 
-namespace NLog.Extention
+namespace NLog.Extension
 {
     /// <summary>
     /// Renders exception starting from new line with short type exception name followed by message
