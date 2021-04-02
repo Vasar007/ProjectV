@@ -9,3 +9,15 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
+    # Specify additional information for NuGet pull requests.
+    labels:
+      - "area: Dependencies"
+      - "type: Code Maintenance"
+      - "status: External"
+    assignees:
+      - "Vasar007"
+    reviewers:
+      - "Vasar007"
+    # Raise pull requests for version updates
+    # to NuGet against the "develop" branch.
+    target-branch: "develop"
