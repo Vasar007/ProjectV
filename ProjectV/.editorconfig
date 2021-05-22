@@ -1,8 +1,18 @@
 ﻿# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-# C# files
-[*.cs]
+# C# and F# files
+[*.{cs,fs,fsi,fsx}]
+
+# Files to exclude from foramtting because dotnet-format cannot process F# usages in C# code.
+[Applications/ProjectV.ConsoleApp/Program.cs]
+generated_code = true
+
+[Applications/ProjectV.DesktopApp/Models/ContentDirectories/ContentDirectoryHelper.cs]
+generated_code = true
+
+[Applications/ProjectV.DesktopApp/Models/ContentDirectories/ContentFinderWrapper.cs]
+generated_code = true
 
 #### Core EditorConfig Options ####
 

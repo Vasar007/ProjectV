@@ -57,7 +57,7 @@ namespace FileHelpers
             // Hack cos FieldOrderAttribute.Order is internal (why?)
             var pi = typeof(FieldOrderAttribute).GetProperty("Order");
 
-            return (int) pi.GetValue(attribute, null);
+            return (int)pi.GetValue(attribute, null);
         }
     }
 }

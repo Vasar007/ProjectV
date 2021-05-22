@@ -21,27 +21,27 @@ namespace ProjectV.DataPipeline
                     switch (task.Status)
                     {
                         case TaskStatus.RanToCompletion:
-                        {
-                            return task.Result;
-                        }
+                            {
+                                return task.Result;
+                            }
 
                         case TaskStatus.Faulted:
-                        {
-                            Exception exception =
-                                ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception);
+                            {
+                                Exception exception =
+                                    ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception);
 
-                            _logger.Error(exception, "Task is in the faulted state.");
+                                _logger.Error(exception, "Task is in the faulted state.");
 
-                            throw new TaskFaultedException(
-                                "Rethrow exception because a task is in the faulted state.",
-                                exception
-                            );
-                        }
+                                throw new TaskFaultedException(
+                                    "Rethrow exception because a task is in the faulted state.",
+                                    exception
+                                );
+                            }
 
                         default:
-                        {
-                            return default!;
-                        }
+                            {
+                                return default!;
+                            }
                     }
                 }
             );

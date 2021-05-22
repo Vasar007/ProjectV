@@ -159,22 +159,22 @@ namespace ProjectV.Building.Service
             switch (fileReaderName)
             {
                 case _simpleFileReaderParameterName:
-                {
-                    return new IO.Input.File.SimpleFileReader();
-                }
+                    {
+                        return new IO.Input.File.SimpleFileReader();
+                    }
 
                 case _filterFileReaderParameterName:
-                {
-                    return new IO.Input.File.FilterFileReader();
-                }
+                    {
+                        return new IO.Input.File.FilterFileReader();
+                    }
 
                 default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(fileReaderName), fileReaderName,
-                        "Couldn't recognize file reader type."
-                    );
-                }
+                    {
+                        throw new ArgumentOutOfRangeException(
+                            nameof(fileReaderName), fileReaderName,
+                            "Couldn't recognize file reader type."
+                        );
+                    }
             }
         }
 

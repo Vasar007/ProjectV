@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ProjectV.Communication;
 using ProjectV.Configuration;
+using ProjectV.ContentDirectories;
 using ProjectV.Core;
 using ProjectV.DataAccessLayer;
 using ProjectV.DataAccessLayer.Services.Jobs;
@@ -21,8 +22,7 @@ namespace ProjectV.ConsoleApp
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(Program));
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace ProjectV.ConsoleApp
                 _logger.PrintHeader("Console client application started.");
 
                 await MainXDocument(args);
-                //TestDbOrmEf();
-                //TestAutomapper();
-                //await TestConentDirectories();
+                TestDbOrmEf();
+                TestAutomapper();
+                await TestConentDirectories();
                 return 0;
             }
             catch (Exception ex)
@@ -186,8 +186,8 @@ namespace ProjectV.ConsoleApp
 
         private static async Task TestConentDirectories()
         {
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = await ContentFinder
-                .FindContentForDirAsync(
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result =
+                await ContentFinder.FindContentForDirAsync(
                     @"C:\Users\vasar\Documents\GitHub",
                     ContentModels.ContentType.Text
                 );

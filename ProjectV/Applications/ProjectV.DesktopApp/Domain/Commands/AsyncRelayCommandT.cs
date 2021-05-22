@@ -82,7 +82,7 @@ namespace ProjectV.DesktopApp.Domain.Commands
                 throw GetParameterNullException(nameof(parameter));
             }
 
-            return CanExecute((T) parameter);
+            return CanExecute((T)parameter);
         }
 
         void ICommand.Execute(object? parameter)
@@ -92,7 +92,7 @@ namespace ProjectV.DesktopApp.Domain.Commands
                 throw GetParameterNullException(nameof(parameter));
             }
 
-            ExecuteAsync((T) parameter).FireAndForgetSafeAsync(_errorHandler);
+            ExecuteAsync((T)parameter).FireAndForgetSafeAsync(_errorHandler);
         }
 
         private static ArgumentNullException GetParameterNullException(string parameterName)

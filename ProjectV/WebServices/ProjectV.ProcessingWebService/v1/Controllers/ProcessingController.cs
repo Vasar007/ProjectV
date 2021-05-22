@@ -35,7 +35,7 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return Ok("Create procesiing task by POST request");
+            return Ok("Create processing task by POST request");
         }
 
         [HttpPost]

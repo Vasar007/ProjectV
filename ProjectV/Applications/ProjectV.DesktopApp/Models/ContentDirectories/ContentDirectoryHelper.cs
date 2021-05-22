@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjectV.ContentDirectories;
 
 namespace ProjectV.DesktopApp.Models.ContentDirectories
 {

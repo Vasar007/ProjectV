@@ -101,43 +101,43 @@ namespace ProjectV.IO.Input.GoogleDrive
             switch (progress.Status)
             {
                 case DownloadStatus.Downloading:
-                {
-                    _logger.Info($"Downloading: {progress.BytesDownloaded}");
-                    break;
-                }
+                    {
+                        _logger.Info($"Downloading: {progress.BytesDownloaded}");
+                        break;
+                    }
 
                 case DownloadStatus.Completed:
-                {
-                    _logger.Info("Download completed.");
-                    if (string.IsNullOrEmpty(mimeType))
                     {
-                        SaveStream(stream, saveTo);
+                        _logger.Info("Download completed.");
+                        if (string.IsNullOrEmpty(mimeType))
+                        {
+                            SaveStream(stream, saveTo);
+                        }
+                        else
+                        {
+                            SaveStream(stream, saveTo + GetExtension(mimeType));
+                        }
+                        break;
                     }
-                    else
-                    {
-                        SaveStream(stream, saveTo + GetExtension(mimeType));
-                    }
-                    break;
-                }
 
                 case DownloadStatus.Failed:
-                {
-                    _logger.Warn("Download failed.");
-                    break;
-                }
+                    {
+                        _logger.Warn("Download failed.");
+                        break;
+                    }
 
                 case DownloadStatus.NotStarted:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
 
                 default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(progress), progress.Status,
-                        $"Not known status value: '{progress.Status.ToString()}'."
-                    );
-                }
+                    {
+                        throw new ArgumentOutOfRangeException(
+                            nameof(progress), progress.Status,
+                            $"Not known status value: '{progress.Status.ToString()}'."
+                        );
+                    }
             }
         }
 

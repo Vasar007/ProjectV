@@ -46,18 +46,18 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             switch (update.Type)
             {
                 case UpdateType.Message:
-                {
-                    Message message = update.Message;
-                    _logger.Info($"Received Message from {message.Chat.Id}.");
-                    await ProcessMessage(message);
-                    break;
-                }
+                    {
+                        Message message = update.Message;
+                        _logger.Info($"Received Message from {message.Chat.Id}.");
+                        await ProcessMessage(message);
+                        break;
+                    }
 
                 default:
-                {
-                    _logger.Warn($"Skipped {update.Type}");
-                    break;
-                }
+                    {
+                        _logger.Warn($"Skipped {update.Type}");
+                        break;
+                    }
             }
 
         }
@@ -73,54 +73,54 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             switch (command)
             {
                 case "/start":
-                {
-                    await SendResponseToStartCommand(message.Chat.Id);
-                    break;
-                }
+                    {
+                        await SendResponseToStartCommand(message.Chat.Id);
+                        break;
+                    }
 
                 case "/services":
-                {
-                    await SendResponseToServicesCommand(message.Chat.Id);
-                    break;
-                }
+                    {
+                        await SendResponseToServicesCommand(message.Chat.Id);
+                        break;
+                    }
 
                 case "/request":
-                {
-                    await SendResponseToRequestCommand(message.Chat.Id);
-                    break;
-                }
+                    {
+                        await SendResponseToRequestCommand(message.Chat.Id);
+                        break;
+                    }
 
                 case "/cancel":
-                {
-                    await SendResponseToCancelCommand(message.Chat.Id);
-                    break;
-                }
+                    {
+                        await SendResponseToCancelCommand(message.Chat.Id);
+                        break;
+                    }
 
                 case "/help":
-                {
-                    await SendResponseToHelpCommand(message.Chat.Id);
-                    break;
-                }
+                    {
+                        await SendResponseToHelpCommand(message.Chat.Id);
+                        break;
+                    }
 
                 default:
-                {
-                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
                     {
-                        await SendResponseToInvalidMessage(message.Chat.Id);
-                        return;
-                    }
+                        if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
+                        {
+                            await SendResponseToInvalidMessage(message.Chat.Id);
+                            return;
+                        }
 
-                    if (requestParams.Requirements is null)
-                    {
-                        string serviceName = data.First();
-                        await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
-                                                                requestParams);
-                        return;
-                    }
+                        if (requestParams.Requirements is null)
+                        {
+                            string serviceName = data.First();
+                            await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
+                                                                    requestParams);
+                            return;
+                        }
 
-                    await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
-                    break;
-                }
+                        await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
+                        break;
+                    }
             }
         }
 
