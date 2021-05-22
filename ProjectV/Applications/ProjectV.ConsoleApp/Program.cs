@@ -82,9 +82,13 @@ namespace ProjectV.ConsoleApp
                 _logger.PrintHeader("Console client application started.");
 
                 await MainXDocument(args);
+
+#if DEBUG
                 TestDbOrmEf();
                 TestAutomapper();
                 await TestConentDirectories();
+#endif
+
                 return 0;
             }
             catch (Exception ex)
