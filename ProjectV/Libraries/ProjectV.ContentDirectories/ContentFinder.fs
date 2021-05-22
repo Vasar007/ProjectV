@@ -11,9 +11,8 @@ let private convertContentType contentType =
         | ContentModels.ContentType.Movie -> ContentFinderInternal.ContentTypeInternal.Movie
         | ContentModels.ContentType.Image -> ContentFinderInternal.ContentTypeInternal.Image
         | ContentModels.ContentType.Text  -> ContentFinderInternal.ContentTypeInternal.Text
-        | _                               -> invalidArg "contentType"
-                                                        ("Content type is out of range: \"" +
-                                                         contentType.ToString() + "\".")
+        | _                               -> invalidArg (nameof contentType)
+                                                        $"Content type is out of range: \"{contentType.ToString()}\"."
 
 let private defaultDirectoryExceptionHandler (_: exn) (_: string) =
     ()
@@ -38,8 +37,8 @@ let private getFileSeqAsync directoryName (args: ContentModels.ScannerArguments)
     } |> Async.StartAsTask
 
 let FindContentAsync (args: ContentModels.ContentFinderArguments) =
-    args.ThrowIfNullValue("args", false) |> ignore
-    args.DirectorySeq.ThrowIfNull("args.DirectorySeq") |> ignore
+    args.ThrowIfNullValue((nameof args), false) |> ignore
+    args.DirectorySeq.ThrowIfNull((nameof args.DirectorySeq)) |> ignore
     
     let exceptionHandler = match args.DirectoryExceptionHandler with
                                | Some handler -> handler
@@ -62,8 +61,8 @@ let FindContentAsync (args: ContentModels.ContentFinderArguments) =
     ContentFinderInternal.findContentAsync internalArgs
 
 let FindContentForDirWithAsync directoryName fileSeqGen contentType pagingInfo =
-    directoryName.ThrowIfNull("directoryName") |> ignore
-    fileSeqGen.ThrowIfNullValue("fileSeqGen", false) |> ignore
+    directoryName.ThrowIfNull((nameof directoryName)) |> ignore
+    fileSeqGen.ThrowIfNullValue((nameof fileSeqGen), false) |> ignore
 
     let (args: ContentModels.ContentFinderArguments) = {
         DirectorySeq = (getFolderSeq directoryName)

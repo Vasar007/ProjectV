@@ -1,6 +1,6 @@
-using System.Text.Json;
-using Xunit;
+﻿using System.Text.Json;
 using ProjectV.Models.Data;
+using Xunit;
 
 namespace ProjectV.Common.Tests
 {
@@ -10,7 +10,7 @@ namespace ProjectV.Common.Tests
         {
         }
 
-        [Fact(Skip = "Current version of JsonSerializer cannot work with classe without " +
+        [Fact(Skip = "Current version of JsonSerializer cannot work with class without " +
                      "parameterless constructors.")]
         public void BasicInfoSerializationToJsonAndBack()
         {
@@ -42,7 +42,7 @@ namespace ProjectV.Common.Tests
             return JsonSerializer.Serialize(value, options);
         }
 
-        private static T Deserialize<T>(string json)
+        private static T? Deserialize<T>(string json)
         {
             var options = new JsonSerializerOptions
             {

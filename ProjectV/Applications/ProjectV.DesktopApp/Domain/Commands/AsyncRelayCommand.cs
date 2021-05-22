@@ -75,12 +75,12 @@ namespace ProjectV.DesktopApp.Domain.Commands
 
         public event EventHandler? CanExecuteChanged;
 
-        bool ICommand.CanExecute(object parameter)
+        bool ICommand.CanExecute(object? parameter)
         {
             return CanExecute();
         }
 
-        void ICommand.Execute(object parameter)
+        void ICommand.Execute(object? parameter)
         {
             ExecuteAsync().FireAndForgetSafeAsync(_errorHandler);
         }

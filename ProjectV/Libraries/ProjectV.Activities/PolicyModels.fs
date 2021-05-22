@@ -18,13 +18,14 @@ module PolicyId =
         { PolicyId.Value = Guid.NewGuid() }
 
     let wrapPolicyId (idValue: Guid) =
-        idValue.ThrowIfEmpty("idValue") |> ignore
+        idValue.ThrowIfEmpty((nameof idValue)) |> ignore
         { PolicyId.Value = idValue }
 
     let (|PolicyId|) (valueToMatch: PolicyId) =
         valueToMatch.Value
 
 
+// You should create "PolicyName" through factory functions.
 [<Struct>]
 type PolicyName =
     private {
@@ -35,7 +36,7 @@ type PolicyName =
 module PolicyName =
 
     let createPolicyName (value: string) =
-        value.ThrowIfNullOrWhiteSpace("value") |> ignore
+        value.ThrowIfNullOrWhiteSpace((nameof value)) |> ignore
         { PolicyName.Value = value }
 
     let (|PolicyName|) (valueToMatch: PolicyName) =

@@ -1,21 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <Platforms>x64</Platforms>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ProjectV.ConfigurationWebService</RootNamespace>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
     <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="$(SolutionDir)WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,27 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <Platforms>x64</Platforms>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
     <RootNamespace>ProjectV.CommonWebApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="$(MicrosoftAspNetWebApiClientPackageVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="$(MicrosoftAspNetCoreMvcVersioningPackageVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleAspNetCorePackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
   </ItemGroup>
 
 </Project>

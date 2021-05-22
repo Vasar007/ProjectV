@@ -99,7 +99,7 @@ namespace ProjectV
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> presents empty string.
         /// </exception>
-        public static T GetValueOrDefault<T>(string variableName, T defaultValue = default)
+        public static T GetValueOrDefault<T>(string variableName, T defaultValue)
             where T : IConvertible
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
