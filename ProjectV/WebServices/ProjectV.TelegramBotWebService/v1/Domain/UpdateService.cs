@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 using ProjectV.Building;
 using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
 using ProjectV.TelegramBotWebService.Properties;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
@@ -42,7 +42,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 _logger.Warn("Received empty Message.");
                 return;
             }
-            
+
             switch (update.Type)
             {
                 case UpdateType.Message:
@@ -222,7 +222,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 replyMarkup: new ReplyKeyboardRemove()
             );
 
-            // Shedule task for request and waiting for service response.
+            // Schedule task for request and waiting for service response.
             _ = ProcessingResponseReceiver.ScheduleRequestAsync(
                 _botService, _serviceProxy, chatId, requestParams
             );

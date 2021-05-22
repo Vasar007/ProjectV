@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using SteamWebApiLib;
-using SteamWebApiLib.Models.AppDetails;
-using SteamWebApiLib.Models.BriefInfo;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.SteamService.Mappers;
 using ProjectV.SteamService.Models;
+using SteamWebApiLib;
+using SteamWebApiLib.Models.AppDetails;
+using SteamWebApiLib.Models.BriefInfo;
 
 namespace ProjectV.SteamService
 {
@@ -38,7 +38,7 @@ namespace ProjectV.SteamService
 
         /// <inheritdoc />
         public string ApiKey { get; }
-        
+
 
         public SteamApiClient(string apiKey)
         {

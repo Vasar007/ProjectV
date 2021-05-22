@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
-using ProjectV.Models.Internal;
 using ProjectV.Models.Data;
+using ProjectV.Models.Internal;
+using Xunit;
 
 namespace ProjectV.Appraisers.Tests
 {

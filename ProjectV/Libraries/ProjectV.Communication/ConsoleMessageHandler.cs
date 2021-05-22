@@ -23,7 +23,7 @@ namespace ProjectV.Communication
 
 
         /// <summary>
-        /// Initializes message handler and sets unicode encoding if required.
+        /// Initializes message handler and sets Unicode encoding if required.
         /// </summary>
         public ConsoleMessageHandler(bool setUnicode)
         {
@@ -96,7 +96,7 @@ namespace ProjectV.Communication
         {
             Console.WriteLine(message);
         }
-        
+
         #endregion
     }
 }

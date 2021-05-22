@@ -63,10 +63,10 @@ namespace ProjectV.Building
         public ConfigRequirements GetResult()
         {
             return new ConfigRequirements(
-                input:      _input.ToArray(),
-                services:   _services.ToArray(),
+                input: _input.ToArray(),
+                services: _services.ToArray(),
                 appraisals: _appraisals.ToArray(),
-                output:     _output.ToArray()
+                output: _output.ToArray()
             );
         }
 

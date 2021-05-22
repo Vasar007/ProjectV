@@ -74,7 +74,7 @@ namespace ProjectV.Crawlers.Game.Steam
                 SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
                 SteamAppsStorage.FillStorage(steamApps);
             }
-           
+
             int? appId = SteamAppsStorage.TryGetAppIdByName(entityName);
 
             if (!appId.HasValue)

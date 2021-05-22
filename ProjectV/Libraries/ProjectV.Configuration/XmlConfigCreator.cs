@@ -567,26 +567,26 @@ namespace ProjectV.Configuration
         /// <returns>Created XML configuration.</returns>
         public ConfigurationXml GetResult()
         {
-            _result.ShellConfig.MessageHandler.MessageHandlerParameters = 
+            _result.ShellConfig.MessageHandler.MessageHandlerParameters =
                 _messageHandlerParameters.ToArray();
 
-            _result.ShellConfig.InputManager.InputManagerParameters = 
+            _result.ShellConfig.InputManager.InputManagerParameters =
                 _inputManagerParameters.ToArray();
             _result.ShellConfig.InputManager.Inputters = _inputters.ToArray();
 
-            _result.ShellConfig.CrawlersManager.CrawlersManagerParameters = 
+            _result.ShellConfig.CrawlersManager.CrawlersManagerParameters =
                 _crawlersManagerParameters.ToArray();
             _result.ShellConfig.CrawlersManager.Crawlers = _crawlers.ToArray();
 
-            _result.ShellConfig.AppraisersManager.AppraisersManagerParameters = 
+            _result.ShellConfig.AppraisersManager.AppraisersManagerParameters =
                 _appraisersManagerParameters.ToArray();
             _result.ShellConfig.AppraisersManager.Appraisers = _appraisers.ToArray();
 
-            _result.ShellConfig.OutputManager.OutputManagerParameters = 
+            _result.ShellConfig.OutputManager.OutputManagerParameters =
                 _outputManagerParameters.ToArray();
             _result.ShellConfig.OutputManager.Outputters = _outputters.ToArray();
 
-            _result.ShellConfig.DataBaseManager.DatabaseManagerParameters = 
+            _result.ShellConfig.DataBaseManager.DatabaseManagerParameters =
                 _dataBaseManagerParameters.ToArray();
             _result.ShellConfig.DataBaseManager.Repositories = _repositories.ToArray();
 

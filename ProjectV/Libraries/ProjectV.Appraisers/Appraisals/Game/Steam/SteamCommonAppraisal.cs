@@ -1,7 +1,7 @@
 ﻿using System;
+using Acolyte.Assertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
-using Acolyte.Assertions;
 
 namespace ProjectV.Appraisers.Appraisals.Game.Steam
 {
@@ -25,7 +25,7 @@ namespace ProjectV.Appraisers.Appraisals.Game.Steam
         #region IAppraisal<SteamGameInfo> Implementation
 
         /// <summary>
-        /// No exctraction will be perfomed because this appraisal no needed in such preparation.
+        /// No extraction will be performed because this appraisal no needed in such preparation.
         /// </summary>
         public void PrepareCalculation(RawDataContainer rawDataContainer)
         {

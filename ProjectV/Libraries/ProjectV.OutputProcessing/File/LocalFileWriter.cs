@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using FileHelpers;
-using ProjectV.Logging;
 using ProjectV.Communication;
+using ProjectV.Logging;
 using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.File
@@ -47,7 +47,7 @@ namespace ProjectV.IO.Output.File
         /// </summary>
         /// <param name="results">Results to save.</param>
         /// <param name="storageName">Filename to write.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if no exception occurred, <c>false</c> otherwise.</returns>
         public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string storageName)
         {
@@ -72,16 +72,16 @@ namespace ProjectV.IO.Output.File
         /// </summary>
         /// <param name="results">Results to save.</param>
         /// <param name="filename">Filename to write.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if no exception occurred, <c>false</c> otherwise.</returns>
         private static bool WriteFile(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string filename)
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
             using (var engine = new FileHelperAsyncEngine<OuputFileData>
-                  {
-                      HeaderText = typeof(OuputFileData).GetCsvHeader()
-                  }
+            {
+                HeaderText = typeof(OuputFileData).GetCsvHeader()
+            }
             )
             using (engine.BeginWriteFile(filename))
             {

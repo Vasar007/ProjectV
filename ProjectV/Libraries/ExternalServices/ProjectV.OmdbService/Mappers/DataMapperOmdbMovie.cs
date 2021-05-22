@@ -17,10 +17,10 @@ namespace ProjectV.OmdbService.Mappers
 
         public OmdbMovieInfo Transform(Item dataObject)
         {
-            int thingId = int.Parse(dataObject.ImdbId.Substring(2));
+            int thingId = int.Parse(dataObject.ImdbId[2..]);
             int voteCount = int.Parse(dataObject.ImdbVotes, NumberStyles.AllowThousands);
             double voteAverage = double.Parse(dataObject.ImdbRating);
-            DateTime releaseDate = DateTime.Parse(dataObject.Released);
+            var releaseDate = DateTime.Parse(dataObject.Released);
 
             int metascore = string.Equals(dataObject.Metascore, "N/A",
                                           StringComparison.OrdinalIgnoreCase)
@@ -33,16 +33,16 @@ namespace ProjectV.OmdbService.Mappers
                 .ToList();
 
             return new OmdbMovieInfo(
-                thingId:     thingId,
-                title:       dataObject.Title,
-                voteCount:   voteCount,
+                thingId: thingId,
+                title: dataObject.Title,
+                voteCount: voteCount,
                 voteAverage: voteAverage,
-                overview:    dataObject.Plot,
+                overview: dataObject.Plot,
                 releaseDate: releaseDate,
-                metascore:   metascore,
-                rated:       dataObject.Rated,
-                genreIds:    genreIds,
-                posterPath:  dataObject.Poster
+                metascore: metascore,
+                rated: dataObject.Rated,
+                genreIds: genreIds,
+                posterPath: dataObject.Poster
             );
         }
 

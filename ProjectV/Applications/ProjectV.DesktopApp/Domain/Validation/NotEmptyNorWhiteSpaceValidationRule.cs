@@ -15,9 +15,9 @@ namespace ProjectV.DesktopApp.Domain.Validation
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (!(value is string str))
+            if (value is not string str)
             {
-                if (!(value is BindingExpression bindingExpression) ||
+                if (value is not BindingExpression bindingExpression ||
                     !bindingExpression.TryEvaluate(out str))
                 {
                     return new ValidationResult(false, "Content value is not a string.");

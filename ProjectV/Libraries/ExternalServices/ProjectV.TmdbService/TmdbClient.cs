@@ -4,15 +4,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Newtonsoft.Json;
-using TMDbLib.Client;
-using TMDbLib.Objects.General;
-using TMDbLib.Objects.Search;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Exceptions;
 using ProjectV.Models.Internal;
 using ProjectV.TmdbService.Mappers;
 using ProjectV.TmdbService.Models;
+using TMDbLib.Client;
+using TMDbLib.Objects.General;
+using TMDbLib.Objects.Search;
 
 namespace ProjectV.TmdbService
 {
@@ -30,7 +30,7 @@ namespace ProjectV.TmdbService
             = new DataMapperTmdbContainer();
 
         /// <summary>
-        /// Helper class to transform raw DTO config to concrete interanl object without extra data.
+        /// Helper class to transform raw DTO config to concrete internal object without extra data.
         /// </summary>
         private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
             new DataMapperTmdbConfig();
@@ -69,7 +69,7 @@ namespace ProjectV.TmdbService
             get => _tmdbClient.DefaultCountry;
             set => _tmdbClient.DefaultCountry = value.ThrowIfNull(nameof(value));
         }
-        
+
         public TmdbServiceConfigurationInfo Config => _configMapper.Transform(_tmdbClient.Config);
 
         /// <inheritdoc />

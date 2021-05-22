@@ -15,7 +15,7 @@ namespace ProjectV.DesktopApp.Views
 
         public void Clear()
         {
-            if (!(DataContext is CreateToplistViewModel createToplistViewModel)) return;
+            if (DataContext is not CreateToplistViewModel createToplistViewModel) return;
 
             createToplistViewModel.ToplistName = string.Empty;
             ToplistNameTextBox.Clear();

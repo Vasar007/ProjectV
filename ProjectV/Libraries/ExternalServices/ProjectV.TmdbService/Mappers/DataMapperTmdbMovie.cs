@@ -15,16 +15,16 @@ namespace ProjectV.TmdbService.Mappers
         public TmdbMovieInfo Transform(SearchMovie dataObject)
         {
             return new TmdbMovieInfo(
-                thingId:     dataObject.Id,
-                title:       dataObject.Title,
-                voteCount:   dataObject.VoteCount,
+                thingId: dataObject.Id,
+                title: dataObject.Title,
+                voteCount: dataObject.VoteCount,
                 voteAverage: dataObject.VoteAverage,
-                overview:    dataObject.Overview,
+                overview: dataObject.Overview,
                 releaseDate: dataObject.ReleaseDate ?? new DateTime(),
-                popularity:  dataObject.Popularity,
-                adult:       dataObject.Adult,
-                genreIds:    dataObject.GenreIds,
-                posterPath:  dataObject.PosterPath
+                popularity: dataObject.Popularity,
+                adult: dataObject.Adult,
+                genreIds: dataObject.GenreIds,
+                posterPath: dataObject.PosterPath
             );
         }
 

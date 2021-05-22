@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 using Acolyte.Assertions;
-using System.Linq;
 
 namespace ProjectV.DesktopApp.Domain.Converters
 {

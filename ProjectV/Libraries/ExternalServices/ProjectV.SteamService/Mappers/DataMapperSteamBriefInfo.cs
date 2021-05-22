@@ -1,5 +1,5 @@
-﻿using SteamWebApiLib.Models.BriefInfo;
-using ProjectV.SteamService.Models;
+﻿using ProjectV.SteamService.Models;
+using SteamWebApiLib.Models.BriefInfo;
 
 namespace ProjectV.SteamService.Mappers
 {
@@ -16,7 +16,7 @@ namespace ProjectV.SteamService.Mappers
         {
             return new SteamBriefInfo(
                 appId: dataObject.AppId,
-                name:  dataObject.Name
+                name: dataObject.Name
             );
         }
 

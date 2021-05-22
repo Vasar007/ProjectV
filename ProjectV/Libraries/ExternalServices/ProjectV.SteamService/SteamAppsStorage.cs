@@ -21,7 +21,7 @@ namespace ProjectV.SteamService
 
         private static readonly ConcurrentDictionary<string, int> _steamAppsList =
             new ConcurrentDictionary<string, int>();
-        
+
         public static bool IsEmpty => _steamAppsList.IsEmpty;
 
 

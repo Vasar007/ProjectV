@@ -7,7 +7,7 @@ namespace ProjectV.Configuration
 {
     public sealed class ServiceConfigRegistry
     {
-        private readonly Dictionary<string, XElement> _messageHandlerRegistry = 
+        private readonly Dictionary<string, XElement> _messageHandlerRegistry =
             new Dictionary<string, XElement>();
 
         private readonly Dictionary<string, XElement> _inputRegistry =

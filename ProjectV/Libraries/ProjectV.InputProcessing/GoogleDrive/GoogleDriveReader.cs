@@ -1,13 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Acolyte.Collections;
 using Google.Apis.Download;
 using Google.Apis.Drive.v3;
-using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
-using System.Diagnostics.CodeAnalysis;
+using GoogleDriveData = Google.Apis.Drive.v3.Data;
 
 namespace ProjectV.IO.Input.GoogleDrive
 {
@@ -60,7 +60,7 @@ namespace ProjectV.IO.Input.GoogleDrive
             // Get info from API, download file and read it.
             // TODO: move query logic to separate class.
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
-                { Q = $"name contains '{storageName}'" }).Files;
+            { Q = $"name contains '{storageName}'" }).Files;
 
             if (!files.IsNullOrEmpty())
             {
@@ -242,7 +242,7 @@ namespace ProjectV.IO.Input.GoogleDrive
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "An error occured during downloading and reading file.");
+                _logger.Warn(ex, "An error occurred during downloading and reading file.");
 
                 downloadedFilename = null;
                 return false;

@@ -47,7 +47,7 @@ namespace ProjectV.Executors
             // Create Shell.
             // Execute Shell with data.
             throw new NotImplementedException(
-                "Current serivce version cannot have job with data in DB."
+                "Current service version cannot have job with data in DB."
             );
         }
 
@@ -59,7 +59,7 @@ namespace ProjectV.Executors
                XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
             );
             using Shell shell = builderDirector.MakeShell();
-            
+
             shell.InputManager.Add(additionalInputter);
             shell.OutputManager.Add(additionalOutputter);
 

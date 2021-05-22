@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Prism.Events;
+﻿using Prism.Events;
 using ProjectV.DesktopApp.Models.Things;
 
 namespace ProjectV.DesktopApp.Domain.Messages

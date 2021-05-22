@@ -17,14 +17,14 @@ namespace ProjectV.DesktopApp.Views
 
         public void ClearTextBox()
         {
-            if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+            if (DataContext is not InputThingViewModel inputThingViewModel) return;
 
             ClearInternal(inputThingViewModel);
         }
 
         public void ClearAllView()
         {
-            if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+            if (DataContext is not InputThingViewModel inputThingViewModel) return;
 
             ClearInternal(inputThingViewModel);
             inputThingViewModel.ThingList.Clear();
@@ -48,7 +48,7 @@ namespace ProjectV.DesktopApp.Views
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(DataContext is InputThingViewModel inputThingViewModel)) return;
+            if (DataContext is not InputThingViewModel inputThingViewModel) return;
 
             string thingName = inputThingViewModel.ThingName;
             if (string.IsNullOrWhiteSpace(thingName))

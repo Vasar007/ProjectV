@@ -16,7 +16,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
         {
             data.ThrowIfNull(nameof(data));
 
-            if (!(data is OmdbMovieInfo movieInfo))
+            if (data is not OmdbMovieInfo movieInfo)
             {
                 throw new ArgumentException("Data handler has invalid type.", nameof(data));
             }

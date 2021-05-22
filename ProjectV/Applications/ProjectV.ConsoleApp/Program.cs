@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectV.Core;
+using AutoMapper;
 using ProjectV.Communication;
 using ProjectV.Configuration;
-using ProjectV.ContentDirectories;
+using ProjectV.Core;
+using ProjectV.DataAccessLayer;
 using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.DataAccessLayer;
-using AutoMapper;
 using ProjectV.Models.Internal.Jobs;
 
 namespace ProjectV.ConsoleApp

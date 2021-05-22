@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using ProjectV.CommonFSharp;
-using ProjectV.ContentDirectories;
 
 namespace ProjectV.DesktopApp.Models.ContentDirectories
 {

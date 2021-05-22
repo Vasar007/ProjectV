@@ -1,5 +1,5 @@
-﻿using System.Xml.Serialization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace ProjectV.Models.Configuration
 {

@@ -28,7 +28,7 @@ namespace ProjectV.DesktopApp.Views
 
         private void InputThing_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is InputThingView inputThingView)) return;
+            if (eventArgs.Session.Content is not InputThingView inputThingView) return;
 
             // Make sure that items list is clear when we start new dialog.
             inputThingView.ClearAllView();
@@ -38,7 +38,7 @@ namespace ProjectV.DesktopApp.Views
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is InputThingViewModel inputThingViewModel)) return;
+            if (eventArgs.Parameter is not InputThingViewModel inputThingViewModel) return;
 
             IReadOnlyList<string> thingList = inputThingViewModel.ThingList.ToReadOnlyList();
             if (thingList.IsNullOrEmpty()) return;
@@ -53,7 +53,7 @@ namespace ProjectV.DesktopApp.Views
 
         private void EnterData_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is EnterDataView enterDataView)) return;
+            if (eventArgs.Session.Content is not EnterDataView enterDataView) return;
 
             // Make sure that text box is clear when we start new dialog.
             enterDataView.Clear();
@@ -63,7 +63,7 @@ namespace ProjectV.DesktopApp.Views
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is EnterDataViewModel enterDataViewModel)) return;
+            if (eventArgs.Parameter is not EnterDataViewModel enterDataViewModel) return;
 
             string googleDriveFilename = enterDataViewModel.Name;
             if (string.IsNullOrWhiteSpace(googleDriveFilename))

@@ -24,7 +24,7 @@ namespace ProjectV.Appraisers
 
         /// <inheritdoc />
         public string Tag { get; } = $"Appraiser<{typeof(T).Name}>";
-        
+
         #endregion
 
         #region ITypeId Implementation
@@ -56,7 +56,7 @@ namespace ProjectV.Appraisers
         {
             entityInfo.ThrowIfNull(nameof(entityInfo));
 
-            if (!(entityInfo is T convertedInfo))
+            if (entityInfo is not T convertedInfo)
             {
                 throw new ArgumentException(
                     $"Element \"{entityInfo.Title}\" (ID = {entityInfo.ThingId.ToString()}) " +

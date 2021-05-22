@@ -44,15 +44,15 @@ namespace ProjectV.DesktopApp.ViewModels
             private set => SetProperty(ref _isNotBusy, value);
         }
 
-        // Initializes throught property (in SelectedSceneItem when ChangeScene called in ctor).
-        private UserControl _currentContent = default!; 
+        // Initializes through property (in SelectedSceneItem when ChangeScene called in ctor).
+        private UserControl _currentContent = default!;
         public UserControl CurrentContent
         {
             get => _currentContent;
             set => SetProperty(ref _currentContent, value.ThrowIfNull(nameof(value)));
         }
 
-        // Initializes throught property (in ChangeScene which called in ctor).
+        // Initializes through property (in ChangeScene which called in ctor).
         private SceneItem _selectedSceneItem = default!;
         public SceneItem SelectedSceneItem
         {

@@ -50,9 +50,9 @@ namespace ProjectV.Appraisers.Tests
             return Enumerable
                 .Range(1, count)
                 .Select(i => new BasicInfo(
-                    thingId:     i,
-                    title:       $"Title-{i.ToString()}-{CreateRandomString(count, RandomInstance)}",
-                    voteCount:   i * RandomInstance.Next(),
+                    thingId: i,
+                    title: $"Title-{i.ToString()}-{CreateRandomString(count, RandomInstance)}",
+                    voteCount: i * RandomInstance.Next(),
                     voteAverage: i * RandomInstance.NextDouble()
                 ))
                 .ToList();
@@ -63,7 +63,7 @@ namespace ProjectV.Appraisers.Tests
             if (length <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(length), length,
-                                                      "Length must pe positive.");
+                                                      "Length must be positive.");
             }
 
             random ??= new Random();

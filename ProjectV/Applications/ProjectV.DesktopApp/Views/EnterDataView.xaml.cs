@@ -15,7 +15,7 @@ namespace ProjectV.DesktopApp.Views
 
         public void Clear()
         {
-            if (!(DataContext is EnterDataViewModel enterDataViewModel)) return;
+            if (DataContext is not EnterDataViewModel enterDataViewModel) return;
 
             enterDataViewModel.Name = string.Empty;
             NameTextBox.Clear();

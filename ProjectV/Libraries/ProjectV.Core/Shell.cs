@@ -165,7 +165,7 @@ namespace ProjectV.Core
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occured during saving results work.");
+                _logger.Error(ex, "Exception occurred during saving results work.");
                 return ServiceStatus.OutputError;
             }
         }

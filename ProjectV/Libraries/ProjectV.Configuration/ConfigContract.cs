@@ -60,7 +60,7 @@ namespace ProjectV.Configuration
 
 
         /// <summary>
-        /// Checks availability different service components which specifid in 
+        /// Checks availability different service components which specified in 
         /// <see cref="ConfigContract" />.
         /// </summary>
         /// <param name="item">Value to check.</param>
@@ -75,7 +75,7 @@ namespace ProjectV.Configuration
         public static void CheckAvailability(string item, IReadOnlyList<string> availableList)
         {
             item.ThrowIfNullOrEmpty(nameof(item));
-            
+
             if (!availableList.Contains(item))
             {
                 throw new ArgumentException(

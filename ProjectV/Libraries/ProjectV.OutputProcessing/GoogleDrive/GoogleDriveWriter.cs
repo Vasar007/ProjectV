@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Acolyte.Collections;
 using Google.Apis.Drive.v3;
 using Google.Apis.Upload;
-using GoogleDriveData = Google.Apis.Drive.v3.Data;
-using ProjectV.Logging;
 using ProjectV.Communication;
 using ProjectV.IO.Output.File;
+using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using System.Threading.Tasks;
+using GoogleDriveData = Google.Apis.Drive.v3.Data;
 
 namespace ProjectV.IO.Output.GoogleDrive
 {
@@ -89,8 +89,8 @@ namespace ProjectV.IO.Output.GoogleDrive
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, $"An error occured during uploading \"{storageName}\".");
-                GlobalMessageHandler.OutputMessage("An error occured during uploading " +
+                _logger.Warn(ex, $"An error occurred during uploading \"{storageName}\".");
+                GlobalMessageHandler.OutputMessage("An error occurred during uploading " +
                                                    $"\"{storageName}\" : {ex}");
                 return false;
             }
@@ -240,7 +240,7 @@ namespace ProjectV.IO.Output.GoogleDrive
 
             string storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
-                { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
+            { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
 
             bool result = false;
             if (!files.IsNullOrEmpty())

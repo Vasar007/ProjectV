@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectV.Models.WebService;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
+using ProjectV.Models.WebService;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
@@ -20,7 +20,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
-            // Otherwise Telegram will retry to send event again untill service send a response.
+            // Otherwise Telegram will retry to send event again until service send a response.
             return Task.Run(
                 () => ScheduleRequestImplementation(botService, serviceProxy,
                                                     chatId, requestParams),

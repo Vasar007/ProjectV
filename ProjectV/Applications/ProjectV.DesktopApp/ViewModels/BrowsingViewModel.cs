@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Acolyte.Assertions;
+using Prism.Mvvm;
 using ProjectV.DesktopApp.Models.DataSuppliers;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.WebService;
-using Prism.Mvvm;
-using Acolyte.Assertions;
 
 namespace ProjectV.DesktopApp.ViewModels
 {

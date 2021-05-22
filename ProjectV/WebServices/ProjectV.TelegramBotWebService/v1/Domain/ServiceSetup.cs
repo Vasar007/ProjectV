@@ -44,7 +44,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 await _botService.Client.DeleteWebhookAsync();
                 _logger.Info("Webhook was deleted.");
             }
-            
+
             _logger.Info("Webhook wasn't set, no need to delete.");
         }
 
