@@ -10,10 +10,14 @@ root = true
 indent_size = 4
 indent_style = space
 tab_width = 4
+trim_trailing_whitespace = true
 
 # New line preferences
 #end_of_line = crlf -> Disabling because it can be system-dependent.
 insert_final_newline = true
+
+# Encoding
+charset = utf-8-bom
 
 #### .NET Coding Conventions ####
 

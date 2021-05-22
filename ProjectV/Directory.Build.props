@@ -1,0 +1,69 @@
+<Project>
+
+  <!-- Project properties -->
+  <PropertyGroup>
+    <AppPlatforms>x64</AppPlatforms>
+    <AppConfigurations>Debug;Release</AppConfigurations>
+    <AppTargetFramework>net5.0</AppTargetFramework>
+    <WindowsAppTargetFramework>net5.0-windows</WindowsAppTargetFramework>
+    <LibraryTargetFramework>netstandard2.1</LibraryTargetFramework>
+    <TestTargetFramework>net5.0</TestTargetFramework>
+    <CSharpLangVersion>9.0</CSharpLangVersion>
+    <FSharpLangVersion>5.0</FSharpLangVersion>
+  </PropertyGroup>
+
+  <!-- NuGet packages -->
+  <PropertyGroup>
+    <AcolyteNETPackageVersion>1.0.2</AcolyteNETPackageVersion>
+    <AutoMapperPackageVersion>10.0.0</AutoMapperPackageVersion>
+    <AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>8.0.1</AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>
+    <CoverletCollectorPackageVersion>3.0.3</CoverletCollectorPackageVersion>
+    <CsvHelperPackageVersion>15.0.5</CsvHelperPackageVersion>
+    <FileHelpersPackageVersion>3.4.1</FileHelpersPackageVersion>
+    <FSharpCorePackageVersion>5.0.1</FSharpCorePackageVersion>
+    <GoogleApisPackageVersion>1.48.0</GoogleApisPackageVersion>
+    <GoogleApisAuthPackageVersion>1.48.0</GoogleApisAuthPackageVersion>
+    <GoogleApisCorePackageVersion>1.48.0</GoogleApisCorePackageVersion>
+    <GoogleApisDrivev3PackageVersion>1.48.0.2013</GoogleApisDrivev3PackageVersion>
+    <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
+    <HttpToSocks5ProxyPackageVersion>1.4.0</HttpToSocks5ProxyPackageVersion>
+    <JsonSubTypesPackageVersion>1.7.0</JsonSubTypesPackageVersion>
+    <MaterialDesignColorsPackageVersion>1.2.6</MaterialDesignColorsPackageVersion>
+    <MaterialDesignThemesPackageVersion>3.1.3</MaterialDesignThemesPackageVersion>
+    <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>3.1.7</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
+    <MicrosoftAspNetCoreMvcVersioningPackageVersion>4.1.1</MicrosoftAspNetCoreMvcVersioningPackageVersion>
+    <MicrosoftAspNetWebApiClientPackageVersion>5.2.7</MicrosoftAspNetWebApiClientPackageVersion>
+    <MicrosoftBclHashCodePackageVersion>1.1.1</MicrosoftBclHashCodePackageVersion>
+    <MicrosoftEntityFrameworkCorePackageVersion>3.1.7</MicrosoftEntityFrameworkCorePackageVersion>
+    <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>3.1.7</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
+    <MicrosoftEntityFrameworkCoreToolsPackageVersion>3.1.7</MicrosoftEntityFrameworkCoreToolsPackageVersion>
+    <MicrosoftExtensionsConfigurationPackageVersion>3.1.7</MicrosoftExtensionsConfigurationPackageVersion>
+    <MicrosoftExtensionsConfigurationBinderPackageVersion>3.1.7</MicrosoftExtensionsConfigurationBinderPackageVersion>
+    <MicrosoftExtensionsConfigurationJsonPackageVersion>3.1.7</MicrosoftExtensionsConfigurationJsonPackageVersion>
+    <MicrosoftNETTestSdkPackageVersion>16.9.4</MicrosoftNETTestSdkPackageVersion>
+    <MoqPackageVersion>4.16.1</MoqPackageVersion>
+    <NewtonsoftJsonPackageVersion>12.0.3</NewtonsoftJsonPackageVersion>
+    <NLogPackageVersion>4.7.4</NLogPackageVersion>
+    <NLogConfigPackageVersion>4.7.4</NLogConfigPackageVersion>
+    <NLogSchemaPackageVersion>4.7.4</NLogSchemaPackageVersion>
+    <NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>3.1.4</NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>
+    <OmdbApiNetPackageVersion>1.3.0</OmdbApiNetPackageVersion>
+    <OokiiDialogsWpfNETCorePackageVersion>2.1.0</OokiiDialogsWpfNETCorePackageVersion>
+    <TelegramBotPackageVersion>15.7.1</TelegramBotPackageVersion>
+    <TMDbLibPackageVersion>1.6.0</TMDbLibPackageVersion>
+    <PrismUnityPackageVersion>7.2.0.1422</PrismUnityPackageVersion>
+    <PrismWpfPackageVersion>7.2.0.1422</PrismWpfPackageVersion>
+    <RestSharpPackageVersion>106.11.4</RestSharpPackageVersion>
+    <SteamWebApiLibPackageVersion>1.1.0</SteamWebApiLibPackageVersion>
+    <SwashbuckleAspNetCorePackageVersion>5.5.1</SwashbuckleAspNetCorePackageVersion>
+    <SystemDataSqlClientPackageVersion>4.8.2</SystemDataSqlClientPackageVersion>
+    <SystemLinqAsyncPackageVersion>5.0.0</SystemLinqAsyncPackageVersion>
+    <SystemNetHttpPackageVersion>4.3.4</SystemNetHttpPackageVersion>
+    <SystemThreadingTasksDataflowPackageVersion>4.11.1</SystemThreadingTasksDataflowPackageVersion>
+    <SystemValueTuplePackageVersion>4.5.0</SystemValueTuplePackageVersion>
+    <UnquotePackageVersion>5.0.0</UnquotePackageVersion>
+    <XunitPackageVersion>2.4.1</XunitPackageVersion>
+    <XunitRunnerVisualStudioPackageVersion>2.4.3</XunitRunnerVisualStudioPackageVersion>
+  </PropertyGroup>
+
+</Project>
