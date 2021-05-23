@@ -89,14 +89,14 @@ namespace ProjectV.ConsoleApp
                 await TestConentDirectories();
 #endif
 
-                return AppExitCode.Success;
+                return ExitCodes.Success;
             }
             catch (Exception ex)
             {
                 const string message = "Exception occurred during execution.";
                 _logger.Error(ex, message);
                 Console.WriteLine($"{message}{Environment.NewLine}{ex}");
-                return AppExitCode.Fail;
+                return ExitCodes.Fail;
             }
             finally
             {
