@@ -25,6 +25,9 @@ matrix:
 install:
   - ps: dotnet tool update -g dotnet-format --version $env:dotnetFormatVersion
 
+before_build:
+  - ps: dotnet restore ProjectV
+
 build:
   verbosity: minimal
 
