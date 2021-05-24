@@ -1,5 +1,6 @@
 ﻿namespace ProjectV.ConsoleApp
 {
+    // TODO: replace with version from Acolyte package.
     public enum ExitCode
     {
         Success = 0,
