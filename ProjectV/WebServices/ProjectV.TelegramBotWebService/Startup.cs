@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using ProjectV.CommonWebApi;
+using ProjectV.CommonWebApi.Extensions;
 using ProjectV.TelegramBotWebService.v1.Domain;
 
 namespace ProjectV.TelegramBotWebService
@@ -105,7 +105,7 @@ namespace ProjectV.TelegramBotWebService
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseMiddleware<ErrorLoggingMiddleware>();
+            app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
