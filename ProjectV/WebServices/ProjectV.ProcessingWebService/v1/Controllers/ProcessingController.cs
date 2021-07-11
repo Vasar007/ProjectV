@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Collections;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.DataAccessLayer.Services.Jobs;
@@ -40,31 +40,24 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostRequestData(
             RequestData requestData)
         {
             _logger.Info("Processing data request.");
+            _logger.Debug($"ThingNames: [{requestData.ThingNames.ToSingleString()}]");
 
-            try
+            IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(
+                requestData.ConfigurationXml.ServiceType, _jobInfoService
+            );
+
+            ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
+            if (response.Metadata.ResultStatus != ServiceStatus.Ok)
             {
-                IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(
-                    requestData.ConfigurationXml.ServiceType, _jobInfoService
-                );
-
-                ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
-                if (response.Metadata.ResultStatus != ServiceStatus.Ok)
-                {
-                    return BadRequest(response);
-                }
-
-                return Ok(response);
+                return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during data processing.");
-                return BadRequest(requestData);
-            }
+
+            return Ok(response);
         }
     }
 }

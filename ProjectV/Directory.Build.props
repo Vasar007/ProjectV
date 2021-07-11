@@ -14,7 +14,7 @@
 
   <!-- NuGet packages -->
   <PropertyGroup>
-    <AcolyteNETPackageVersion>1.0.2</AcolyteNETPackageVersion>
+    <AcolyteNETPackageVersion>2.1.0</AcolyteNETPackageVersion>
     <AutoMapperPackageVersion>10.0.0</AutoMapperPackageVersion>
     <AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>8.0.1</AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>
     <CoverletCollectorPackageVersion>3.0.3</CoverletCollectorPackageVersion>

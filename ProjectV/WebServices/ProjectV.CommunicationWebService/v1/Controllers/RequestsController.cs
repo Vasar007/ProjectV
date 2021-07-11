@@ -41,25 +41,19 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
             RequestParams requestParams)
         {
-            try
-            {
-                RequestData requestData =
-                    await _configurationReceiver.ReceiveConfigForRequestAsync(requestParams);
+            _logger.Info("Got request to add in processing queue.");
 
-                ProcessingResponse response =
-                    await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
+            RequestData requestData =
+                await _configurationReceiver.ReceiveConfigForRequestAsync(requestParams);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during request handling.");
-                return BadRequest(requestParams);
-            }
+            ProcessingResponse response =
+                await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
+
+            return Ok(response);
         }
     }
 }

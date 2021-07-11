@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,19 +32,11 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromBody] Update update)
         {
-            try
-            {
-                await _updateService.ProcessUpdateMessage(update);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during bot service work.");
-                return BadRequest(update);
-            }
+            await _updateService.ProcessUpdateMessage(update);
+            return Ok();
         }
     }
 }
