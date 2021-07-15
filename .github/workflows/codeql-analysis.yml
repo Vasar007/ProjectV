@@ -18,7 +18,8 @@ jobs:
   analyze:
     name: Analyze
     # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
-    runs-on: ubuntu-latest
+    # We should use Windows because of WPF usage in solution.
+    runs-on: windows-latest
 
     strategy:
       fail-fast: false
