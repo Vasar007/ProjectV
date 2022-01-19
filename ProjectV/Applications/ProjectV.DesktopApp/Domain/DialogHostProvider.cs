@@ -18,7 +18,7 @@ namespace ProjectV.DesktopApp.Domain
             dialogIdentifier.ThrowIfNull(nameof(dialogIdentifier));
             closingEventHandler.ThrowIfNull(nameof(closingEventHandler));
 
-            object result = await DialogHost.Show(
+            object? result = await DialogHost.Show(
                 content, dialogIdentifier, closingEventHandler
             );
 
@@ -36,7 +36,7 @@ namespace ProjectV.DesktopApp.Domain
             openedEventHandler.ThrowIfNull(nameof(openedEventHandler));
             closingEventHandler.ThrowIfNull(nameof(closingEventHandler));
 
-            object result = await DialogHost.Show(
+            object? result = await DialogHost.Show(
                 content, dialogIdentifier, openedEventHandler, closingEventHandler
             );
 

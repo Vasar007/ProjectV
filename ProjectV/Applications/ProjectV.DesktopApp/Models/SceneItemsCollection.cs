@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Acolyte.Common;
 
 namespace ProjectV.DesktopApp.Models

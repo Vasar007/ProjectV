@@ -2,7 +2,7 @@
 
 open System.IO
 open Acolyte.Assertions
-open Acolyte.Collections
+open Acolyte.Linq
 open ProjectV.ContentDirectories
 
 

@@ -1,4 +1,5 @@
-﻿using Acolyte.Assertions;
+﻿using System.Net.Http;
+using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using MihaZupan;
 using Telegram.Bot;
@@ -25,7 +26,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 ? new TelegramBotClient(_config.BotToken)
                 : new TelegramBotClient(
                     _config.BotToken,
-                    new HttpToSocks5Proxy(_config.Socks5Host, _config.Socks5Port)
+                    new HttpClient(new HttpClientHandler { Proxy = new HttpToSocks5Proxy(_config.Socks5Host, _config.Socks5Port), UseProxy = true })
                 );
         }
 

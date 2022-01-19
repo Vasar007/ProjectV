@@ -79,7 +79,10 @@ namespace ProjectV.Executors
 
                 ++executedCount;
 
-                if (executedCount == ExecutionsNumber) break;
+                if (executedCount == ExecutionsNumber)
+                {
+                    break;
+                }
 
                 await Task.Delay(DelayTime);
             }

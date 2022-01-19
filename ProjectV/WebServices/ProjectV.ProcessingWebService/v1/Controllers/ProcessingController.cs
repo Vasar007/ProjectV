@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.DataAccessLayer.Services.Jobs;

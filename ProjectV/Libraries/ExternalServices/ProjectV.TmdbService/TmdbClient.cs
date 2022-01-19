@@ -13,6 +13,7 @@ using ProjectV.TmdbService.Models;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
+using TMDbLib.Utilities.Serializer;
 
 namespace ProjectV.TmdbService
 {
@@ -80,12 +81,18 @@ namespace ProjectV.TmdbService
 
 
         public TmdbClient(string apiKey, bool useSsl = false, string baseUrl = "api.themoviedb.org",
-            JsonSerializer? serializer = null, IWebProxy? proxy = null)
+            ITMDbSerializer? serializer = null, IWebProxy? proxy = null)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
             baseUrl.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _tmdbClient = new TMDbClient(apiKey, useSsl, baseUrl, serializer, proxy);
+            _tmdbClient = new TMDbClient(
+                apiKey: apiKey,
+                useSsl: useSsl,
+                baseUrl: baseUrl,
+                serializer: serializer,
+                proxy: proxy
+            );
         }
 
         public async Task<TmdbServiceConfigurationInfo> GetConfigAsync()
@@ -105,8 +112,10 @@ namespace ProjectV.TmdbService
             return _configMapper.Transform(config);
         }
 
+
         public async Task<TmdbSearchContainer?> TrySearchMovieAsync(string query, int page = 0,
-            bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default)
+            bool includeAdult = false, int year = 0, string? region = null,
+            int primaryReleaseYear = 0, CancellationToken cancellationToken = default)
         {
             query.ThrowIfNullOrWhiteSpace(nameof(query));
 
@@ -116,7 +125,13 @@ namespace ProjectV.TmdbService
             try
             {
                 SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
-                    query, page, includeAdult, year, cancellationToken
+                    query: query,
+                    page: page,
+                    includeAdult: includeAdult,
+                    year: year,
+                    region: region,
+                    primaryReleaseYear: primaryReleaseYear,
+                    cancellationToken: cancellationToken
                 );
 
                 return _dataMapper.Transform(response);

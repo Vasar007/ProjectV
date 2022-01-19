@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Google.Apis.Download;
 using Google.Apis.Drive.v3;
 using ProjectV.IO.Input.File;
@@ -55,7 +55,10 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// <returns>Enumeration of Things names as strings.</returns>
         public IEnumerable<string> ReadThingNames(string storageName)
         {
-            if (string.IsNullOrEmpty(storageName)) return new List<string>();
+            if (string.IsNullOrEmpty(storageName))
+            {
+                return new List<string>();
+            }
 
             // Get info from API, download file and read it.
             // TODO: move query logic to separate class.

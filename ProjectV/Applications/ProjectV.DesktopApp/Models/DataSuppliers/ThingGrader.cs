@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Logging;
 using ProjectV.Models.Data;

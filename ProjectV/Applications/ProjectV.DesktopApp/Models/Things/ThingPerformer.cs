@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
@@ -151,6 +151,7 @@ namespace ProjectV.DesktopApp.Models.Things
             };
         }
 
+        // TODO: we can use local requirements creator instead of reusing the old one.
         private void CreateBasicRequirements(string serviceName)
         {
             serviceName = ConfigContract.GetProperServiceName(serviceName);

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 
 namespace ProjectV.DesktopApp.Models.Toplists
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 
 namespace ProjectV.DesktopApp.Models.ContentDirectories
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Google.Apis.Drive.v3;
 using Google.Apis.Upload;
 using ProjectV.Communication;
@@ -65,7 +65,10 @@ namespace ProjectV.IO.Output.GoogleDrive
         public async Task<bool> SaveResults(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)
         {
-            if (string.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(storageName))
+            {
+                return false;
+            }
 
             // TODO: move temp filename creation to separate class.
             string tempStorageName;
@@ -236,7 +239,10 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <returns><c>true</c> if procedure was successful, <c>false</c> otherwise.</returns>
         private bool ReadFileAndUploadOrUpdate(string path, string storageName)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName))
+            {
+                return false;
+            }
 
             string storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams

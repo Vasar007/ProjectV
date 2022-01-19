@@ -196,7 +196,7 @@ namespace ProjectV.Building.Service
                 // automatically when the authorization flow completes for the first time.
                 const string credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+                    GoogleClientSecrets.FromStream(stream).Secrets,
                     IO.GoogleDriveWorker.Scopes,
                     IO.GoogleDriveWorker.ApplicationName,
                     CancellationToken.None,
