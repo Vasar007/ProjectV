@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
-    <PackageReference Include="Unquote" Version="$($UnquotePackageVersion)" />
+    <PackageReference Include="Unquote" Version="$(UnquotePackageVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
     <PackageReference Include="xunit" Version="$(XunitPackageVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)">
