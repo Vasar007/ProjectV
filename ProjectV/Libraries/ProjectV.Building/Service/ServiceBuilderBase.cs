@@ -156,26 +156,17 @@ namespace ProjectV.Building.Service
 
             _logger.Info("Creating async file reader.");
 
-            switch (fileReaderName)
+            return fileReaderName switch
             {
-                case _simpleFileReaderParameterName:
-                    {
-                        return new IO.Input.File.SimpleFileReader();
-                    }
+                _simpleFileReaderParameterName => new IO.Input.File.SimpleFileReader(),
 
-                case _filterFileReaderParameterName:
-                    {
-                        return new IO.Input.File.FilterFileReader();
-                    }
+                _filterFileReaderParameterName => new IO.Input.File.FilterFileReader(),
 
-                default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(fileReaderName), fileReaderName,
-                            "Couldn't recognize file reader type."
-                        );
-                    }
-            }
+                _ => throw new ArgumentOutOfRangeException(
+                        nameof(fileReaderName), fileReaderName,
+                        "Couldn't recognize file reader type."
+                    )
+            };
         }
 
         /// <summary>

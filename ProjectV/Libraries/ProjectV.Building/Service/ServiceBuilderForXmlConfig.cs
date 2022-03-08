@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable format // dotnet format fails indentation for switch :(
+
+using System;
 using System.Xml.Linq;
 using Acolyte.Assertions;
 using Acolyte.Xml;
@@ -52,34 +54,34 @@ namespace ProjectV.Building.Service
             switch (handlerElement!.Value)
             {
                 case _consoleMessageHandlerParameterName:
+                {
+                    XElement? messageHandlerParametersElement = XDocumentParser.FindSubelement(
+                        messageHandlerElement, _setUnicodeParameterName
+                    );
+
+                    if (messageHandlerParametersElement is null)
                     {
-                        XElement? messageHandlerParametersElement = XDocumentParser.FindSubelement(
-                            messageHandlerElement, _setUnicodeParameterName
+                        throw new ArgumentException(
+                            "Invalid structure of XML document: cannot find message handler " +
+                            "parameters block.",
+                            nameof(messageHandlerElement)
                         );
-
-                        if (messageHandlerParametersElement is null)
-                        {
-                            throw new ArgumentException(
-                                "Invalid structure of XML document: cannot find message handler " +
-                                "parameters block.",
-                                nameof(messageHandlerElement)
-                            );
-                        }
-
-                        var setUnicode = XDocumentParser.GetElementValue<bool>(
-                            messageHandlerParametersElement
-                        );
-
-                        return new Communication.ConsoleMessageHandler(setUnicode);
                     }
+
+                    var setUnicode = XDocumentParser.GetElementValue<bool>(
+                        messageHandlerParametersElement
+                    );
+
+                    return new Communication.ConsoleMessageHandler(setUnicode);
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(messageHandlerElement), messageHandlerElement,
-                            "Couldn't recognize message handler type specified in XML config."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(messageHandlerElement), messageHandlerElement,
+                        "Couldn't recognize message handler type specified in XML config."
+                    );
+                }
             }
         }
 
@@ -103,36 +105,36 @@ namespace ProjectV.Building.Service
             switch (inputterElement.Name.LocalName)
             {
                 case _localFileParameterName:
-                    {
-                        string fileReaderName = XDocumentParser.GetAttributeValue(
-                            inputterElement, _fileReaderParameterName + _localFileParameterName
-                        );
+                {
+                    string fileReaderName = XDocumentParser.GetAttributeValue(
+                        inputterElement, _fileReaderParameterName + _localFileParameterName
+                    );
 
-                        IO.Input.File.IFileReader fileReader =
-                            CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
-                        return new IO.Input.File.LocalFileReader(fileReader);
-                    }
+                    return new IO.Input.File.LocalFileReader(fileReader);
+                }
 
                 case _googleDriveParameterName:
-                    {
-                        string fileReaderName = XDocumentParser.GetAttributeValue(
-                            inputterElement, _fileReaderParameterName + _googleDriveParameterName
-                        );
+                {
+                    string fileReaderName = XDocumentParser.GetAttributeValue(
+                        inputterElement, _fileReaderParameterName + _googleDriveParameterName
+                    );
 
-                        IO.Input.File.IFileReader fileReader =
-                            CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
-                        return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
-                    }
+                    return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(inputterElement), inputterElement,
-                            "Couldn't recognize input type specified in XML config."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(inputterElement), inputterElement,
+                        "Couldn't recognize input type specified in XML config."
+                    );
+                }
             }
         }
 
@@ -156,42 +158,42 @@ namespace ProjectV.Building.Service
             switch (crawlerElement.Name.LocalName)
             {
                 case _tmdbCrawlerParameterName:
-                    {
-                        string apiKey = XDocumentParser.GetAttributeValue(
-                            crawlerElement, _tmdbApiKeyParameterName
-                        );
-                        var maxRetryCount = XDocumentParser.GetAttributeValue<int>(
-                            crawlerElement, _tmdbMaxRetryCountParameterName
-                        );
+                {
+                    string apiKey = XDocumentParser.GetAttributeValue(
+                        crawlerElement, _tmdbApiKeyParameterName
+                    );
+                    var maxRetryCount = XDocumentParser.GetAttributeValue<int>(
+                        crawlerElement, _tmdbMaxRetryCountParameterName
+                    );
 
-                        return new Crawlers.Movie.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
-                    }
+                    return new Crawlers.Movie.Tmdb.TmdbCrawler(apiKey, maxRetryCount);
+                }
 
                 case _omdbCrawlerParameterName:
-                    {
-                        string apiKey = XDocumentParser.GetAttributeValue(
-                            crawlerElement, _omdbApiKeyParameterName
-                        );
+                {
+                    string apiKey = XDocumentParser.GetAttributeValue(
+                        crawlerElement, _omdbApiKeyParameterName
+                    );
 
-                        return new Crawlers.Movie.Omdb.OmdbCrawler(apiKey);
-                    }
+                    return new Crawlers.Movie.Omdb.OmdbCrawler(apiKey);
+                }
 
                 case _steamCrawlerParameterName:
-                    {
-                        string apiKey = XDocumentParser.GetAttributeValue(
-                            crawlerElement, _steamApiKeyParameterName
-                        );
+                {
+                    string apiKey = XDocumentParser.GetAttributeValue(
+                        crawlerElement, _steamApiKeyParameterName
+                    );
 
-                        return new Crawlers.Game.Steam.SteamCrawler(apiKey);
-                    }
+                    return new Crawlers.Game.Steam.SteamCrawler(apiKey);
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(crawlerElement), crawlerElement,
-                            "Couldn't recognize crawler type specified in XML config."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(crawlerElement), crawlerElement,
+                        "Couldn't recognize crawler type specified in XML config."
+                    );
+                }
             }
         }
 
@@ -215,33 +217,33 @@ namespace ProjectV.Building.Service
             switch (appraiserElement.Name.LocalName)
             {
                 case _appraiserTmdbParameterName:
-                    {
-                        var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbCommonAppraisal();
+                {
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbCommonAppraisal();
 
-                        return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
-                    }
+                    return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
+                }
 
                 case _appraiserOmdbParameterName:
-                    {
-                        var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();
+                {
+                    var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();
 
-                        return new Appraisers.Appraiser<OmdbMovieInfo>(appraisal);
-                    }
+                    return new Appraisers.Appraiser<OmdbMovieInfo>(appraisal);
+                }
 
                 case _steamAppraiserParameterName:
-                    {
-                        var appraisal = new Appraisers.Appraisals.Game.Steam.SteamCommonAppraisal();
+                {
+                    var appraisal = new Appraisers.Appraisals.Game.Steam.SteamCommonAppraisal();
 
-                        return new Appraisers.Appraiser<SteamGameInfo>(appraisal);
-                    }
+                    return new Appraisers.Appraiser<SteamGameInfo>(appraisal);
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(appraiserElement), appraiserElement,
-                            "Couldn't recognize appraiser type specified in XML config."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(appraiserElement), appraiserElement,
+                        "Couldn't recognize appraiser type specified in XML config."
+                    );
+                }
             }
         }
 
@@ -265,22 +267,22 @@ namespace ProjectV.Building.Service
             switch (outputterElement.Name.LocalName)
             {
                 case _localFileParameterName:
-                    {
-                        return new IO.Output.File.LocalFileWriterAsync();
-                    }
+                {
+                    return new IO.Output.File.LocalFileWriterAsync();
+                }
 
                 case _googleDriveParameterName:
-                    {
-                        return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
-                    }
+                {
+                    return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(outputterElement), outputterElement,
-                            "Couldn't recognize output type specified in XML config."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(outputterElement), outputterElement,
+                        "Couldn't recognize output type specified in XML config."
+                    );
+                }
             }
         }
     }

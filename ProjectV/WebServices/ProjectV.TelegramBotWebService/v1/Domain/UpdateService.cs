@@ -1,10 +1,13 @@
-﻿using System;
+﻿#pragma warning disable format // dotnet format fails indentation for switch :(
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Building;
 using ProjectV.Configuration;
+using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
 using ProjectV.TelegramBotWebService.Properties;
@@ -46,18 +49,19 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             switch (update.Type)
             {
                 case UpdateType.Message:
-                    {
-                        Message message = update.Message;
-                        _logger.Info($"Received Message from {message.Chat.Id}.");
-                        await ProcessMessage(message);
-                        break;
-                    }
+                {
+                    Message message = update.Message;
+                    _logger.Info($"Received Message from {message.Chat.Id}.");
+                    await ProcessMessage(message);
+                    break;
+                }
 
                 default:
-                    {
-                        _logger.Warn($"Skipped {update.Type}");
-                        break;
-                    }
+                {
+                    string encodedMessage = UserInputEncoder.Encode($"Skipped {update.Type}.");
+                    _logger.Warn(encodedMessage);
+                    break;
+                }
             }
 
         }
@@ -73,54 +77,54 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             switch (command)
             {
                 case "/start":
-                    {
-                        await SendResponseToStartCommand(message.Chat.Id);
-                        break;
-                    }
+                {
+                    await SendResponseToStartCommand(message.Chat.Id);
+                    break;
+                }
 
                 case "/services":
-                    {
-                        await SendResponseToServicesCommand(message.Chat.Id);
-                        break;
-                    }
+                {
+                    await SendResponseToServicesCommand(message.Chat.Id);
+                    break;
+                }
 
                 case "/request":
-                    {
-                        await SendResponseToRequestCommand(message.Chat.Id);
-                        break;
-                    }
+                {
+                    await SendResponseToRequestCommand(message.Chat.Id);
+                    break;
+                }
 
                 case "/cancel":
-                    {
-                        await SendResponseToCancelCommand(message.Chat.Id);
-                        break;
-                    }
+                {
+                    await SendResponseToCancelCommand(message.Chat.Id);
+                    break;
+                }
 
                 case "/help":
-                    {
-                        await SendResponseToHelpCommand(message.Chat.Id);
-                        break;
-                    }
+                {
+                    await SendResponseToHelpCommand(message.Chat.Id);
+                    break;
+                }
 
                 default:
+                {
+                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
                     {
-                        if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
-                        {
-                            await SendResponseToInvalidMessage(message.Chat.Id);
-                            return;
-                        }
-
-                        if (requestParams.Requirements is null)
-                        {
-                            string serviceName = data.First();
-                            await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
-                                                                    requestParams);
-                            return;
-                        }
-
-                        await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
-                        break;
+                        await SendResponseToInvalidMessage(message.Chat.Id);
+                        return;
                     }
+
+                    if (requestParams.Requirements is null)
+                    {
+                        string serviceName = data.First();
+                        await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
+                                                                requestParams);
+                        return;
+                    }
+
+                    await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
+                    break;
+                }
             }
         }
 
@@ -180,7 +184,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         private async Task ContinueRequestCommandWithService(long chatId, string serviceName,
             RequestParams requestParams)
         {
-            _logger.Info($"Continue process /request command with service {serviceName}.");
+            string encodedUserInput = UserInputEncoder.Encode(serviceName);
+            _logger.Info($"Continue process /request command with service {encodedUserInput}.");
             ReplyKeyboardMarkup replyKeyboard = new[]
             {
                 ConfigContract.AvailableBeautifiedServices.ToArray(),

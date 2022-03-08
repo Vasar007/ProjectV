@@ -6,9 +6,6 @@ root = true
 
 # Files to exclude from foramtting because dotnet-format cannot process F# usages in C# code.
 
-# IDE0005: Using directive is unnecessary.
-dotnet_diagnostic.IDE0005.severity = error
-
 [Applications/ProjectV.ConsoleApp/Program.cs]
 generated_code = true
 
@@ -150,7 +147,7 @@ csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
 csharp_indent_case_contents_when_block = false
-csharp_indent_labels = no_change
+csharp_indent_labels = one_less_than_current
 csharp_indent_switch_labels = true
 
 # Space preferences
@@ -231,7 +228,7 @@ dotnet_diagnostic.CS0219.severity = error
 #### IDE Warnings ####
 
 # IDE0005: Using directive is unnecessary.
-dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0005.severity = error
 
 # IDE0039: Use local function
 dotnet_diagnostic.IDE0039.severity = silent

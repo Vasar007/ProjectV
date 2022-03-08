@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable format // dotnet format fails indentation for switch :(
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -104,43 +106,43 @@ namespace ProjectV.IO.Input.GoogleDrive
             switch (progress.Status)
             {
                 case DownloadStatus.Downloading:
-                    {
-                        _logger.Info($"Downloading: {progress.BytesDownloaded}");
-                        break;
-                    }
+                {
+                    _logger.Info($"Downloading: {progress.BytesDownloaded}");
+                    break;
+                }
 
                 case DownloadStatus.Completed:
+                {
+                    _logger.Info("Download completed.");
+                    if (string.IsNullOrEmpty(mimeType))
                     {
-                        _logger.Info("Download completed.");
-                        if (string.IsNullOrEmpty(mimeType))
-                        {
-                            SaveStream(stream, saveTo);
-                        }
-                        else
-                        {
-                            SaveStream(stream, saveTo + GetExtension(mimeType));
-                        }
-                        break;
+                        SaveStream(stream, saveTo);
                     }
+                    else
+                    {
+                        SaveStream(stream, saveTo + GetExtension(mimeType));
+                    }
+                    break;
+                }
 
                 case DownloadStatus.Failed:
-                    {
-                        _logger.Warn("Download failed.");
-                        break;
-                    }
+                {
+                    _logger.Warn("Download failed.");
+                    break;
+                }
 
                 case DownloadStatus.NotStarted:
-                    {
-                        break;
-                    }
+                {
+                    break;
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(
-                            nameof(progress), progress.Status,
-                            $"Not known status value: '{progress.Status.ToString()}'."
-                        );
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(progress), progress.Status,
+                        $"Not known status value: '{progress.Status.ToString()}'."
+                    );
+                }
             }
         }
 
