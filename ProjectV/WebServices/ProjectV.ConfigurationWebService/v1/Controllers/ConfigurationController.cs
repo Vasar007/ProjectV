@@ -1,5 +1,4 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.ConfigurationWebService.v1.Domain;

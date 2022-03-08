@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Newtonsoft.Json;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Exceptions;
