@@ -19,7 +19,8 @@ jobs:
     name: Analyze
     # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
     # We should use Windows because of WPF usage in solution.
-    runs-on: windows-latest
+    # windows-latest = windows-2022 but CodeQL does not support Windows Server 2022.
+    runs-on: windows-2019
 
     strategy:
       fail-fast: false
