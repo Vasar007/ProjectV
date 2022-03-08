@@ -8,7 +8,7 @@
     <WindowsAppTargetFramework>net6.0-windows</WindowsAppTargetFramework>
     <LibraryTargetFramework>net6.0</LibraryTargetFramework>
     <TestTargetFramework>net6.0</TestTargetFramework>
-    <CSharpLangVersion>9.0</CSharpLangVersion>
+    <CSharpLangVersion>10.0</CSharpLangVersion>
     <FSharpLangVersion>5.0</FSharpLangVersion>
   </PropertyGroup>
 
