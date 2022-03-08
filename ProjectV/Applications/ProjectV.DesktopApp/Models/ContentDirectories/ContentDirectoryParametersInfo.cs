@@ -5,7 +5,7 @@ namespace ProjectV.DesktopApp.Models.ContentDirectories
     internal sealed class ContentDirectoryParametersInfo
     {
         public string DirectoryPath { get; }
-        
+
         public ContentTypeToFind ContentType { get; }
 
 

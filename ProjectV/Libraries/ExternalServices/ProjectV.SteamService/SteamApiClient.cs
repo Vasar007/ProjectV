@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using SteamWebApiLib;
-using SteamWebApiLib.Models.AppDetails;
-using SteamWebApiLib.Models.BriefInfo;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.SteamService.Mappers;
 using ProjectV.SteamService.Models;
+using SteamWebApiLib;
+using SteamWebApiLib.Models.AppDetails;
+using SteamWebApiLib.Models.BriefInfo;
 
 namespace ProjectV.SteamService
 {
@@ -36,11 +36,9 @@ namespace ProjectV.SteamService
         /// </summary>
         private readonly SteamWebApiLib.SteamApiClient _steamApiClient;
 
-        private bool _disposed;
-
         /// <inheritdoc />
         public string ApiKey { get; }
-        
+
 
         public SteamApiClient(string apiKey)
         {
@@ -72,7 +70,7 @@ namespace ProjectV.SteamService
             try
             {
                 SteamApp response = await _steamApiClient.GetSteamAppAsync(
-                    appId, (CountryCode) countryCode, (Language) language, token
+                    appId, (CountryCode)countryCode, (Language)language, token
                 );
 
                 return _dataMapper.Transform(response);
@@ -88,12 +86,18 @@ namespace ProjectV.SteamService
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _steamApiClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

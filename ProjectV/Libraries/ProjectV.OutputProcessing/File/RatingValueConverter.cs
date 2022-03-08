@@ -25,7 +25,7 @@ namespace ProjectV.IO.Output.File
         /// <inheritdoc />
         public override object StringToField(string from)
         {
-            List<string> values = from.Split(_separator).ToList();
+            var values = from.Split(_separator).ToList();
             return values.ConvertAll(double.Parse);
         }
 

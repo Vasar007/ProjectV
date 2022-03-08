@@ -3,8 +3,8 @@
 namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder director which controls of <see cref="Shell" /> creating process with the help of
-    /// specified builder.
+    /// Builder director which controls of <see cref="Shell" /> creating process with the help
+    /// of specified builder.
     /// </summary>
     public sealed class ShellBuilderDirector
     {
@@ -51,7 +51,6 @@ namespace ProjectV.Core.ShellBuilders
             _shellBuilder.BuildCrawlersManager();
             _shellBuilder.BuildAppraisersManager();
             _shellBuilder.BuildOutputManager();
-            _shellBuilder.BuildDataBaseManager();
 
             return _shellBuilder.GetResult();
         }

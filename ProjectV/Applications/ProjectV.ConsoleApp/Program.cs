@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectV.Core;
+using AutoMapper;
 using ProjectV.Communication;
 using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
-using ProjectV.DAL.EntityFramework;
+using ProjectV.Core;
+using ProjectV.DataAccessLayer;
+using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Logging;
-using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Models.Internal.Jobs;
 
 namespace ProjectV.ConsoleApp
 {
@@ -20,8 +22,7 @@ namespace ProjectV.ConsoleApp
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(Program));
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace ProjectV.ConsoleApp
         private static async Task MainXDocument(IReadOnlyList<string> args)
         {
             // Show the case when we have a movies to appraise.
-            var builderDirector = ShellAsync.CreateBuilderDirector(
+            var builderDirector = Shell.CreateBuilderDirector(
                 XmlConfigCreator.CreateDefaultXmlConfigAsXDocument()
             );
             var shell = builderDirector.MakeShell();
@@ -44,7 +45,7 @@ namespace ProjectV.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
-        private static async Task Run(IReadOnlyList<string> args, ShellAsync shell)
+        private static async Task Run(IReadOnlyList<string> args, Shell shell)
         {
             ServiceStatus status;
             if (args.Count == 1)
@@ -81,14 +82,21 @@ namespace ProjectV.ConsoleApp
                 _logger.PrintHeader("Console client application started.");
 
                 await MainXDocument(args);
-                //TestEntityFrameworkCore();
-                //await TestConentDirectories();
-                return 0;
+
+#if DEBUG
+                TestDbOrmEf();
+                TestAutomapper();
+                await TestConentDirectories();
+#endif
+
+                return ExitCodes.Success;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Exception occurred in {nameof(Main)} method.");
-                return -1;
+                const string message = "Exception occurred during execution.";
+                _logger.Error(ex, message);
+                Console.WriteLine($"{message}{Environment.NewLine}{ex}");
+                return ExitCodes.Fail;
             }
             finally
             {
@@ -96,45 +104,94 @@ namespace ProjectV.ConsoleApp
             }
         }
 
-        private static void TestEntityFrameworkCore()
+        #region Debug-only Code
+
+#if DEBUG
+
+        private static void TestDbOrmEf()
         {
-            using (var context = new ProjectVContext())
+            var storageSettings = ConfigOptions.GetOptions<DatabaseOptions>();
+            using (var context = new ProjectVDbContext(storageSettings))
             {
-                var tmdbMovie = new TmdbMovieInfo(
-                    thingId:     1,
-                    title:       "Test",
-                    voteCount:   100,
-                    voteAverage: 10.0,
-                    overview:    "Overview",
-                    releaseDate: DateTime.UtcNow,
-                    popularity:  50.0,
-                    adult:       true,
-                    genreIds:    new List<int> { 1, 2, 4 },
-                    posterPath:  "None"
+                var jobDbInfo = new JobDbInfo(
+                    id: Guid.NewGuid(),
+                    name: "JobName",
+                    state: 1,
+                    result: 2,
+                    config: "TaskConfig"
                 );
 
-                context.Add(tmdbMovie);
+                context.GetJobDbSet().Add(jobDbInfo);
 
                 int count = context.SaveChanges();
                 Console.WriteLine($"{count.ToString()} records saved to database.");
             }
 
-            using (var context = new ProjectVContext())
+            using (var context = new ProjectVDbContext(storageSettings))
             {
-                foreach (TmdbMovieInfo tmdbMovie in context.TmdbMovies)
+                foreach (JobDbInfo jobDbInfo in context.GetJobDbSet())
                 {
-                    Console.WriteLine(
-                        $"TMDB movie: {tmdbMovie.ThingId.ToString()}, {tmdbMovie.Title}, " +
-                        $"{tmdbMovie.Popularity.ToString()}"
-                    );
+                    string message =
+                        $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                        $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                        $"{jobDbInfo.Config.ToString()}";
+
+                    Console.WriteLine(message);
                 }
             }
         }
 
+        private static void TestAutomapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<JobDbInfo, JobInfo>();
+                cfg.CreateMap<JobInfo, JobDbInfo>();
+
+                cfg.CreateMap<Guid, JobId>()
+                   .ConvertUsing(guid => JobId.Wrap(guid));
+                cfg.CreateMap<JobId, Guid>()
+                   .ConvertUsing(jobId => jobId.Value);
+            });
+            config.AssertConfigurationIsValid();
+
+            var mapper = config.CreateMapper();
+
+            var jobDbInfo = new JobDbInfo(
+                id: Guid.NewGuid(),
+                name: "JobName",
+                state: 1,
+                result: 2,
+                config: "TaskConfig"
+            );
+            string message =
+                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                $"{jobDbInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
+
+            var jobInfo = mapper.Map<JobInfo>(jobDbInfo);
+            message =
+                $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
+                $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
+                $"{jobInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
+
+            jobDbInfo = mapper.Map<JobDbInfo>(jobInfo);
+            message =
+                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
+                $"{jobDbInfo.Config.ToString()}";
+
+            Console.WriteLine(message);
+        }
+
         private static async Task TestConentDirectories()
         {
-            IReadOnlyDictionary<string, IReadOnlyList<string>> result = await ContentFinder
-                .FindContentForDirAsync(
+            IReadOnlyDictionary<string, IReadOnlyList<string>> result =
+                await ContentFinder.FindContentForDirAsync(
                     @"C:\Users\vasar\Documents\GitHub",
                     ContentModels.ContentType.Text
                 );
@@ -148,5 +205,9 @@ namespace ProjectV.ConsoleApp
                 );
             }
         }
+
+#endif
+
+        #endregion
     }
 }

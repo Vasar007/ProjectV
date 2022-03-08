@@ -25,7 +25,7 @@ namespace ProjectV.DesktopApp.Views
 
         private void CreateToplist_DialogOpened(object sender, DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is CreateToplistView createToplistView)) return;
+            if (eventArgs.Session.Content is not CreateToplistView createToplistView) return;
 
             // Make sure that text box is clear when we start new dialog.
             createToplistView.Clear();
@@ -35,7 +35,7 @@ namespace ProjectV.DesktopApp.Views
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is CreateToplistViewModel createToplistViewModel)) return;
+            if (eventArgs.Parameter is not CreateToplistViewModel createToplistViewModel) return;
 
             string toplistName = createToplistViewModel.ToplistName;
             if (string.IsNullOrWhiteSpace(toplistName))

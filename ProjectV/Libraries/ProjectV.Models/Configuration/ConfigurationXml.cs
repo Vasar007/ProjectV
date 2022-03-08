@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 namespace ProjectV.Models.Configuration
 {
     // TODO: make this DTO immutable.
-    [XmlRoot(ElementName = "ConfigurationXml", Namespace = "")]
+    [XmlRoot(ElementName = nameof(ConfigurationXml), Namespace = "")]
     public sealed class ConfigurationXml
     {
         [XmlElement]

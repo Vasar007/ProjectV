@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Acolyte.Common;
 
 namespace ProjectV.DesktopApp.Models
@@ -42,7 +42,7 @@ namespace ProjectV.DesktopApp.Models
             sceneName.ThrowIfNullOrEmpty(nameof(sceneName));
 
             return FindSceneIndex(sceneName) != Constants.NotFoundIndex;
-           
+
         }
 
         public int FindSceneIndex(string sceneName)
@@ -77,10 +77,10 @@ namespace ProjectV.DesktopApp.Models
             sceneName.ThrowIfNullOrEmpty(nameof(sceneName));
 
             SceneItem sceneItem = GetSceneItem(sceneName);
-            if (!(sceneItem.Content is T control))
+            if (sceneItem.Content is not T control)
             {
                 throw new ArgumentException(
-                    $"Content of scene with name \"{sceneName}\" is not convertable to " +
+                    $"Content of scene with name \"{sceneName}\" is not convertible to " +
                     $"{typeof(T).FullName}.",
                     nameof(sceneName)
                 );
@@ -94,10 +94,10 @@ namespace ProjectV.DesktopApp.Models
             sceneName.ThrowIfNullOrEmpty(nameof(sceneName));
 
             SceneItem sceneItem = GetSceneItem(sceneName);
-            if (!(sceneItem.Content.DataContext is T control))
+            if (sceneItem.Content.DataContext is not T control)
             {
                 throw new ArgumentException(
-                    $"Content of scene with name \"{sceneName}\" is not convertable to " +
+                    $"Content of scene with name \"{sceneName}\" is not convertible to " +
                     $"{typeof(T).FullName}.",
                     nameof(sceneName)
                 );

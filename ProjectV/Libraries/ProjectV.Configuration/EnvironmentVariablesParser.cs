@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 
 namespace ProjectV
 {
@@ -48,7 +48,7 @@ namespace ProjectV
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
 
-            if (!_values.TryGetValue(variableName, out string value))
+            if (!_values.TryGetValue(variableName, out string? value))
             {
                 throw new ArgumentException(
                     $"Variable name \"{variableName}\" was not found in the environment values.",
@@ -83,7 +83,7 @@ namespace ProjectV
             where T : IConvertible
         {
             string stringValue = GetValue(variableName);
-            return (T) Convert.ChangeType(stringValue, typeof(T));
+            return (T)Convert.ChangeType(stringValue, typeof(T));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ProjectV
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> presents empty string.
         /// </exception>
-        public static T GetValueOrDefault<T>(string variableName, T defaultValue = default)
+        public static T GetValueOrDefault<T>(string variableName, T defaultValue)
             where T : IConvertible
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
@@ -107,7 +107,7 @@ namespace ProjectV
             try
             {
                 string stringValue = GetValue(variableName);
-                return (T) Convert.ChangeType(stringValue, typeof(T));
+                return (T)Convert.ChangeType(stringValue, typeof(T));
             }
             catch (Exception)
             {
@@ -121,7 +121,7 @@ namespace ProjectV
         /// <param name="environmentVariableValue">Raw value of environment variable.</param>
         /// <returns>Dictionary with parsed values.</returns>
         private static IReadOnlyDictionary<string, string> ParseEnvironmentVariableValue(
-            string environmentVariableValue)
+            string? environmentVariableValue)
         {
             if (string.IsNullOrEmpty(environmentVariableValue))
             {

@@ -9,10 +9,10 @@ namespace ProjectV.Models.Configuration
         [XmlAttribute(DataType = "string")]
         public string DefaultOutStorageName { get; set; } = default!;
 
-        [XmlAnyElement(Name = "OutputManagerParameters")]
+        [XmlAnyElement(Name = nameof(OutputManagerParameters))]
         public XElement[] OutputManagerParameters { get; set; } = default!;
 
-        [XmlAnyElement(Name = "Outputters")]
+        [XmlAnyElement(Name = nameof(Outputters))]
         public XElement[] Outputters { get; set; } = default!;
 
 

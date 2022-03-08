@@ -24,7 +24,7 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET Standard is 2.1 for libraries, .NET Core is 3.1 for web services and for desktop app. Version of C# is 8.0, version of F# is 4.7.
+Target .NET is 6.0 for all projects. Version of C# is 10.0, version of F# is 5.0.
 
 You can install all dependencies using NuGet package manager.
 

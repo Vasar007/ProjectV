@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using FileHelpers;
-using ProjectV.Logging;
 using ProjectV.Communication;
+using ProjectV.Logging;
 using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.File
@@ -12,7 +12,7 @@ namespace ProjectV.IO.Output.File
     /// Class which can write to files and process output content. Uses FileHelpers library to
     /// delegate all routine work.
     /// </summary>
-    public sealed class LocalFileWriter : IOutputter, IOutputterBase, ITagable
+    public sealed class LocalFileWriter : ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -22,7 +22,7 @@ namespace ProjectV.IO.Output.File
         #region ITagable Implementation
 
         /// <inheritdoc />
-        public string Tag { get; } = "LocalFileWriter";
+        public string Tag { get; } = nameof(LocalFileWriter);
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace ProjectV.IO.Output.File
         {
         }
 
-        /// <inheritdoc cref="System.IO.File..Exists" />
+        /// <inheritdoc cref="System.IO.File.Exists" />
         public static bool DoesExistFile(string path)
         {
             return System.IO.File.Exists(path);
@@ -47,7 +47,7 @@ namespace ProjectV.IO.Output.File
         /// </summary>
         /// <param name="results">Results to save.</param>
         /// <param name="storageName">Filename to write.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if no exception occurred, <c>false</c> otherwise.</returns>
         public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string storageName)
         {
@@ -72,16 +72,16 @@ namespace ProjectV.IO.Output.File
         /// </summary>
         /// <param name="results">Results to save.</param>
         /// <param name="filename">Filename to write.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if no exception occurred, <c>false</c> otherwise.</returns>
         private static bool WriteFile(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string filename)
         {
             if (string.IsNullOrEmpty(filename)) return false;
 
             using (var engine = new FileHelperAsyncEngine<OuputFileData>
-                  {
-                      HeaderText = typeof(OuputFileData).GetCsvHeader()
-                  }
+            {
+                HeaderText = typeof(OuputFileData).GetCsvHeader()
+            }
             )
             using (engine.BeginWriteFile(filename))
             {
@@ -104,8 +104,8 @@ namespace ProjectV.IO.Output.File
         private static Dictionary<string, IList<double>> ConvertResultsToDict(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results)
         {
-            // TODO: add additional data structure based on Dictionary<string, (CResultInfo, Int32)>
-            // where string is name of the Thing, CResultInfo is meta information and Int32 is place
+            // TODO: add additional data structure based on Dictionary<string, (ResultInfo, Int32)>
+            // where string is name of the Thing, ResultInfo is meta information and Int32 is place
             // in the rating. If appraiser cannot appraise the Thing, then we would have pair
             // <nameof(Thing), null> (yes, ValueType cannot be null, we'd simply have something
             // similar, i.e. default or special value). Such data structure, I think, can help to
@@ -117,7 +117,7 @@ namespace ProjectV.IO.Output.File
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                                              out IList<double> ratingValues))
+                                              out IList<double>? ratingValues))
                     {
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }

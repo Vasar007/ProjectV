@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Collections;
 using ProjectV.Communication;
+using ProjectV.DataPipeline;
 using ProjectV.Logging;
 
 namespace ProjectV.IO.Input
@@ -15,7 +16,8 @@ namespace ProjectV.IO.Input
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<InputManager>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
@@ -41,9 +43,8 @@ namespace ProjectV.IO.Input
         /// </exception>
         public InputManager(string defaultStorageName)
         {
-            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
-                nameof(defaultStorageName)
-            );
+            _defaultStorageName =
+                defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
         #region IManager<IInputter> Implementation
@@ -73,70 +74,48 @@ namespace ProjectV.IO.Input
 
         #endregion
 
-        /// <summary>
-        /// Get names from inputter with specified storage name.
-        /// </summary>
-        /// <param name="storageName">Input storage name.</param>
-        /// <returns>Collection of The Things names as strings.</returns>
-        public List<string> GetNames(string storageName)
+        public InputtersFlow CreateFlow(string storageName)
         {
-            var result = new List<string>();
             if (string.IsNullOrWhiteSpace(storageName))
             {
                 storageName = _defaultStorageName;
 
-                string message = "Storage name is empty, using the default value.";
+                const string message = "Storage name is empty, using the default value.";
                 _logger.Info(message);
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            foreach (IInputter inputter in _inputters)
-            {
-                bool success = TryReadThingNames(inputter, storageName,
-                                                 out IReadOnlyList<string> value);
+            var inputtersFunc = _inputters.Select(inputter =>
+                new Func<string, IEnumerable<string>>(
+                    input => TryReadThingNames(inputter, input)
+                )
+            );
 
-                if (!success || value.IsNullOrEmpty())
-                {
-                    string message = $"No Things were found in {storageName} by inputter " +
-                                     $"{inputter.Tag}.";
+            var inputtersFlow = new InputtersFlow(inputtersFunc);
 
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-                    continue;
-                }
-
-                result.AddRange(value);
-            }
-
-            _logger.Info($"{result.Count} Things were found.");
-            return result;
+            _logger.Info($"Conctructed inputters pipeline for \"{storageName}\".");
+            return inputtersFlow;
         }
 
         /// <summary>
-        /// Calls reading method from inputter and process caught exceptions.
+        /// Get names from inputter with specified storage name.
         /// </summary>
-        /// <param name="inputter">Reader of input source.</param>
         /// <param name="storageName">Input storage name.</param>
-        /// <param name="result">Reference to collection to write data.</param>
-        /// <returns>
-        /// <c>true</c> if read method doesn't throw any exceptions, <c>false</c> otherwise.
-        /// </returns>
-        private static bool TryReadThingNames(IInputter inputter, string storageName,
-            out IReadOnlyList<string> result)
+        /// <returns>Enumeration of The Things names as strings.</returns>
+        private static IEnumerable<string> TryReadThingNames(IInputter inputter,
+            string storageName)
         {
             try
             {
-                result = inputter.ReadThingNames(storageName);
+                return inputter.ReadThingNames(storageName);
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Couldn't get access to the storage.");
-                GlobalMessageHandler.OutputMessage("Couldn't get access to the storage for " +
-                                                    $"inputter {inputter.Tag}. Error: {ex}");
-                result = new List<string>();
-                return false;
+                string message = $"Inputter '{inputter.Tag}' could not get access to the " +
+                                 $"storage \"{storageName}\".";
+                _logger.Error(ex, message);
+                throw;
             }
-            return true;
         }
     }
 }

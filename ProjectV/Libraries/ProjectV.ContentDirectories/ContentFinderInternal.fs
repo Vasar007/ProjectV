@@ -3,8 +3,8 @@
 open System
 open System.IO
 open System.Threading.Tasks
-open Acolyte.Functional
-open Acolyte.Collections
+open Acolyte.Functional.Collections
+open Acolyte.Linq
 open ProjectV.ContentDirectories
 
 
@@ -35,7 +35,7 @@ let private convertSeqGenToAsync fileSeqGen =
         | ContentModels.FileSeqGenerator.Async(generatorAsync = genAsync) ->
             genAsync
 
-let private convertToReadOnlyList files  =
+let private convertToReadOnlyList files =
     files
     |> EnumerableExtensions.ToReadOnlyList
 
@@ -71,7 +71,7 @@ let internal findContentAsync args =
                // Step 2: applying paging to items.
                |> SeqEx.skipSafe pagingInfo.Offset
                |> Seq.truncate pagingInfo.Count
-               // Step 3: groupping items by directory name.
+               // Step 3: grouping items by directory name.
                |> Seq.groupBy (Path.GetDirectoryName >> Path.GetFileName)
                // Step 4: transforming items to result object.
                |> Seq.map transformGrouppedPairs

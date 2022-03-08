@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using Gridsum.DataflowEx;
 using ProjectV.Models.Data;
 
@@ -40,7 +40,7 @@ namespace ProjectV.DataPipeline
         {
             var crawlerFlows = crawlers.Select(crawler =>
                 new TransformManyBlock<string, BasicInfo>(
-                    async entity => await crawler(entity).AsEnumerable().LogIfErrorOccured()
+                    async entity => await crawler(entity).AsEnumerableAsync().LogIfErrorOccured()
                 ).ToDataflow(DataflowOptions.Default)
             );
 

@@ -17,7 +17,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
                 serviceConfigurationInfo.ThrowIfNull(nameof(serviceConfigurationInfo));
         }
 
-        #region IImageSupplier Implamentation
+        #region IImageSupplier Implementation
 
         public string GetImageLink(BasicInfo data, ImageSize imageSize)
         {
@@ -28,7 +28,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
                 _serviceConfigurationInfo = TmdbServiceConfiguration.Configuration;
             }
 
-            if (!(data is TmdbMovieInfo movieInfo))
+            if (data is not TmdbMovieInfo movieInfo)
             {
                 throw new ArgumentException("Data handler has invalid type.", nameof(data));
             }

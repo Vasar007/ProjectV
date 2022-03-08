@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable format // dotnet format fails indentation for switch :(
+
+using System;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Exceptions;
@@ -28,7 +30,7 @@ namespace ProjectV.DataPipeline
                         case TaskStatus.Faulted:
                         {
                             Exception exception =
-                                ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception);
+                                ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception!);
 
                             _logger.Error(exception, "Task is in the faulted state.");
 

@@ -20,7 +20,7 @@ namespace ProjectV.DesktopApp.Domain
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occured during async execution.");
+                _logger.Error(ex, "Exception occurred during async execution.");
                 handler.HandleError(ex);
             }
         }

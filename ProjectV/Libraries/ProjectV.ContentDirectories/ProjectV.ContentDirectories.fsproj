@@ -1,13 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <Platforms>x64</Platforms>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>4.7</LangVersion>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
+    <OutputType>Library</OutputType>
+    <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
+    <LangVersion>$(FSharpLangVersion)</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.ContentDirectories</RootNamespace>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,12 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\ProjectV.CommonFSharp\ProjectV.CommonFSharp.fsproj" />
+    <PackageReference Update="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.7.2" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonFSharp\ProjectV.CommonFSharp.fsproj" />
   </ItemGroup>
 
 </Project>

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.SteamService;
 using ProjectV.SteamService.Models;
+using ProjectV.SteamService.Storages;
 
 namespace ProjectV.Crawlers.Game.Steam
 {
     /// <summary>
-    /// Concrete crawler for Steam service.
+    /// Provides async version of Steam crawler.
     /// </summary>
-    public sealed class SteamCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
+    public sealed class SteamCrawler : ICrawler, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -27,9 +27,10 @@ namespace ProjectV.Crawlers.Game.Steam
         private readonly ISteamApiClient _steamApiClient;
 
         /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
         /// </summary>
-        private bool _disposed;
+        private readonly HashSet<BasicInfo> _searchResults;
 
         #region ITagable Implementation
 
@@ -61,56 +62,57 @@ namespace ProjectV.Crawlers.Game.Steam
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _steamApiClient = SteamApiClientFactory.CreateClient(apiKey);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
         #region ICrawler Implementation
 
         /// <inheritdoc />
-        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
-            bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            if (SteamAppsStorage.IsEmpty)
+            // Upload all available information into the cache.
+            SteamAppsStorage storage = GlobalSteamAppsStorage.Instance;
+            if (storage.IsEmpty)
             {
-                SteamBriefInfoContainer steamApps = _steamApiClient.GetAppListAsync().Result;
-                SteamAppsStorage.FillStorage(steamApps);
+                SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
+                storage.FillStorage(steamApps);
             }
 
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            foreach (string game in entities)
+            int? appId = storage.TryGetAppIdByName(entityName);
+
+            if (!appId.HasValue)
             {
-                int? appId = SteamAppsStorage.TryGetAppIdByName(game);
+                string message = $"{entityName} was not find in Steam responses storage.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                if (!appId.HasValue)
-                {
-                    string message = $"{game} was not find in Steam responses storage.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                var response = _steamApiClient.TryGetSteamAppAsync(
-                    appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
-                ).Result;
-
-                if (response is null)
-                {
-                    string message = $"{game} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
-                }
-
-                searchResults.Add(response);
+                yield break;
             }
-            return searchResults.ToList();
+
+            var response = await _steamApiClient.TryGetSteamAppAsync(
+                appId.Value, SteamCountryCode.Russia, SteamResponseLanguage.English
+            );
+
+            if (response is null)
+            {
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
+
+                yield break;
+            }
+
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {response} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(response))
+            {
+                yield return response;
+            }
+
+            yield break;
         }
 
         #endregion
@@ -118,14 +120,20 @@ namespace ProjectV.Crawlers.Game.Steam
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases resources of TMDb client.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _steamApiClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

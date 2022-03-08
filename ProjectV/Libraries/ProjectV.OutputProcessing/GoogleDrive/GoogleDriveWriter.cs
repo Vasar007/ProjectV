@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Acolyte.Collections;
+using System.Threading.Tasks;
+using Acolyte.Linq;
 using Google.Apis.Drive.v3;
 using Google.Apis.Upload;
-using GoogleDriveData = Google.Apis.Drive.v3.Data;
-using ProjectV.Logging;
 using ProjectV.Communication;
 using ProjectV.IO.Output.File;
+using ProjectV.Logging;
 using ProjectV.Models.Internal;
+using GoogleDriveData = Google.Apis.Drive.v3.Data;
 
 namespace ProjectV.IO.Output.GoogleDrive
 {
     /// <summary>
     /// Concrete implementation of writer part for Google Drive API.
     /// </summary>
-    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputter, IOutputterBase, ITagable
+    public sealed class GoogleDriveWriter : GoogleDriveWorker, IOutputter, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -31,7 +32,7 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <summary>
         /// Used to write results to local file which would be upload to Google Drive.
         /// </summary>
-        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
+        private readonly LocalFileWriterAsync _localFileWriter;
 
         #region ITagable Implementation
 
@@ -47,6 +48,7 @@ namespace ProjectV.IO.Output.GoogleDrive
         public GoogleDriveWriter(DriveService driveService)
             : base(driveService)
         {
+            _localFileWriter = new LocalFileWriterAsync();
         }
 
         #region IOutputter Implementation
@@ -60,20 +62,27 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <remarks>
         /// This method creates and deletes temporary file to store appraised content.
         /// </remarks>
-        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
-            string storageName)
+        public async Task<bool> SaveResults(
+            IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)
         {
-            if (string.IsNullOrEmpty(storageName)) return false;
-
-            string tempStorageName = "temp_" + storageName;
-            while (LocalFileWriter.DoesExistFile(tempStorageName))
+            if (string.IsNullOrEmpty(storageName))
             {
-                tempStorageName = "temp_" + tempStorageName;
+                return false;
             }
 
-            // Save results to local file and upload it.
-            if (!_localFileWriter.SaveResults(results, tempStorageName))
+            // TODO: move temp filename creation to separate class.
+            string tempStorageName;
+            do
             {
+                tempStorageName = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
+            }
+            while (LocalFileWriter.DoesExistFile(tempStorageName));
+
+            // Save results to local file and upload it.
+            var hasSavedSuccessfully = await _localFileWriter.SaveResults(results, tempStorageName);
+            if (!hasSavedSuccessfully)
+            {
+                _logger.Warn($"Results for \"{storageName}\" have not been saved.");
                 return false;
             }
 
@@ -83,8 +92,8 @@ namespace ProjectV.IO.Output.GoogleDrive
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, $"An error occured during uploading \"{storageName}\".");
-                GlobalMessageHandler.OutputMessage("An error occured during uploading " +
+                _logger.Warn(ex, $"An error occurred during uploading \"{storageName}\".");
+                GlobalMessageHandler.OutputMessage("An error occurred during uploading " +
                                                    $"\"{storageName}\" : {ex}");
                 return false;
             }
@@ -230,11 +239,14 @@ namespace ProjectV.IO.Output.GoogleDrive
         /// <returns><c>true</c> if procedure was successful, <c>false</c> otherwise.</returns>
         private bool ReadFileAndUploadOrUpdate(string path, string storageName)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName)) return false;
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(storageName))
+            {
+                return false;
+            }
 
             string storageNameWithoutExtension = Path.GetFileNameWithoutExtension(storageName);
             IList<GoogleDriveData.File> files = ListFiles(new GoogleDriveFilesListOptionalParams
-                { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
+            { Q = $"name contains '{storageNameWithoutExtension}'" }).Files;
 
             bool result = false;
             if (!files.IsNullOrEmpty())

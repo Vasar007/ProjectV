@@ -9,10 +9,10 @@ namespace ProjectV.Models.Configuration
         [XmlAttribute(DataType = "boolean")]
         public bool CrawlersOutputFlag { get; set; }
 
-        [XmlAnyElement(Name = "CrawlersManagerParameters")]
+        [XmlAnyElement(Name = nameof(CrawlersManagerParameters))]
         public XElement[] CrawlersManagerParameters { get; set; } = default!;
 
-        [XmlAnyElement(Name = "Crawlers")]
+        [XmlAnyElement(Name = nameof(Crawlers))]
         public XElement[] Crawlers { get; set; } = default!;
 
 

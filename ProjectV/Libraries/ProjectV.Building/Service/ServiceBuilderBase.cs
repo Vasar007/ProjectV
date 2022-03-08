@@ -136,13 +136,11 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates file reader (sequential) instance depend on parameter value (could be read from 
+        /// Creates file reader instance depend on parameter value (could be read from 
         /// config file or XML document).
         /// </summary>
-        /// <param name="fileReaderName">
-        /// Name of the file reader (sequential) class to create.
-        /// </param>
-        /// <returns>Fully initialized instance of file reader (sequential) class.</returns>
+        /// <param name="fileReaderName">Name of the file reader class to create.</param>
+        /// <returns>Fully initialized instance of file reader class.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="fileReaderName" /> is <c>null</c>.
         /// </exception>
@@ -156,71 +154,19 @@ namespace ProjectV.Building.Service
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
-            _logger.Info("Creating file reader.");
-
-            switch (fileReaderName)
-            {
-                case _simpleFileReaderParameterName:
-                {
-                    return new IO.Input.File.SimpleFileReader();
-                }
-
-                case _filterFileReaderParameterName:
-                {
-                    return new IO.Input.File.FilterFileReader();
-                }
-
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(fileReaderName), fileReaderName,
-                        "Couldn't recognize file reader type."
-                    );
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates file reader (async) instance depend on parameter value (could be read from 
-        /// config file or XML document).
-        /// </summary>
-        /// <param name="fileReaderName">Name of the file reader (async) class to create.</param>
-        /// <returns>Fully initialized instance of file reader (async) class.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="fileReaderName" /> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="fileReaderName" /> isn't specified in method.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="fileReaderName" /> presents empty string.
-        /// </exception>
-        protected IO.Input.File.IFileReaderAsync CreateFileReaderAsync(string fileReaderName)
-        {
-            fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
-
             _logger.Info("Creating async file reader.");
 
-            switch (fileReaderName)
+            return fileReaderName switch
             {
-                case _simpleFileReaderParameterName:
-                {
-                    return new IO.Input.File.SimpleFileReaderAsync();
-                }
+                _simpleFileReaderParameterName => new IO.Input.File.SimpleFileReader(),
 
-                case _filterFileReaderParameterName:
-                {
-                    throw new NotImplementedException("Now FilterFileReaderAsync isn't supported.");
-                }
+                _filterFileReaderParameterName => new IO.Input.File.FilterFileReader(),
 
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
+                _ => throw new ArgumentOutOfRangeException(
                         nameof(fileReaderName), fileReaderName,
                         "Couldn't recognize file reader type."
-                    );
-                }
-            }
+                    )
+            };
         }
 
         /// <summary>
@@ -241,7 +187,7 @@ namespace ProjectV.Building.Service
                 // automatically when the authorization flow completes for the first time.
                 const string credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+                    GoogleClientSecrets.FromStream(stream).Secrets,
                     IO.GoogleDriveWorker.Scopes,
                     IO.GoogleDriveWorker.ApplicationName,
                     CancellationToken.None,

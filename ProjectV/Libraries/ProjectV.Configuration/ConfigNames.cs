@@ -48,6 +48,8 @@
             public static string OmdbAppraiserCommonName { get; } = "OmdbCommon";
 
             public static string SteamAppraiserCommonName { get; } = "SteamCommon";
+
+            // TODO: add normalized apprisers.
         }
 
         public static class Outputters
@@ -55,24 +57,6 @@
             public static string LocalFileWriterName { get; } = "LocalFileWriter";
 
             public static string GoogleDriveWriterName { get; } = "GoogleDriveWriter";
-        }
-
-        /// <summary>
-        /// Repository names in service registry.
-        /// </summary>
-        /// <remarks>
-        /// There are contract that all repositories (except base) must have same name as
-        /// appropriate crawlers.
-        /// </remarks>
-        public static class Repositories
-        {
-            public static string BasicInfoRepositoryName { get; } = "BasicInfo";
-
-            public static string TmdbMovieRepositoryName => Crawlers.TmdbCrawlerName;
-
-            public static string OmdbMovieRepositoryName => Crawlers.OmdbCrawlerName;
-
-            public static string SteamGameRepositoryName => Crawlers.SteamCrawlerName;
         }
 
         /// <summary>

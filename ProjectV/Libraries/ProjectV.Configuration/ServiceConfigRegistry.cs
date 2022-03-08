@@ -7,23 +7,15 @@ namespace ProjectV.Configuration
 {
     public sealed class ServiceConfigRegistry
     {
-        private readonly Dictionary<string, XElement> _messageHandlerRegistry = 
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _messageHandlerRegistry = new();
 
-        private readonly Dictionary<string, XElement> _inputRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _inputRegistry = new();
 
-        private readonly Dictionary<string, XElement> _crawlersRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _crawlersRegistry = new();
 
-        private readonly Dictionary<string, XElement> _appraisersRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _appraisersRegistry = new();
 
-        private readonly Dictionary<string, XElement> _outputRegistry =
-            new Dictionary<string, XElement>();
-
-        private readonly Dictionary<string, XElement> _repositoriesRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _outputRegistry = new();
 
 
         public ServiceConfigRegistry()
@@ -55,11 +47,6 @@ namespace ProjectV.Configuration
             Register(_outputRegistry, identifier, element);
         }
 
-        public void RegisterRepository(string identifier, XElement element)
-        {
-            Register(_repositoriesRegistry, identifier, element);
-        }
-
         public XElement GetConfigForMessageHandlerParameter(string identifier)
         {
             return GetConfigForIdenrifier(_messageHandlerRegistry, identifier);
@@ -85,11 +72,6 @@ namespace ProjectV.Configuration
             return GetConfigForIdenrifier(_outputRegistry, identifier);
         }
 
-        public XElement GetConfigForRepository(string identifier)
-        {
-            return GetConfigForIdenrifier(_repositoriesRegistry, identifier);
-        }
-
         private static void Register(Dictionary<string, XElement> registry, string identifier,
             XElement element)
         {
@@ -104,7 +86,7 @@ namespace ProjectV.Configuration
         {
             identifier.ThrowIfNullOrEmpty(nameof(identifier));
 
-            if (!registry.TryGetValue(identifier, out XElement element))
+            if (!registry.TryGetValue(identifier, out XElement? element))
             {
                 throw new ArgumentException($"Identifier {identifier} was not registered.",
                                             nameof(identifier));

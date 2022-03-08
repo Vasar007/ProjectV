@@ -3,16 +3,16 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Newtonsoft.Json;
-using TMDbLib.Client;
-using TMDbLib.Objects.General;
-using TMDbLib.Objects.Search;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Exceptions;
 using ProjectV.Models.Internal;
 using ProjectV.TmdbService.Mappers;
 using ProjectV.TmdbService.Models;
+using TMDbLib.Client;
+using TMDbLib.Objects.General;
+using TMDbLib.Objects.Search;
+using TMDbLib.Utilities.Serializer;
 
 namespace ProjectV.TmdbService
 {
@@ -30,7 +30,7 @@ namespace ProjectV.TmdbService
             = new DataMapperTmdbContainer();
 
         /// <summary>
-        /// Helper class to transform raw DTO config to concrete interanl object without extra data.
+        /// Helper class to transform raw DTO config to concrete internal object without extra data.
         /// </summary>
         private readonly IDataMapper<TMDbConfig, TmdbServiceConfigurationInfo> _configMapper =
             new DataMapperTmdbConfig();
@@ -39,8 +39,6 @@ namespace ProjectV.TmdbService
         /// Third-party helper class to make a calls to TMDb API.
         /// </summary>
         private readonly TMDbClient _tmdbClient;
-
-        private bool _disposed;
 
         /// <inheritdoc />
         public int MaxRetryCount
@@ -71,7 +69,7 @@ namespace ProjectV.TmdbService
             get => _tmdbClient.DefaultCountry;
             set => _tmdbClient.DefaultCountry = value.ThrowIfNull(nameof(value));
         }
-        
+
         public TmdbServiceConfigurationInfo Config => _configMapper.Transform(_tmdbClient.Config);
 
         /// <inheritdoc />
@@ -82,12 +80,18 @@ namespace ProjectV.TmdbService
 
 
         public TmdbClient(string apiKey, bool useSsl = false, string baseUrl = "api.themoviedb.org",
-            JsonSerializer? serializer = null, IWebProxy? proxy = null)
+            ITMDbSerializer? serializer = null, IWebProxy? proxy = null)
         {
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
             baseUrl.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
-            _tmdbClient = new TMDbClient(apiKey, useSsl, baseUrl, serializer, proxy);
+            _tmdbClient = new TMDbClient(
+                apiKey: apiKey,
+                useSsl: useSsl,
+                baseUrl: baseUrl,
+                serializer: serializer,
+                proxy: proxy
+            );
         }
 
         public async Task<TmdbServiceConfigurationInfo> GetConfigAsync()
@@ -107,8 +111,10 @@ namespace ProjectV.TmdbService
             return _configMapper.Transform(config);
         }
 
+
         public async Task<TmdbSearchContainer?> TrySearchMovieAsync(string query, int page = 0,
-            bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default)
+            bool includeAdult = false, int year = 0, string? region = null,
+            int primaryReleaseYear = 0, CancellationToken cancellationToken = default)
         {
             query.ThrowIfNullOrWhiteSpace(nameof(query));
 
@@ -118,7 +124,13 @@ namespace ProjectV.TmdbService
             try
             {
                 SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
-                    query, page, includeAdult, year, cancellationToken
+                    query: query,
+                    page: page,
+                    includeAdult: includeAdult,
+                    year: year,
+                    region: region,
+                    primaryReleaseYear: primaryReleaseYear,
+                    cancellationToken: cancellationToken
                 );
 
                 return _dataMapper.Transform(response);
@@ -133,12 +145,18 @@ namespace ProjectV.TmdbService
 
         #region IDisposable Implementation
 
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _tmdbClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

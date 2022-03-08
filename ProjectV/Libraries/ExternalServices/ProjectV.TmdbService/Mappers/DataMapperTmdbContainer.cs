@@ -1,9 +1,7 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 using ProjectV.TmdbService.Models;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
-using ProjectV.Models.Data;
 
 namespace ProjectV.TmdbService.Mappers
 {
@@ -24,14 +22,14 @@ namespace ProjectV.TmdbService.Mappers
 
         public TmdbSearchContainer Transform(SearchContainer<SearchMovie> dataObject)
         {
-            List<TmdbMovieInfo> results = dataObject.Results
+            var results = dataObject.Results
                 .Select(tmdb => _mapperTmdbMovie.Transform(tmdb))
                 .ToList();
 
             return new TmdbSearchContainer(
-                page:         dataObject.Page,
-                results:      results,
-                totalPages:   dataObject.TotalPages,
+                page: dataObject.Page,
+                results: results,
+                totalPages: dataObject.TotalPages,
                 totalResults: dataObject.TotalResults
             );
         }

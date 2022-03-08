@@ -15,7 +15,7 @@ namespace ProjectV.DesktopApp.Views
 
         public void Clear()
         {
-            if (!(DataContext is ChooseContentDirectoryViewModel createToplistViewModel)) return;
+            if (DataContext is not ChooseContentDirectoryViewModel createToplistViewModel) return;
 
             createToplistViewModel.DirectoryPath = string.Empty;
             DirectoryPathTextBox.Clear();

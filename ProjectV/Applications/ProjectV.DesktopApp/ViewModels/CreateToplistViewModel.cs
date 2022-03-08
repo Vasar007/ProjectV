@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ProjectV.DesktopApp.Models.Toplists;
-using Prism.Mvvm;
 using Acolyte.Assertions;
+using Prism.Mvvm;
+using ProjectV.DesktopApp.Models.Toplists;
 
 namespace ProjectV.DesktopApp.ViewModels
 {

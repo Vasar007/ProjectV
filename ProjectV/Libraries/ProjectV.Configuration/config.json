@@ -1,10 +1,10 @@
 {
-  "DataBaseOptions": {
-    "ConnectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ProjectV;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+  "DatabaseOptions": {
+    "ConnectionString": "Host=localhost;Port=5432;Database=ProjectV;Username=postgres;Password=postgres"
   },
 
   "ProjectVServiceOptions": {
-    "CommunicationServiceBaseAddress": "https://localhost:44359/",
+    "CommunicationServiceBaseAddress": "https://localhost:44322/",
     "CommunicationServiceApiUrl": "api/v1/requests"
   }
 }

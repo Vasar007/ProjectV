@@ -33,8 +33,8 @@ namespace ProjectV.DesktopApp.Models.Toplists
             toplist.ThrowIfNull(nameof(toplist));
 
             Name = toplist.Name;
-            Type = (int) toplist.Type;
-            Format = (int) toplist.Format;
+            Type = (int)toplist.Type;
+            Format = (int)toplist.Format;
 
             Blocks = ConvertBlocksToXElements(toplist.Blocks);
         }
@@ -128,7 +128,7 @@ namespace ProjectV.DesktopApp.Models.Toplists
             int parsedPosition = XDocumentParser.GetAttributeValue<int>(
                 xmlItem, nameof(ToplistItem.Position)
             );
-            int? position = parsedPosition == -1 ? (int?) null : parsedPosition;
+            int? position = parsedPosition == -1 ? (int?)null : parsedPosition;
 
             return new ToplistItem(name, position, parentBlock);
         }

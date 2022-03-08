@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using ProjectV.Communication;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
@@ -13,9 +14,9 @@ using ProjectV.TmdbService.Models;
 namespace ProjectV.Crawlers.Movie.Tmdb
 {
     /// <summary>
-    /// Concrete crawler for The Movie Database service.
+    /// Provides async version of TMDb crawler.
     /// </summary>
-    public sealed class TmdbCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
+    public sealed class TmdbCrawler : ICrawler, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -28,9 +29,10 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         private readonly ITmdbClient _tmdbClient;
 
         /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
         /// </summary>
-        private bool _disposed;
+        private readonly HashSet<BasicInfo> _searchResults;
 
         #region ITagable Implementation
 
@@ -63,43 +65,42 @@ namespace ProjectV.Crawlers.Movie.Tmdb
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _tmdbClient = TmdbClientFactory.CreateClient(apiKey, maxRetryCount);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
-        #region ICrawler Implementation
+        #region ICrawler Implemenation
 
         /// <inheritdoc />
-        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
-            bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
             TmdbServiceConfiguration.SetServiceConfigurationOnce(
-                GetServiceConfiguration(outputResults)
+                await GetServiceConfiguration(outputResults)
             );
 
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            foreach (string movie in entities)
+            TmdbSearchContainer? response = await _tmdbClient.TrySearchMovieAsync(entityName);
+
+            if (response is null || response.Results.IsNullOrEmpty())
             {
-                TmdbSearchContainer? response = _tmdbClient.TrySearchMovieAsync(movie).Result;
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                if (response is null || response.Results.IsNullOrEmpty())
-                {
-                    string message = $"{movie} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                // Get first search result from response and ignore all the rest.
-                TmdbMovieInfo searchResult = response.Results.First();
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
-                }
-
-                searchResults.Add(searchResult);
+                yield break;
             }
-            return searchResults.ToList();
+
+            // Get first search result from response and ignore all the rest.
+            TmdbMovieInfo searchResult = response.Results.First();
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {searchResult.Title} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(searchResult))
+            {
+                yield return searchResult;
+            }
+
+            yield break;
         }
 
         #endregion
@@ -107,14 +108,20 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases resources of TMDb client.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _tmdbClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion
@@ -124,9 +131,10 @@ namespace ProjectV.Crawlers.Movie.Tmdb
         /// </summary>
         /// <param name="outputResults">Flag to define need to output.</param>
         /// <returns>Transformed configuration of the service.</returns>
-        private TmdbServiceConfigurationInfo GetServiceConfiguration(bool outputResults)
+        private async Task<TmdbServiceConfigurationInfo> GetServiceConfiguration(
+            bool outputResults)
         {
-            TmdbServiceConfigurationInfo config = _tmdbClient.GetConfigAsync().Result;
+            TmdbServiceConfigurationInfo config = await _tmdbClient.GetConfigAsync();
 
             if (outputResults)
             {

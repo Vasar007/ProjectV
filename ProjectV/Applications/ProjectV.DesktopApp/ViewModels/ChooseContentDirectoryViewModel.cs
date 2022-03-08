@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Windows.Input;
 using Acolyte.Assertions;
-using Prism.Mvvm;
 using Prism.Commands;
+using Prism.Mvvm;
 using ProjectV.DesktopApp.Models.ContentDirectories;
 using ProjectV.Logging;
 

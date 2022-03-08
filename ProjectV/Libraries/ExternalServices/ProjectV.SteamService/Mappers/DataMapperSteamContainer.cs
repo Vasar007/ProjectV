@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SteamWebApiLib.Models.BriefInfo;
+﻿using System.Linq;
 using ProjectV.SteamService.Models;
+using SteamWebApiLib.Models.BriefInfo;
 
 namespace ProjectV.SteamService.Mappers
 {
@@ -23,7 +22,7 @@ namespace ProjectV.SteamService.Mappers
 
         public SteamBriefInfoContainer Transform(SteamAppBriefInfoList dataObject)
         {
-            List<SteamBriefInfo> results = dataObject.Apps
+            var results = dataObject.Apps
                 .Select(app => _mapperSteamBriefInfo.Transform(app))
                 .ToList();
 

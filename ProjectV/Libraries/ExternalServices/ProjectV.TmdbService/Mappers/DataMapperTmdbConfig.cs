@@ -14,10 +14,10 @@ namespace ProjectV.TmdbService.Mappers
         public TmdbServiceConfigurationInfo Transform(TMDbConfig dataObject)
         {
             return new TmdbServiceConfigurationInfo(
-                baseUrl:       dataObject.Images.BaseUrl,
+                baseUrl: dataObject.Images.BaseUrl,
                 secureBaseUrl: dataObject.Images.SecureBaseUrl,
                 backdropSizes: dataObject.Images.BackdropSizes,
-                posterSizes:   dataObject.Images.PosterSizes
+                posterSizes: dataObject.Images.PosterSizes
             );
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable format // dotnet format fails indentation for switch :(
+
+using System;
 using System.Xml.Linq;
 using Acolyte.Assertions;
 using Acolyte.Xml;
@@ -8,7 +10,7 @@ using ProjectV.Models.Data;
 namespace ProjectV.Building.Service
 {
     /// <summary>
-    /// Provides methods to create service classes (sequential) instances with parameters from XML 
+    /// Provides methods to create service classes instances with parameters from XML 
     /// config.
     /// </summary>
     public sealed class ServiceBuilderForXmlConfig : ServiceBuilderBase
@@ -21,14 +23,14 @@ namespace ProjectV.Building.Service
 
 
         /// <summary>
-        /// Creates service (sequential) builder to interact with XML config.
+        /// Creates service builder to interact with XML config.
         /// </summary>
         public ServiceBuilderForXmlConfig()
         {
         }
 
         /// <summary>
-        /// Creates message handler (sequential) instance depend on parameter value (could be get 
+        /// Creates message (sequential) handler instance depend on parameter value (could be get 
         /// from config).
         /// </summary>
         /// <param name="messageHandlerElement">Element from XML config.</param>
@@ -49,7 +51,7 @@ namespace ProjectV.Building.Service
             var handlerElement = messageHandlerElement.Attribute(_messageHandlerTypeParameterName);
             handlerElement.ThrowIfNull(nameof(handlerElement));
 
-            switch (handlerElement.Value)
+            switch (handlerElement!.Value)
             {
                 case _consoleMessageHandlerParameterName:
                 {
@@ -84,8 +86,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates inputter (sequential) instance depend on parameter value (could be get from 
-        /// config).
+        /// Creates inputter instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="inputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of inputter interface.</returns>
@@ -99,7 +100,7 @@ namespace ProjectV.Building.Service
         {
             inputterElement.ThrowIfNull(nameof(inputterElement));
 
-            _logger.Info("Creating inputter.");
+            _logger.Info("Creating intputter.");
 
             switch (inputterElement.Name.LocalName)
             {
@@ -109,7 +110,8 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
                     return new IO.Input.File.LocalFileReader(fileReader);
                 }
@@ -120,7 +122,8 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _googleDriveParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader =
+                        CreateFileReader(fileReaderName);
 
                     return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
                 }
@@ -136,8 +139,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates crawler (sequential) instance depend on parameter value (could be get from 
-        /// config).
+        /// Creates crawler instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="crawlerElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of crawler class.</returns>
@@ -196,8 +198,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates appraiser (sequential) instance depend on parameter value (could be get from 
-        /// config).
+        /// Creates appraiser instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="appraiserElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of appraiser class.</returns>
@@ -217,27 +218,21 @@ namespace ProjectV.Building.Service
             {
                 case _appraiserTmdbParameterName:
                 {
-                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
-                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb
-                        .TmdbNormalizedAppraisal(basicAppraisal);
+                    var appraisal = new Appraisers.Appraisals.Movie.Tmdb.TmdbCommonAppraisal();
 
                     return new Appraisers.Appraiser<TmdbMovieInfo>(appraisal);
                 }
 
                 case _appraiserOmdbParameterName:
                 {
-                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
-                    var appraisal = new Appraisers.Appraisals.Movie.Omdb
-                        .OmdbNormalizedAppraisal(basicAppraisal);
+                    var appraisal = new Appraisers.Appraisals.Movie.Omdb.OmdbCommonAppraisal();
 
                     return new Appraisers.Appraiser<OmdbMovieInfo>(appraisal);
                 }
 
                 case _steamAppraiserParameterName:
                 {
-                    var basicAppraisal = new Appraisers.Appraisals.BasicAppraisal();
-                    var appraisal = new Appraisers.Appraisals.Game.Steam
-                        .SteamNormalizedAppraisal(basicAppraisal);
+                    var appraisal = new Appraisers.Appraisals.Game.Steam.SteamCommonAppraisal();
 
                     return new Appraisers.Appraiser<SteamGameInfo>(appraisal);
                 }
@@ -253,8 +248,7 @@ namespace ProjectV.Building.Service
         }
 
         /// <summary>
-        /// Creates outputter (sequential) instance depend on parameter value (could be get from 
-        /// config).
+        /// Creates outputter instance depend on parameter value (could be get from config).
         /// </summary>
         /// <param name="outputterElement">Element from XML config.</param>
         /// <returns>Fully initialized instance of outputter interface.</returns>
@@ -274,7 +268,7 @@ namespace ProjectV.Building.Service
             {
                 case _localFileParameterName:
                 {
-                    return new IO.Output.File.LocalFileWriter();
+                    return new IO.Output.File.LocalFileWriterAsync();
                 }
 
                 case _googleDriveParameterName:
@@ -286,52 +280,6 @@ namespace ProjectV.Building.Service
                 {
                     throw new ArgumentOutOfRangeException(
                         nameof(outputterElement), outputterElement,
-                        "Couldn't recognize output type specified in XML config."
-                    );
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates repository (sequential) instance depend on parameter value (could be get from 
-        /// config).
-        /// </summary>
-        /// <param name="repositoryElement">Element from XML config.</param>
-        /// <param name="storageSettings">
-        /// Storage settings for repositrory (at least contain connection string).
-        /// </param>
-        /// <returns>Fully initialized instance of repository interface.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="repositoryElement" /> isn't specified in config.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="repositoryElement" /> or <paramref name="storageSettings" /> is 
-        /// <c>null</c>.
-        /// </exception>
-        public DAL.Repositories.IDataRepository CreateRepository(XElement repositoryElement,
-            DAL.DataBaseOptions storageSettings)
-        {
-            repositoryElement.ThrowIfNull(nameof(repositoryElement));
-            storageSettings.ThrowIfNull(nameof(storageSettings));
-
-            _logger.Info("Creating reppository.");
-
-            switch (repositoryElement.Name.LocalName)
-            {
-                case _basicInfoRepositoryParameterName:
-                {
-                    return new DAL.Repositories.BasicInfoRepository(storageSettings);
-                }
-
-                case _tmdbMovieRepositoryParameterName:
-                {
-                    return new DAL.Repositories.TmdbMovieRepository(storageSettings);
-                }
-
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(repositoryElement), repositoryElement,
                         "Couldn't recognize output type specified in XML config."
                     );
                 }

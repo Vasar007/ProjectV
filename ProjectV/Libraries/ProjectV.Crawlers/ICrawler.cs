@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ProjectV.Models.Data;
 
 namespace ProjectV.Crawlers
@@ -7,7 +8,7 @@ namespace ProjectV.Crawlers
     /// Crawlers base interface for sequential service. You should inherit this class if would like
     /// to create your own crawler.
     /// </summary>
-    public interface ICrawler : ICrawlerBase
+    public interface ICrawler : IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Gets response from data storage and process it.
@@ -19,6 +20,6 @@ namespace ProjectV.Crawlers
         /// Response collection must be unique because rating calculation errors can occur in such
         /// situations.
         /// </remarks>
-        IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities, bool outputResults);
+        IAsyncEnumerable<BasicInfo> GetResponse(string entitiyName, bool outputResults);
     }
 }

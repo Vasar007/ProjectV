@@ -9,7 +9,7 @@ namespace ProjectV.Models.Configuration
         [XmlAttribute(DataType = "string")]
         public string MessageHandlerType { get; set; } = default!;
 
-        [XmlAnyElement(Name = "MessageHandlerParameters")]
+        [XmlAnyElement(Name = nameof(MessageHandlerParameters))]
         public XElement[] MessageHandlerParameters { get; set; } = default!;
 
 

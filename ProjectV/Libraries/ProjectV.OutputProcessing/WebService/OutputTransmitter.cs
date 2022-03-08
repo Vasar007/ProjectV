@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.WebService
 {
-    public sealed class OutputTransmitter : IOutputter, IOutputterBase, ITagable
+    public sealed class OutputTransmitter : IOutputter, ITagable
     {
         private IReadOnlyList<IReadOnlyList<RatingDataContainer>> _transmittingResults =
             new List<IReadOnlyList<RatingDataContainer>>();
+
+        public string StorageName { get; private set; } = string.Empty;
 
         #region ITagable Implementation
 
@@ -14,8 +17,6 @@ namespace ProjectV.IO.Output.WebService
         public string Tag { get; } = nameof(OutputTransmitter);
 
         #endregion
-
-        public string StorageName { get; private set; } = string.Empty;
 
 
         public OutputTransmitter()
@@ -29,13 +30,13 @@ namespace ProjectV.IO.Output.WebService
 
         #region IOutputter Implementation
 
-        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
+        public Task<bool> SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
             string storageName)
         {
             StorageName = storageName;
 
             _transmittingResults = results;
-            return true;
+            return Task.FromResult(true);
         }
 
         #endregion

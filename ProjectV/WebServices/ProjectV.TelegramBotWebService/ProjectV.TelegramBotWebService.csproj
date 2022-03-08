@@ -1,34 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup Label="Globals">
-    <Platforms>x64</Platforms>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>CS8600,CS8602,CS8603,CS8618,CS8625</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ProjectV.TelegramBotWebService</RootNamespace>
+    <IncludeSymbols>false</IncludeSymbols>
+    <IsPackable>false</IsPackable>
     <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpToSocks5Proxy" Version="1.4.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-    <PackageReference Include="Telegram.Bot" Version="15.7.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Core\ProjectV.Core.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
-    <ProjectReference Include="..\..\Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <PackageReference Include="HttpToSocks5Proxy" Version="$(HttpToSocks5ProxyPackageVersion)" />
+    <PackageReference Include="Telegram.Bot" Version="$(TelegramBotPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +33,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
   </ItemGroup>
 
 </Project>

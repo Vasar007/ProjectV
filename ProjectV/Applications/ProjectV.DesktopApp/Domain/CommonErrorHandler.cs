@@ -17,7 +17,7 @@ namespace ProjectV.DesktopApp.Domain
 
         public void HandleError(Exception ex)
         {
-            _logger.Error(ex, "Exception occured during task execution.");
+            _logger.Error(ex, "Exception occurred during task execution.");
         }
 
         #endregion

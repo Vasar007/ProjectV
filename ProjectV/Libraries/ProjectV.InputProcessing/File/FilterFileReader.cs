@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration;
 using FileHelpers;
@@ -42,8 +41,11 @@ namespace ProjectV.IO.Input.File
         #region IFileReader Implementation
 
         /// <inheritdoc />
-        /// <remarks>File must contain "Status" and "Thing Name" columns.</remarks>
-        public List<string> ReadFile(string filename)
+        /// <remarks>
+        /// File must contain specified columns: <see cref="_thingNameHeader" />,
+        /// <see cref="_statusHeader" />.
+        /// </remarks>
+        public IEnumerable<string> ReadFile(string filename)
         {
             _logger.Info($"Reading file \"{filename}\".");
 
@@ -53,20 +55,25 @@ namespace ProjectV.IO.Input.File
             using var engine = new FileHelperAsyncEngine<FilterInputFileData>();
             using (engine.BeginReadFile(filename))
             {
-                // The engine is IEnumerable.
-                result.UnionWith(
-                    engine
-                        .Where(data => string.IsNullOrEmpty(data.status))
-                        .Select(data => data.thingName)
-                );
+                foreach (FilterInputFileData record in engine)
+                {
+                    if (!string.IsNullOrEmpty(record.status)) continue;
+
+                    if (result.Add(record.thingName))
+                    {
+                        yield return record.thingName;
+                    }
+                }
             }
-            return result.ToList();
         }
 
         /// <inheritdoc />
-        /// <remarks>File must contain "Status" and "Thing Name" columns.</remarks>
+        /// <remarks>
+        /// File must contain specified columns: <see cref="_thingNameHeader" />,
+        /// <see cref="_statusHeader" />.
+        /// </remarks>
         /// <exception cref="InvalidDataException">CSV file doesn't contain header.</exception>
-        public List<string> ReadCsvFile(string filename)
+        public IEnumerable<string> ReadCsvFile(string filename)
         {
             _logger.Info($"Reading CSV file \"{filename}\".");
 
@@ -90,11 +97,12 @@ namespace ProjectV.IO.Input.File
                 string status = csv[_statusHeader];
                 if (!string.IsNullOrEmpty(status)) continue;
 
-                string field = csv[_thingNameHeader];
-                result.Add(field);
+                string thingName = csv[_thingNameHeader];
+                if (result.Add(thingName))
+                {
+                    yield return thingName;
+                }
             }
-
-            return result.ToList();
         }
 
         #endregion

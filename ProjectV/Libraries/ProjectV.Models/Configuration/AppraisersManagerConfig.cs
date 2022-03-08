@@ -1,5 +1,5 @@
-﻿using System.Xml.Serialization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace ProjectV.Models.Configuration
 {
@@ -9,10 +9,10 @@ namespace ProjectV.Models.Configuration
         [XmlAttribute(DataType = "boolean")]
         public bool AppraisersOutputFlag { get; set; }
 
-        [XmlAnyElement(Name = "AppraisersManagerParameters")]
+        [XmlAnyElement(Name = nameof(AppraisersManagerParameters))]
         public XElement[] AppraisersManagerParameters { get; set; } = default!;
 
-        [XmlAnyElement(Name = "Appraisers")]
+        [XmlAnyElement(Name = nameof(Appraisers))]
         public XElement[] Appraisers { get; set; } = default!;
 
 

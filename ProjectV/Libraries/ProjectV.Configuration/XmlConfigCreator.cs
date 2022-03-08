@@ -28,6 +28,12 @@ namespace ProjectV.Configuration
             LoggerFactory.CreateLoggerFor<XmlConfigCreator>();
 
         /// <summary>
+        /// Specifies default service type used in config creation. Default value:
+        /// <see cref="ServiceType.TplDataflow" />.
+        /// </summary>
+        public static ServiceType DefaultServiceType { get; } = ServiceType.TplDataflow;
+
+        /// <summary>
         /// Inner array to hold collection of message handler parameters.
         /// </summary>
         private readonly List<XElement> _messageHandlerParameters = new List<XElement>();
@@ -160,17 +166,12 @@ namespace ProjectV.Configuration
                             ),
                         }
                     },
-                    DataBaseManager = new DataBaseManagerConfig
+                    DataBaseManager = new DatabaseManagerConfig
                     {
-                        Repositories = new[]
-                        {
-                            ConfigModule.GetConfigForRepository(
-                                ConfigNames.Repositories.TmdbMovieRepositoryName
-                            )
-                        }
+                        Repositories = Array.Empty<XElement>()
                     }
                 },
-                ServiceType = ServiceType.TplDataflow
+                ServiceType = DefaultServiceType
             };
 
             return xmlConfig;
@@ -225,12 +226,6 @@ namespace ProjectV.Configuration
 
             xmlConfigCreator.SetDefaultOutStorageName("appraised_things.csv");
 
-            xmlConfigCreator.AddRepository(
-                ConfigModule.GetConfigForRepository(
-                    ConfigNames.Repositories.BasicInfoRepositoryName
-                )
-            );
-
             foreach (var inputItem in configRequirements.Input)
             {
                 ConfigContract.CheckAvailability(inputItem, ConfigContract.AvailableInput);
@@ -246,9 +241,6 @@ namespace ProjectV.Configuration
 
                 xmlConfigCreator.AddCrawler(
                     ConfigModule.GetConfigForCrawler(serviceItem)
-                );
-                xmlConfigCreator.AddRepository(
-                    ConfigModule.GetConfigForRepository(serviceItem)
                 );
             }
 
@@ -270,7 +262,7 @@ namespace ProjectV.Configuration
                 );
             }
 
-            xmlConfigCreator.SetServiceType(ServiceType.TplDataflow);
+            xmlConfigCreator.SetServiceType(DefaultServiceType);
 
             return xmlConfigCreator.GetResult();
         }
@@ -289,7 +281,7 @@ namespace ProjectV.Configuration
                     CrawlersManager = new CrawlersManagerConfig(),
                     AppraisersManager = new AppraisersManagerConfig(),
                     OutputManager = new OutputManagerConfig(),
-                    DataBaseManager = new DataBaseManagerConfig()
+                    DataBaseManager = new DatabaseManagerConfig()
                 }
             };
 
@@ -575,26 +567,26 @@ namespace ProjectV.Configuration
         /// <returns>Created XML configuration.</returns>
         public ConfigurationXml GetResult()
         {
-            _result.ShellConfig.MessageHandler.MessageHandlerParameters = 
+            _result.ShellConfig.MessageHandler.MessageHandlerParameters =
                 _messageHandlerParameters.ToArray();
 
-            _result.ShellConfig.InputManager.InputManagerParameters = 
+            _result.ShellConfig.InputManager.InputManagerParameters =
                 _inputManagerParameters.ToArray();
             _result.ShellConfig.InputManager.Inputters = _inputters.ToArray();
 
-            _result.ShellConfig.CrawlersManager.CrawlersManagerParameters = 
+            _result.ShellConfig.CrawlersManager.CrawlersManagerParameters =
                 _crawlersManagerParameters.ToArray();
             _result.ShellConfig.CrawlersManager.Crawlers = _crawlers.ToArray();
 
-            _result.ShellConfig.AppraisersManager.AppraisersManagerParameters = 
+            _result.ShellConfig.AppraisersManager.AppraisersManagerParameters =
                 _appraisersManagerParameters.ToArray();
             _result.ShellConfig.AppraisersManager.Appraisers = _appraisers.ToArray();
 
-            _result.ShellConfig.OutputManager.OutputManagerParameters = 
+            _result.ShellConfig.OutputManager.OutputManagerParameters =
                 _outputManagerParameters.ToArray();
             _result.ShellConfig.OutputManager.Outputters = _outputters.ToArray();
 
-            _result.ShellConfig.DataBaseManager.DataBaseManagerParameters = 
+            _result.ShellConfig.DataBaseManager.DatabaseManagerParameters =
                 _dataBaseManagerParameters.ToArray();
             _result.ShellConfig.DataBaseManager.Repositories = _repositories.ToArray();
 

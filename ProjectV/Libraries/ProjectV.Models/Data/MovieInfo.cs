@@ -19,7 +19,7 @@ namespace ProjectV.Models.Data
         /// <summary>
         /// Movie release date.
         /// </summary>
-        public DateTime ReleaseDate { get;  }
+        public DateTime ReleaseDate { get; }
 
 
         /// <inheritdoc />

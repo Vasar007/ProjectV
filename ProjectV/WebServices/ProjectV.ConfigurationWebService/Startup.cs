@@ -1,12 +1,13 @@
 ﻿using System;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ProjectV.CommonWebApi.Extensions;
 using ProjectV.ConfigurationWebService.v1.Domain;
 
 namespace ProjectV.ConfigurationWebService
@@ -18,7 +19,7 @@ namespace ProjectV.ConfigurationWebService
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration.ThrowIfNull(nameof(configuration));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -28,7 +29,6 @@ namespace ProjectV.ConfigurationWebService
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson();
 
             services.AddApiVersioning(
@@ -96,6 +96,7 @@ namespace ProjectV.ConfigurationWebService
                 c.RoutePrefix = string.Empty;
             });
 
+            app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

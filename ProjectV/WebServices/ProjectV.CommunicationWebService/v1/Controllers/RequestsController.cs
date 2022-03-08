@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Acolyte.Assertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommunicationWebService.v1.Domain;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
-using Acolyte.Assertions;
 
 namespace ProjectV.CommunicationWebService.v1.Controllers
 {
@@ -32,30 +32,27 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return "You can get request processing your data by ThingsAppraiser service.";
+            return Ok("You can get request processing your data by ThingsAppraiser service.");
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
             RequestParams requestParams)
         {
-            try
-            {
-                RequestData requestData =
-                    await _configurationReceiver.ReceiveConfigForRequestAsync(requestParams);
+            _logger.Info("Got request to add in processing queue.");
 
-                ProcessingResponse response =
-                    await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
+            RequestData requestData =
+                await _configurationReceiver.ReceiveConfigForRequestAsync(requestParams);
 
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during request handling.");
-            }
-            return BadRequest(requestParams);
+            ProcessingResponse response =
+                await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
+
+            return Ok(response);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Acolyte.Assertions;
 
 namespace ProjectV.IO.Input.WebService
 {
-    public sealed class InputTransmitter : IInputter, IInputterBase, ITagable
+    public sealed class InputTransmitter : IInputter, ITagable
     {
-        private readonly IReadOnlyList<string> _thingNames;
+        private readonly IEnumerable<string> _thingNames;
 
         #region ITagable Implementation
 
@@ -18,14 +17,14 @@ namespace ProjectV.IO.Input.WebService
         public string StorageName { get; private set; } = string.Empty;
 
 
-        public InputTransmitter(IReadOnlyList<string> thingNames)
+        public InputTransmitter(IEnumerable<string> thingNames)
         {
             _thingNames = thingNames.ThrowIfNull(nameof(thingNames));
         }
 
         #region IInputter Implementation
 
-        public IReadOnlyList<string> ReadThingNames(string storageName)
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
             StorageName = storageName;
 
@@ -33,9 +32,11 @@ namespace ProjectV.IO.Input.WebService
             var result = new HashSet<string>();
             foreach (string thingName in _thingNames)
             {
-                result.Add(thingName);
+                if (result.Add(thingName))
+                {
+                    yield return thingName;
+                }
             }
-            return result.ToList();
         }
 
         #endregion

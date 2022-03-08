@@ -12,15 +12,15 @@ namespace ProjectV.IO.Input.File
         /// structure (it's implementation detail, see implementers remarks).
         /// </summary>
         /// <param name="filename">Filename to read.</param>
-        /// <returns>Processed collection of entity names.</returns>
-        List<string> ReadFile(string filename);
+        /// <returns>Enumeration of entity names.</returns>
+        IEnumerable<string> ReadFile(string filename);
 
         /// <summary>
         /// Reads local csv-file. File must satisfy a particular structure (it's implementation
         /// detail, see implementers remarks).
         /// </summary>
         /// <param name="filename">Filename to read</param>
-        /// <returns>Processed collection of entity names.</returns>
-        List<string> ReadCsvFile(string filename);
+        /// <returns>Enumeration of entity names.</returns>
+        IEnumerable<string> ReadCsvFile(string filename);
     }
 }

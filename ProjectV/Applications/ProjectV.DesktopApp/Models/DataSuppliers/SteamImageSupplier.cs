@@ -16,7 +16,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
         {
             data.ThrowIfNull(nameof(data));
 
-            if (!(data is SteamGameInfo gameInfo))
+            if (data is not SteamGameInfo gameInfo)
             {
                 throw new ArgumentException("Data handler has invalid type.", nameof(data));
             }

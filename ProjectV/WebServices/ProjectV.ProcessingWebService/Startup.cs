@@ -1,12 +1,15 @@
 ﻿using System;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ProjectV.CommonWebApi.Extensions;
+using ProjectV.DataAccessLayer;
+using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService
@@ -18,7 +21,7 @@ namespace ProjectV.ProcessingWebService
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration.ThrowIfNull(nameof(configuration));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -26,9 +29,14 @@ namespace ProjectV.ProcessingWebService
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
 
+            services.Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IJobInfoService, JobInfoService>();
+            services.AddDbContext<ProjectVDbContext>();
+
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson();
 
             services.AddApiVersioning(
@@ -95,6 +103,7 @@ namespace ProjectV.ProcessingWebService
                 c.RoutePrefix = string.Empty;
             });
 
+            app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

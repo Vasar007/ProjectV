@@ -43,9 +43,7 @@ namespace ProjectV.Appraisers.Appraisals.Movie.Tmdb
         {
             entity.ThrowIfNull(nameof(entity));
 
-            double popValue = entity.Popularity;
-
-            return popValue;
+            return entity.Popularity;
         }
 
         #endregion

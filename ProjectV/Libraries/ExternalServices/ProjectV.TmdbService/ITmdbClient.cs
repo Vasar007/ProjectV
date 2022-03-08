@@ -53,7 +53,8 @@ namespace ProjectV.TmdbService
 
 
         Task<TmdbSearchContainer?> TrySearchMovieAsync(string query, int page = 0,
-            bool includeAdult = false, int year = 0, CancellationToken cancellationToken = default);
+            bool includeAdult = false, int year = 0, string? region = null,
+            int primaryReleaseYear = 0, CancellationToken cancellationToken = default);
 
         Task<TmdbServiceConfigurationInfo> GetConfigAsync();
     }

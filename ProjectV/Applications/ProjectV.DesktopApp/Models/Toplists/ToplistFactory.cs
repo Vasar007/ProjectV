@@ -40,7 +40,7 @@ namespace ProjectV.DesktopApp.Models.Toplists
             ToplistXml toplistXml = ToplistBase.Desirialize(fileContent);
 
             ToplistBase toplist = Create(
-                toplistXml.Name, (ToplistType) toplistXml.Type, (ToplistFormat) toplistXml.Format
+                toplistXml.Name, (ToplistType)toplistXml.Type, (ToplistFormat)toplistXml.Format
             );
             toplist.UpdateBlocks(toplistXml.ConvertXElementsToBlocks());
             return toplist;

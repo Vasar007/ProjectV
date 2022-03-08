@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectV.Models.WebService;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
+using ProjectV.Models.WebService;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
@@ -15,13 +15,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
 
 
-        public static void ScheduleRequest(IBotService botService, IServiceProxy serviceProxy,
+        public static Task ScheduleRequestAsync(IBotService botService, IServiceProxy serviceProxy,
             long chatId, RequestParams requestParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
-            // Otherwise Telegram will retry to send event again untill service send a response.
-            Task.Run(
+            // Otherwise Telegram will retry to send event again until service send a response.
+            return Task.Run(
                 () => ScheduleRequestImplementation(botService, serviceProxy,
                                                     chatId, requestParams),
                 token
@@ -75,13 +75,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
                                               out IList<double>? ratingValues))
                     {
-                        if (ratingValues is null)
-                        {
-                            throw new InvalidOperationException(
-                                "Rating data container contains null values."
-                            );
-                        }
-
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }
                     else

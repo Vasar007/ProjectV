@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.Logging;
 
 namespace ProjectV.IO.Input.File
 {
     /// <summary>
-    /// Class which can read from files and parse it.
+    /// Class which can read from local files.
     /// </summary>
-    public sealed class LocalFileReader : IInputter, IInputterBase, ITagable
+    public sealed class LocalFileReader : IInputter, ITagable
     {
         /// <summary>
         /// Logger instance for current class.
@@ -32,7 +33,9 @@ namespace ProjectV.IO.Input.File
         /// <summary>
         /// Initializes instance with specified reader.
         /// </summary>
-        public LocalFileReader(IFileReader fileReader)
+        /// <param name="fileReader">File reader implementation.</param>
+        public LocalFileReader(
+            IFileReader fileReader)
         {
             _fileReader = fileReader.ThrowIfNull(nameof(fileReader));
         }
@@ -44,29 +47,27 @@ namespace ProjectV.IO.Input.File
         /// </summary>
         /// <param name="storageName">Storage with Things names.</param>
         /// <returns>Things names as collection of strings.</returns>
-        public IReadOnlyList<string> ReadThingNames(string storageName)
+        public IEnumerable<string> ReadThingNames(string storageName)
         {
-            var result = new List<string>();
-            if (string.IsNullOrEmpty(storageName)) return result;
+            if (string.IsNullOrEmpty(storageName)) return Enumerable.Empty<string>();
 
             try
             {
-                if (storageName.EndsWith(".csv"))
+                if (storageName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
                 {
-                    result = _fileReader.ReadCsvFile(storageName);
+                    return _fileReader.ReadCsvFile(storageName);
                 }
                 else
                 {
-                    result = _fileReader.ReadFile(storageName);
+                    return _fileReader.ReadFile(storageName);
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "File reader throws exception.");
+                _logger.Error(ex, "Async file reader throws exception.");
                 throw;
             }
 
-            return result;
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace ProjectV.DesktopApp.Views
         private void ChooseContentDirectory_DialogOpened(object sender,
             DialogOpenedEventArgs eventArgs)
         {
-            if (!(eventArgs.Session.Content is ChooseContentDirectoryView chooseContentDirectoryView)) return;
+            if (eventArgs.Session.Content is not ChooseContentDirectoryView chooseContentDirectoryView) return;
 
             // Make sure that text box is clear when we start new dialog.
             chooseContentDirectoryView.Clear();
@@ -37,7 +37,7 @@ namespace ProjectV.DesktopApp.Views
         {
             if (Equals(eventArgs.Parameter, false)) return;
 
-            if (!(eventArgs.Parameter is ChooseContentDirectoryViewModel chooseContentDirectoryViewModel)) return;
+            if (eventArgs.Parameter is not ChooseContentDirectoryViewModel chooseContentDirectoryViewModel) return;
 
             string directoryPath = chooseContentDirectoryViewModel.DirectoryPath;
             if (string.IsNullOrWhiteSpace(directoryPath))

@@ -1,15 +1,17 @@
+environment:
+  dotnetFormatVersion: 5.0.211103
+
 version: '{build}'
-image: Visual Studio 2019
+image: Visual Studio 2022
+
+# Do not build on tags (GitHub, Bitbucket, GitLab, Gitea).
+skip_tags: true
 
 shallow_clone: true
 
-clone_folder: C:/projects/projectv
+# All branches are built by default.
 
-branches:
-  only:
-    - master
-    - develop
-
+# Build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
   - x64
 
@@ -20,9 +22,11 @@ configuration:
 matrix:
   fast_finish: true
 
+install:
+  - ps: dotnet tool update -g dotnet-format --version $env:dotnetFormatVersion
+
 before_build:
-  - cmd: cd ProjectV
-  - cmd: dotnet restore
+  - ps: dotnet restore ProjectV
 
 build:
   verbosity: minimal
@@ -31,20 +35,14 @@ test:
   assemblies:
     - '**/*.Tests.dll'
 
-# F# tests does not execute at all.
 after_test:
-  - ps: >-
-      if ($env:configuration -eq "Debug")
-      {
-        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Debug --no-build
-      }
-      else
-      {
-        dotnet test "C:/projects/projectv/ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj" --configuration Release --no-build
-      }
+  # F# tests does not execute at all.
+  - ps: dotnet test --configuration $env:configuration --no-build "ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj"
+  # Check code style.
+  - ps: dotnet-format "ProjectV/ProjectV.sln" --fix-whitespace --fix-style warn --check --verbosity diagnostic
 
 pull_requests:
     do_not_increment_build_number: true
 
-nuget:  
+nuget:
     disable_publish_on_pr: true

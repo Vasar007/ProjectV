@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Acolyte.Assertions;
+using ProjectV.DataPipeline;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 
@@ -27,17 +29,13 @@ namespace ProjectV.Crawlers
         /// </summary>
         private readonly bool _outputResults;
 
-        /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
-        /// </summary>
-        private bool _disposed;
-
 
         /// <summary>
         /// Initializes manager for crawlers.
         /// </summary>
         /// <param name="outputResults">Flag to define need to output crawlers results.</param>
-        public CrawlersManager(bool outputResults)
+        public CrawlersManager(
+            bool outputResults)
         {
             _outputResults = outputResults;
         }
@@ -72,32 +70,58 @@ namespace ProjectV.Crawlers
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases all resources used by crawlers.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
-            _crawlers.ForEach(crawler => crawler.Dispose());
+            _crawlers.ForEach(crawlerAsync => crawlerAsync.Dispose());
+
+            _disposed = true;
         }
 
         #endregion
 
-        /// <summary>
-        /// Sends requests to all crawlers in collection and collect responses.
-        /// </summary>
-        /// <param name="entities">Collection of entities as strings to process.</param>
-        /// <returns>Collection of results from crawlers produced from a set of entities.</returns>
-        public IReadOnlyList<IReadOnlyList<BasicInfo>> CollectAllResponses(List<string> entities)
+        public CrawlersFlow CreateFlow()
         {
-            var results = new List<IReadOnlyList<BasicInfo>>();
-            foreach (ICrawler crawler in _crawlers)
+            var crawlersFunc = _crawlers.Select(crawler =>
+                new Func<string, IAsyncEnumerable<BasicInfo>>(
+                    entityName => TryGetResponse(crawler, entityName)
+                )
+            );
+
+            var crawlersFlow = new CrawlersFlow(crawlersFunc);
+
+            _logger.Info("Constructed crawlers pipeline.");
+            return crawlersFlow;
+        }
+
+
+        /// <summary>
+        /// Sends requests to crawler in collection and collect response(-s).
+        /// </summary>
+        /// <param name="entityName">Entity name to process.</param>
+        /// <returns>Enumeration of results from crawler produced from an entitiy.</returns>
+        private IAsyncEnumerable<BasicInfo> TryGetResponse(ICrawler crawler,
+            string entityName)
+        {
+            try
             {
-                results.Add(crawler.GetResponse(entities, _outputResults));
+                return crawler.GetResponse(entityName, _outputResults);
             }
-            _logger.Info("Crawlers have finished work.");
-            return results;
+            catch (Exception ex)
+            {
+                string message = $"Crawler {crawler.Tag} could not process " +
+                                 $"entity \"{entityName}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

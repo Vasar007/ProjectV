@@ -7,12 +7,12 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.IO.Output.File
 {
-    public sealed class LocalFileWriterAsync : IOutputterAsync, IOutputterBase, ITagable
+    public sealed class LocalFileWriterAsync : IOutputter, ITagable
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<LocalFileWriterAsync>();
 
-        private readonly LocalFileWriter _localFileWriter = new LocalFileWriter();
+        private readonly LocalFileWriter _localFileWriter;
 
         #region ITagable Implementation
 
@@ -24,9 +24,10 @@ namespace ProjectV.IO.Output.File
 
         public LocalFileWriterAsync()
         {
+            _localFileWriter = new LocalFileWriter();
         }
 
-        #region IOutputterAsync Implementation
+        #region IOutputter Implementation
 
         public async Task<bool> SaveResults(
             IReadOnlyList<IReadOnlyList<RatingDataContainer>> results, string storageName)
@@ -35,6 +36,7 @@ namespace ProjectV.IO.Output.File
 
             try
             {
+                // Simply wrapping sync file writer with "Task.Run" method.
                 return await Task.Run(() => _localFileWriter.SaveResults(results, storageName));
             }
             catch (Exception ex)

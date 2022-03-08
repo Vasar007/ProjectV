@@ -36,7 +36,7 @@ namespace ProjectV.DesktopApp.Views
 
         private void OnCopy(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (!(eventArgs.Parameter is string stringValue)) return;
+            if (eventArgs.Parameter is not string stringValue) return;
 
             try
             {

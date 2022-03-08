@@ -16,27 +16,27 @@
         Ok,
 
         /// <summary>
-        /// Unexpected exception occured.
+        /// Unexpected exception occurred.
         /// </summary>
         Error,
 
         /// <summary>
-        /// Exception had occured during input component work.
+        /// Exception had occurred during input component work.
         /// </summary>
         InputError,
 
         /// <summary>
-        /// Exception had occured during crawlers component work.
+        /// Exception had occurred during crawlers component work.
         /// </summary>
         RequestError,
 
         /// <summary>
-        /// Exception had occured during appraisers component work.
+        /// Exception had occurred during appraisers component work.
         /// </summary>
         AppraiseError,
 
         /// <summary>
-        /// Exception had occured during output component work.
+        /// Exception had occurred during output component work.
         /// </summary>
         OutputError,
 

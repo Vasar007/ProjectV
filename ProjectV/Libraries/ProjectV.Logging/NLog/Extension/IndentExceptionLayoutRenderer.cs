@@ -5,7 +5,7 @@ using System.Text;
 using NLog.Config;
 using NLog.LayoutRenderers;
 
-namespace NLog.Extention
+namespace NLog.Extension
 {
     /// <summary>
     /// Renders exception starting from new line with short type exception name followed by message
@@ -85,7 +85,7 @@ namespace NLog.Extention
         /// <param name="logEvent">Specified parameter which contains exception info.</param>
         protected override void Append(StringBuilder builder, LogEventInfo logEvent)
         {
-            Exception ex = logEvent.Exception;
+            Exception? ex = logEvent.Exception;
             while (ex != null)
             {
                 builder.Append(

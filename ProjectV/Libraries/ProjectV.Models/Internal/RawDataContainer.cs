@@ -33,7 +33,7 @@ namespace ProjectV.Models.Internal
         {
             parameterName.ThrowIfNullOrEmpty(nameof(parameterName));
 
-            if (!_additionalData.TryGetValue(parameterName, out MinMaxDenominator result))
+            if (!_additionalData.TryGetValue(parameterName, out MinMaxDenominator? result))
             {
                 throw new ArgumentException(
                     "Parameter with specified name does not exist in parameter collection.",

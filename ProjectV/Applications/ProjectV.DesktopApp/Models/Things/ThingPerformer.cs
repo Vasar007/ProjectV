@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
@@ -109,9 +109,11 @@ namespace ProjectV.DesktopApp.Models.Things
 
             CreateBasicRequirements(serviceName);
 
+            // Read local file, retrieve all things and send them as list to service to crawling
+            // and appaise.
             var localFileReader = new LocalFileReader(new SimpleFileReader());
             IReadOnlyList<string> thingNames = await Task
-                .Run(() => localFileReader.ReadThingNames(storageName))
+                .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);
@@ -130,13 +132,15 @@ namespace ProjectV.DesktopApp.Models.Things
 
             CreateBasicRequirements(serviceName);
 
+            // Read file from Google Drive, retrieve all things and send them as list to service to
+            // crawling and appaise.
             var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
             );
 
             IReadOnlyList<string> thingNames = await Task
-                .Run(() => googleDriveReader.ReadThingNames(storageName))
+                .Run(() => googleDriveReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);
@@ -147,6 +151,7 @@ namespace ProjectV.DesktopApp.Models.Things
             };
         }
 
+        // TODO: we can use local requirements creator instead of reusing the old one.
         private void CreateBasicRequirements(string serviceName)
         {
             serviceName = ConfigContract.GetProperServiceName(serviceName);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.Communication;
 using ProjectV.Logging;
@@ -10,9 +9,9 @@ using ProjectV.OmdbService;
 namespace ProjectV.Crawlers.Movie.Omdb
 {
     /// <summary>
-    /// Concrete crawler for Open Movie Database service.
+    /// Provides async version of OMDb crawler.
     /// </summary>
-    public sealed class OmdbCrawler : ICrawler, ICrawlerBase, IDisposable, ITagable, ITypeId
+    public sealed class OmdbCrawler : ICrawler, IDisposable, ITagable, ITypeId
     {
         /// <summary>
         /// Logger instance for current class.
@@ -26,9 +25,10 @@ namespace ProjectV.Crawlers.Movie.Omdb
         private readonly IOmdbClient _omdbClient;
 
         /// <summary>
-        /// Boolean flag used to show that object has already been disposed.
+        /// Uses <see cref="HashSet{T}" /> to avoid duplicated data which can produce errors in
+        /// further work.
         /// </summary>
-        private bool _disposed;
+        private readonly HashSet<BasicInfo> _searchResults;
 
         #region ITagable Implementation
 
@@ -60,38 +60,38 @@ namespace ProjectV.Crawlers.Movie.Omdb
             apiKey.ThrowIfNullOrWhiteSpace(nameof(apiKey));
 
             _omdbClient = OmdbClientFactory.CreateClient(apiKey);
+            _searchResults = new HashSet<BasicInfo>();
         }
 
         #region ICrawler Implementation
 
         /// <inheritdoc />
-        public IReadOnlyList<BasicInfo> GetResponse(IReadOnlyList<string> entities,
-            bool outputResults)
+        public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            // Use HashSet to avoid duplicated data which can produce errors in further work.
-            var searchResults = new HashSet<BasicInfo>();
-            foreach (string movie in entities)
+            OmdbMovieInfo? response = await _omdbClient.TryGetItemByTitleAsync(entityName);
+
+            if (response is null)
             {
-                OmdbMovieInfo? response = _omdbClient.TryGetItemByTitleAsync(movie).Result;
+                string message = $"{entityName} was not processed.";
+                _logger.Warn(message);
+                GlobalMessageHandler.OutputMessage(message);
 
-                if (response is null)
-                {
-                    string message = $"{movie} was not processed.";
-                    _logger.Warn(message);
-                    GlobalMessageHandler.OutputMessage(message);
-
-                    continue;
-                }
-
-                // Get first search result from response and ignore all the rest.
-                if (outputResults)
-                {
-                    GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
-                }
-
-                searchResults.Add(response);
+                yield break;
             }
-            return searchResults.ToList();
+
+            // Get first search result from response and ignore all the rest.
+            if (outputResults)
+            {
+                GlobalMessageHandler.OutputMessage($"Got {response.Title} from \"{Tag}\".");
+            }
+
+            if (_searchResults.Add(response))
+            {
+                yield return response;
+            }
+
+            yield break;
+
         }
 
         #endregion
@@ -99,14 +99,20 @@ namespace ProjectV.Crawlers.Movie.Omdb
         #region IDisposable Implementation
 
         /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
         /// Releases resources of TMDb client.
         /// </summary>
         public void Dispose()
         {
             if (_disposed) return;
-            _disposed = true;
 
             _omdbClient.Dispose();
+
+            _disposed = true;
         }
 
         #endregion

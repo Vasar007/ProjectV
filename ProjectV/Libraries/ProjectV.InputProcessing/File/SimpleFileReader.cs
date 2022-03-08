@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using FileHelpers;
-using CsvHelper;
-using ProjectV.Logging;
 using Acolyte.Assertions;
+using CsvHelper;
 using CsvHelper.Configuration;
+using FileHelpers;
+using ProjectV.Logging;
 
 namespace ProjectV.IO.Input.File
 {
@@ -38,7 +37,8 @@ namespace ProjectV.IO.Input.File
         /// <exception cref="ArgumentException">
         /// <paramref name="thingNameHeader" /> presents empty strings or contains only whitespaces.
         /// </exception>
-        public SimpleFileReader(string thingNameHeader = "Thing Name")
+        public SimpleFileReader(
+            string thingNameHeader = "Thing Name")
         {
             _thingNameHeader = thingNameHeader.ThrowIfNullOrWhiteSpace(nameof(thingNameHeader));
         }
@@ -46,8 +46,10 @@ namespace ProjectV.IO.Input.File
         #region IFileReader Implementation
 
         /// <inheritdoc />
-        /// <remarks>File must contain "Thing Name" columns.</remarks>
-        public List<string> ReadFile(string filename)
+        /// <remarks>
+        /// File must contain specified column: <see cref="_thingNameHeader" />.
+        /// </remarks>
+        public IEnumerable<string> ReadFile(string filename)
         {
             _logger.Info($"Reading file \"{filename}\".");
 
@@ -57,16 +59,22 @@ namespace ProjectV.IO.Input.File
             using var engine = new FileHelperAsyncEngine<InputFileData>();
             using (engine.BeginReadFile(filename))
             {
-                // The engine is IEnumerable.
-                result.UnionWith(engine.Select(data => data.thingName));
+                foreach (InputFileData record in engine)
+                {
+                    if (result.Add(record.thingName))
+                    {
+                        yield return record.thingName;
+                    }
+                }
             }
-            return result.ToList();
         }
 
         /// <inheritdoc />
-        /// <remarks>File must contain "Thing Name" columns.</remarks>
+        /// <remarks>
+        /// File must contain specified column: <see cref="_thingNameHeader" />.
+        /// </remarks>
         /// <exception cref="InvalidDataException">CSV file doesn't contain header.</exception>
-        public List<string> ReadCsvFile(string filename)
+        public IEnumerable<string> ReadCsvFile(string filename)
         {
             _logger.Info($"Reading CSV file \"{filename}\".");
 
@@ -88,10 +96,11 @@ namespace ProjectV.IO.Input.File
             while (csv.Read())
             {
                 string thingName = csv[_thingNameHeader];
-                result.Add(thingName);
+                if (result.Add(thingName))
+                {
+                    yield return thingName;
+                }
             }
-
-            return result.ToList();
         }
 
         #endregion

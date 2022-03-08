@@ -75,14 +75,30 @@ namespace ProjectV.DesktopApp.Domain.Commands
 
         public event EventHandler? CanExecuteChanged;
 
-        bool ICommand.CanExecute(object parameter)
+        bool ICommand.CanExecute(object? parameter)
         {
-            return CanExecute((T) parameter);
+            if (parameter is null)
+            {
+                throw GetParameterNullException(nameof(parameter));
+            }
+
+            return CanExecute((T)parameter);
         }
 
-        void ICommand.Execute(object parameter)
+        void ICommand.Execute(object? parameter)
         {
-            ExecuteAsync((T) parameter).FireAndForgetSafeAsync(_errorHandler);
+            if (parameter is null)
+            {
+                throw GetParameterNullException(nameof(parameter));
+            }
+
+            ExecuteAsync((T)parameter).FireAndForgetSafeAsync(_errorHandler);
+        }
+
+        private static ArgumentNullException GetParameterNullException(string parameterName)
+        {
+            const string message = "Failed to execute command: parameter is null.";
+            return new ArgumentNullException(parameterName, message);
         }
 
         #endregion

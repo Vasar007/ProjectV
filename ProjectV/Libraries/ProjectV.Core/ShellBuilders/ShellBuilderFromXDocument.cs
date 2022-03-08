@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using Acolyte.Assertions;
 using Acolyte.Xml;
 using ProjectV.Building.Service;
 using ProjectV.Logging;
@@ -7,8 +8,8 @@ using ProjectV.Logging;
 namespace ProjectV.Core.ShellBuilders
 {
     /// <summary>
-    /// Builder class which provides the way of constructing <see cref="Shell" /> instances from
-    /// <see cref="XDocument" /> config.
+    /// Builder class which provides the way of constructing <see cref="Shell" /> instances
+    /// from <see cref="XDocument" /> config.
     /// </summary>
     /// <remarks>
     /// Structure of XML config must satisfy certain contracts, otherwise different exception could
@@ -34,6 +35,11 @@ namespace ProjectV.Core.ShellBuilders
         private readonly XDocumentParser _documentParser;
 
         /// <summary>
+        /// Default value of bounded capacity of service.
+        /// </summary>
+        private readonly int _defaultBoundedCapacity = 10;
+
+        /// <summary>
         /// Variables which saves input manager instance during building process.
         /// </summary>
         private IO.Input.InputManager? _inputManager;
@@ -53,21 +59,21 @@ namespace ProjectV.Core.ShellBuilders
         /// </summary>
         private IO.Output.OutputManager? _outputManager;
 
-        /// <summary>
-        /// Variables which saves data base manager instance during building process.
-        /// </summary>
-        private DAL.DataBaseManager? _dataBaseManager;
-
 
         /// <summary>
         /// Initializes builder instance and associates <see cref="XDocumentParser" /> which
         /// provides deferred parsing of XML configuration.
         /// </summary>
-        /// <param name="configuration">XML configuration of <see cref="Shell" /> class.</param>
+        /// <param name="configuration">
+        /// XML configuration of <see cref="Shell" /> class.
+        /// </param>
         public ShellBuilderFromXDocument(XDocument configuration)
         {
+            configuration.ThrowIfNull(nameof(configuration));
+            configuration.Root.ThrowIfNull(nameof(configuration.Root));
+
             _documentParser = new XDocumentParser(
-                new XDocument(configuration.Root.Element(_rootElementName))
+                new XDocument(configuration.Root!.Element(_rootElementName))
             );
         }
 
@@ -80,7 +86,6 @@ namespace ProjectV.Core.ShellBuilders
             _crawlersManager = null;
             _appraisersManager = null;
             _outputManager = null;
-            _dataBaseManager = null;
         }
 
         /// <inheritdoc />
@@ -212,37 +217,6 @@ namespace ProjectV.Core.ShellBuilders
         }
 
         /// <inheritdoc />
-        /// <exception cref="InvalidOperationException">
-        /// XML configuration doesn't contain element for data base manager with specified name.
-        /// </exception>
-        public void BuildDataBaseManager()
-        {
-            XElement? dataBaseManagerElement = _documentParser.FindElement(
-                _dataBaseManagerParameterName
-            );
-            if (dataBaseManagerElement is null)
-            {
-                throw new InvalidOperationException(
-                    $"XML document has not value for {_dataBaseManagerParameterName}."
-                );
-            }
-
-            var dataBaseOptions = Configuration.ConfigOptions.GetOptions<DAL.DataBaseOptions>();
-            _dataBaseManager = new DAL.DataBaseManager(
-                new DAL.Repositories.ResultInfoRepository(dataBaseOptions),
-                new DAL.Repositories.RatingRepository(dataBaseOptions)
-            );
-
-            foreach (XElement element in dataBaseManagerElement.Elements())
-            {
-                DAL.Repositories.IDataRepository repository = _serviceBuilder.CreateRepository(
-                    element, dataBaseOptions
-                );
-                _dataBaseManager.DataRepositoriesManager.Add(repository);
-            }
-        }
-
-        /// <inheritdoc />
         public Shell GetResult()
         {
             if (_inputManager is null)
@@ -269,17 +243,11 @@ namespace ProjectV.Core.ShellBuilders
                     $"{nameof(IO.Output.OutputManager)} was not built."
                 );
             }
-            if (_dataBaseManager is null)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(DAL.DataBaseManager)} was not built."
-                );
-            }
 
             _logger.Info($"Creating {nameof(Shell)} from user-defined XML config.");
 
-            return new Shell(_inputManager, _crawlersManager, _appraisersManager, _outputManager,
-                             _dataBaseManager);
+            return new Shell(_inputManager, _crawlersManager, _appraisersManager,
+                                  _outputManager, _defaultBoundedCapacity);
         }
 
         #endregion

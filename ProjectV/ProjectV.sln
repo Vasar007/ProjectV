@@ -3,6 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B97E92F-1FA2-41BB-8D5A-BD54BF5145E9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Models", "Libraries\ProjectV.Models\ProjectV.Models.csproj", "{3CCE9023-B85D-4450-83D6-3D652007900A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Logging", "Libraries\ProjectV.Logging\ProjectV.Logging.csproj", "{691EF706-60F9-4092-A0B9-529DE966443C}"
@@ -25,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.CommonCSharp", "Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.ConsoleApp", "Applications\ProjectV.ConsoleApp\ProjectV.ConsoleApp.csproj", "{8EFB34C0-FEA9-483C-8D5C-62E92E37CDF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DAL", "Libraries\ProjectV.DAL\ProjectV.DAL.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DataAccessLayer", "Libraries\ProjectV.DataAccessLayer\ProjectV.DataAccessLayer.csproj", "{B361A854-721F-4062-A6B8-C07950835D8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebServices", "WebServices", "{178A5A26-091E-4A8D-A385-171C3644A7D4}"
 EndProject
@@ -57,7 +64,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Building", "Librar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Configuration", "Libraries\ProjectV.Configuration\ProjectV.Configuration.csproj", "{07CA1D28-0FE1-4D74-B4B1-E9F76A97CAA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.TaskService", "Libraries\ProjectV.TaskService\ProjectV.TaskService.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Executors", "Libraries\ProjectV.Executors\ProjectV.Executors.csproj", "{8B7F0908-E2A7-43B0-9B5E-B11461BC4776}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Appraisers.Tests", "Tests\ProjectV.Appraisers.Tests\ProjectV.Appraisers.Tests.csproj", "{A2D6E685-8C04-40C3-AEDD-B68CEFAF7AAA}"
 EndProject
@@ -71,10 +78,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DesktopApp", "Appl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DataPipeline", "Libraries\ProjectV.DataPipeline\ProjectV.DataPipeline.csproj", "{6464A2B5-DBE6-4257-A4B0-425A1B714133}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B97E92F-1FA2-41BB-8D5A-BD54BF5145E9}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ProjectV.Activities", "Libraries\ProjectV.Activities\ProjectV.Activities.fsproj", "{CC3827A5-480B-4777-BBDD-371517BA67D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectV.CommonWebApi", "WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj", "{27D2BA49-E628-435D-A35E-FD93F4380B4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,6 +204,14 @@ Global
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Debug|x64.Build.0 = Debug|x64
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Release|x64.ActiveCfg = Release|x64
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Release|x64.Build.0 = Release|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Debug|x64.ActiveCfg = Debug|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Debug|x64.Build.0 = Debug|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.ActiveCfg = Release|x64
+		{CC3827A5-480B-4777-BBDD-371517BA67D6}.Release|x64.Build.0 = Release|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Debug|x64.ActiveCfg = Debug|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Debug|x64.Build.0 = Debug|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.ActiveCfg = Release|x64
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +247,8 @@ Global
 		{6A688168-767F-4798-8D56-9BA6131D6CD4} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A} = {A7284513-CE2B-43D7-833E-99752D705D26}
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{CC3827A5-480B-4777-BBDD-371517BA67D6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
+		{27D2BA49-E628-435D-A35E-FD93F4380B4A} = {178A5A26-091E-4A8D-A385-171C3644A7D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

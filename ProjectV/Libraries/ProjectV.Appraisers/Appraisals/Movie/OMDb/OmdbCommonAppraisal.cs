@@ -37,7 +37,7 @@ namespace ProjectV.Appraisers.Appraisals.Movie.Omdb
         /// </summary>
         /// <param name="entity">Target value to calculate rating.</param>
         /// <returns>
-        /// Sum of rating <see cref="BasicInfo" /> and normalized metascore value.
+        /// <returns>Average vote value.</returns>
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="entity" /> is <c>null</c>.
@@ -46,9 +46,7 @@ namespace ProjectV.Appraisers.Appraisals.Movie.Omdb
         {
             entity.ThrowIfNull(nameof(entity));
 
-            double imdbValue = entity.VoteAverage;
-
-            return imdbValue;
+            return entity.VoteAverage;
         }
 
         #endregion

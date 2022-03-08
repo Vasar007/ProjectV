@@ -14,7 +14,7 @@ namespace ProjectV.DesktopApp.ViewModels
         }
 
         public string HintText { get; }
-        
+
 
         public EnterDataViewModel(GoogleDriveData googleDriveData)
         {

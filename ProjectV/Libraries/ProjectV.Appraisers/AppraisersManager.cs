@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Acolyte.Assertions;
-using ProjectV.Communication;
+using ProjectV.DataPipeline;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
@@ -10,7 +9,7 @@ using ProjectV.Models.Internal;
 namespace ProjectV.Appraisers
 {
     /// <summary>
-    /// Class which connects collected data with appraisers and executes the last one to process
+    /// Class which connects collected data with appraisers and executes the last ones to process
     /// this data.
     /// </summary>
     public sealed class AppraisersManager : IManager<IAppraiser>
@@ -32,17 +31,13 @@ namespace ProjectV.Appraisers
         /// </summary>
         private readonly bool _outputResults;
 
-        /// <summary>
-        /// Represents additional data structure to work with ratings.
-        /// </summary>
-        private readonly RatingsStorage _ratingsStorage = new RatingsStorage();
-
 
         /// <summary>
         /// Initializes manager for appraisers.
         /// </summary>
         /// <param name="outputResults">Flag to define need to output appraisers results.</param>
-        public AppraisersManager(bool outputResults)
+        public AppraisersManager(
+            bool outputResults)
         {
             _outputResults = outputResults;
         }
@@ -57,17 +52,15 @@ namespace ProjectV.Appraisers
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisers.TryGetValue(item.TypeId, out IList<IAppraiser> list))
+            if (_appraisers.TryGetValue(item.TypeId, out IList<IAppraiser>? list))
             {
                 if (!list.Contains(item))
                 {
-                    item.RatingId = _ratingsStorage.Register(item.TypeId, item.RatingName);
                     list.Add(item);
                 }
             }
             else
             {
-                item.RatingId = _ratingsStorage.Register(item.TypeId, item.RatingName);
                 _appraisers.Add(item.TypeId, new List<IAppraiser> { item });
             }
         }
@@ -79,52 +72,55 @@ namespace ProjectV.Appraisers
         public bool Remove(IAppraiser item)
         {
             item.ThrowIfNull(nameof(item));
-
-            if (!_ratingsStorage.Deregister(item.RatingId))
-            {
-                _logger.Warn("Removed appraiser had unregistered rating ID.");
-            }
             return _appraisers.Remove(item.TypeId);
         }
 
         #endregion
 
+        public AppraisersFlow CreateFlow()
+        {
+            var appraisersFunc = new List<Funcotype>(_appraisers.Count);
+            foreach ((Type type, IList<IAppraiser> appraisers) in _appraisers)
+            {
+                foreach (IAppraiser appraiserAsync in appraisers)
+                {
+                    var funcotype = new Funcotype(
+                        entityInfo => TryGetRatings(appraiserAsync, entityInfo),
+                        type
+                    );
+                    appraisersFunc.Add(funcotype);
+                }
+            }
+
+            var appraisersFlow = new AppraisersFlow(appraisersFunc);
+
+            _logger.Info("Constructed appraisers pipeline.");
+            return appraisersFlow;
+        }
+
         /// <summary>
-        /// Finds suitable appraisers for every collection and execute ratings calculations.
+        /// Execute rating calculation for suitable appraisers.
         /// </summary>
-        /// <param name="data">Collections of crawlers results.</param>
-        /// <returns>Appraised collections produced from a set of data.</returns>
+        /// <param name="appraisers">Appraiser to execute calculation.</param>
+        /// <param name="entityInfo">Entity info from crawler to apprais.</param>
+        /// <returns>Appraised data produced from an entity info.</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="data" /> is <c>null</c>.
         /// </exception>
-        public ProcessedDataContainer GetAllRatings(IReadOnlyList<RawDataContainer> data)
+        private RatingDataContainer TryGetRatings(IAppraiser appraisers,
+           BasicInfo entityInfo)
         {
-            data.ThrowIfNull(nameof(data));
-
-            var results = new List<IReadOnlyList<ResultInfo>>();
-            foreach (RawDataContainer datum in data)
+            try
             {
-                IReadOnlyList<BasicInfo> internalData = datum.RawData;
-                // Skip empty collections of data.
-                if (!internalData.Any()) continue;
-
-                // Suggest that all types in collection are identical.
-                Type itemsType = internalData.First().GetType();
-
-                if (!_appraisers.TryGetValue(itemsType, out IList<IAppraiser> values))
-                {
-                    string message = $"Type {itemsType} was not used to appraise!";
-                    _logger.Info(message);
-                    GlobalMessageHandler.OutputMessage(message);
-                    continue;
-                }
-
-                foreach (IAppraiser appraiser in values)
-                {
-                    results.Add(appraiser.GetRatings(datum, _outputResults));
-                }
+                return appraisers.GetRatings(entityInfo, _outputResults);
             }
-            return new ProcessedDataContainer(results, _ratingsStorage);
+            catch (Exception ex)
+            {
+                string message = $"Appraiser {appraisers.Tag} could not process " +
+                                 $"entity info \"{entityInfo.Title}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

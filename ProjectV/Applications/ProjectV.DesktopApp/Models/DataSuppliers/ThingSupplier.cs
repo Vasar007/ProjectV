@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using Acolyte.Assertions;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.Internal;
 using ProjectV.Models.WebService;
-using Acolyte.Assertions;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {

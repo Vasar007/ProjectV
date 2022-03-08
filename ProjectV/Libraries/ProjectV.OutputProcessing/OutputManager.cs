@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Collections;
+using Acolyte.Linq;
 using ProjectV.Communication;
+using ProjectV.DataPipeline;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 
@@ -42,11 +44,11 @@ namespace ProjectV.IO.Output
         /// <paramref name="defaultStorageName" /> presents empty strings or contains only
         /// whitespaces.
         /// </exception>
-        public OutputManager(string defaultStorageName)
+        public OutputManager(
+            string defaultStorageName)
         {
-            _defaultStorageName = defaultStorageName.ThrowIfNullOrWhiteSpace(
-                nameof(defaultStorageName)
-            );
+            _defaultStorageName =
+                defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
         }
 
         #region IManager<IOutputter> Implementation
@@ -76,36 +78,92 @@ namespace ProjectV.IO.Output
 
         #endregion
 
-        /// <summary>
-        /// Executes saving procedure and get it status as boolean variable.
-        /// </summary>
-        /// <param name="results">Collections of appraised results to save.</param>
-        /// <param name="storageName">Storage name of output source.</param>
-        /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
-        public bool SaveResults(IReadOnlyList<IReadOnlyList<RatingDataContainer>> results,
-            string storageName)
+        public OutputtersFlow CreateFlow(string storageName)
         {
             if (string.IsNullOrWhiteSpace(storageName))
             {
                 storageName = _defaultStorageName;
 
-                string message = "Storage name is empty, using the default value.";
+                _logger.Info("Storage name is empty, using the default value.");
+            }
+
+            // A trick to complete pipeline with some pre-actions for outputters.
+            // Now we only logging results because we should process all appraised results
+            // before saving (e.g. sort them). So, may be in the future we will have some additional
+            // logic instead of plain logging here.
+            Action<RatingDataContainer> outputtersFunc = result =>
+            {
+                _logger.Info($"Got result for Thing:");
+                _logger.Info($"    ThingId: '{result.DataHandler.ThingId.ToString()}'.");
+                _logger.Info($"    Title: '{result.DataHandler.Title.ToString()}'.");
+            };
+
+            var outputtersFlow = new OutputtersFlow(new[] { outputtersFunc });
+
+            _logger.Info("Constructed outputters pipeline.");
+            return outputtersFlow;
+        }
+
+        /// <summary>
+        /// Executes saving procedure and get it status as boolean variable. Results will be saved
+        /// when the whole pipeline will be finished.
+        /// </summary>
+        /// <param name="results">Collections of appraised results to save.</param>
+        /// <param name="storageName">Storage name of output source.</param>
+        /// <returns><c>true</c> if the save was successful, <c>false</c> otherwise.</returns>
+        public async Task<bool> SaveResults(OutputtersFlow outputtersFlow, string storageName)
+        {
+            if (string.IsNullOrWhiteSpace(storageName))
+            {
+                storageName = _defaultStorageName;
+
+                const string message = "Storage name is empty, using the default value.";
                 _logger.Info(message);
                 GlobalMessageHandler.OutputMessage(message);
             }
 
-            List<bool> statuses = _outputters.Select(
-                outputter => outputter.SaveResults(results, storageName)
-            ).ToList();
+            // Make sure that the final pipeline task is completed.
+            await outputtersFlow.CompletionTask;
 
-            if (!statuses.IsNullOrEmpty() && statuses.All(r => r))
+            IReadOnlyList<RatingDataContainer> results = outputtersFlow.Results.ToReadOnlyList();
+
+            IReadOnlyList<List<RatingDataContainer>> resultsToSave = results
+                .GroupBy(rating => rating.RatingId, (key, group) => group.ToList())
+                .ToReadOnlyList();
+
+            resultsToSave
+                .AsParallel()
+                .ForAll(rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue)));
+
+            IReadOnlyList<Task<bool>> resultTasks = _outputters
+                .Select(outputter => TrySaveRatings(outputter, resultsToSave, storageName))
+                .ToReadOnlyList();
+
+            IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
+            if (statuses.Count > 0 && statuses.All(status => status))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
             }
 
-            _logger.Info($"Couldn't save some results to \"{storageName}\".");
+            _logger.Info($"Could not save some results to \"{storageName}\".");
             return false;
+        }
+
+        private static async Task<bool> TrySaveRatings(IOutputter outputter,
+           IReadOnlyList<IReadOnlyList<RatingDataContainer>> resultsToSave, string storageName)
+        {
+            try
+            {
+                return await outputter.SaveResults(resultsToSave, storageName);
+            }
+            catch (Exception ex)
+            {
+                string message = $"Outputter {outputter.Tag} could not save " +
+                                 $"{resultsToSave.Count.ToString()} results to \"{storageName}\".";
+                _logger.Error(ex, message);
+                throw;
+            }
         }
     }
 }

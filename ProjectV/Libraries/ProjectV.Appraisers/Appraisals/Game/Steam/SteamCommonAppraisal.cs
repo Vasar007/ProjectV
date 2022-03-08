@@ -1,7 +1,7 @@
 ﻿using System;
+using Acolyte.Assertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
-using Acolyte.Assertions;
 
 namespace ProjectV.Appraisers.Appraisals.Game.Steam
 {
@@ -25,7 +25,7 @@ namespace ProjectV.Appraisers.Appraisals.Game.Steam
         #region IAppraisal<SteamGameInfo> Implementation
 
         /// <summary>
-        /// No exctraction will be perfomed because this appraisal no needed in such preparation.
+        /// No extraction will be performed because this appraisal no needed in such preparation.
         /// </summary>
         public void PrepareCalculation(RawDataContainer rawDataContainer)
         {
@@ -46,9 +46,8 @@ namespace ProjectV.Appraisers.Appraisals.Game.Steam
         {
             entity.ThrowIfNull(nameof(entity));
 
-            double priceValue = decimal.ToDouble(entity.Price) - entity.VoteAverage;
-
-            return priceValue;
+            // We save initial price in "VoteAverage" field.
+            return decimal.ToDouble(entity.Price) - entity.VoteAverage;
         }
 
         #endregion

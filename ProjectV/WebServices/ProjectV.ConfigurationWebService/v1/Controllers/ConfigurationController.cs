@@ -1,5 +1,5 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.ConfigurationWebService.v1.Domain;
 using ProjectV.Logging;
@@ -24,27 +24,22 @@ namespace ProjectV.ConfigurationWebService.v1.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return "Get proper configuration with POST request.";
+            return Ok("Get proper configuration with POST request.");
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<ConfigurationXml> PostConfiguration(
             ConfigRequirements configRequirements)
         {
-            try
-            {
-                ConfigurationXml configuration = _configCreator.CreateConfigBasedOnRequirements(
-                    configRequirements
-                );
-                return configuration;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Exception occurred during configuration creating.");
-            }
-            return BadRequest(configRequirements);
+            ConfigurationXml configuration = _configCreator.CreateConfigBasedOnRequirements(
+                configRequirements
+            );
+            return Ok(configuration);
         }
     }
 }

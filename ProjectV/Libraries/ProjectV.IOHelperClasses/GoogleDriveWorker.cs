@@ -4,9 +4,9 @@ using System.IO;
 using System.Reflection;
 using Acolyte.Assertions;
 using Google.Apis.Drive.v3;
-using GoogleDriveData = Google.Apis.Drive.v3.Data;
 using ProjectV.Communication;
 using ProjectV.Logging;
+using GoogleDriveData = Google.Apis.Drive.v3.Data;
 
 namespace ProjectV.IO
 {
@@ -70,13 +70,13 @@ namespace ProjectV.IO
             PropertyInfo[] optionalProperties = optional.GetType().GetProperties();
             foreach (PropertyInfo property in optionalProperties)
             {
-                // Copy value from optional parms to the request.
+                // Copy value from optional params to the request.
                 // WARNING! They should have the same names and data types.
-                PropertyInfo piShared = request.GetType().GetProperty(property.Name);
-                object propertyValue = property.GetValue(optional, null);
+                PropertyInfo? piShared = request.GetType().GetProperty(property.Name);
+                object? propertyValue = property.GetValue(optional, null);
 
                 // Test that we do not add values for items that are null.
-                if (!(propertyValue is null) && !(piShared is null))
+                if (propertyValue is not null && piShared is not null)
                 {
                     piShared.SetValue(request, propertyValue, null);
                 }
@@ -91,6 +91,8 @@ namespace ProjectV.IO
         /// <param name="saveTo">Filename (absolute or relative).</param>
         protected static void SaveStream(MemoryStream stream, string saveTo)
         {
+            _logger.Info($"Saving downloaded content to file: '{saveTo}'.");
+
             using var file = new FileStream(saveTo, FileMode.Create, FileAccess.Write);
 
             stream.WriteTo(file);
@@ -163,12 +165,16 @@ namespace ProjectV.IO
         /// Deletes the specified file.
         /// </summary>
         /// <param name="filename">Filename to delete.</param>
-        /// <returns><c>true</c> if no exception occured, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if no exception occurred, <c>false</c> otherwise.</returns>
         protected static bool DeleteFileSafe(string filename)
         {
+            _logger.Debug($"Deleted downloaded file \"{filename}\".");
+
             try
             {
                 File.Delete(filename);
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -177,7 +183,6 @@ namespace ProjectV.IO
                                                     $" \"{filename}\". Error: {ex}");
                 return false;
             }
-            return true;
         }
 
         /// <summary>
@@ -213,8 +218,8 @@ namespace ProjectV.IO
             {
                 // Building the initial request.
                 FilesResource.ListRequest request = GoogleDriveService.Files.List();
-                // Applying optional parameters to the request.                
-                request = (FilesResource.ListRequest) ApplyOptionalParams(request, optional);
+                // Applying optional parameters to the request.
+                request = (FilesResource.ListRequest)ApplyOptionalParams(request, optional);
                 // Requesting data.
                 return request.Execute();
             }
