@@ -6,6 +6,7 @@ using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.SteamService;
 using ProjectV.SteamService.Models;
+using ProjectV.SteamService.Storages;
 
 namespace ProjectV.Crawlers.Game.Steam
 {
@@ -69,13 +70,15 @@ namespace ProjectV.Crawlers.Game.Steam
         /// <inheritdoc />
         public async IAsyncEnumerable<BasicInfo> GetResponse(string entityName, bool outputResults)
         {
-            if (SteamAppsStorage.IsEmpty)
+            // Upload all available information into the cache.
+            SteamAppsStorage storage = GlobalSteamAppsStorage.Instance;
+            if (storage.IsEmpty)
             {
                 SteamBriefInfoContainer steamApps = await _steamApiClient.GetAppListAsync();
-                SteamAppsStorage.FillStorage(steamApps);
+                storage.FillStorage(steamApps);
             }
 
-            int? appId = SteamAppsStorage.TryGetAppIdByName(entityName);
+            int? appId = storage.TryGetAppIdByName(entityName);
 
             if (!appId.HasValue)
             {
