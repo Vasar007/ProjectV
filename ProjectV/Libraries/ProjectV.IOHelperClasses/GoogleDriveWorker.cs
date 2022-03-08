@@ -70,13 +70,13 @@ namespace ProjectV.IO
             PropertyInfo[] optionalProperties = optional.GetType().GetProperties();
             foreach (PropertyInfo property in optionalProperties)
             {
-                // Copy value from optional parms to the request.
+                // Copy value from optional params to the request.
                 // WARNING! They should have the same names and data types.
-                PropertyInfo piShared = request.GetType().GetProperty(property.Name);
-                object propertyValue = property.GetValue(optional, null);
+                PropertyInfo? piShared = request.GetType().GetProperty(property.Name);
+                object? propertyValue = property.GetValue(optional, null);
 
                 // Test that we do not add values for items that are null.
-                if (!(propertyValue is null) && !(piShared is null))
+                if (propertyValue is not null && piShared is not null)
                 {
                     piShared.SetValue(request, propertyValue, null);
                 }

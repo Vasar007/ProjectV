@@ -28,7 +28,7 @@ namespace ProjectV.DataPipeline
                         case TaskStatus.Faulted:
                             {
                                 Exception exception =
-                                    ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception);
+                                    ExceptionsHelper.UnwrapAggregateExceptionIfSingle(task.Exception!);
 
                                 _logger.Error(exception, "Task is in the faulted state.");
 

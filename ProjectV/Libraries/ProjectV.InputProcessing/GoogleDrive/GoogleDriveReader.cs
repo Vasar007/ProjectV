@@ -225,7 +225,7 @@ namespace ProjectV.IO.Input.GoogleDrive
                 // on extension.
                 string tempFilename = Path.GetTempFileName();
                 string tempFilepath = Path.Combine(
-                    Path.GetDirectoryName(tempFilename),
+                    Path.GetDirectoryName(tempFilename)!,
                     Path.GetFileNameWithoutExtension(tempFilename)
                 );
 

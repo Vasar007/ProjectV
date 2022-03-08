@@ -1,9 +1,7 @@
 ﻿using System;
 using Acolyte.Assertions;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +37,6 @@ namespace ProjectV.ProcessingWebService
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson();
 
             services.AddApiVersioning(

@@ -56,7 +56,7 @@ namespace ProjectV.Models.Internal
         public Type GetTypeByRatingId(Guid ratingId)
         {
             Rating rating = GetRatingById(ratingId);
-            if (!_ratingsHelper.TryGetValue(rating, out Type type))
+            if (!_ratingsHelper.TryGetValue(rating, out Type? type))
             {
                 throw new ArgumentException(
                     $"Rating with specified ID '{ratingId.ToString()}' was not registered.",

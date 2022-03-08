@@ -79,13 +79,12 @@ namespace ProjectV.Communication
         /// </summary>
         /// <returns>The next line of characters from the input stream.</returns>
         /// <exception cref="ArgumentNullException">
-        /// Read input line is <c>null</c>.
+        /// Read input line is <see langword="null" />.
         /// </exception>
         public string GetMessage()
         {
-            string line = Console.ReadLine();
-            line.ThrowIfNull(nameof(line));
-            return line;
+            string? line = Console.ReadLine();
+            return line.ThrowIfNull(nameof(line));
         }
 
         /// <summary>

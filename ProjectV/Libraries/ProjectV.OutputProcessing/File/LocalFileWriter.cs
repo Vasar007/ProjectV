@@ -117,7 +117,7 @@ namespace ProjectV.IO.Output.File
                 foreach (RatingDataContainer ratingDataContainer in rating)
                 {
                     if (converted.TryGetValue(ratingDataContainer.DataHandler.Title,
-                                              out IList<double> ratingValues))
+                                              out IList<double>? ratingValues))
                     {
                         ratingValues.Add(ratingDataContainer.RatingValue);
                     }

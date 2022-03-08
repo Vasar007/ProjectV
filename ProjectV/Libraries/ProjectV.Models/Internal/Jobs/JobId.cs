@@ -45,9 +45,9 @@ namespace ProjectV.Models.Internal.Jobs
             return Value.ToString("N", CultureInfo.InvariantCulture);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj != null && obj is JobId taskId)
+            if (obj is not null and JobId taskId)
                 return Equals(taskId);
 
             return false;

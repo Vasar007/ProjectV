@@ -7,20 +7,15 @@ namespace ProjectV.Configuration
 {
     public sealed class ServiceConfigRegistry
     {
-        private readonly Dictionary<string, XElement> _messageHandlerRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _messageHandlerRegistry = new();
 
-        private readonly Dictionary<string, XElement> _inputRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _inputRegistry = new();
 
-        private readonly Dictionary<string, XElement> _crawlersRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _crawlersRegistry = new();
 
-        private readonly Dictionary<string, XElement> _appraisersRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _appraisersRegistry = new();
 
-        private readonly Dictionary<string, XElement> _outputRegistry =
-            new Dictionary<string, XElement>();
+        private readonly Dictionary<string, XElement> _outputRegistry = new();
 
 
         public ServiceConfigRegistry()
@@ -91,7 +86,7 @@ namespace ProjectV.Configuration
         {
             identifier.ThrowIfNullOrEmpty(nameof(identifier));
 
-            if (!registry.TryGetValue(identifier, out XElement element))
+            if (!registry.TryGetValue(identifier, out XElement? element))
             {
                 throw new ArgumentException($"Identifier {identifier} was not registered.",
                                             nameof(identifier));

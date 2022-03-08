@@ -49,7 +49,7 @@ namespace ProjectV.Building.Service
             var handlerElement = messageHandlerElement.Attribute(_messageHandlerTypeParameterName);
             handlerElement.ThrowIfNull(nameof(handlerElement));
 
-            switch (handlerElement.Value)
+            switch (handlerElement!.Value)
             {
                 case _consoleMessageHandlerParameterName:
                     {

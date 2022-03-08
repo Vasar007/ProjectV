@@ -19,7 +19,7 @@
     <PackageReference Include="MaterialDesignColors" Version="$(MaterialDesignColorsPackageVersion)" />
     <PackageReference Include="MaterialDesignThemes" Version="$(MaterialDesignThemesPackageVersion)" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="$(MicrosoftAspNetWebApiClientPackageVersion)" />
-    <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="$(OokiiDialogsWpfNETCorePackageVersion)" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="$(OokiiDialogsWpfPackageVersion)" />
     <PackageReference Include="Prism.Unity" Version="$(PrismUnityPackageVersion)" />
     <PackageReference Include="Prism.Wpf" Version="$(PrismWpfPackageVersion)" />
   </ItemGroup>

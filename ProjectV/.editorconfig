@@ -5,6 +5,10 @@ root = true
 [*.{cs,fs,fsi,fsx}]
 
 # Files to exclude from foramtting because dotnet-format cannot process F# usages in C# code.
+
+# IDE0005: Using directive is unnecessary.
+dotnet_diagnostic.IDE0005.severity = error
+
 [Applications/ProjectV.ConsoleApp/Program.cs]
 generated_code = true
 

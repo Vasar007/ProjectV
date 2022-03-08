@@ -48,7 +48,7 @@ namespace ProjectV
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
 
-            if (!_values.TryGetValue(variableName, out string value))
+            if (!_values.TryGetValue(variableName, out string? value))
             {
                 throw new ArgumentException(
                     $"Variable name \"{variableName}\" was not found in the environment values.",
@@ -121,7 +121,7 @@ namespace ProjectV
         /// <param name="environmentVariableValue">Raw value of environment variable.</param>
         /// <returns>Dictionary with parsed values.</returns>
         private static IReadOnlyDictionary<string, string> ParseEnvironmentVariableValue(
-            string environmentVariableValue)
+            string? environmentVariableValue)
         {
             if (string.IsNullOrEmpty(environmentVariableValue))
             {

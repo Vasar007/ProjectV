@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using Acolyte.Assertions;
 using Acolyte.Xml;
 using ProjectV.Building.Service;
 using ProjectV.Logging;
@@ -68,8 +69,11 @@ namespace ProjectV.Core.ShellBuilders
         /// </param>
         public ShellBuilderFromXDocument(XDocument configuration)
         {
+            configuration.ThrowIfNull(nameof(configuration));
+            configuration.Root.ThrowIfNull(nameof(configuration.Root));
+
             _documentParser = new XDocumentParser(
-                new XDocument(configuration.Root.Element(_rootElementName))
+                new XDocument(configuration.Root!.Element(_rootElementName))
             );
         }
 

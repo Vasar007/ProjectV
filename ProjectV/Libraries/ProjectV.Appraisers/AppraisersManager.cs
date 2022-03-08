@@ -52,7 +52,7 @@ namespace ProjectV.Appraisers
         {
             item.ThrowIfNull(nameof(item));
 
-            if (_appraisers.TryGetValue(item.TypeId, out IList<IAppraiser> list))
+            if (_appraisers.TryGetValue(item.TypeId, out IList<IAppraiser>? list))
             {
                 if (!list.Contains(item))
                 {

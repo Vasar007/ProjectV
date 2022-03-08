@@ -14,12 +14,13 @@ namespace FileHelpers
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class FieldTitleAttribute : Attribute
     {
+        public string Name { get; private set; }
+
+
         public FieldTitleAttribute(string name)
         {
             Name = name.ThrowIfNull(nameof(name));
         }
-
-        public string Name { get; private set; }
     }
 
     public static class FileHelpersTypeExtensions
@@ -47,17 +48,23 @@ namespace FileHelpers
             return string.Join(",", type.GetFieldTitles());
         }
 
-        static bool IsFileHelpersField(this FieldInfo field)
+        private static bool IsFileHelpersField(this FieldInfo field)
         {
             return field.GetCustomAttributes(true).OfType<FieldOrderAttribute>().Any();
         }
 
-        static int GetOrder(this FieldOrderAttribute attribute)
+        private static int GetOrder(this FieldOrderAttribute attribute)
         {
             // Hack cos FieldOrderAttribute.Order is internal (why?)
             var pi = typeof(FieldOrderAttribute).GetProperty("Order");
+            if (pi is null)
+                return 0;
 
-            return (int)pi.GetValue(attribute, null);
+            object? value = pi.GetValue(attribute, null);
+            if (value is null)
+                return 0;
+
+            return (int)value;
         }
     }
 }

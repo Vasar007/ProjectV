@@ -184,7 +184,7 @@ namespace ProjectV.DesktopApp.ViewModels
 
         private bool CanReturnToStartView(UserControl currentContent)
         {
-            return !(currentContent is StartView) && IsNotBusy;
+            return currentContent is not StartView && IsNotBusy;
         }
 
         private void GoToSettingsView()

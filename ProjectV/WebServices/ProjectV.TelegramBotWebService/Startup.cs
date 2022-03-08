@@ -38,7 +38,6 @@ namespace ProjectV.TelegramBotWebService
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson();
 
             services.AddApiVersioning(
