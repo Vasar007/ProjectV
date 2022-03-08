@@ -2,7 +2,7 @@
 {
     public sealed class ProjectVServiceOptions : IOptions
     {
-        public string CommunicationServiceBaseAddress { get; set; } = "https://localhost:44359/";
+        public string CommunicationServiceBaseAddress { get; set; } = "https://localhost:44322/";
 
         public string CommunicationServiceApiUrl { get; set; } = "api/v1/requests";
 

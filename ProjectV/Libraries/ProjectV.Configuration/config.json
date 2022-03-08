@@ -4,7 +4,7 @@
   },
 
   "ProjectVServiceOptions": {
-    "CommunicationServiceBaseAddress": "https://localhost:44359/",
+    "CommunicationServiceBaseAddress": "https://localhost:44322/",
     "CommunicationServiceApiUrl": "api/v1/requests"
   }
 }

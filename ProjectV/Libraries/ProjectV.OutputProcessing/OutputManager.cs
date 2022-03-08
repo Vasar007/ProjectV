@@ -136,11 +136,11 @@ namespace ProjectV.IO.Output
                 .ForAll(rating => rating.Sort((x, y) => y.RatingValue.CompareTo(x.RatingValue)));
 
             IReadOnlyList<Task<bool>> resultTasks = _outputters
-                .Select(outputter => TryGetRatings(outputter, resultsToSave, storageName))
+                .Select(outputter => TrySaveRatings(outputter, resultsToSave, storageName))
                 .ToReadOnlyList();
 
             IReadOnlyList<bool> statuses = await Task.WhenAll(resultTasks);
-            if (statuses.Count > 0 && statuses.All(statis => statis))
+            if (statuses.Count > 0 && statuses.All(status => status))
             {
                 _logger.Info($"Successfully saved all results to \"{storageName}\".");
                 return true;
@@ -150,7 +150,7 @@ namespace ProjectV.IO.Output
             return false;
         }
 
-        private static async Task<bool> TryGetRatings(IOutputter outputter,
+        private static async Task<bool> TrySaveRatings(IOutputter outputter,
            IReadOnlyList<IReadOnlyList<RatingDataContainer>> resultsToSave, string storageName)
         {
             try
