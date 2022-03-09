@@ -98,7 +98,7 @@ namespace ProjectV.Building.Service
         protected static readonly string _tmdbApiKeyParameterName = "TmdbApiKey";
 
         /// <summary>
-        /// Attribute name for number of maximum attemts to retry for TMDb crawler.
+        /// Attribute name for number of maximum attempts to retry for TMDb crawler.
         /// </summary>
         protected static readonly string _tmdbMaxRetryCountParameterName = "TmdbMaxRetryCount";
 
@@ -115,7 +115,8 @@ namespace ProjectV.Building.Service
         /// <summary>
         /// Provides thread-safe service to interact with Google Drive.
         /// </summary>
-        protected static readonly DriveService _driveService = CreateDriveService();
+        protected static readonly Lazy<DriveService> _lazyDriveService = new(() => CreateDriveService());
+        protected static DriveService DriveService => _lazyDriveService.Value;
 
         /// <summary>
         /// Attribute value for simple file reader.
@@ -150,7 +151,7 @@ namespace ProjectV.Building.Service
         /// <exception cref="ArgumentException">
         /// <paramref name="fileReaderName" /> presents empty string.
         /// </exception>
-        protected IO.Input.File.IFileReader CreateFileReader(string fileReaderName)
+        protected static IO.Input.File.IFileReader CreateFileReader(string fileReaderName)
         {
             fileReaderName.ThrowIfNullOrEmpty(nameof(fileReaderName));
 
@@ -174,7 +175,7 @@ namespace ProjectV.Building.Service
         /// </summary>
         /// <returns>Initialized Drive Service instance.</returns>
         /// <remarks>
-        /// There is no need to create more than one instance of <see cref="DriveService" /> class.
+        /// There is no need to create more than one instance of <see cref="Google.Apis.Drive.v3.DriveService" /> class.
         /// </remarks>
         private static DriveService CreateDriveService()
         {
