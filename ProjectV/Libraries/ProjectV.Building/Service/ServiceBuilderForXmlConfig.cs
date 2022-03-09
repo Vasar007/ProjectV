@@ -110,8 +110,7 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader =
-                        CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
 
                     return new IO.Input.File.LocalFileReader(fileReader);
                 }
@@ -122,10 +121,9 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _googleDriveParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader =
-                        CreateFileReader(fileReaderName);
+                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
 
-                    return new IO.Input.GoogleDrive.GoogleDriveReader(_driveService, fileReader);
+                    return new IO.Input.GoogleDrive.GoogleDriveReader(DriveService, fileReader);
                 }
 
                 default:
@@ -273,7 +271,7 @@ namespace ProjectV.Building.Service
 
                 case _googleDriveParameterName:
                 {
-                    return new IO.Output.GoogleDrive.GoogleDriveWriter(_driveService);
+                    return new IO.Output.GoogleDrive.GoogleDriveWriter(DriveService);
                 }
 
                 default:
