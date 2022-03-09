@@ -11,7 +11,7 @@ namespace ProjectV.TmdbService
         /// <summary>
         /// Object for lock statement.
         /// </summary>
-        private readonly static object _syncRoot = new object();
+        private readonly static object _syncRoot = new();
 
         /// <summary>
         /// Back field for correspond property that contains configuration of TMDb service.
@@ -29,10 +29,10 @@ namespace ProjectV.TmdbService
 
 
         /// <summary>
-        /// Checks if configuration was initilized before.
+        /// Checks if configuration was initialized before.
         /// </summary>
-        /// <returns><c>true</c> if configuration was initilized, <c>false</c> otherwise.</returns>
-        public static bool HasValue => !(_configuration is null);
+        /// <returns><c>true</c> if configuration was initialized, <c>false</c> otherwise.</returns>
+        public static bool HasValue => _configuration is not null;
 
         /// <summary>
         /// Updates configuration if it is <c>null</c>.

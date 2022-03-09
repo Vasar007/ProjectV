@@ -94,7 +94,12 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         private async Task LogResult(IExecutor executor)
         {
-            JobInfo jobInfo = await _jobInfoService.GetByIdAsync(executor.Id);
+            JobInfo? jobInfo = await _jobInfoService.FindByIdAsync(executor.Id);
+            if (jobInfo is null)
+            {
+                _logger.Info($"No job info found for executor '{executor.Id.ToString()}'.");
+                return;
+            }
 
             _logger.Info($"Final job info: {jobInfo.ToLogString()}");
         }

@@ -30,7 +30,9 @@ namespace ProjectV.CommunicationWebService
             services.AddSingleton<IProcessingResponseReceiverAsync,
                                   ProcessingResponseReceiverAsync>();
 
-            services.Configure<ServiceSettings>(Configuration.GetSection("ServicesConfiguration"));
+            services.Configure<CommunicationWebServiceSettings>(
+                Configuration.GetSection(nameof(CommunicationWebServiceSettings))
+            );
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -77,11 +79,7 @@ namespace ProjectV.CommunicationWebService
         // pipeline.
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (!env.IsDevelopment())
             {
                 // The default HSTS value is 30 days. You may want to change this for production 
                 // scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -95,8 +93,7 @@ namespace ProjectV.CommunicationWebService
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("./swagger/v1/swagger.json",
-                                  "ProjectV Communication API v1");
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "ProjectV Communication API v1");
                 c.RoutePrefix = string.Empty;
             });
 

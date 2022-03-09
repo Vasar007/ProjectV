@@ -1,7 +1,7 @@
 ﻿namespace ProjectV.TelegramBotWebService
 {
     // TODO: make this DTO immutable.
-    public sealed class ServiceSettings
+    public sealed class TelegramBotWebServiceSettings
     {
         public string NgrokUrl { get; set; } = default!;
 
@@ -12,7 +12,7 @@
         public string ProjectVServiceApiUrl { get; set; } = default!;
 
 
-        public ServiceSettings()
+        public TelegramBotWebServiceSettings()
         {
         }
     }

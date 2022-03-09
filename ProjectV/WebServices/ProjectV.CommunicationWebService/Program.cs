@@ -28,11 +28,11 @@ namespace ProjectV.CommunicationWebService
             {
                 _logger.PrintHeader("Communication web service started.");
 
-                IWebHost webHost = CreateWebHostBuilder(args).Build();
+                var host = CreateWebHostBuilder(args).Build();
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
-                await webHost.RunAsync();
+                await host.RunAsync();
             }
             catch (Exception ex)
             {

@@ -29,7 +29,9 @@ namespace ProjectV.ProcessingWebService
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
 
-            services.Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
+            services.Configure<DatabaseOptions>(
+                Configuration.GetSection(nameof(DatabaseOptions))
+            );
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJobInfoService, JobInfoService>();
@@ -80,11 +82,7 @@ namespace ProjectV.ProcessingWebService
         // pipeline.
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
+            if (!env.IsDevelopment())
             {
                 // The default HSTS value is 30 days. You may want to change this for production 
                 // scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -98,8 +96,7 @@ namespace ProjectV.ProcessingWebService
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("./swagger/v1/swagger.json",
-                                  "ProjectV Processing API v1");
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "ProjectV Processing API v1");
                 c.RoutePrefix = string.Empty;
             });
 

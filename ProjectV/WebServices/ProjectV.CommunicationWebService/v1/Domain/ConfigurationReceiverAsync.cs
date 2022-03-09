@@ -15,12 +15,12 @@ namespace ProjectV.CommunicationWebService.v1.Domain
         private static readonly ILogger _logger =
            LoggerFactory.CreateLoggerFor<ConfigurationReceiverAsync>();
 
-        private readonly ServiceSettings _settings;
+        private readonly CommunicationWebServiceSettings _settings;
 
         private readonly HttpClient _client;
 
 
-        public ConfigurationReceiverAsync(IOptions<ServiceSettings> settingsOptions)
+        public ConfigurationReceiverAsync(IOptions<CommunicationWebServiceSettings> settingsOptions)
         {
             _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
 
