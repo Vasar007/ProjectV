@@ -13,8 +13,7 @@ namespace ProjectV.ProcessingWebService
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(Program));
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
@@ -54,13 +53,13 @@ namespace ProjectV.ProcessingWebService
             {
                 _logger.PrintHeader("Processing web service started.");
 
-                IWebHost webHost = CreateWebHostBuilder(args).Build();
+                var host = CreateWebHostBuilder(args).Build();
 
-                await CreateDbIfNotExistsAsync(webHost);
+                await CreateDbIfNotExistsAsync(host);
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
-                await webHost.RunAsync();
+                await host.RunAsync();
             }
             catch (Exception ex)
             {

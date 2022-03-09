@@ -30,7 +30,7 @@
     <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
     <MaterialDesignColorsPackageVersion>2.0.4</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.3.0</MaterialDesignThemesPackageVersion>
-    <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.2</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
+    <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.3</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
     <MicrosoftAspNetWebApiClientPackageVersion>5.2.7</MicrosoftAspNetWebApiClientPackageVersion>
     <MicrosoftBclHashCodePackageVersion>1.1.1</MicrosoftBclHashCodePackageVersion>
@@ -40,6 +40,8 @@
     <MicrosoftExtensionsConfigurationPackageVersion>6.0.1</MicrosoftExtensionsConfigurationPackageVersion>
     <MicrosoftExtensionsConfigurationBinderPackageVersion>6.0.0</MicrosoftExtensionsConfigurationBinderPackageVersion>
     <MicrosoftExtensionsConfigurationJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
+    <MicrosoftExtensionsHostingSystemdPackageVersion>6.0.0</MicrosoftExtensionsHostingSystemdPackageVersion>
+    <MicrosoftExtensionsHostingWindowsServicesPackageVersion>6.0.0</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
     <MicrosoftNETTestSdkPackageVersion>17.1.0</MicrosoftNETTestSdkPackageVersion>
     <MoqPackageVersion>4.16.1</MoqPackageVersion>
     <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>

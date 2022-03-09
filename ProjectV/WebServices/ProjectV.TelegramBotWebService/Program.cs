@@ -13,8 +13,7 @@ namespace ProjectV.TelegramBotWebService
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(Program));
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args)
@@ -30,15 +29,15 @@ namespace ProjectV.TelegramBotWebService
             {
                 _logger.PrintHeader("Telegram bot web service started.");
 
-                IWebHost webHost = CreateWebHostBuilder(args).Build();
+                var host = CreateWebHostBuilder(args).Build();
 
                 // Set web hook to get messages from Telegram Bot.
-                var serviceSetup = webHost.Services.GetRequiredService<IServiceSetup>();
+                var serviceSetup = host.Services.GetRequiredService<IServiceSetup>();
                 await using var webhookHandler = await serviceSetup.SetWebhookAsync();
 
                 // Run the WebHost, and start accepting requests.
                 // There's an async overload, so we may as well use it.
-                await webHost.RunAsync();
+                await host.RunAsync();
             }
             catch (Exception ex)
             {
