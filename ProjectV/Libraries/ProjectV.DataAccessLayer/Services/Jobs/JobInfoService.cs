@@ -25,6 +25,11 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
 
         public async Task AddAsync(JobInfo jobInfo)
         {
+            if (!_context.CanUseDb())
+            {
+                return;
+            }
+
             var taskDbModel = _mapper.Map<JobDbInfo>(jobInfo);
             await _context.GetJobDbSet().AddAsync(taskDbModel);
 
@@ -33,7 +38,9 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
 
         public async Task<JobInfo?> FindByIdAsync(JobId jobId)
         {
-            JobDbInfo? taskDbModel = await _context.GetJobDbSet().FindAsync(jobId.Value);
+            JobDbInfo? taskDbModel = await _context.ExecuteIfCanUseDb(
+                dbSet => dbSet.FindAsync(jobId.Value)
+            );
 
             return _mapper.Map<JobInfo>(taskDbModel);
         }

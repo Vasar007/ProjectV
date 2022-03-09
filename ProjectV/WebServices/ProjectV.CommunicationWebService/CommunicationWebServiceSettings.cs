@@ -1,7 +1,7 @@
 ﻿namespace ProjectV.CommunicationWebService
 {
     // TODO: make this DTO immutable.
-    public sealed class ServiceSettings
+    public sealed class CommunicationWebServiceSettings
     {
         public string ConfigurationServiceBaseAddress { get; set; } = default!;
 
@@ -12,7 +12,7 @@
         public string ProcessingServiceApiUrl { get; set; } = default!;
 
 
-        public ServiceSettings()
+        public CommunicationWebServiceSettings()
         {
         }
     }

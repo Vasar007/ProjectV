@@ -30,7 +30,9 @@ namespace ProjectV.CommunicationWebService
             services.AddSingleton<IProcessingResponseReceiverAsync,
                                   ProcessingResponseReceiverAsync>();
 
-            services.Configure<ServiceSettings>(Configuration.GetSection("ServicesConfiguration"));
+            services.Configure<CommunicationWebServiceSettings>(
+                Configuration.GetSection(nameof(CommunicationWebServiceSettings))
+            );
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

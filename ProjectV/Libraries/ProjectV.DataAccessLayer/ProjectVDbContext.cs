@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -33,14 +34,54 @@ namespace ProjectV.DataAccessLayer
             return Jobs;
         }
 
+        public bool CanUseDb()
+        {
+            return _storageOptions.CanUseDatabase;
+        }
+
+        public async ValueTask ExecuteIfCanUseDb(Func<DbSet<JobDbInfo>, ValueTask> action)
+        {
+            action.ThrowIfNull(nameof(action));
+
+            if (!CanUseDb())
+            {
+                return;
+            }
+
+            await action(GetJobDbSet());
+        }
+
+        public async ValueTask<TReturn?> ExecuteIfCanUseDb<TReturn>(
+            Func<DbSet<JobDbInfo>, ValueTask<TReturn>> action)
+        {
+            action.ThrowIfNull(nameof(action));
+
+            if (!CanUseDb())
+            {
+                return await ValueTask.FromResult<TReturn>(default!);
+            }
+
+            return await action(GetJobDbSet());
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!CanUseDb())
+            {
+                return;
+            }
+
             optionsBuilder
                 .UseNpgsql(_storageOptions.ConnectionString, o => o.SetPostgresVersion(12, 0));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            if (!CanUseDb())
+            {
+                return;
+            }
+
             // The next line is required for PostreSQL DB because
             // MSSQL default schema name is "dbo".
             modelBuilder.HasDefaultSchema("public");

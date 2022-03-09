@@ -29,7 +29,9 @@ namespace ProjectV.ProcessingWebService
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
 
-            services.Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
+            services.Configure<DatabaseOptions>(
+                Configuration.GetSection(nameof(DatabaseOptions))
+            );
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IJobInfoService, JobInfoService>();

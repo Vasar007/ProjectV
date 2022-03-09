@@ -34,6 +34,12 @@ namespace ProjectV.ProcessingWebService
             {
                 var context = services.GetRequiredService<ProjectVDbContext>();
 
+                if (!context.CanUseDb())
+                {
+                    _logger.Info("Database will disable.");
+                    return;
+                }
+
                 bool wasCreated = await context.Database.EnsureCreatedAsync();
 
                 string message = wasCreated

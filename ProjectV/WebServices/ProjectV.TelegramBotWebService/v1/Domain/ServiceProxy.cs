@@ -13,12 +13,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
-        private readonly ServiceSettings _settings;
+        private readonly TelegramBotWebServiceSettings _settings;
 
         private readonly HttpClient _client;
 
 
-        public ServiceProxy(IOptions<ServiceSettings> settings)
+        public ServiceProxy(IOptions<TelegramBotWebServiceSettings> settings)
         {
             _settings = settings.Value.ThrowIfNull(nameof(settings));
 
