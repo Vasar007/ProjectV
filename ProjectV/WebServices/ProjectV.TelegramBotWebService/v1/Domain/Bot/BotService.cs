@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using MihaZupan;
 using Telegram.Bot;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 {
     public sealed class BotService : IBotService
     {

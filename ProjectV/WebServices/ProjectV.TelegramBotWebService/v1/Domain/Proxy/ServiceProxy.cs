@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 {
     public sealed class ServiceProxy : IServiceProxy, IDisposable
     {
@@ -18,12 +18,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         private readonly HttpClient _client;
 
 
-        public ServiceProxy(IOptions<TelegramBotWebServiceSettings> settings)
+        public ServiceProxy(
+            IOptions<TelegramBotWebServiceSettings> settings)
         {
             _settings = settings.Value.ThrowIfNull(nameof(settings));
 
-            _logger.Info("ProjectV service url: " +
-                         $"{_settings.ProjectVServiceBaseAddress}");
+            _logger.Info($"ProjectV service url: {_settings.ProjectVServiceBaseAddress}");
 
             _client = new HttpClient
             {

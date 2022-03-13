@@ -11,6 +11,10 @@ using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
 using ProjectV.TelegramBotWebService.Properties;
+using ProjectV.TelegramBotWebService.v1.Domain.Bot;
+using ProjectV.TelegramBotWebService.v1.Domain.Cache;
+using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
+using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -21,19 +25,27 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<UpdateService>();
 
+        // TODO: add settings to configure bot commands.
+
         private readonly IBotService _botService;
 
         private readonly IServiceProxy _serviceProxy;
 
         private readonly IUserCache _userCache;
 
+        private readonly ITelegramTextProcessor _textProcessor;
 
-        public UpdateService(IBotService botService, IServiceProxy serviceProxy,
-            IUserCache userCache)
+
+        public UpdateService(
+            IBotService botService,
+            IServiceProxy serviceProxy,
+            IUserCache userCache,
+            ITelegramTextProcessor textProcessor)
         {
             _botService = botService.ThrowIfNull(nameof(botService));
             _serviceProxy = serviceProxy.ThrowIfNull(nameof(serviceProxy));
             _userCache = userCache.ThrowIfNull(nameof(userCache));
+            _textProcessor = textProcessor.ThrowIfNull(nameof(textProcessor));
         }
 
         #region IUpdateService Implementation
@@ -70,9 +82,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         private async Task ProcessMessage(Message message)
         {
-            IReadOnlyList<string> data = message.Text.Split(Environment.NewLine);
-            IReadOnlyList<string> firstLine = data.First().Split(' ');
-            string command = firstLine.First();
+            IReadOnlyList<string> data = _textProcessor.ParseAsSeparateLines(message.Text);
+            string command = _textProcessor.ParseCommand(data[0]);
 
             switch (command)
             {
@@ -116,7 +127,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
                     if (requestParams.Requirements is null)
                     {
-                        string serviceName = data.First();
+                        string serviceName = data[0];
                         await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
                                                                 requestParams);
                         return;
@@ -205,11 +216,15 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             serviceName = ConfigContract.GetProperServiceName(serviceName);
             requestParams.Requirements = CreateRequirements(serviceName, $"{serviceName}Common");
 
+            string message = _textProcessor.JoinWithNewLineSeparator(new[] {
+                $"Enter data for {serviceName}. Please, use this format:",
+                 "thingName1",
+                 "thingName2"
+            });
+
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                $"Enter data for {serviceName}. Please, use this format:{Environment.NewLine}" +
-                $"thingName1{Environment.NewLine}" +
-                "thingName2",
+                message,
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }
@@ -267,7 +282,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             );
         }
 
-        private ConfigRequirements CreateRequirements(string serviceName, string appraisalName)
+        private static ConfigRequirements CreateRequirements(string serviceName,
+            string appraisalName)
         {
             serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
             appraisalName.ThrowIfNullOrEmpty(nameof(appraisalName));

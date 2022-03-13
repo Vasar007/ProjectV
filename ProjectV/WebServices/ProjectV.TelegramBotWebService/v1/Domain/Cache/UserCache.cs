@@ -3,12 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 using Acolyte.Assertions;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Cache
 {
     public sealed class UserCache : IUserCache
     {
-        private readonly ConcurrentDictionary<long, RequestParams> _cache =
-            new ConcurrentDictionary<long, RequestParams>();
+        private readonly ConcurrentDictionary<long, RequestParams> _cache = new();
 
 
         public UserCache()

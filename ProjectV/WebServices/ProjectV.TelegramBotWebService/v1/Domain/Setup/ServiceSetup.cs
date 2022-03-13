@@ -2,8 +2,9 @@
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
+using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 {
     public sealed class ServiceSetup : IServiceSetup
     {

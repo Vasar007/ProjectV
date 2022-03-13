@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Cache
 {
     public interface IUserCache
     {

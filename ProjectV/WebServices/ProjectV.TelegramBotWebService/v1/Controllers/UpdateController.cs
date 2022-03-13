@@ -12,9 +12,6 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
     [ApiController]
     public sealed class UpdateController : Controller
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateController>();
-
         private readonly IUpdateService _updateService;
 
 

@@ -11,6 +11,8 @@
 
         public string ProjectVServiceApiUrl { get; set; } = default!;
 
+        public string EndlineSeparator { get; set; } = default!;
+
 
         public TelegramBotWebServiceSettings()
         {

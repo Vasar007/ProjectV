@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.WebService;
+using ProjectV.TelegramBotWebService.v1.Domain.Bot;
+using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ProjectV.Models.WebService;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 {
     public interface IServiceProxy
     {

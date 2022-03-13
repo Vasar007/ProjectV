@@ -9,6 +9,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.TelegramBotWebService.v1.Domain;
+using ProjectV.TelegramBotWebService.v1.Domain.Bot;
+using ProjectV.TelegramBotWebService.v1.Domain.Cache;
+using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
+using ProjectV.TelegramBotWebService.v1.Domain.Setup;
+using ProjectV.TelegramBotWebService.v1.Domain.Text;
 
 namespace ProjectV.TelegramBotWebService
 {
@@ -31,6 +36,7 @@ namespace ProjectV.TelegramBotWebService
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();
             services.AddTransient<IUserCache, UserCache>();
+            services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
 
             services.Configure<BotConfiguration>(
                 Configuration.GetSection(nameof(BotConfiguration))

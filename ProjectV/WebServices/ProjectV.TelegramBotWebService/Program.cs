@@ -4,7 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectV.Logging;
-using ProjectV.TelegramBotWebService.v1.Domain;
+using ProjectV.TelegramBotWebService.v1.Domain.Setup;
 
 namespace ProjectV.TelegramBotWebService
 {
