@@ -4,7 +4,7 @@ namespace ProjectV.DesktopApp.Domain
 {
     internal static class DesktopOptions
     {
-        public static string Title { get; } = "The Thing Appraiser";
+        public static string Title { get; } = "Project V";
 
         /// <summary>
         /// Page names of all views in main menu.

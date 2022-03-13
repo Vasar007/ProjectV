@@ -12,7 +12,7 @@
     <RootNamespace>ProjectV.ConfigurationWebService</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>
-    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\Resources\ProjectV_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
