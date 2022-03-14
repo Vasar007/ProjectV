@@ -34,7 +34,7 @@
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
     <MicrosoftAspNetWebApiClientPackageVersion>5.2.7</MicrosoftAspNetWebApiClientPackageVersion>
     <MicrosoftBclHashCodePackageVersion>1.1.1</MicrosoftBclHashCodePackageVersion>
-    <MicrosoftEntityFrameworkCorePackageVersion>6.0.2</MicrosoftEntityFrameworkCorePackageVersion>
+    <MicrosoftEntityFrameworkCorePackageVersion>6.0.3</MicrosoftEntityFrameworkCorePackageVersion>
     <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>6.0.2</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
     <MicrosoftEntityFrameworkCoreToolsPackageVersion>6.0.2</MicrosoftEntityFrameworkCoreToolsPackageVersion>
     <MicrosoftExtensionsConfigurationPackageVersion>6.0.1</MicrosoftExtensionsConfigurationPackageVersion>
