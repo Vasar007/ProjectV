@@ -61,7 +61,7 @@
     <SystemNetHttpPackageVersion>4.3.4</SystemNetHttpPackageVersion>
     <SystemThreadingTasksDataflowPackageVersion>6.0.0</SystemThreadingTasksDataflowPackageVersion>
     <SystemValueTuplePackageVersion>4.5.0</SystemValueTuplePackageVersion>
-    <TelegramBotPackageVersion>16.0.2</TelegramBotPackageVersion>
+    <TelegramBotPackageVersion>17.0.0</TelegramBotPackageVersion>
     <TMDbLibPackageVersion>1.9.1</TMDbLibPackageVersion>
     <UnquotePackageVersion>6.1.0</UnquotePackageVersion>
     <XunitPackageVersion>2.4.1</XunitPackageVersion>
