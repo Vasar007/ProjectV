@@ -7,6 +7,7 @@
     <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
     <LangVersion>$(FSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.ContentDirectories</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>

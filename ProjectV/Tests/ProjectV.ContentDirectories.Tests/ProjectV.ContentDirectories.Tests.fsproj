@@ -7,6 +7,7 @@
     <TargetFramework>$(TestTargetFramework)</TargetFramework>
     <LangVersion>$(FSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.ContentDirectories.Tests</RootNamespace>
     <IsPublishable>false</IsPublishable>
