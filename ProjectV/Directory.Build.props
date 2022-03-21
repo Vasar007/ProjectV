@@ -28,7 +28,7 @@
     <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
     <HttpToSocks5ProxyPackageVersion>1.4.0</HttpToSocks5ProxyPackageVersion>
     <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
-    <MaterialDesignColorsPackageVersion>2.0.4</MaterialDesignColorsPackageVersion>
+    <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.3.0</MaterialDesignThemesPackageVersion>
     <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.3</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
