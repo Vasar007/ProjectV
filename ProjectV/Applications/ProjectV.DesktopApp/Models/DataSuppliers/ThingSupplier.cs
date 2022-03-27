@@ -4,7 +4,7 @@ using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {
@@ -51,10 +51,12 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
             {
                 _things.Clear();
             }
+
             foreach (IReadOnlyList<RatingDataContainer> rating in response.RatingDataContainers)
             {
                 _things.AddRange(_thingGrader.ProcessRatings(rating));
             }
+
             return true;
         }
 

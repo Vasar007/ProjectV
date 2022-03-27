@@ -11,7 +11,8 @@ using ProjectV.DesktopApp.Domain.Executor;
 using ProjectV.DesktopApp.Models.DataSuppliers;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
@@ -25,10 +26,13 @@ namespace ProjectV.DesktopApp.Models.Things
         private readonly ServiceProxy _serviceProxy;
 
 
-        public ThingPerformer()
+        public ThingPerformer(
+            ProjectVServiceOptions serviceOptions)
         {
+            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxy = new ServiceProxy();
+            _serviceProxy = new ServiceProxy(serviceOptions);
         }
 
         #region IPerformer<ThingPerformerInfo, ThingResultInfo> Implementation
@@ -37,7 +41,7 @@ namespace ProjectV.DesktopApp.Models.Things
         {
             thingsInfo.ThrowIfNull(nameof(thingsInfo));
 
-            RequestParams requestParams = await ConfigureServiceRequest(thingsInfo)
+            StartJobParamsRequest requestParams = await ConfigureServiceRequest(thingsInfo)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ProcessingResponse? response = await _serviceProxy.SendPostRequest(requestParams)
@@ -48,7 +52,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
         #endregion
 
-        private async Task<RequestParams> ConfigureServiceRequest(ThingPerformerInfo thingsInfo)
+        private async Task<StartJobParamsRequest> ConfigureServiceRequest(ThingPerformerInfo thingsInfo)
         {
             return thingsInfo.Data.DataSource switch
             {
@@ -85,7 +89,7 @@ namespace ProjectV.DesktopApp.Models.Things
             }
         }
 
-        private RequestParams CreateRequestWithUserInputData(string serviceName,
+        private StartJobParamsRequest CreateRequestWithUserInputData(string serviceName,
             IReadOnlyList<string> thingNames)
         {
             _logger.Info($"Perform request with user input data for service \"{serviceName}\". " +
@@ -94,14 +98,14 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()
             };
         }
 
-        private async Task<RequestParams> CreateRequestWithLocalFileData(string serviceName,
+        private async Task<StartJobParamsRequest> CreateRequestWithLocalFileData(string serviceName,
             string storageName)
         {
             _logger.Info($"Perform request with local file data for service \"{serviceName}\". " +
@@ -110,21 +114,21 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             // Read local file, retrieve all things and send them as list to service to crawling
-            // and appaise.
+            // and appraise.
             var localFileReader = new LocalFileReader(new SimpleFileReader());
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()
             };
         }
 
-        private async Task<RequestParams> CreateGoogleDriveRequest(string serviceName,
+        private async Task<StartJobParamsRequest> CreateGoogleDriveRequest(string serviceName,
             string storageName)
         {
             _logger.Info($"Perform request with google drive data for service \"{serviceName}\". " +
@@ -133,7 +137,7 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             // Read file from Google Drive, retrieve all things and send them as list to service to
-            // crawling and appaise.
+            // crawling and appraise.
             var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
@@ -144,7 +148,7 @@ namespace ProjectV.DesktopApp.Models.Things
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()

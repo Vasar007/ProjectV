@@ -51,6 +51,7 @@ namespace ProjectV.CommonWebApi.Extensions
             return exception switch
             {
                 AccessViolationException => RestApiStrings.AccessViolationErrorMessage,
+
                 _ => RestApiStrings.InternalErrorMessage
             };
         }

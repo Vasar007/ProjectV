@@ -1,12 +1,9 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.ConfigurationWebService.v1.Domain;
 
@@ -17,7 +14,8 @@ namespace ProjectV.ConfigurationWebService
         public IConfiguration Configuration { get; }
 
 
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration)
         {
             Configuration = configuration.ThrowIfNull(nameof(configuration));
         }
@@ -31,42 +29,14 @@ namespace ProjectV.ConfigurationWebService
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
                 .AddNewtonsoftJson();
 
-            services.AddApiVersioning(
-                options =>
-                {
-                    // Reporting api versions will return the headers "api-supported-versions" and 
-                    // "api-deprecated-versions".
-                    options.ReportApiVersions = true;
-
-                    // Automatically applies an api version based on the name of the defining 
-                    // controller's namespace.
-                    options.Conventions.Add(new VersionByNamespaceConvention());
-                }
-            );
+            services.AddApiVersioningByNamespaceConvention();
 
             // Register the Swagger generator, defining 1 or more Swagger documents.
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "ProjectV Configuration API",
-                    Description = "Web API to create service configurations based on input " +
-                                  "parameters.",
-                    //TermsOfService = "None",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Vasily Vasilyev",
-                        Email = "vasar007@yandex.ru",
-                        Url = new Uri("https://t.me/Vasar007")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Apache License 2.0",
-                        Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0")
-                    }
-                });
-            });
+            services.ConfigureSwaggerGenWithOpenApi(
+                title: "ProjectV Configuration API",
+                description: "Web API to create service configurations based on input parameters.",
+                apiVersion: "v1"
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 
@@ -94,6 +64,15 @@ namespace ProjectV.ConfigurationWebService
             app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
+using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
@@ -16,7 +17,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         private readonly IBotService _botService;
 
 
-        public ServiceSetup(IOptions<TelegramBotWebServiceSettings> settings, IBotService botService)
+        public ServiceSetup(
+            IOptions<TelegramBotWebServiceSettings> settings,
+            IBotService botService)
         {
             _settings = settings.Value.ThrowIfNull(nameof(settings));
             _botService = botService.ThrowIfNull(nameof(botService));

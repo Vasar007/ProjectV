@@ -8,7 +8,7 @@ using ProjectV.Models.WebService;
 
 namespace ProjectV.ConfigurationWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/configuration")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class ConfigurationController : ControllerBase
     {

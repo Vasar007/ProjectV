@@ -5,7 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebService.Responses;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
 
@@ -18,26 +19,25 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
 
         public static Task ScheduleRequestAsync(IBotService botService, IServiceProxy serviceProxy,
-            long chatId, RequestParams requestParams, CancellationToken token = default)
+            long chatId, StartJobParamsRequest jobParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
             // Otherwise Telegram will retry to send event again until service send a response.
             return Task.Run(
-                () => ScheduleRequestImplementation(botService, serviceProxy,
-                                                    chatId, requestParams),
+                () => ScheduleRequestImplementation(botService, serviceProxy, chatId, jobParams),
                 token
             );
         }
 
         private static async Task ScheduleRequestImplementation(IBotService botService,
-            IServiceProxy serviceProxy, long chatId, RequestParams requestParams)
+            IServiceProxy serviceProxy, long chatId, StartJobParamsRequest jobParams)
         {
             _logger.Info("Trying to send request to ProjectV service.");
 
             try
             {
-                ProcessingResponse? response = await serviceProxy.SendPostRequest(requestParams);
+                ProcessingResponse? response = await serviceProxy.SendPostRequest(jobParams);
 
                 if (response is null)
                 {

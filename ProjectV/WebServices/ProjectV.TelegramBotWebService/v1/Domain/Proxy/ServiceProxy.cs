@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebService.Responses;
+using ProjectV.TelegramBotWebService.Config;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 {
@@ -37,12 +39,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 
         #region IServiceProxy Implementation
 
-        public async Task<ProcessingResponse?> SendPostRequest(RequestParams requestParams)
+        public async Task<ProcessingResponse?> SendPostRequest(StartJobParamsRequest jobParams)
         {
             _logger.Info("Service method 'PostInitialRequest' is called.");
 
             using HttpResponseMessage response = await _client.PostAsJsonAsync(
-                _settings.ProjectVServiceApiUrl, requestParams
+                _settings.ProjectVServiceApiUrl, jobParams
             );
 
             if (response.IsSuccessStatusCode)

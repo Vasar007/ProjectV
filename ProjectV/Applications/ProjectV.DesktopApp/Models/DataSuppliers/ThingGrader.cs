@@ -7,7 +7,7 @@ using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Responses;
 using ProjectV.TmdbService;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
@@ -33,7 +33,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
                 return new List<Thing>();
             }
 
-            IImageSupplier imageSupplier = DetermineImageSupplier(rating.First().DataHandler);
+            IImageSupplier imageSupplier = DetermineImageSupplier(rating[0].DataHandler);
 
             IReadOnlyList<Thing> result = rating.Select(r =>
                 new Thing(
@@ -46,7 +46,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
             return result;
         }
 
-        public void ProcessMetadata(ResponseMetadata metadata)
+        public void ProcessMetadata(ProcessingResponseMetadata metadata)
         {
             metadata.ThrowIfNull(nameof(metadata));
 
@@ -68,7 +68,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
         #endregion
 
-        private IImageSupplier DetermineImageSupplier(BasicInfo basicInfo)
+        private static IImageSupplier DetermineImageSupplier(BasicInfo basicInfo)
         {
             basicInfo.ThrowIfNull(nameof(basicInfo));
 
@@ -80,8 +80,10 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
                 SteamGameInfo _ => new SteamImageSupplier(),
 
-                _ => throw new ArgumentOutOfRangeException(nameof(basicInfo), basicInfo,
-                                                           "Got unknown type to process.")
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(basicInfo), basicInfo,
+                    $"Got unknown type [{basicInfo.GetType().Name}] to process."
+                )
             };
         }
     }

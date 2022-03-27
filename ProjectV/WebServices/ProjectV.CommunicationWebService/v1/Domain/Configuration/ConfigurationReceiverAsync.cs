@@ -4,11 +4,13 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.CommunicationWebService.Config;
 using ProjectV.Logging;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebService.Responses;
 
-namespace ProjectV.CommunicationWebService.v1.Domain
+namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 {
     public sealed class ConfigurationReceiverAsync : IConfigurationReceiverAsync, IDisposable
     {
@@ -20,7 +22,8 @@ namespace ProjectV.CommunicationWebService.v1.Domain
         private readonly HttpClient _client;
 
 
-        public ConfigurationReceiverAsync(IOptions<CommunicationWebServiceSettings> settingsOptions)
+        public ConfigurationReceiverAsync(
+            IOptions<CommunicationWebServiceSettings> settingsOptions)
         {
             _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
 
@@ -36,12 +39,13 @@ namespace ProjectV.CommunicationWebService.v1.Domain
 
         #region IConfigurationReceiverAsync Implementation
 
-        public async Task<RequestData> ReceiveConfigForRequestAsync(RequestParams requestParams)
+        public async Task<StartJobDataResponce> ReceiveConfigForRequestAsync(
+            StartJobParamsRequest jobParams)
         {
             _logger.Info("Sending config request and trying to receive response.");
 
             using (HttpResponseMessage responseConfigMessage = await _client.PostAsJsonAsync(
-                       _settings.ConfigurationServiceApiUrl, requestParams.Requirements
+                       _settings.ConfigurationServiceApiUrl, jobParams.Requirements
                   )
             )
             {
@@ -52,9 +56,9 @@ namespace ProjectV.CommunicationWebService.v1.Domain
                     var config =
                         await responseConfigMessage.Content.ReadAsAsync<ConfigurationXml>();
 
-                    var requestData = new RequestData
+                    var requestData = new StartJobDataResponce
                     {
-                        ThingNames = requestParams.ThingNames,
+                        ThingNames = jobParams.ThingNames,
                         ConfigurationXml = config
                     };
                     return requestData;

@@ -2,6 +2,7 @@
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using MihaZupan;
+using ProjectV.TelegramBotWebService.Config;
 using Telegram.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
@@ -17,7 +18,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
         #endregion
 
 
-        public BotService(IOptions<BotConfiguration> config)
+        public BotService(
+            IOptions<BotConfiguration> config)
         {
             _config = config.Value.ThrowIfNull(nameof(config));
 

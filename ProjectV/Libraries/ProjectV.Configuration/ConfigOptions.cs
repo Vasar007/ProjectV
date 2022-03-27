@@ -7,8 +7,7 @@ namespace ProjectV.Configuration
 {
     public static partial class ConfigOptions
     {
-        private static readonly Lazy<IConfigurationRoot> Root =
-            new Lazy<IConfigurationRoot>(LoadOptions);
+        private static readonly Lazy<IConfigurationRoot> Root = new(LoadOptions);
 
         public static string ConfigFilename { get; } = "config.json";
 

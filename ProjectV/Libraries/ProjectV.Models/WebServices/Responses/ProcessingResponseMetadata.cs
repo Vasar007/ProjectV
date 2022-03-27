@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using ProjectV.Models.Internal;
 
-namespace ProjectV.Models.WebService
+namespace ProjectV.Models.WebService.Responses
 {
     // TODO: make this DTO immutable.
-    public sealed class ResponseMetadata
+    public sealed class ProcessingResponseMetadata
     {
         public int CommonResultsNumber { get; set; }
 
@@ -18,7 +18,7 @@ namespace ProjectV.Models.WebService
         public IReadOnlyDictionary<string, IOptionalData> OptionalData { get; set; } = default!;
 
 
-        public ResponseMetadata()
+        public ProcessingResponseMetadata()
         {
         }
     }

@@ -7,6 +7,7 @@ using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using ProjectV.Configuration;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Commands;
 using ProjectV.DesktopApp.Domain.Messages;
@@ -17,7 +18,7 @@ using ProjectV.DesktopApp.Models.Things;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.DesktopApp.ViewModels
 {
@@ -219,7 +220,7 @@ namespace ProjectV.DesktopApp.ViewModels
             {
                 IsNotBusy = false;
 
-                var thingPerformer = new ThingPerformer();
+                var thingPerformer = new ThingPerformer(ConfigOptions.ProjectVService);
                 ThingResultInfo result = await thingPerformer.PerformAsync(thingsInfo);
                 ProcessStatusOperation(result);
             }

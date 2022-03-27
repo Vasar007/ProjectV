@@ -1,4 +1,4 @@
-﻿namespace ProjectV.TelegramBotWebService
+﻿namespace ProjectV.TelegramBotWebService.Config
 {
     // TODO: make this DTO immutable.
     public sealed class TelegramBotWebServiceSettings

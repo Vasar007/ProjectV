@@ -2,13 +2,12 @@
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/update")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class UpdateController : Controller
     {

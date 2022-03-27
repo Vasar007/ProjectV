@@ -28,8 +28,15 @@
     <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
     <HttpToSocks5ProxyPackageVersion>1.4.0</HttpToSocks5ProxyPackageVersion>
     <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
+<<<<<<< HEAD
     <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.4.0</MaterialDesignThemesPackageVersion>
+=======
+    <MaterialDesignColorsPackageVersion>2.0.4</MaterialDesignColorsPackageVersion>
+    <MaterialDesignThemesPackageVersion>4.3.0</MaterialDesignThemesPackageVersion>
+    <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.3</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
+    <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.3</MicrosoftAspNetCoreAuthorizationPackageVersion>
+>>>>>>> d543bdd... Features, refactoring: add first code for authentication and authorization for REST services (code for JWT tokens)
     <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.3</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
     <MicrosoftAspNetWebApiClientPackageVersion>5.2.7</MicrosoftAspNetWebApiClientPackageVersion>
@@ -42,6 +49,7 @@
     <MicrosoftExtensionsConfigurationJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
     <MicrosoftExtensionsHostingSystemdPackageVersion>6.0.0</MicrosoftExtensionsHostingSystemdPackageVersion>
     <MicrosoftExtensionsHostingWindowsServicesPackageVersion>6.0.0</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
+    <MicrosoftIdentityModelTokensPackageVersion>6.16.0</MicrosoftIdentityModelTokensPackageVersion>
     <MicrosoftNETTestSdkPackageVersion>17.1.0</MicrosoftNETTestSdkPackageVersion>
     <MoqPackageVersion>4.16.1</MoqPackageVersion>
     <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>
@@ -57,10 +65,10 @@
     <SteamWebApiLibPackageVersion>1.1.0</SteamWebApiLibPackageVersion>
     <SwashbuckleAspNetCorePackageVersion>6.3.0</SwashbuckleAspNetCorePackageVersion>
     <SystemDataSqlClientPackageVersion>4.8.3</SystemDataSqlClientPackageVersion>
+    <SystemIdentityModelTokensJwtPackageVersion>6.16.0</SystemIdentityModelTokensJwtPackageVersion>
     <SystemLinqAsyncPackageVersion>5.0.0</SystemLinqAsyncPackageVersion>
     <SystemNetHttpPackageVersion>4.3.4</SystemNetHttpPackageVersion>
     <SystemThreadingTasksDataflowPackageVersion>6.0.0</SystemThreadingTasksDataflowPackageVersion>
-    <SystemValueTuplePackageVersion>4.5.0</SystemValueTuplePackageVersion>
     <TelegramBotPackageVersion>16.0.2</TelegramBotPackageVersion>
     <TMDbLibPackageVersion>1.9.1</TMDbLibPackageVersion>
     <UnquotePackageVersion>6.1.0</UnquotePackageVersion>

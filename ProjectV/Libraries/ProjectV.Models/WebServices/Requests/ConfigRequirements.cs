@@ -16,8 +16,11 @@ namespace ProjectV.Models.WebService
 
 
         [JsonConstructor]
-        public ConfigRequirements(IReadOnlyList<string> input, IReadOnlyList<string> services,
-             IReadOnlyList<string> appraisals, IReadOnlyList<string> output)
+        public ConfigRequirements(
+            IReadOnlyList<string> input,
+            IReadOnlyList<string> services,
+            IReadOnlyList<string> appraisals,
+            IReadOnlyList<string> output)
         {
             Input = input.ThrowIfNull(nameof(input));
             Services = services.ThrowIfNull(nameof(services));

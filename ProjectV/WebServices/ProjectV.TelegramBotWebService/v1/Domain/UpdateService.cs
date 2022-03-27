@@ -1,6 +1,5 @@
 ﻿#pragma warning disable format // dotnet format fails indentation for switch :(
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using ProjectV.Configuration;
 using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
@@ -119,21 +119,21 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    if (!_userCache.TryGetUser(message.Chat.Id, out RequestParams? requestParams))
+                    if (!_userCache.TryGetUser(message.Chat.Id, out StartJobParamsRequest? jobData))
                     {
                         await SendResponseToInvalidMessage(message.Chat.Id);
                         return;
                     }
 
-                    if (requestParams.Requirements is null)
+                    if (jobData.Requirements is null)
                     {
                         string serviceName = data[0];
                         await ContinueRequestCommandWithService(message.Chat.Id, serviceName,
-                                                                requestParams);
+                                                                jobData);
                         return;
                     }
 
-                    await ContinueRequestCommandWithData(message.Chat.Id, data, requestParams);
+                    await ContinueRequestCommandWithData(message.Chat.Id, data, jobData);
                     break;
                 }
             }
@@ -176,8 +176,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         {
             _logger.Info("Processes /request command.");
 
-            var requestParams = new RequestParams();
-            _userCache.TryAddUser(chatId, requestParams);
+            var jobParams = new StartJobParamsRequest();
+            _userCache.TryAddUser(chatId, jobParams);
 
             ReplyKeyboardMarkup replyKeyboard = new[]
             {
@@ -193,7 +193,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         }
 
         private async Task ContinueRequestCommandWithService(long chatId, string serviceName,
-            RequestParams requestParams)
+            StartJobParamsRequest requestParams)
         {
             string encodedUserInput = UserInputEncoder.Encode(serviceName);
             _logger.Info($"Continue process /request command with service {encodedUserInput}.");
@@ -230,11 +230,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         }
 
         private async Task ContinueRequestCommandWithData(long chatId, IReadOnlyList<string> data,
-            RequestParams requestParams)
+            StartJobParamsRequest jobParams)
         {
             _logger.Info("Continue process /request command with data.");
 
-            requestParams.ThingNames = data.ToList();
+            jobParams.ThingNames = data.ToList();
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
@@ -244,7 +244,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             // Schedule task for request and waiting for service response.
             _ = ProcessingResponseReceiver.ScheduleRequestAsync(
-                _botService, _serviceProxy, chatId, requestParams
+                _botService, _serviceProxy, chatId, jobParams
             );
 
             _userCache.TryRemoveUser(chatId);

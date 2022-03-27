@@ -6,13 +6,13 @@ namespace ProjectV.Building
 {
     public sealed class RequirementsCreator : IRequirementsCreator
     {
-        private readonly List<string> _input = new List<string>();
+        private readonly List<string> _input = new();
 
-        private readonly List<string> _services = new List<string>();
+        private readonly List<string> _services = new();
 
-        private readonly List<string> _appraisals = new List<string>();
+        private readonly List<string> _appraisals = new();
 
-        private readonly List<string> _output = new List<string>();
+        private readonly List<string> _output = new();
 
 
         public RequirementsCreator()

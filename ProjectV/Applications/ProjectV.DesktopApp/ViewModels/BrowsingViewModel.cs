@@ -4,7 +4,7 @@ using Acolyte.Assertions;
 using Prism.Mvvm;
 using ProjectV.DesktopApp.Models.DataSuppliers;
 using ProjectV.DesktopApp.Models.Things;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.DesktopApp.ViewModels
 {

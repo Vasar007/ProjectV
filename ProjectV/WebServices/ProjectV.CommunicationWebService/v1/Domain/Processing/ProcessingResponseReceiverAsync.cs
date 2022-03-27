@@ -4,10 +4,11 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.CommunicationWebService.Config;
 using ProjectV.Logging;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Responses;
 
-namespace ProjectV.CommunicationWebService.v1.Domain
+namespace ProjectV.CommunicationWebService.v1.Domain.Processing
 {
     public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync,
         IDisposable
@@ -37,12 +38,12 @@ namespace ProjectV.CommunicationWebService.v1.Domain
         #region IProcessingResponseReceiverAsync Implementation
 
         public async Task<ProcessingResponse> ReceiveProcessingResponseAsync(
-            RequestData requestData)
+            StartJobDataResponce jobData)
         {
             _logger.Info("Sending data request and trying to receive response.");
 
             using (HttpResponseMessage responseMessage = await _client.PostAsJsonAsync(
-                    _settings.ProcessingServiceApiUrl, requestData
+                    _settings.ProcessingServiceApiUrl, jobData
                   )
             )
             {

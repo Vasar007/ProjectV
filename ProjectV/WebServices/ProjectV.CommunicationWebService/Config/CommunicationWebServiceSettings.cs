@@ -1,4 +1,4 @@
-﻿namespace ProjectV.CommunicationWebService
+﻿namespace ProjectV.CommunicationWebService.Config
 {
     // TODO: make this DTO immutable.
     public sealed class CommunicationWebServiceSettings

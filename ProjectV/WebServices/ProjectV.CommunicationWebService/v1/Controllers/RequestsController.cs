@@ -2,13 +2,15 @@
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjectV.CommunicationWebService.v1.Domain;
+using ProjectV.CommunicationWebService.v1.Domain.Configuration;
+using ProjectV.CommunicationWebService.v1.Domain.Processing;
 using ProjectV.Logging;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/requests")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class RequestsController : ControllerBase
     {
@@ -19,7 +21,8 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
         private readonly IProcessingResponseReceiverAsync _processingResponseReceiver;
 
-        public RequestsController(IConfigurationReceiverAsync configurationReceiver,
+        public RequestsController(
+            IConfigurationReceiverAsync configurationReceiver,
             IProcessingResponseReceiverAsync processingResponseReceiver)
         {
             _configurationReceiver = configurationReceiver.ThrowIfNull(
@@ -42,15 +45,15 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
-            RequestParams requestParams)
+            StartJobParamsRequest jobParams)
         {
             _logger.Info("Got request to add in processing queue.");
 
-            RequestData requestData =
-                await _configurationReceiver.ReceiveConfigForRequestAsync(requestParams);
+            StartJobDataResponce jobData =
+                await _configurationReceiver.ReceiveConfigForRequestAsync(jobParams);
 
             ProcessingResponse response =
-                await _processingResponseReceiver.ReceiveProcessingResponseAsync(requestData);
+                await _processingResponseReceiver.ReceiveProcessingResponseAsync(jobData);
 
             return Ok(response);
         }
