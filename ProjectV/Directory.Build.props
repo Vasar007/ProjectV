@@ -28,12 +28,8 @@
     <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
     <HttpToSocks5ProxyPackageVersion>1.4.0</HttpToSocks5ProxyPackageVersion>
     <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
-<<<<<<< HEAD
     <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.4.0</MaterialDesignThemesPackageVersion>
-=======
-    <MaterialDesignColorsPackageVersion>2.0.4</MaterialDesignColorsPackageVersion>
-    <MaterialDesignThemesPackageVersion>4.3.0</MaterialDesignThemesPackageVersion>
     <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.3</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
     <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.3</MicrosoftAspNetCoreAuthorizationPackageVersion>
 >>>>>>> d543bdd... Features, refactoring: add first code for authentication and authorization for REST services (code for JWT tokens)
