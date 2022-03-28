@@ -21,7 +21,7 @@
     <CsvHelperPackageVersion>27.2.1</CsvHelperPackageVersion>
     <FileHelpersPackageVersion>3.5.1</FileHelpersPackageVersion>
     <FSharpCorePackageVersion>6.0.3</FSharpCorePackageVersion>
-    <GoogleApisPackageVersion>1.56.0</GoogleApisPackageVersion>
+    <GoogleApisPackageVersion>1.57.0</GoogleApisPackageVersion>
     <GoogleApisAuthPackageVersion>1.56.0</GoogleApisAuthPackageVersion>
     <GoogleApisCorePackageVersion>1.56.0</GoogleApisCorePackageVersion>
     <GoogleApisDrivev3PackageVersion>1.56.0.2601</GoogleApisDrivev3PackageVersion>
