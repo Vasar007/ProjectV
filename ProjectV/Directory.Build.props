@@ -49,7 +49,7 @@
     <MoqPackageVersion>4.16.1</MoqPackageVersion>
     <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>
     <NLogPackageVersion>4.7.15</NLogPackageVersion>
-    <NLogConfigPackageVersion>4.7.14</NLogConfigPackageVersion>
+    <NLogConfigPackageVersion>4.7.15</NLogConfigPackageVersion>
     <NLogSchemaPackageVersion>4.7.15</NLogSchemaPackageVersion>
     <NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>6.0.3</NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>
     <OmdbApiNetPackageVersion>1.3.0</OmdbApiNetPackageVersion>
