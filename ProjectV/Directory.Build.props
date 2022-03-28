@@ -22,7 +22,7 @@
     <FileHelpersPackageVersion>3.5.1</FileHelpersPackageVersion>
     <FSharpCorePackageVersion>6.0.3</FSharpCorePackageVersion>
     <GoogleApisPackageVersion>1.56.0</GoogleApisPackageVersion>
-    <GoogleApisAuthPackageVersion>1.56.0</GoogleApisAuthPackageVersion>
+    <GoogleApisAuthPackageVersion>1.57.0</GoogleApisAuthPackageVersion>
     <GoogleApisCorePackageVersion>1.57.0</GoogleApisCorePackageVersion>
     <GoogleApisDrivev3PackageVersion>1.56.0.2601</GoogleApisDrivev3PackageVersion>
     <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
