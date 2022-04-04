@@ -4,15 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectV.Models.Internal.Jobs;
 
-namespace ProjectV.DataAccessLayer.Services.Jobs
+namespace ProjectV.DataAccessLayer.Services.Jobs.Models
 {
     [Table("jobs")]
     public sealed class JobDbInfo
     {
         [Key, Required]
         [Column("id")]
-        public Guid Id { get; }
+        internal Guid Id { get; }
+        public JobId WrappedId => JobId.Wrap(Id);
 
         [Required]
         [Column("name")]
@@ -38,7 +40,7 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
             int result,
             string config)
         {
-            Id = id;
+            Id = id.ThrowIfEmpty(nameof(id));
             Name = name.ThrowIfNullOrWhiteSpace(nameof(config));
             State = state;
             Result = result;
@@ -52,7 +54,7 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
         {
         }
 
-        #region Implementation of IEntityTypeConfiguration<JobDbInfo>
+        #region IEntityTypeConfiguration<JobDbInfo> Implementation
 
         public void Configure(EntityTypeBuilder<JobDbInfo> builder)
         {

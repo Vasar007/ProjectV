@@ -1,4 +1,4 @@
-﻿using ProjectV.Models.WebService;
+﻿using ProjectV.Models.WebService.Requests;
 
 namespace ProjectV.Building
 {

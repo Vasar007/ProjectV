@@ -27,7 +27,7 @@ namespace ProjectV.ProcessingWebService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
-            services.AddScoped<IJobInfoService, JobInfoService>();
+            services.AddScoped<IJobInfoService, DatabaseJobInfoService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ProjectVDbContext>();

@@ -32,6 +32,7 @@
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Logging\ProjectV.Logging.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.DataAccessLayer\ProjectV.DataAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
 using ProjectV.Core;
 using ProjectV.DataAccessLayer;
-using ProjectV.DataAccessLayer.Services.Jobs;
+using ProjectV.DataAccessLayer.Services.Jobs.Models;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
@@ -133,7 +133,7 @@ namespace ProjectV.ConsoleApp
                 foreach (JobDbInfo jobDbInfo in context.GetJobDbSet())
                 {
                     string message =
-                        $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                        $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                         $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                         $"{jobDbInfo.Config.ToString()}";
 
@@ -166,7 +166,7 @@ namespace ProjectV.ConsoleApp
                 config: "TaskConfig"
             );
             string message =
-                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                 $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                 $"{jobDbInfo.Config.ToString()}";
 
@@ -182,7 +182,7 @@ namespace ProjectV.ConsoleApp
 
             jobDbInfo = mapper.Map<JobDbInfo>(jobInfo);
             message =
-                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                 $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                 $"{jobDbInfo.Config.ToString()}";
 
