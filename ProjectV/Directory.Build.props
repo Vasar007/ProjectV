@@ -60,7 +60,7 @@
     <SteamWebApiLibPackageVersion>1.1.0</SteamWebApiLibPackageVersion>
     <SwashbuckleAspNetCorePackageVersion>6.3.0</SwashbuckleAspNetCorePackageVersion>
     <SystemDataSqlClientPackageVersion>4.8.3</SystemDataSqlClientPackageVersion>
-    <SystemIdentityModelTokensJwtPackageVersion>6.16.0</SystemIdentityModelTokensJwtPackageVersion>
+    <SystemIdentityModelTokensJwtPackageVersion>6.17.0</SystemIdentityModelTokensJwtPackageVersion>
     <SystemLinqAsyncPackageVersion>5.0.0</SystemLinqAsyncPackageVersion>
     <SystemNetHttpPackageVersion>4.3.4</SystemNetHttpPackageVersion>
     <SystemThreadingTasksDataflowPackageVersion>6.0.0</SystemThreadingTasksDataflowPackageVersion>
