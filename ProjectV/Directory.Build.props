@@ -44,7 +44,7 @@
     <MicrosoftExtensionsConfigurationJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
     <MicrosoftExtensionsHostingSystemdPackageVersion>6.0.0</MicrosoftExtensionsHostingSystemdPackageVersion>
     <MicrosoftExtensionsHostingWindowsServicesPackageVersion>6.0.0</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
-    <MicrosoftIdentityModelTokensPackageVersion>6.16.0</MicrosoftIdentityModelTokensPackageVersion>
+    <MicrosoftIdentityModelTokensPackageVersion>6.17.0</MicrosoftIdentityModelTokensPackageVersion>
     <MicrosoftNETTestSdkPackageVersion>17.1.0</MicrosoftNETTestSdkPackageVersion>
     <MoqPackageVersion>4.16.1</MoqPackageVersion>
     <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>
