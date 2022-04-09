@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
@@ -31,6 +32,8 @@ namespace ProjectV.DesktopApp
                     XmlLanguage.GetLanguage(CultureInfo.InvariantCulture.Name)
                 )
             );
+
+            UnhandledExceptionEventRegistrator.Register(Application_OnUnhandledException);
 
             _logger.PrintHeader("Desktop client application started.");
         }
@@ -75,6 +78,12 @@ namespace ProjectV.DesktopApp
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             _logger.PrintFooter("Desktop client application stopped.");
+        }
+
+        private void Application_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var ex = (Exception)e.ExceptionObject;
+            _logger.Error(ex, "Unhandled exception has been occurred.");
         }
     }
 }
