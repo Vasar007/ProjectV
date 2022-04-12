@@ -31,7 +31,7 @@
     <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.4.0</MaterialDesignThemesPackageVersion>
     <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.3</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
-    <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.3</MicrosoftAspNetCoreAuthorizationPackageVersion>
+    <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.4</MicrosoftAspNetCoreAuthorizationPackageVersion>
     <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.3</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
     <MicrosoftAspNetWebApiClientPackageVersion>5.2.7</MicrosoftAspNetWebApiClientPackageVersion>
