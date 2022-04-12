@@ -30,7 +30,7 @@
     <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
     <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
     <MaterialDesignThemesPackageVersion>4.4.0</MaterialDesignThemesPackageVersion>
-    <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.3</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
+    <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.4</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
     <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.3</MicrosoftAspNetCoreAuthorizationPackageVersion>
     <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.3</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
     <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
