@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RestSharp" Version="$(RestSharpPackageVersion)" />
-    <PackageReference Include="System.Net.Http" Version="$(SystemNetHttpPackageVersion)" />
+    <PackageReference Include="RestSharp" />
+    <PackageReference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

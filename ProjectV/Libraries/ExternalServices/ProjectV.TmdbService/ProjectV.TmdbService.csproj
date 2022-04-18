@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TMDbLib" Version="$(TMDbLibPackageVersion)" />
+    <PackageReference Include="TMDbLib" />
   </ItemGroup>
 
   <ItemGroup>

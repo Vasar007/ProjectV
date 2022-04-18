@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonSubTypes" Version="$(JsonSubTypesPackageVersion)" />
+    <PackageReference Include="JsonSubTypes" />
   </ItemGroup>
 
   <ItemGroup>

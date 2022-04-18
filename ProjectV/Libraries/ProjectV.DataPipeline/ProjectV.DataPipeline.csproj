@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gridsum.DataflowEx" Version="$(GridsumDataflowExPackageVersion)" />
+    <PackageReference Include="Gridsum.DataflowEx" />
   </ItemGroup>
 
   <ItemGroup>

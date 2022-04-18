@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SteamWebApiLib" Version="$(SteamWebApiLibPackageVersion)" />
+    <PackageReference Include="SteamWebApiLib" />
   </ItemGroup>
 
   <ItemGroup>

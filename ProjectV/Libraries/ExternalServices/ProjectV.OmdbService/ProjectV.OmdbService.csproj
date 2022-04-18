@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OmdbApiNet" Version="$(OmdbApiNetPackageVersion)" />
+    <PackageReference Include="OmdbApiNet" />
   </ItemGroup>
 
   <ItemGroup>

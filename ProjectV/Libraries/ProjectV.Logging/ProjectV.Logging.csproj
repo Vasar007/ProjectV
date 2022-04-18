@@ -15,15 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NLog" Version="$(NLogPackageVersion)" />
-    <PackageReference Include="NLog.Config" Version="$(NLogConfigPackageVersion)">
-      <ExcludeAssets>all</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="NLog.Schema" Version="$(NLogSchemaPackageVersion)" />
+    <PackageReference Include="NLog" />
+    <PackageReference Include="NLog.Config" PrivateAssets="all" />
+    <PackageReference Include="NLog.Extensions.Logging" />
+    <PackageReference Include="NLog.Schema" />
   </ItemGroup>
 
   <ItemGroup>

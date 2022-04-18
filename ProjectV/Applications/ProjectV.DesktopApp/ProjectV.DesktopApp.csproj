@@ -17,12 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="$(MaterialDesignColorsPackageVersion)" />
-    <PackageReference Include="MaterialDesignThemes" Version="$(MaterialDesignThemesPackageVersion)" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="$(MicrosoftAspNetWebApiClientPackageVersion)" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="$(OokiiDialogsWpfPackageVersion)" />
-    <PackageReference Include="Prism.Unity" Version="$(PrismUnityPackageVersion)" />
-    <PackageReference Include="Prism.Wpf" Version="$(PrismWpfPackageVersion)" />
+    <PackageReference Include="MaterialDesignColors" />
+    <PackageReference Include="MaterialDesignThemes" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" />
+    <PackageReference Include="Prism.Unity" />
+    <PackageReference Include="Prism.Wpf" />
   </ItemGroup>
 
   <ItemGroup>

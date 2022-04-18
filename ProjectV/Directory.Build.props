@@ -10,65 +10,7 @@
     <TestTargetFramework>net6.0</TestTargetFramework>
     <CSharpLangVersion>10.0</CSharpLangVersion>
     <FSharpLangVersion>5.0</FSharpLangVersion>
-  </PropertyGroup>
-
-  <!-- NuGet packages -->
-  <PropertyGroup>
-    <AcolyteNETPackageVersion>2.2.0</AcolyteNETPackageVersion>
-    <AutoMapperPackageVersion>11.0.1</AutoMapperPackageVersion>
-    <AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>11.0.0</AutoMapperExtensionsMicrosoftDependencyInjectionPackageVersion>
-    <CoverletCollectorPackageVersion>3.1.2</CoverletCollectorPackageVersion>
-    <CsvHelperPackageVersion>27.2.1</CsvHelperPackageVersion>
-    <FileHelpersPackageVersion>3.5.1</FileHelpersPackageVersion>
-    <FSharpCorePackageVersion>6.0.3</FSharpCorePackageVersion>
-    <GoogleApisPackageVersion>1.57.0</GoogleApisPackageVersion>
-    <GoogleApisAuthPackageVersion>1.57.0</GoogleApisAuthPackageVersion>
-    <GoogleApisCorePackageVersion>1.57.0</GoogleApisCorePackageVersion>
-    <GoogleApisDrivev3PackageVersion>1.57.0.2656</GoogleApisDrivev3PackageVersion>
-    <GridsumDataflowExPackageVersion>2.0.0</GridsumDataflowExPackageVersion>
-    <HttpToSocks5ProxyPackageVersion>1.4.0</HttpToSocks5ProxyPackageVersion>
-    <JsonSubTypesPackageVersion>1.8.0</JsonSubTypesPackageVersion>
-    <MaterialDesignColorsPackageVersion>2.0.5</MaterialDesignColorsPackageVersion>
-    <MaterialDesignThemesPackageVersion>4.4.0</MaterialDesignThemesPackageVersion>
-    <MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>6.0.4</MicrosoftAspNetCoreAuthenticationJwtBearerPackageVersion>
-    <MicrosoftAspNetCoreAuthorizationPackageVersion>6.0.4</MicrosoftAspNetCoreAuthorizationPackageVersion>
-    <MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>6.0.4</MicrosoftAspNetCoreMvcNewtonsoftJsonPackageVersion>
-    <MicrosoftAspNetCoreMvcVersioningPackageVersion>5.0.0</MicrosoftAspNetCoreMvcVersioningPackageVersion>
-    <MicrosoftAspNetWebApiClientPackageVersion>5.2.8</MicrosoftAspNetWebApiClientPackageVersion>
-    <MicrosoftBclHashCodePackageVersion>1.1.1</MicrosoftBclHashCodePackageVersion>
-    <MicrosoftEntityFrameworkCorePackageVersion>6.0.4</MicrosoftEntityFrameworkCorePackageVersion>
-    <MicrosoftEntityFrameworkCoreSqlServerPackageVersion>6.0.4</MicrosoftEntityFrameworkCoreSqlServerPackageVersion>
-    <MicrosoftEntityFrameworkCoreToolsPackageVersion>6.0.4</MicrosoftEntityFrameworkCoreToolsPackageVersion>
-    <MicrosoftExtensionsConfigurationPackageVersion>6.0.1</MicrosoftExtensionsConfigurationPackageVersion>
-    <MicrosoftExtensionsConfigurationBinderPackageVersion>6.0.0</MicrosoftExtensionsConfigurationBinderPackageVersion>
-    <MicrosoftExtensionsConfigurationJsonPackageVersion>6.0.0</MicrosoftExtensionsConfigurationJsonPackageVersion>
-    <MicrosoftExtensionsHostingSystemdPackageVersion>6.0.0</MicrosoftExtensionsHostingSystemdPackageVersion>
-    <MicrosoftExtensionsHostingWindowsServicesPackageVersion>6.0.0</MicrosoftExtensionsHostingWindowsServicesPackageVersion>
-    <MicrosoftIdentityModelTokensPackageVersion>6.17.0</MicrosoftIdentityModelTokensPackageVersion>
-    <MicrosoftNETTestSdkPackageVersion>17.1.0</MicrosoftNETTestSdkPackageVersion>
-    <MoqPackageVersion>4.16.1</MoqPackageVersion>
-    <NewtonsoftJsonPackageVersion>13.0.1</NewtonsoftJsonPackageVersion>
-    <NLogPackageVersion>4.7.15</NLogPackageVersion>
-    <NLogConfigPackageVersion>4.7.15</NLogConfigPackageVersion>
-    <NLogSchemaPackageVersion>4.7.15</NLogSchemaPackageVersion>
-    <NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>6.0.3</NpgsqlEntityFrameworkCorePostgreSQLPackageVersion>
-    <OmdbApiNetPackageVersion>1.3.0</OmdbApiNetPackageVersion>
-    <OokiiDialogsWpfPackageVersion>5.0.1</OokiiDialogsWpfPackageVersion>
-    <PrismUnityPackageVersion>8.1.97</PrismUnityPackageVersion>
-    <PrismWpfPackageVersion>8.1.97</PrismWpfPackageVersion>
-    <RestSharpPackageVersion>107.3.0</RestSharpPackageVersion>
-    <SteamWebApiLibPackageVersion>1.1.0</SteamWebApiLibPackageVersion>
-    <SwashbuckleAspNetCorePackageVersion>6.3.0</SwashbuckleAspNetCorePackageVersion>
-    <SystemDataSqlClientPackageVersion>4.8.3</SystemDataSqlClientPackageVersion>
-    <SystemIdentityModelTokensJwtPackageVersion>6.17.0</SystemIdentityModelTokensJwtPackageVersion>
-    <SystemLinqAsyncPackageVersion>5.0.0</SystemLinqAsyncPackageVersion>
-    <SystemNetHttpPackageVersion>4.3.4</SystemNetHttpPackageVersion>
-    <SystemThreadingTasksDataflowPackageVersion>6.0.0</SystemThreadingTasksDataflowPackageVersion>
-    <TelegramBotPackageVersion>16.0.2</TelegramBotPackageVersion>
-    <TMDbLibPackageVersion>1.9.1</TMDbLibPackageVersion>
-    <UnquotePackageVersion>6.1.0</UnquotePackageVersion>
-    <XunitPackageVersion>2.4.1</XunitPackageVersion>
-    <XunitRunnerVisualStudioPackageVersion>2.4.3</XunitRunnerVisualStudioPackageVersion>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
 </Project>
