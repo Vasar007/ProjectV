@@ -4,7 +4,7 @@
     <Platforms>$(AppPlatforms)</Platforms>
     <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Library</OutputType>
-    <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(FSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
     <Deterministic>true</Deterministic>
