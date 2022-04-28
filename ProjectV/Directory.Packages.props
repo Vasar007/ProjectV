@@ -16,7 +16,7 @@
     <PackageVersion Include="Gridsum.DataflowEx" Version="2.0.0" />
     <PackageVersion Include="HttpToSocks5Proxy" Version="1.4.0" />
     <PackageVersion Include="JsonSubTypes" Version="1.8.0" />
-    <PackageVersion Include="MaterialDesignColors" Version="2.0.5" />
+    <PackageVersion Include="MaterialDesignColors" Version="2.0.6" />
     <PackageVersion Include="MaterialDesignThemes" Version="4.4.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="6.0.4" />
