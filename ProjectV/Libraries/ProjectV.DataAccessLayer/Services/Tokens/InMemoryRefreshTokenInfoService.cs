@@ -27,9 +27,11 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
             _userInfoService = inMemoryUserInfoService;
 
-            _userInfoService.OnAddAsync += AddIfNeededAsync;
-            _userInfoService.OnUpdateAsync += UpdateIfNeededAsync;
-            _userInfoService.OnDeleteAsync += DeleteIfNeededAsync;
+            _userInfoService.OnAddAsync += AddTokenForUserIfNeededAsync;
+            _userInfoService.OnUpdateAsync += UpdateTokenForUserIfNeededAsync;
+            _userInfoService.OnDeleteAsync += DeleteTokenForUserIfNeededAsync;
+
+            OnAddAsync += UpdateUserForTokenIfNeededAsync;
         }
 
         #region IDisposable Members
@@ -40,9 +42,11 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
         {
             if (_disposed) return;
 
-            _userInfoService.OnAddAsync -= AddIfNeededAsync;
-            _userInfoService.OnUpdateAsync -= UpdateIfNeededAsync;
-            _userInfoService.OnDeleteAsync -= DeleteIfNeededAsync;
+            _userInfoService.OnAddAsync -= AddTokenForUserIfNeededAsync;
+            _userInfoService.OnUpdateAsync -= UpdateTokenForUserIfNeededAsync;
+            _userInfoService.OnDeleteAsync -= DeleteTokenForUserIfNeededAsync;
+
+            OnAddAsync -= UpdateUserForTokenIfNeededAsync;
 
             _disposed = true;
         }
@@ -70,7 +74,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
         #endregion
 
-        private async Task AddIfNeededAsync(UserInfo userInfo)
+        private async Task AddTokenForUserIfNeededAsync(UserInfo userInfo)
         {
             if (userInfo.RefreshToken is not null)
             {
@@ -78,7 +82,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
             }
         }
 
-        private async Task UpdateIfNeededAsync(UserInfo userInfo)
+        private async Task UpdateTokenForUserIfNeededAsync(UserInfo userInfo)
         {
             if (userInfo.RefreshToken is not null)
             {
@@ -86,11 +90,36 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
             }
         }
 
-        private async Task DeleteIfNeededAsync(UserInfo userInfo)
+        private async Task DeleteTokenForUserIfNeededAsync(UserInfo userInfo)
         {
             if (userInfo.RefreshToken is not null)
             {
                 await DeleteAsync(userInfo.RefreshToken.Id);
+            }
+        }
+
+        private async Task UpdateUserForTokenIfNeededAsync(RefreshTokenInfo refreshToken)
+        {
+            UserInfo? userInfo = await _userInfoService.FindByIdAsync(refreshToken.UserId);
+            if (userInfo is null)
+            {
+                throw new InvalidOperationException(
+                    $"Trying to add token for non-existed or deleted user '{refreshToken.UserId}'."
+                );
+            }
+
+            if (userInfo.RefreshToken is null)
+            {
+                var userInfoWithToken = new UserInfo(
+                    id: userInfo.Id,
+                    userName: userInfo.UserName,
+                    password: userInfo.Password,
+                    passwordSalt: userInfo.PasswordSalt,
+                    timestamp: userInfo.Timestamp,
+                    active: userInfo.Active,
+                    refreshToken: refreshToken
+                );
+                await _userInfoService.UpdateAsync(userInfoWithToken);
             }
         }
     }

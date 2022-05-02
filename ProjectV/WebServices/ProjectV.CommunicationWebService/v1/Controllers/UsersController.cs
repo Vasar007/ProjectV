@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
@@ -64,7 +65,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         {
             if (refreshTokenRequest is null ||
                 string.IsNullOrEmpty(refreshTokenRequest.RefreshToken) ||
-                refreshTokenRequest.UserId != Guid.Empty)
+                refreshTokenRequest.UserId == Guid.Empty)
             {
                 return BadRequest(new TokenResponse
                 {
@@ -104,7 +105,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
             {
                 var errors = ModelState.Values
                     .SelectMany(x => x.Errors.Select(c => c.ErrorMessage))
-                    .ToList();
+                    .ToReadOnlyList();
 
                 if (errors.Any())
                 {
@@ -123,7 +124,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
                 return UnprocessableEntity(signupResponse);
             }
 
-            return Ok(signupResponse.UserName);
+            return Ok(signupResponse);
         }
 
         [HttpPost]

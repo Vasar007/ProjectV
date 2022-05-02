@@ -73,7 +73,6 @@ namespace ProjectV.ProcessingWebService
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
-            app.UseMvc();
 
             app.UseRouting();
             app.UseAuthentication();

@@ -84,7 +84,6 @@ namespace ProjectV.TelegramBotWebService
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
-            app.UseMvc();
 
             app.UseRouting();
             app.UseAuthentication();

@@ -93,6 +93,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new SignupResponse
                 {
                     Success = true,
+                    UserId = user.Id.Value,
                     UserName = user.UserName.Value
                 };
             }

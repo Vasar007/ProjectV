@@ -30,7 +30,8 @@ namespace ProjectV.CommonWebApi.Extensions
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = config.Issuer,
                         ValidAudience = config.Audience,
-                        IssuerSigningKey = key
+                        IssuerSigningKey = key,
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 
