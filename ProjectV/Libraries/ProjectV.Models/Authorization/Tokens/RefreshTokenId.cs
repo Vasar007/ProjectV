@@ -30,5 +30,25 @@ namespace ProjectV.Models.Authorization.Tokens
 
             return new RefreshTokenId(id);
         }
+
+        public static RefreshTokenId Parse(string rawId)
+        {
+            rawId.ThrowIfNullOrEmpty(nameof(rawId));
+
+            var id = Guid.Parse(rawId);
+            return Wrap(id);
+        }
+
+        public static bool TryParse(string? rawId, out RefreshTokenId result)
+        {
+            if (Guid.TryParse(rawId, out Guid id))
+            {
+                result = Wrap(id);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
     }
 }

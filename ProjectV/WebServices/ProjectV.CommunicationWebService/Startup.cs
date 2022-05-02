@@ -4,12 +4,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectV.CommonWebApi.Authorization.Passwords;
+using ProjectV.CommonWebApi.Authorization.Tokens.Services;
+using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.CommunicationWebService.Config;
-using ProjectV.CommunicationWebService.v1.Domain;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
+using ProjectV.DataAccessLayer.Services.Tokens;
+using ProjectV.DataAccessLayer.Services.Users;
 
 namespace ProjectV.CommunicationWebService
 {
@@ -29,6 +33,12 @@ namespace ProjectV.CommunicationWebService
         {
             services.AddSingleton<IConfigurationReceiverAsync, ConfigurationReceiverAsync>();
             services.AddSingleton<IProcessingResponseReceiverAsync, ProcessingResponseReceiverAsync>();
+
+            services.AddSingleton<IPasswordManager, PasswordManager>();
+            services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();
+            services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>();
+            services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<IUserService, UserService>();
 
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services

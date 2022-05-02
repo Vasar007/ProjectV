@@ -30,5 +30,25 @@ namespace ProjectV.Models.Users
 
             return new UserId(id);
         }
+
+        public static UserId Parse(string rawId)
+        {
+            rawId.ThrowIfNullOrEmpty(nameof(rawId));
+
+            var id = Guid.Parse(rawId);
+            return Wrap(id);
+        }
+
+        public static bool TryParse(string? rawId, out UserId result)
+        {
+            if (Guid.TryParse(rawId, out Guid id))
+            {
+                result = Wrap(id);
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
     }
 }

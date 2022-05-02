@@ -38,7 +38,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return Ok("You can get request processing your data by ThingsAppraiser service.");
+            return Ok("You can get request processing your data by ProjectV service.");
         }
 
         [HttpPost]

@@ -16,7 +16,8 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
         public byte[] GetSecureSalt()
         {
             // Starting .NET 6, the Class RNGCryptoServiceProvider is obsolete,
-            // so now we have to use the RandomNumberGenerator Class to generate a secure random number bytes
+            // so now we have to use the RandomNumberGenerator Class to generate a secure random
+            // number bytes.
 
             return RandomNumberGenerator.GetBytes(32);
         }

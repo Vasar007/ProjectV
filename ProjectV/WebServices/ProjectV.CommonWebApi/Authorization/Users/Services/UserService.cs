@@ -44,7 +44,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new SignupResponse
                 {
                     Success = false,
-                    Error = "User already exists with the same email",
+                    Error = "User already exists with the same user name",
                     ErrorCode = "S02"
                 };
             }
@@ -78,7 +78,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 password: passwordHash,
                 passwordSalt: Convert.ToBase64String(salt),
                 ts: signupRequest.Ts,
-                active: true, // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
+                active: true, // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true.
                 refreshToken: null
             );
 
@@ -112,7 +112,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "Email not found",
+                    Error = "User name not found",
                     ErrorCode = "L02"
                 };
             }
@@ -125,7 +125,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "Invalid Password",
+                    Error = "Invalid password",
                     ErrorCode = "L03"
                 };
             }
