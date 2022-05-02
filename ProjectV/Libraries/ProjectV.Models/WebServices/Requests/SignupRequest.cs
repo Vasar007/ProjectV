@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ProjectV.Models.Authorization;
 
 namespace ProjectV.Models.WebServices.Requests
 {
@@ -15,7 +16,7 @@ namespace ProjectV.Models.WebServices.Requests
         public string ConfirmPassword { get; set; } = default!;
 
         [Required]
-        public DateTime Ts { get; set; }
+        public DateTime Timestamp { get; set; }
 
 
         public SignupRequest()

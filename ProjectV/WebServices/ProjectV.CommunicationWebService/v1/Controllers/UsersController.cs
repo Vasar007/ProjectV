@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Authorization;
@@ -63,7 +64,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         {
             if (refreshTokenRequest is null ||
                 string.IsNullOrEmpty(refreshTokenRequest.RefreshToken) ||
-                !refreshTokenRequest.UserId.IsSpecified)
+                refreshTokenRequest.UserId != Guid.Empty)
             {
                 return BadRequest(new TokenResponse
                 {
@@ -88,8 +89,8 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
             return Ok(new
             {
-                AccessToken = tokenResponse.AccessToken,
-                Refreshtoken = tokenResponse.RefreshToken
+                tokenResponse.AccessToken,
+                tokenResponse.RefreshToken
             });
         }
 
@@ -97,6 +98,8 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [Route("signup")]
         public async Task<IActionResult> Signup(SignupRequest signupRequest)
         {
+            signupRequest.ThrowIfNull(nameof(signupRequest));
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
@@ -123,8 +126,8 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
             return Ok(signupResponse.UserName);
         }
 
-        [Authorize]
         [HttpPost]
+        [Authorize]
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {

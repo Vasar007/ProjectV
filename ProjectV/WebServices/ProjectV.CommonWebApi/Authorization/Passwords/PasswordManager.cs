@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using ProjectV.Models.Authorization;
 
 namespace ProjectV.CommonWebApi.Authorization.Passwords
 {
@@ -22,13 +23,12 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
             return RandomNumberGenerator.GetBytes(32);
         }
 
-        public string HashUsingPbkdf2(string password, byte[] salt)
+        public string HashUsingPbkdf2(Password password, byte[] salt)
         {
-            password.ThrowIfNullOrWhiteSpace(nameof(password));
             salt.ThrowIfNullOrEmpty(nameof(salt));
 
             byte[] derivedKey = KeyDerivation.Pbkdf2(
-                password: password,
+                password: password.Value,
                 salt: salt,
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 100000,
@@ -38,12 +38,10 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
             return Convert.ToBase64String(derivedKey);
         }
 
-        public bool EnsurePasswordIsStrong(string password)
+        public bool EnsurePasswordIsStrong(Password password)
         {
-            password.ThrowIfNullOrWhiteSpace(nameof(password));
-
             // TODO: add normal password checker.
-            return password.Length <= 7;
+            return password.Value.Length > 7;
         }
 
         #endregion

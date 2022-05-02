@@ -1,11 +1,13 @@
-﻿namespace ProjectV.CommonWebApi.Authorization.Passwords
+﻿using ProjectV.Models.Authorization;
+
+namespace ProjectV.CommonWebApi.Authorization.Passwords
 {
     public interface IPasswordManager
     {
         byte[] GetSecureSalt();
 
-        string HashUsingPbkdf2(string password, byte[] salt);
+        string HashUsingPbkdf2(Password password, byte[] salt);
 
-        bool EnsurePasswordIsStrong(string password);
+        bool EnsurePasswordIsStrong(Password password);
     }
 }

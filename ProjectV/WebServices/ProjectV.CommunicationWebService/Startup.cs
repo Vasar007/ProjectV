@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Authorization.Passwords;
+using ProjectV.CommonWebApi.Authorization.Tokens.Generators;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Extensions;
@@ -37,6 +38,7 @@ namespace ProjectV.CommunicationWebService
             services.AddSingleton<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();
             services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>();
+            services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddSingleton<ITokenService, TokenService>();
             services.AddSingleton<IUserService, UserService>();
 

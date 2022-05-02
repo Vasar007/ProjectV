@@ -15,9 +15,17 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
 
         public InMemoryRefreshTokenInfoService(
-            InMemoryUserInfoService userInfoService)
+            IUserInfoService userInfoService)
         {
-            _userInfoService = userInfoService.ThrowIfNull(nameof(userInfoService));
+            userInfoService.ThrowIfNull(nameof(userInfoService));
+
+            // We accept interface to allow DI inject object.
+            if (userInfoService is not InMemoryUserInfoService inMemoryUserInfoService)
+            {
+                throw new ArgumentException("In-memory IUserInfoService expected.", nameof(userInfoService));
+            }
+
+            _userInfoService = inMemoryUserInfoService;
 
             _userInfoService.OnAddAsync += AddIfNeededAsync;
             _userInfoService.OnUpdateAsync += UpdateIfNeededAsync;

@@ -4,7 +4,7 @@ using Acolyte.Assertions;
 namespace ProjectV.Models.Users
 {
     // Implicitly implements "IEquatable<UserName>" because it is record.
-    public record struct UserName
+    public readonly record struct UserName
     {
         public static UserName None { get; } = new UserName(string.Empty);
 

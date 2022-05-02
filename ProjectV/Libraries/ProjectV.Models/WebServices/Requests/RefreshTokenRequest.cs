@@ -1,11 +1,12 @@
-﻿using ProjectV.Models.Users;
+﻿using System;
 
 namespace ProjectV.Models.WebService.Requests
 {
     // TODO: make this DTO immutable.
     public sealed class RefreshTokenRequest
     {
-        public UserId UserId { get; set; }
+        public Guid UserId { get; set; }
+
         public string RefreshToken { get; set; } = default!;
 
 

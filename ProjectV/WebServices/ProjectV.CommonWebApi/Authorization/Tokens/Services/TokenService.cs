@@ -6,6 +6,7 @@ using ProjectV.CommonWebApi.Authorization.Passwords;
 using ProjectV.CommonWebApi.Authorization.Tokens.Generators;
 using ProjectV.DataAccessLayer.Services.Tokens;
 using ProjectV.DataAccessLayer.Services.Users;
+using ProjectV.Models.Authorization;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
 using ProjectV.Models.WebService.Requests;
@@ -47,8 +48,9 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
             }
 
             byte[] salt = _passwordManager.GetSecureSalt();
+            var password = Password.Wrap(refreshToken);
 
-            string refreshTokenHashed = _passwordManager.HashUsingPbkdf2(refreshToken, salt);
+            string refreshTokenHashed = _passwordManager.HashUsingPbkdf2(password, salt);
 
             if (user.RefreshToken is not null)
             {
@@ -87,7 +89,11 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
         public async Task<ValidateRefreshTokenResponse> ValidateRefreshTokenAsync(
             RefreshTokenRequest refreshTokenRequest)
         {
-            RefreshTokenInfo? refreshToken = await _refreshTokenInfoService.FindByUserIdAsync(refreshTokenRequest.UserId);
+            var userId = UserId.Wrap(refreshTokenRequest.UserId);
+
+            RefreshTokenInfo? refreshToken = await _refreshTokenInfoService.FindByUserIdAsync(
+                userId
+            );
 
             var response = new ValidateRefreshTokenResponse();
             if (refreshToken is null)
@@ -98,8 +104,10 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 return response;
             }
 
+            var password = Password.Wrap(refreshTokenRequest.RefreshToken);
+
             string refreshTokenToValidateHash = _passwordManager.HashUsingPbkdf2(
-                refreshTokenRequest.RefreshToken, Convert.FromBase64String(refreshToken.TokenSalt)
+                password, Convert.FromBase64String(refreshToken.TokenSalt)
             );
 
             if (refreshToken.TokenHash != refreshTokenToValidateHash)

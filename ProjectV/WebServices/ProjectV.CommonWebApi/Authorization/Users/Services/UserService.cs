@@ -5,6 +5,7 @@ using ProjectV.CommonWebApi.Authorization.Passwords;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.DataAccessLayer.Services.Tokens;
 using ProjectV.DataAccessLayer.Services.Users;
+using ProjectV.Models.Authorization;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
 using ProjectV.Models.WebServices.Requests;
@@ -49,7 +50,10 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 };
             }
 
-            if (StringComparer.Ordinal.Equals(signupRequest.Password, signupRequest.ConfirmPassword))
+            var password = Password.Wrap(signupRequest.Password);
+            var confirmPassword = Password.Wrap(signupRequest.ConfirmPassword);
+
+            if (password != confirmPassword)
             {
                 return new SignupResponse
                 {
@@ -59,7 +63,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 };
             }
 
-            if (!_passwordManager.EnsurePasswordIsStrong(signupRequest.Password))
+            if (!_passwordManager.EnsurePasswordIsStrong(password))
             {
                 return new SignupResponse
                 {
@@ -70,14 +74,14 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
             }
 
             byte[] salt = _passwordManager.GetSecureSalt();
-            string passwordHash = _passwordManager.HashUsingPbkdf2(signupRequest.Password, salt);
+            string passwordHash = _passwordManager.HashUsingPbkdf2(password, salt);
 
             var user = new UserInfo(
                 id: UserId.Create(),
                 userName: UserName.Wrap(signupRequest.UserName),
                 password: passwordHash,
                 passwordSalt: Convert.ToBase64String(salt),
-                ts: signupRequest.Ts,
+                timestamp: signupRequest.Timestamp,
                 active: true, // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true.
                 refreshToken: null
             );
@@ -116,8 +120,10 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                     ErrorCode = "L02"
                 };
             }
+
+            var password = Password.Wrap(loginRequest.Password);
             string passwordHash = _passwordManager.HashUsingPbkdf2(
-                loginRequest.Password, Convert.FromBase64String(user.PasswordSalt)
+                password, Convert.FromBase64String(user.PasswordSalt)
             );
 
             if (user.Password != passwordHash)
