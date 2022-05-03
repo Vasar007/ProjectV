@@ -15,6 +15,13 @@ namespace ProjectV
             _onDisposeActionAsync = onDisposeActionAsync.ThrowIfNull(nameof(onDisposeActionAsync));
         }
 
+        public bool Cancel()
+        {
+            bool wasDisposed = _disposed;
+            _disposed = true;
+            return wasDisposed;
+        }
+
         #region IAsyncDisposable Implementation
 
         /// <summary>

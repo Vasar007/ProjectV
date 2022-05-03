@@ -16,11 +16,11 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
         private readonly ProjectVServiceOptions _serviceOptions;
 
+        private readonly HttpClient _client;
+
         private string BaseAddress => _serviceOptions.CommunicationServiceBaseAddress;
 
         private string ApiUrl => _serviceOptions.CommunicationServiceApiUrl;
-
-        private readonly HttpClient _client;
 
 
         public ServiceProxy(
@@ -30,22 +30,16 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
             _logger.Info($"ProjectV service url: {BaseAddress}");
 
-            _client = new HttpClient { BaseAddress = new Uri(BaseAddress) };
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json")
-            );
+            _client = CreateHttpClient(serviceOptions);
         }
 
         public async Task<ProcessingResponse?> SendPostRequest(StartJobParamsRequest requestParams)
         {
             requestParams.ThrowIfNull(nameof(requestParams));
 
-            _logger.Info($"Service method '{nameof(SendPostRequest)}' is called.");
+            _logger.Info($"Sending POST request to '{ApiUrl}'.");
 
-            using HttpResponseMessage response = await _client.PostAsJsonAsync(
-                ApiUrl, requestParams
-            );
+            using var response = await _client.PostAsJsonAsync(ApiUrl, requestParams);
 
             if (response.IsSuccessStatusCode)
             {
@@ -73,5 +67,34 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
         }
 
         #endregion
+
+        private static HttpClient CreateHttpClient(ProjectVServiceOptions serviceOptions)
+        {
+            string baseAddress = serviceOptions.CommunicationServiceBaseAddress;
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(baseAddress)
+            };
+
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // TODO: add option to login for user and use user's access token.
+                if (!string.IsNullOrWhiteSpace(serviceOptions.AccessToken))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {serviceOptions.AccessToken}");
+                }
+
+                return client;
+            }
+            catch (Exception)
+            {
+                client.Dispose();
+                throw;
+            }
+        }
     }
 }

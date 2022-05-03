@@ -15,7 +15,7 @@ namespace ProjectV.DesktopApp.Models.Things
             ProcessingResponse? response)
         {
             ServiceName = serviceName.ThrowIfNullOrWhiteSpace(nameof(serviceName));
-            Response = response.ThrowIfNull(nameof(response));
+            Response = response;
         }
     }
 }

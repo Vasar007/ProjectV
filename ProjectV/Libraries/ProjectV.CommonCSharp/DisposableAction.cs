@@ -14,6 +14,13 @@ namespace ProjectV
             _onDisposeAction = onDisposeAction.ThrowIfNull(nameof(onDisposeAction));
         }
 
+        public bool Cancel()
+        {
+            bool wasDisposed = _disposed;
+            _disposed = true;
+            return wasDisposed;
+        }
+
         #region IDisposable Implementation
 
         /// <summary>

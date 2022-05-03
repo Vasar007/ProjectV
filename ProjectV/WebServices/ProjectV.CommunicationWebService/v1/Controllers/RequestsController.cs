@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
@@ -38,10 +39,11 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> GetInfo()
         {
-            return Ok("You can get request processing your data by ProjectV service.");
+            return Ok("Process your data by ProjectV service with POST request.");
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(

@@ -13,6 +13,9 @@
 
         public string EndlineSeparator { get; set; } = default!;
 
+        public string? AccessToken { get; set; } =
+         EnvironmentVariablesParser.GetValueOrDefault("AccessToken", string.Empty);
+
 
         public TelegramBotWebServiceSettings()
         {

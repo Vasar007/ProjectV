@@ -6,6 +6,9 @@
 
         public string CommunicationServiceApiUrl { get; set; } = "api/v1/requests";
 
+        public string? AccessToken { get; set; } =
+            EnvironmentVariablesParser.GetValueOrDefault("AccessToken", string.Empty);
+
 
         public ProjectVServiceOptions()
         {

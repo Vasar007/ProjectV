@@ -19,33 +19,28 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 
         private readonly HttpClient _client;
 
+        private string BaseAddress => _settings.ProjectVServiceBaseAddress;
+
+        private string ApiUrl => _settings.ProjectVServiceApiUrl;
+
 
         public ServiceProxy(
             IOptions<TelegramBotWebServiceSettings> settings)
         {
             _settings = settings.Value.ThrowIfNull(nameof(settings));
 
-            _logger.Info($"ProjectV service url: {_settings.ProjectVServiceBaseAddress}");
+            _logger.Info($"ProjectV service url: {BaseAddress}");
 
-            _client = new HttpClient
-            {
-                BaseAddress = new Uri(_settings.ProjectVServiceBaseAddress)
-            };
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json")
-            );
+            _client = CreateHttpClient(_settings);
         }
 
         #region IServiceProxy Implementation
 
         public async Task<ProcessingResponse?> SendPostRequest(StartJobParamsRequest jobParams)
         {
-            _logger.Info("Service method 'PostInitialRequest' is called.");
+            _logger.Info($"Sending POST request to '{ApiUrl}'.");
 
-            using HttpResponseMessage response = await _client.PostAsJsonAsync(
-                _settings.ProjectVServiceApiUrl, jobParams
-            );
+            using var response = await _client.PostAsJsonAsync(ApiUrl, jobParams);
 
             if (response.IsSuccessStatusCode)
             {
@@ -75,5 +70,34 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
         }
 
         #endregion
+
+        private static HttpClient CreateHttpClient(TelegramBotWebServiceSettings settings)
+        {
+            string baseAddress = settings.ProjectVServiceBaseAddress;
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(baseAddress)
+            };
+
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // TODO: add option to login for user and use user's access token.
+                if (!string.IsNullOrWhiteSpace(settings.AccessToken))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {settings.AccessToken}");
+                }
+
+                return client;
+            }
+            catch (Exception)
+            {
+                client.Dispose();
+                throw;
+            }
+        }
     }
 }
