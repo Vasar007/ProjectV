@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.ConfigurationWebService.v1.Domain;
 
 namespace ProjectV.ConfigurationWebService
@@ -25,6 +26,10 @@ namespace ProjectV.ConfigurationWebService
         {
             services.AddTransient<IConfigCreator, ConfigCreator>();
 
+            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            services
+                .Configure<JwtConfiguration>(jwtConfigSecion);
+
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
                 .AddNewtonsoftJson();
@@ -37,6 +42,8 @@ namespace ProjectV.ConfigurationWebService
                 description: "Web API to create service configurations based on input parameters.",
                 apiVersion: "v1"
             );
+
+            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtConfiguration>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

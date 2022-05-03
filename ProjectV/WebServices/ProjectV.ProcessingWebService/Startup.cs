@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.DataAccessLayer;
 using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.ProcessingWebService.v1.Domain;
@@ -32,7 +33,9 @@ namespace ProjectV.ProcessingWebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ProjectVDbContext>();
 
+            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
+                .Configure<JwtConfiguration>(jwtConfigSecion)
                 .Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
 
             services
@@ -47,6 +50,8 @@ namespace ProjectV.ProcessingWebService
                 description: "Web API to process data based on configuration.",
                 apiVersion: "v1"
             );
+
+            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtConfiguration>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

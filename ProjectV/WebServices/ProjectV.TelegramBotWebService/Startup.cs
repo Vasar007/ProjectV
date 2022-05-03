@@ -35,8 +35,8 @@ namespace ProjectV.TelegramBotWebService
 
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();
-            services.AddTransient<IUserCache, UserCache>();
-            services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
+            services.AddSingleton<IUserCache, UserCache>();
+            services.AddSingleton<ITelegramTextProcessor, TelegramTextProcessor>();
 
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
