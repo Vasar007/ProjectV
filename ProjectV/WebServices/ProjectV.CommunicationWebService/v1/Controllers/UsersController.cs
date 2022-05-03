@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
@@ -16,7 +17,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class UsersController : ProjectVApiControllerBase
+    public sealed class UsersController : ProjectVApiControllerBase
     {
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
@@ -32,6 +33,9 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login(LoginRequest? loginRequest)
         {
             if (loginRequest is null ||
@@ -61,6 +65,10 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
         [HttpPost]
         [Route("refresh_token")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest? refreshTokenRequest)
         {
             if (refreshTokenRequest is null ||
@@ -97,6 +105,10 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
 
         [HttpPost]
         [Route("signup")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Signup(SignupRequest signupRequest)
         {
             signupRequest.ThrowIfNull(nameof(signupRequest));
@@ -130,6 +142,9 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [HttpPost]
         [Authorize]
         [Route("logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Logout()
         {
             var logout = await _userService.LogoutAsync(Uid);
