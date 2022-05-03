@@ -17,6 +17,11 @@ namespace ProjectV.CommonWebApi.Extensions
             services.ThrowIfNull(nameof(services));
             config.ThrowIfNull(nameof(config));
 
+            if (string.IsNullOrWhiteSpace(config.SecretKey))
+            {
+                throw new ArgumentException("Config does not have secret key.", nameof(config));
+            }
+
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
