@@ -3,11 +3,8 @@
     // TODO: make this DTO immutable.
     public sealed class JwtConfiguration
     {
-        // Not use "string.Empty" to simplify insertion of hard-coded value.
-        private static readonly string _defaultSecretKey = "";
-
         public string SecretKey { get; set; } =
-            EnvironmentVariablesParser.GetValueOrDefault("JwtSecretKey", _defaultSecretKey);
+            EnvironmentVariablesParser.GetValueOrDefault("JwtSecretKey", string.Empty);
 
         public string Issuer { get; set; } = default!;
 

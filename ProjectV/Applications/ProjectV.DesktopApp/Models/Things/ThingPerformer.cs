@@ -6,6 +6,7 @@ using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
+using ProjectV.Configuration.Options;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Executor;
 using ProjectV.DesktopApp.Models.DataSuppliers;

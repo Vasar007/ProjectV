@@ -13,6 +13,7 @@ using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.CommunicationWebService.Config;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
+using ProjectV.Configuration.Options;
 using ProjectV.DataAccessLayer.Services.Tokens;
 using ProjectV.DataAccessLayer.Services.Users;
 
@@ -45,6 +46,7 @@ namespace ProjectV.CommunicationWebService
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<JwtConfiguration>(jwtConfigSecion)
+                .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)))
                 .Configure<CommunicationWebServiceSettings>(Configuration.GetSection(nameof(CommunicationWebServiceSettings)));
 
             services

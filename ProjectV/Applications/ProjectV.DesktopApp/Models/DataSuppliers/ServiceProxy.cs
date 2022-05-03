@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using ProjectV.Configuration;
+using ProjectV.Configuration.Options;
 using ProjectV.Logging;
 using ProjectV.Models.WebService.Requests;
 using ProjectV.Models.WebService.Responses;

@@ -1,6 +1,6 @@
 ﻿using Acolyte.Assertions;
 
-namespace ProjectV.Configuration
+namespace ProjectV.Configuration.Options
 {
     public sealed class ApiOptions : IOptions
     {

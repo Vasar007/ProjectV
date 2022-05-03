@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Acolyte.Assertions;
 using Acolyte.Linq;
@@ -99,15 +100,15 @@ namespace ProjectV
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> presents empty string.
         /// </exception>
-        public static T GetValueOrDefault<T>(string variableName, T defaultValue)
+        [return: NotNullIfNotNull("defaultValue")]
+        public static T? GetValueOrDefault<T>(string variableName, T? defaultValue)
             where T : IConvertible
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
 
             try
             {
-                string stringValue = GetValue(variableName);
-                return (T)Convert.ChangeType(stringValue, typeof(T));
+                return GetValue<T>(variableName);
             }
             catch (Exception)
             {

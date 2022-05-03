@@ -1,4 +1,4 @@
-﻿namespace ProjectV.Configuration
+﻿namespace ProjectV.Configuration.Options
 {
     public sealed class ProjectVServiceOptions : IOptions
     {

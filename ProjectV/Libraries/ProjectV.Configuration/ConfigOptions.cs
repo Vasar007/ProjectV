@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using ProjectV.Options;
 using ProjectV.Json;
+using ProjectV.Configuration.Options;
 
 namespace ProjectV.Configuration
 {
@@ -21,8 +22,9 @@ namespace ProjectV.Configuration
 
         public static ApiOptions Api => GetOptions<ApiOptions>();
 
-        public static ProjectVServiceOptions ProjectVService =>
-            GetOptions<ProjectVServiceOptions>();
+        public static ProjectVServiceOptions ProjectVService => GetOptions<ProjectVServiceOptions>();
+
+        public static UserServiceOptions UserService => GetOptions<UserServiceOptions>();
 
         #endregion
 
