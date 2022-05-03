@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using ProjectV.Models.Authorization;
 
 namespace ProjectV.Models.WebServices.Requests
 {

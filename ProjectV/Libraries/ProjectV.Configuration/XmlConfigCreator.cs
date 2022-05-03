@@ -5,7 +5,6 @@ using Acolyte.Assertions;
 using Acolyte.Xml;
 using ProjectV.Logging;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService;
 using ProjectV.Models.WebService.Requests;
 
 namespace ProjectV.Configuration

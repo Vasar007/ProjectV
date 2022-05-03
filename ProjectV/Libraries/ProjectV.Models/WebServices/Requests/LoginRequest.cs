@@ -1,6 +1,4 @@
-﻿using ProjectV.Models.Authorization;
-
-namespace ProjectV.Models.WebServices.Requests
+﻿namespace ProjectV.Models.WebServices.Requests
 {
     public sealed class LoginRequest
     {
