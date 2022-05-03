@@ -73,8 +73,8 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 };
             }
 
-            byte[] salt = _passwordManager.GetSecureSalt();
-            string passwordHash = _passwordManager.HashUsingPbkdf2(password, salt);
+            var salt = _passwordManager.GetSecureSalt();
+            var passwordHash = _passwordManager.HashUsingPbkdf2(password, salt);
 
             var user = new UserInfo(
                 id: UserId.Create(),
@@ -122,12 +122,12 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 };
             }
 
-            var password = Password.Wrap(loginRequest.Password);
-            string passwordHash = _passwordManager.HashUsingPbkdf2(
-                password, Convert.FromBase64String(user.PasswordSalt)
+            var loginPassword = Password.Wrap(loginRequest.Password);
+            var loginPasswordHash = _passwordManager.HashUsingPbkdf2(
+                loginPassword, Convert.FromBase64String(user.PasswordSalt)
             );
 
-            if (user.Password != passwordHash)
+            if (user.Password != loginPasswordHash)
             {
                 return new TokenResponse
                 {

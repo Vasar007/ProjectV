@@ -1,5 +1,6 @@
 ﻿using System;
 using Acolyte.Assertions;
+using ProjectV.Models.Authorization;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Basic;
 
@@ -9,7 +10,7 @@ namespace ProjectV.Models.Users
     {
         public UserId Id { get; }
         public UserName UserName { get; }
-        public string Password { get; }
+        public Password Password { get; }
         public string PasswordSalt { get; }
         public DateTime Timestamp { get; }
         public bool Active { get; }
@@ -21,7 +22,7 @@ namespace ProjectV.Models.Users
         public UserInfo(
             UserId id,
             UserName userName,
-            string password,
+            Password password,
             string passwordSalt,
             DateTime timestamp,
             bool active,
@@ -29,7 +30,7 @@ namespace ProjectV.Models.Users
         {
             Id = id;
             UserName = userName;
-            Password = password.ThrowIfNullOrWhiteSpace(nameof(password));
+            Password = password;
             PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(passwordSalt));
             Timestamp = timestamp;
             Active = active;

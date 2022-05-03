@@ -6,7 +6,7 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
     {
         byte[] GetSecureSalt();
 
-        string HashUsingPbkdf2(Password password, byte[] salt);
+        Password HashUsingPbkdf2(Password password, byte[] salt);
 
         bool EnsurePasswordIsStrong(Password password);
     }

@@ -9,7 +9,7 @@ namespace ProjectV.Models.Authorization.Tokens
     {
         public RefreshTokenId Id { get; }
         public UserId UserId { get; }
-        public string TokenHash { get; }
+        public Password TokenHash { get; }
         public string TokenSalt { get; }
         public DateTime Ts { get; }
         public DateTime ExpiryDate { get; }
@@ -17,14 +17,14 @@ namespace ProjectV.Models.Authorization.Tokens
         public RefreshTokenInfo(
             RefreshTokenId id,
             UserId userId,
-            string tokenHash,
+            Password tokenHash,
             string tokenSalt,
             DateTime ts,
             DateTime expiryDate)
         {
             Id = id;
             UserId = userId;
-            TokenHash = tokenHash.ThrowIfNull(nameof(tokenHash));
+            TokenHash = tokenHash;
             TokenSalt = tokenSalt.ThrowIfNull(nameof(tokenSalt));
             Ts = ts;
             ExpiryDate = expiryDate;

@@ -23,7 +23,7 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
             return RandomNumberGenerator.GetBytes(32);
         }
 
-        public string HashUsingPbkdf2(Password password, byte[] salt)
+        public Password HashUsingPbkdf2(Password password, byte[] salt)
         {
             salt.ThrowIfNullOrEmpty(nameof(salt));
 
@@ -35,7 +35,8 @@ namespace ProjectV.CommonWebApi.Authorization.Passwords
                 numBytesRequested: 32
             );
 
-            return Convert.ToBase64String(derivedKey);
+            var base64String = Convert.ToBase64String(derivedKey);
+            return Password.Wrap(base64String);
         }
 
         public bool EnsurePasswordIsStrong(Password password)

@@ -47,10 +47,10 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 return null;
             }
 
-            byte[] salt = _passwordManager.GetSecureSalt();
+            var salt = _passwordManager.GetSecureSalt();
             var password = Password.Wrap(refreshToken);
 
-            string refreshTokenHashed = _passwordManager.HashUsingPbkdf2(password, salt);
+            var refreshTokenHashed = _passwordManager.HashUsingPbkdf2(password, salt);
 
             if (user.RefreshToken is not null)
             {
@@ -106,7 +106,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
 
             var password = Password.Wrap(refreshTokenRequest.RefreshToken);
 
-            string refreshTokenToValidateHash = _passwordManager.HashUsingPbkdf2(
+            var refreshTokenToValidateHash = _passwordManager.HashUsingPbkdf2(
                 password, Convert.FromBase64String(refreshToken.TokenSalt)
             );
 
