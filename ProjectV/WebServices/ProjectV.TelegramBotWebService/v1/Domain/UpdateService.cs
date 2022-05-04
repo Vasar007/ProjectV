@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Building;
 using ProjectV.Configuration;
+using ProjectV.Core.Proxies;
 using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebService.Requests;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
-using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -46,6 +46,24 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             _userCache = userCache.ThrowIfNull(nameof(userCache));
             _textProcessor = textProcessor.ThrowIfNull(nameof(textProcessor));
         }
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _serviceProxy.Dispose();
+
+            _disposed = true;
+        }
+
+        #endregion
 
         #region IUpdateService Implementation
 

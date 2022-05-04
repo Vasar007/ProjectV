@@ -4,43 +4,51 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration.Options;
 using ProjectV.Logging;
 using ProjectV.Models.WebService.Requests;
 using ProjectV.Models.WebService.Responses;
-using ProjectV.TelegramBotWebService.Config;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
+namespace ProjectV.Core.Proxies
 {
-    public sealed class ServiceProxy : IServiceProxy, IDisposable
+    public sealed class ServiceProxy : IServiceProxy
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
 
-        private readonly TelegramBotWebServiceSettings _settings;
+        private readonly ProjectVServiceOptions _serviceOptions;
 
         private readonly HttpClient _client;
 
-        private string BaseAddress => _settings.ProjectVServiceBaseAddress;
+        private string BaseAddress => _serviceOptions.CommunicationServiceBaseAddress;
 
-        private string ApiUrl => _settings.ProjectVServiceApiUrl;
+        private string RequestApiUrl => _serviceOptions.CommunicationServiceRequestApiUrl;
 
 
         public ServiceProxy(
-            IOptions<TelegramBotWebServiceSettings> settings)
+           ProjectVServiceOptions serviceOptions)
         {
-            _settings = settings.Value.ThrowIfNull(nameof(settings));
+            _serviceOptions = serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
-            _logger.Info($"ProjectV service url: {BaseAddress}");
+            _logger.Info($"ProjectV service URL: {BaseAddress}");
 
-            _client = CreateHttpClient(_settings);
+            _client = CreateHttpClient(_serviceOptions);
+        }
+
+        public ServiceProxy(
+            IOptions<ProjectVServiceOptions> settings)
+            : this(settings.ThrowIfNull(nameof(settings)).Value)
+        {
         }
 
         #region IServiceProxy Implementation
 
-        public async Task<ProcessingResponse?> SendPostRequest(StartJobParamsRequest jobParams)
+        public async Task<ProcessingResponse?> SendRequest(StartJobParamsRequest jobParams)
         {
-            _logger.Info($"Sending POST request to '{ApiUrl}'.");
+            jobParams.ThrowIfNull(nameof(jobParams));
 
-            using var response = await _client.PostAsJsonAsync(ApiUrl, jobParams);
+            _logger.Info($"Sending POST request to '{RequestApiUrl}'.");
+
+            using var response = await _client.PostAsJsonAsync(RequestApiUrl, jobParams);
 
             if (response.IsSuccessStatusCode)
             {
@@ -71,9 +79,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
 
         #endregion
 
-        private static HttpClient CreateHttpClient(TelegramBotWebServiceSettings settings)
+        private static HttpClient CreateHttpClient(ProjectVServiceOptions serviceOptions)
         {
-            string baseAddress = settings.ProjectVServiceBaseAddress;
+            string baseAddress = serviceOptions.CommunicationServiceBaseAddress;
 
             var client = new HttpClient
             {
@@ -86,9 +94,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Proxy
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 // TODO: add option to login for user and use user's access token.
-                if (!string.IsNullOrWhiteSpace(settings.AccessToken))
+                if (!string.IsNullOrWhiteSpace(serviceOptions.AccessToken))
                 {
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {settings.AccessToken}");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {serviceOptions.AccessToken}");
                 }
 
                 return client;

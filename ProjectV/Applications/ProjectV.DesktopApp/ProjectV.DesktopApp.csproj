@@ -19,7 +19,6 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors" />
     <PackageReference Include="MaterialDesignThemes" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" />
     <PackageReference Include="Ookii.Dialogs.Wpf" />
     <PackageReference Include="Prism.Unity" />
     <PackageReference Include="Prism.Wpf" />

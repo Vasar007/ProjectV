@@ -6,11 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.Configuration.Options;
+using ProjectV.Core.Proxies;
 using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
-using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
 using ProjectV.TelegramBotWebService.v1.Domain.Setup;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 
@@ -41,6 +42,7 @@ namespace ProjectV.TelegramBotWebService
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<JwtConfiguration>(jwtConfigSecion)
+                .Configure<ProjectVServiceOptions>(Configuration.GetSection(nameof(ProjectVServiceOptions)))
                 .Configure<BotConfiguration>(Configuration.GetSection(nameof(BotConfiguration)))
                 .Configure<TelegramBotWebServiceSettings>(Configuration.GetSection(nameof(TelegramBotWebServiceSettings)));
 

@@ -7,9 +7,9 @@ using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
+using ProjectV.Core.Proxies;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Executor;
-using ProjectV.DesktopApp.Models.DataSuppliers;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
 using ProjectV.Models.WebService.Requests;
@@ -17,14 +17,14 @@ using ProjectV.Models.WebService.Responses;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
-    internal sealed class ThingPerformer : IPerformer<ThingPerformerInfo, ThingResultInfo>
+    internal sealed class ThingPerformer : IPerformer<ThingPerformerInfo, ThingResultInfo>,
+        IDisposable
     {
-        private static readonly ILogger _logger =
-               LoggerFactory.CreateLoggerFor<ThingPerformer>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ThingPerformer>();
 
         private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly ServiceProxy _serviceProxy;
+        private readonly IServiceProxy _serviceProxy;
 
 
         public ThingPerformer(
@@ -36,6 +36,24 @@ namespace ProjectV.DesktopApp.Models.Things
             _serviceProxy = new ServiceProxy(serviceOptions);
         }
 
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _serviceProxy.Dispose();
+
+            _disposed = true;
+        }
+
+        #endregion
+
         #region IPerformer<ThingPerformerInfo, ThingResultInfo> Implementation
 
         public async Task<ThingResultInfo> PerformAsync(ThingPerformerInfo thingsInfo)
@@ -45,7 +63,7 @@ namespace ProjectV.DesktopApp.Models.Things
             StartJobParamsRequest requestParams = await ConfigureServiceRequest(thingsInfo)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            ProcessingResponse? response = await _serviceProxy.SendPostRequest(requestParams)
+            ProcessingResponse? response = await _serviceProxy.SendRequest(requestParams)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return new ThingResultInfo(thingsInfo.ServiceName, response);
@@ -53,7 +71,8 @@ namespace ProjectV.DesktopApp.Models.Things
 
         #endregion
 
-        private async Task<StartJobParamsRequest> ConfigureServiceRequest(ThingPerformerInfo thingsInfo)
+        private async Task<StartJobParamsRequest> ConfigureServiceRequest(
+            ThingPerformerInfo thingsInfo)
         {
             return thingsInfo.Data.DataSource switch
             {

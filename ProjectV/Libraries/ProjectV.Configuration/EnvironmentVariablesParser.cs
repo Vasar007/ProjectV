@@ -167,15 +167,13 @@ namespace ProjectV
             if (string.IsNullOrWhiteSpace(keyValuePair[0]))
             {
                 throw new InvalidOperationException(
-                    "Environment variable has empty value among keys: " +
-                    $"'{keyValuePair[0]}'."
+                    $"Environment variable has empty value among keys: '{keyValuePair[0]}'."
                 );
             }
             if (string.IsNullOrWhiteSpace(keyValuePair[1]))
             {
                 throw new InvalidOperationException(
-                    "Environment variable has empty value among values: " +
-                    $"'{keyValuePair[1]}'."
+                    $"Environment variable has empty value among values: '{keyValuePair[1]}'."
                 );
             }
 

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectV.Core.Proxies;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.WebService.Requests;
 using ProjectV.Models.WebService.Responses;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Proxy;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
 {
@@ -37,7 +37,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             try
             {
-                ProcessingResponse? response = await serviceProxy.SendPostRequest(jobParams);
+                ProcessingResponse? response = await serviceProxy.SendRequest(jobParams);
 
                 if (response is null)
                 {
