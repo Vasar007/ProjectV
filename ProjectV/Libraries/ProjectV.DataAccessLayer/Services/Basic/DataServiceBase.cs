@@ -19,7 +19,7 @@ namespace ProjectV.DataAccessLayer.Services.Basic
             TInfo? info = await FindByIdAsync(id);
             if (info is null)
             {
-                throw new NotFoundException($"Failed to found info with ID '{id}'.");
+                throw new NotFoundException($"Failed to found info by ID '{id}'.");
             }
 
             return info;

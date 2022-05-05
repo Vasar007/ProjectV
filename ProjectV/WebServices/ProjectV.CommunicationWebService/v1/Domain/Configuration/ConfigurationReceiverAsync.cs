@@ -7,8 +7,8 @@ using Microsoft.Extensions.Options;
 using ProjectV.CommunicationWebService.Config;
 using ProjectV.Logging;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 {

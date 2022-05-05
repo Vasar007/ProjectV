@@ -18,7 +18,7 @@ using ProjectV.DesktopApp.Models.Things;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.ViewModels
 {
@@ -237,17 +237,19 @@ namespace ProjectV.DesktopApp.ViewModels
             }
         }
 
-        private void ProcessStatusOperation(ThingResultInfo result)
+        private void ProcessStatusOperation(ThingResultInfo info)
         {
-            result.ThrowIfNull(nameof(result));
+            info.ThrowIfNull(nameof(info));
 
-            if (result.Response?.Metadata.ResultStatus == ServiceStatus.Ok)
+            if (info.Result.IsSuccess && info.Result.Ok?.Metadata.ResultStatus == ServiceStatus.Ok)
             {
-                ChangeSceneAndUpdateItems(result.ServiceName, result.Response);
+                ChangeSceneAndUpdateItems(info.ServiceName, info.Result.Ok);
             }
             else
             {
-                MessageBoxProvider.ShowError("Request to ProjectV service failed.");
+                string? errorDetails = info.Result.Error?.ErrorMessage ?? "Unknown error";
+                string errorMessage = $"Processing request to service failed: {errorDetails}.";
+                MessageBoxProvider.ShowError(errorMessage);
                 ForceReturnToStartViewCommand.Execute(null);
             }
         }

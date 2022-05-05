@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectV.Models.WebService.Requests
+namespace ProjectV.Models.WebServices.Requests
 {
     // TODO: make this DTO immutable.
     public sealed class StartJobParamsRequest

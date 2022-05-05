@@ -4,7 +4,7 @@ using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {

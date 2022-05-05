@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using ProjectV.Core.Proxies;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain
@@ -37,15 +36,22 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             try
             {
-                ProcessingResponse? response = await serviceProxy.SendRequest(jobParams);
+                var result = await serviceProxy.SendRequest(jobParams);
 
-                if (response is null)
+                if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
-                    throw new InvalidOperationException("Request has not successful status.");
+                    string? errorDetails = result.Error?.ErrorMessage ?? "Unknown error";
+                    string errorMessage = $"Processing request to service failed: {errorDetails}.";
+                    _logger.Error(errorMessage);
+                    await botService.Client.SendTextMessageAsync(
+                        chatId,
+                        $"Cannot process request. Error: {errorMessage}"
+                    );
+                    return;
                 }
 
                 IReadOnlyDictionary<string, IList<double>> converted =
-                    ConvertResultsToDict(response.RatingDataContainers);
+                    ConvertResultsToDict(result.Ok!.RatingDataContainers);
 
                 _logger.Info("Got response. Output message to Telegram chat.");
 
@@ -53,6 +59,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                     chatId,
                     CreateResponseMessage(converted)
                 );
+
+                _logger.Info("Request was processed.");
             }
             catch (Exception ex)
             {
@@ -62,8 +70,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                     $"Cannot process request. Error: {ex.Message}"
                 );
             }
-
-            _logger.Info("Request was processed.");
         }
 
         private static IReadOnlyDictionary<string, IList<double>> ConvertResultsToDict(

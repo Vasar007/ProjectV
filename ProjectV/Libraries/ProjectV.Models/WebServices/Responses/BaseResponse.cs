@@ -11,7 +11,7 @@ namespace ProjectV.Models.WebServices.Responses
         public string? ErrorCode { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Error { get; set; }
+        public string? ErrorMessage { get; set; }
 
 
         public BaseResponse()

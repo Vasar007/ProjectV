@@ -3,11 +3,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using Microsoft.Extensions.Options;
 using ProjectV.Configuration.Options;
 using ProjectV.Logging;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Core.Proxies
 {
@@ -40,27 +41,6 @@ namespace ProjectV.Core.Proxies
         {
         }
 
-        #region IServiceProxy Implementation
-
-        public async Task<ProcessingResponse?> SendRequest(StartJobParamsRequest jobParams)
-        {
-            jobParams.ThrowIfNull(nameof(jobParams));
-
-            _logger.Info($"Sending POST request to '{RequestApiUrl}'.");
-
-            using var response = await _client.PostAsJsonAsync(RequestApiUrl, jobParams);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsAsync<ProcessingResponse>();
-                return result;
-            }
-
-            return null;
-        }
-
-        #endregion
-
         #region IDisposable Implementation
 
         /// <summary>
@@ -75,6 +55,44 @@ namespace ProjectV.Core.Proxies
             _client.Dispose();
 
             _disposed = true;
+        }
+
+        #endregion
+
+        #region IServiceProxy Implementation
+
+        public async Task<Result<ProcessingResponse, ErrorResponse>> SendRequest(
+            StartJobParamsRequest jobParams)
+        {
+            jobParams.ThrowIfNull(nameof(jobParams));
+
+            _logger.Info($"Sending POST request to '{RequestApiUrl}'.");
+
+            using var response = await _client.PostAsJsonAsync(RequestApiUrl, jobParams);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.Info($"Got a success status code {response.StatusCode} from '{RequestApiUrl}'.");
+                var result = await response.Content.ReadAsAsync<ProcessingResponse>();
+                return Result.Ok(result);
+            }
+
+            _logger.Error($"Got an error status code from '{RequestApiUrl}': {response.ReasonPhrase} (code: {response.StatusCode}).");
+
+            // Response does not have content for 401 error, e.g. calling method with "Authorize"
+            // attribute but request does not contain "Authorization" header.
+            var error = await response.Content.ReadAsAsync<ErrorResponse>();
+            if (error is null)
+            {
+                // In case response does not have any content, create error from common properties.
+                error = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorCode = ((int)response.StatusCode).ToString(),
+                    ErrorMessage = response.ReasonPhrase
+                };
+            }
+            return Result.Error(error);
         }
 
         #endregion

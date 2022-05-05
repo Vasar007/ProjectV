@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Cache
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommonWebApi.Authorization.Tokens.Services

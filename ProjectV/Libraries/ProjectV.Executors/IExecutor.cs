@@ -5,7 +5,7 @@ using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Executors
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using Acolyte.Assertions;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Cache
 {

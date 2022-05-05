@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService.v1.Controllers

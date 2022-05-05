@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Exceptions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Services.Basic;
@@ -62,6 +63,17 @@ namespace ProjectV.DataAccessLayer.Services.Users
             );
 
             return _mapper.Map<UserInfo>(userDbModel);
+        }
+
+        public async Task<UserInfo> GetByUserNameAsync(UserName userName)
+        {
+            var info = await FindByUserNameAsync(userName);
+            if (info is null)
+            {
+                throw new NotFoundException($"Failed to found info by name '{userName.Value}'.");
+            }
+
+            return info;
         }
 
         public async Task<int> UpdateAsync(UserInfo userInfo)

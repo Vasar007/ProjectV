@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Controllers;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.CommonWebApi.Extensions;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 
@@ -35,29 +32,27 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login(LoginRequest? loginRequest)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            if (loginRequest is null ||
-                string.IsNullOrEmpty(loginRequest.UserName) ||
-                string.IsNullOrEmpty(loginRequest.Password))
+            (bool isValid, string? error) = ModelState.ValidateModel();
+            if (!isValid)
             {
+                if (string.IsNullOrWhiteSpace(error))
+                    error = "Missing login details";
+
                 return BadRequest(new TokenResponse
                 {
-                    Error = "Missing login details",
+                    ErrorMessage = error,
                     ErrorCode = "L01"
                 });
             }
 
             var loginResponse = await _userService.LoginAsync(loginRequest);
-
             if (!loginResponse.Success)
             {
-                return Unauthorized(new
-                {
-                    loginResponse.ErrorCode,
-                    loginResponse.Error
-                });
+                return Unauthorized(loginResponse);
             }
 
             return Ok(loginResponse);
@@ -69,28 +64,28 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequest? refreshTokenRequest)
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest)
         {
-            if (refreshTokenRequest is null ||
-                string.IsNullOrEmpty(refreshTokenRequest.RefreshToken) ||
-                refreshTokenRequest.UserId == Guid.Empty)
+            (bool isValid, string? error) = ModelState.ValidateModel();
+            if (!isValid || !refreshTokenRequest.HasAnyUserInfo())
             {
-                return BadRequest(new TokenResponse
+                if (string.IsNullOrWhiteSpace(error))
+                    error = "Missing refresh token details";
+
+                return BadRequest(new SignupResponse
                 {
-                    Error = "Missing refresh token details",
+                    ErrorMessage = error,
                     ErrorCode = "R01"
                 });
             }
 
             var validateRefreshTokenResponse = await _tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
-
             if (!validateRefreshTokenResponse.Success)
             {
                 return UnprocessableEntity(validateRefreshTokenResponse);
             }
 
-            var tokenResponse = await _tokenService.GenerateTokensAsync(validateRefreshTokenResponse.UserId);
-
+            var tokenResponse = await _tokenService.GenerateTokensAsync(validateRefreshTokenResponse.ConvertedUserId);
             if (tokenResponse is null)
             {
                 return UnprocessableEntity(validateRefreshTokenResponse);
@@ -111,26 +106,20 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Signup(SignupRequest signupRequest)
         {
-            signupRequest.ThrowIfNull(nameof(signupRequest));
-
-            if (!ModelState.IsValid)
+            (bool isValid, string? error) = ModelState.ValidateModel();
+            if (!isValid)
             {
-                var errors = ModelState.Values
-                    .SelectMany(x => x.Errors.Select(c => c.ErrorMessage))
-                    .ToReadOnlyList();
+                if (string.IsNullOrWhiteSpace(error))
+                    error = "Missing sign up details";
 
-                if (errors.Any())
+                return BadRequest(new SignupResponse
                 {
-                    return BadRequest(new TokenResponse
-                    {
-                        Error = $"{string.Join(",", errors)}",
-                        ErrorCode = "S01"
-                    });
-                }
+                    ErrorMessage = error,
+                    ErrorCode = "S01"
+                });
             }
 
             var signupResponse = await _userService.SignupAsync(signupRequest);
-
             if (!signupResponse.Success)
             {
                 return UnprocessableEntity(signupResponse);
@@ -148,7 +137,6 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         public async Task<IActionResult> Logout()
         {
             var logout = await _userService.LogoutAsync(Uid);
-
             if (!logout.Success)
             {
                 return UnprocessableEntity(logout);

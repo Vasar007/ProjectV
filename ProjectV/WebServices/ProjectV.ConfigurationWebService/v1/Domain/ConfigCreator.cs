@@ -1,6 +1,6 @@
 ﻿using ProjectV.Configuration;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.ConfigurationWebService.v1.Domain
 {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 {

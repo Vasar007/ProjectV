@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
@@ -12,8 +13,8 @@ using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Executor;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
@@ -60,13 +61,13 @@ namespace ProjectV.DesktopApp.Models.Things
         {
             thingsInfo.ThrowIfNull(nameof(thingsInfo));
 
-            StartJobParamsRequest requestParams = await ConfigureServiceRequest(thingsInfo)
+            var requestParams = await ConfigureServiceRequest(thingsInfo)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            ProcessingResponse? response = await _serviceProxy.SendRequest(requestParams)
+            var result = await _serviceProxy.SendRequest(requestParams)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            return new ThingResultInfo(thingsInfo.ServiceName, response);
+            return new ThingResultInfo(thingsInfo.ServiceName, result);
         }
 
         #endregion

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.ConfigurationWebService.v1.Domain;
 using ProjectV.Logging;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.ConfigurationWebService.v1.Controllers
 {

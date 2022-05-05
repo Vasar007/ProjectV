@@ -2,7 +2,7 @@
 using Acolyte.Assertions;
 using Newtonsoft.Json;
 
-namespace ProjectV.Models.WebService.Requests
+namespace ProjectV.Models.WebServices.Requests
 {
     public sealed class ConfigRequirements
     {

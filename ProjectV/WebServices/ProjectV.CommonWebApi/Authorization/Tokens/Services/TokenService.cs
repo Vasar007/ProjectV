@@ -8,7 +8,7 @@ using ProjectV.DataAccessLayer.Services.Users;
 using ProjectV.Models.Authorization;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
@@ -88,19 +88,25 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
         public async Task<ValidateRefreshTokenResponse> ValidateRefreshTokenAsync(
             RefreshTokenRequest refreshTokenRequest)
         {
-            var userId = UserId.Wrap(refreshTokenRequest.UserId);
+            RefreshTokenInfo? refreshToken = refreshTokenRequest switch
+            {
+                { UserId: var userId } when userId is not null =>
+                    await _refreshTokenInfoService.FindByUserIdAsync(UserId.Wrap(userId.Value)),
 
-            RefreshTokenInfo? refreshToken = await _refreshTokenInfoService.FindByUserIdAsync(
-                userId
-            );
+                { UserName: var userName } when !string.IsNullOrWhiteSpace(userName) =>
+                    await FindTokenByUserNameAsync(UserName.Wrap(userName)),
 
-            var response = new ValidateRefreshTokenResponse();
+                _ => null
+            };
+
             if (refreshToken is null)
             {
-                response.Success = false;
-                response.Error = "Invalid session or user is already logged out";
-                response.ErrorCode = "R02";
-                return response;
+                return new ValidateRefreshTokenResponse
+                {
+                    Success = false,
+                    ErrorMessage = "Invalid request or user is already logged out",
+                    ErrorCode = "R02"
+                };
             }
 
             var password = Password.Wrap(refreshTokenRequest.RefreshToken);
@@ -111,26 +117,42 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
 
             if (refreshToken.TokenHash != refreshTokenToValidateHash)
             {
-                response.Success = false;
-                response.Error = "Invalid refresh token";
-                response.ErrorCode = "R03";
-                return response;
+                return new ValidateRefreshTokenResponse
+                {
+                    Success = false,
+                    ErrorMessage = "Invalid refresh token",
+                    ErrorCode = "R03"
+                };
             }
 
             if (refreshToken.ExpiryDate < DateTime.Now)
             {
-                response.Success = false;
-                response.Error = "Refresh token has expired";
-                response.ErrorCode = "R04";
-                return response;
+                return new ValidateRefreshTokenResponse
+                {
+                    Success = false,
+                    ErrorMessage = "Refresh token has expired",
+                    ErrorCode = "R04"
+                };
             }
 
-            response.Success = true;
-            response.UserId = refreshToken.UserId;
-
-            return response;
+            return new ValidateRefreshTokenResponse
+            {
+                Success = true,
+                UserId = refreshToken.UserId.Value
+            };
         }
 
         #endregion
+
+        private async Task<RefreshTokenInfo?> FindTokenByUserNameAsync(UserName userName)
+        {
+            UserInfo? user = await _userInfoService.FindByUserNameAsync(userName);
+            if (user is null)
+            {
+                return null;
+            }
+
+            return await _refreshTokenInfoService.FindByUserIdAsync(user.Id);
+        }
     }
 }

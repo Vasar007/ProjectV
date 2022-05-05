@@ -9,7 +9,7 @@ using ProjectV.Configuration;
 using ProjectV.Core.Proxies;
 using ProjectV.IO.Input;
 using ProjectV.Logging;
-using ProjectV.Models.WebService.Requests;
+using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.Data;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {

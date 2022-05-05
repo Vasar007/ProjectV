@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ProjectV.Models.Configuration;
 
-namespace ProjectV.Models.WebService.Responses
+namespace ProjectV.Models.WebServices.Responses
 {
     // TODO: make this DTO immutable.
     public sealed class StartJobDataResponce

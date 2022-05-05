@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
 {

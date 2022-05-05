@@ -7,7 +7,7 @@ using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Logging;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Responses;
 using ProjectV.TmdbService;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers

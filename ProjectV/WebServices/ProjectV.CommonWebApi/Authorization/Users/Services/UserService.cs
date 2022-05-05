@@ -44,6 +44,16 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
 
         public async Task<SignupResponse> SignupAsync(SignupRequest signupRequest)
         {
+            if (!_userServiceOptions.AllowSignup)
+            {
+                return new SignupResponse
+                {
+                    Success = false,
+                    ErrorMessage = "Sign up option is currently disabled",
+                    ErrorCode = "S02"
+                };
+            }
+
             UserInfo? existingUser = await _userInfoService.FindByUserNameAsync(
                 UserName.Wrap(signupRequest.UserName)
             );
@@ -53,8 +63,8 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new SignupResponse
                 {
                     Success = false,
-                    Error = "User already exists with the same user name",
-                    ErrorCode = "S02"
+                    ErrorMessage = "User already exists with the same user name",
+                    ErrorCode = "S03"
                 };
             }
 
@@ -66,8 +76,8 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new SignupResponse
                 {
                     Success = false,
-                    Error = "Password and confirm password do not match",
-                    ErrorCode = "S03"
+                    ErrorMessage = "Password and confirm password do not match",
+                    ErrorCode = "S04"
                 };
             }
 
@@ -76,8 +86,8 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new SignupResponse
                 {
                     Success = false,
-                    Error = "Password is weak",
-                    ErrorCode = "S04"
+                    ErrorMessage = "Password is weak",
+                    ErrorCode = "S05"
                 };
             }
 
@@ -99,8 +109,8 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
             return new SignupResponse
             {
                 Success = false,
-                Error = "Unable to save the user",
-                ErrorCode = "S05"
+                ErrorMessage = "Unable to save the user",
+                ErrorCode = "S06"
             };
         }
 
@@ -115,7 +125,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "User name not found",
+                    ErrorMessage = "User name not found",
                     ErrorCode = "L02"
                 };
             }
@@ -130,7 +140,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "Invalid password",
+                    ErrorMessage = "Invalid password",
                     ErrorCode = "L03"
                 };
             }
@@ -141,7 +151,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "Failed to generate tokens",
+                    ErrorMessage = "Failed to generate tokens",
                     ErrorCode = "L04"
                 };
             }
@@ -179,7 +189,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
             return new LogoutResponse
             {
                 Success = false,
-                Error = "Unable to logout user",
+                ErrorMessage = "Unable to logout user",
                 ErrorCode = "L05"
             };
         }

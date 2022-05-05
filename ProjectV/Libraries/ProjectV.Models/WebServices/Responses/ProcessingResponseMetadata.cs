@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using ProjectV.Models.Internal;
 
-namespace ProjectV.Models.WebService.Responses
+namespace ProjectV.Models.WebServices.Responses
 {
     // TODO: make this DTO immutable.
     public sealed class ProcessingResponseMetadata

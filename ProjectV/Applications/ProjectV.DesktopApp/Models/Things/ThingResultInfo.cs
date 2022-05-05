@@ -1,5 +1,6 @@
 ﻿using Acolyte.Assertions;
-using ProjectV.Models.WebService.Responses;
+using Acolyte.Common;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
@@ -7,15 +8,15 @@ namespace ProjectV.DesktopApp.Models.Things
     {
         public string ServiceName { get; }
 
-        public ProcessingResponse? Response { get; }
+        public Result<ProcessingResponse, ErrorResponse> Result { get; }
 
 
         public ThingResultInfo(
             string serviceName,
-            ProcessingResponse? response)
+            Result<ProcessingResponse, ErrorResponse> result)
         {
             ServiceName = serviceName.ThrowIfNullOrWhiteSpace(nameof(serviceName));
-            Response = response;
+            Result = result;
         }
     }
 }

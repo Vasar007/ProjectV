@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
 using ProjectV.Logging;
-using ProjectV.Models.WebService.Requests;
-using ProjectV.Models.WebService.Responses;
+using ProjectV.Models.WebServices.Requests;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Controllers
 {
@@ -36,7 +36,9 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<string> GetInfo()
         {
             return Ok("Process your data by ProjectV service with POST request.");
@@ -45,6 +47,7 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
             StartJobParamsRequest jobParams)
