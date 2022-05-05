@@ -1,4 +1,5 @@
-﻿using Acolyte.Assertions;
+﻿using System.Net.Http;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.Configuration.Options;
+using ProjectV.Core.DependencyInjection;
 using ProjectV.Core.Proxies;
 using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain;
@@ -31,18 +33,21 @@ namespace ProjectV.TelegramBotWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IConfigurationSection serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
+
             services.AddSingleton<IServiceSetup, ServiceSetup>();
-            services.AddSingleton<IServiceProxy, ServiceProxy>();
+            services.AddHttpClientWithOptions("ProjectV", serviceOptionsSection.Get<ProjectVServiceOptions>());
+            services.AddTransient<IServiceProxyClient, ServiceProxyClient>();
 
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();
-            services.AddSingleton<IUserCache, UserCache>();
-            services.AddSingleton<ITelegramTextProcessor, TelegramTextProcessor>();
+            services.AddTransient<IUserCache, UserCache>();
+            services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
 
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
+                .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtConfiguration>(jwtConfigSecion)
-                .Configure<ProjectVServiceOptions>(Configuration.GetSection(nameof(ProjectVServiceOptions)))
                 .Configure<BotConfiguration>(Configuration.GetSection(nameof(BotConfiguration)))
                 .Configure<TelegramBotWebServiceSettings>(Configuration.GetSection(nameof(TelegramBotWebServiceSettings)));
 

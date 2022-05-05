@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,6 +29,7 @@ namespace ProjectV.DesktopApp.ViewModels
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
 
         private readonly IEventAggregator _eventAggregator;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         private readonly SceneItemsCollection _scenes;
 
@@ -80,9 +82,12 @@ namespace ProjectV.DesktopApp.ViewModels
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
 
-        public MainWindowViewModel(IEventAggregator eventAggregator)
+        public MainWindowViewModel(
+            IEventAggregator eventAggregator,
+            IHttpClientFactory httpClientFactory)
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
+            _httpClientFactory = httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
 
             _eventAggregator
                 .GetEvent<AppraiseInputThingsMessage>()
@@ -119,7 +124,13 @@ namespace ProjectV.DesktopApp.ViewModels
             );
             ForceReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView);
             GoToSettingsViewCommand = new DelegateCommand(GoToSettingsView);
+            AddScenes(eventAggregator);
 
+            ChangeScene(DesktopOptions.PageNames.StartPage);
+        }
+
+        private void AddScenes(IEventAggregator eventAggregator)
+        {
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
@@ -160,8 +171,6 @@ namespace ProjectV.DesktopApp.ViewModels
                 DesktopOptions.PageNames.SettingsPage,
                 new SettingsView()
             );
-
-            ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
         private string GetServiceNameFromStartControl()
@@ -220,7 +229,9 @@ namespace ProjectV.DesktopApp.ViewModels
             {
                 IsNotBusy = false;
 
-                using var thingPerformer = new ThingPerformer(ConfigOptions.ProjectVService);
+                using var thingPerformer = new ThingPerformer(
+                    _httpClientFactory, ConfigOptions.ProjectVService
+                );
                 ThingResultInfo result = await thingPerformer.PerformAsync(thingsInfo);
                 ProcessStatusOperation(result);
             }

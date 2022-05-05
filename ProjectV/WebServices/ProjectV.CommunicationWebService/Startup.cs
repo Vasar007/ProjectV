@@ -36,11 +36,11 @@ namespace ProjectV.CommunicationWebService
             services.AddSingleton<IConfigurationReceiverAsync, ConfigurationReceiverAsync>();
             services.AddSingleton<IProcessingResponseReceiverAsync, ProcessingResponseReceiverAsync>();
 
-            services.AddSingleton<IPasswordManager, PasswordManager>();
+            services.AddTransient<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();
             services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>();
-            services.AddSingleton<ITokenGenerator, TokenGenerator>();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddTransient<ITokenGenerator, TokenGenerator>();
+            services.AddTransient<ITokenService, TokenService>();
             services.AddSingleton<IUserService, UserService>();
 
             IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));

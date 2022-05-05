@@ -6,7 +6,7 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Core.Proxies
 {
-    public interface IServiceProxy : IDisposable
+    public interface IServiceProxyClient : IDisposable
     {
         Task<Result<ProcessingResponse, ErrorResponse>> SendRequest(StartJobParamsRequest jobParams);
     }

@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Globalization;
+using System.Net.Http;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
+using ProjectV.Configuration;
+using ProjectV.Core.DependencyInjection;
+using ProjectV.Core.Net.Http;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
@@ -65,9 +71,26 @@ namespace ProjectV.DesktopApp
             return Container.Resolve<MainWindow>();
         }
 
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHttpClientWithOptions("ProjectV", ConfigOptions.ProjectVService);
+        }
+
+        private static IServiceProvider CreateServices()
+        {
+            var host = new HostBuilder()
+                .ConfigureServices(services => ConfigureServices(services))
+                .Build();
+
+            return host.Services;
+        }
+
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            var services = CreateServices();
+
             // TODO: register common domain and models classes here.
+            containerRegistry.Register<IHttpClientFactory>(() => services.GetRequiredService<IHttpClientFactory>());
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

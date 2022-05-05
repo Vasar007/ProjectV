@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
-using Acolyte.Common;
 using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
@@ -14,7 +14,6 @@ using ProjectV.DesktopApp.Domain.Executor;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
-using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
@@ -25,16 +24,18 @@ namespace ProjectV.DesktopApp.Models.Things
 
         private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly IServiceProxy _serviceProxy;
+        private readonly IServiceProxyClient _serviceProxyClient;
 
 
         public ThingPerformer(
+            IHttpClientFactory httpClientFactory,
             ProjectVServiceOptions serviceOptions)
         {
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxy = new ServiceProxy(serviceOptions);
+            _serviceProxyClient = new ServiceProxyClient(httpClientFactory, serviceOptions);
         }
 
         #region IDisposable Implementation
@@ -48,7 +49,7 @@ namespace ProjectV.DesktopApp.Models.Things
         {
             if (_disposed) return;
 
-            _serviceProxy.Dispose();
+            _serviceProxyClient.Dispose();
 
             _disposed = true;
         }
@@ -64,7 +65,7 @@ namespace ProjectV.DesktopApp.Models.Things
             var requestParams = await ConfigureServiceRequest(thingsInfo)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            var result = await _serviceProxy.SendRequest(requestParams)
+            var result = await _serviceProxyClient.SendRequest(requestParams)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return new ThingResultInfo(thingsInfo.ServiceName, result);

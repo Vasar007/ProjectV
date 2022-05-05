@@ -1,43 +1,43 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
 using Microsoft.Extensions.Options;
 using ProjectV.Configuration.Options;
+using ProjectV.Core.Net.Http;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Core.Proxies
 {
-    public sealed class ServiceProxy : IServiceProxy
+    public sealed class ServiceProxyClient : IServiceProxyClient
     {
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxy>();
+        // TODO 2: process error response and on 401 error try to authorize and retry.
+
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxyClient>();
 
         private readonly ProjectVServiceOptions _serviceOptions;
 
         private readonly HttpClient _client;
 
-        private string BaseAddress => _serviceOptions.CommunicationServiceBaseAddress;
-
         private string RequestApiUrl => _serviceOptions.CommunicationServiceRequestApiUrl;
 
 
-        public ServiceProxy(
+        public ServiceProxyClient(
+           IHttpClientFactory httpClientFactory,
            ProjectVServiceOptions serviceOptions)
         {
             _serviceOptions = serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
 
-            _logger.Info($"ProjectV service URL: {BaseAddress}");
-
-            _client = CreateHttpClient(_serviceOptions);
+            _client = httpClientFactory.CreateClientWithOptions(serviceOptions);
         }
 
-        public ServiceProxy(
+        public ServiceProxyClient(
+            IHttpClientFactory httpClientFactory,
             IOptions<ProjectVServiceOptions> settings)
-            : this(settings.ThrowIfNull(nameof(settings)).Value)
+            : this(httpClientFactory, settings.ThrowIfNull(nameof(settings)).Value)
         {
         }
 
@@ -52,14 +52,14 @@ namespace ProjectV.Core.Proxies
         {
             if (_disposed) return;
 
-            _client.Dispose();
+            _client.DisposeClient(_serviceOptions);
 
             _disposed = true;
         }
 
         #endregion
 
-        #region IServiceProxy Implementation
+        #region IServiceProxyClient Implementation
 
         public async Task<Result<ProcessingResponse, ErrorResponse>> SendRequest(
             StartJobParamsRequest jobParams)
@@ -92,38 +92,11 @@ namespace ProjectV.Core.Proxies
                     ErrorMessage = response.ReasonPhrase
                 };
             }
+
+            // TODO: process error response and on 401 error try to authorize and retry.
             return Result.Error(error);
         }
 
         #endregion
-
-        private static HttpClient CreateHttpClient(ProjectVServiceOptions serviceOptions)
-        {
-            string baseAddress = serviceOptions.CommunicationServiceBaseAddress;
-
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri(baseAddress)
-            };
-
-            try
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                // TODO: add option to login for user and use user's access token.
-                if (!string.IsNullOrWhiteSpace(serviceOptions.AccessToken))
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {serviceOptions.AccessToken}");
-                }
-
-                return client;
-            }
-            catch (Exception)
-            {
-                client.Dispose();
-                throw;
-            }
-        }
     }
 }

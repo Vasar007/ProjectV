@@ -28,7 +28,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         private readonly IBotService _botService;
 
-        private readonly IServiceProxy _serviceProxy;
+        private readonly IServiceProxyClient _serviceProxy;
 
         private readonly IUserCache _userCache;
 
@@ -37,7 +37,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         public UpdateService(
             IBotService botService,
-            IServiceProxy serviceProxy,
+            IServiceProxyClient serviceProxy,
             IUserCache userCache,
             ITelegramTextProcessor textProcessor)
         {

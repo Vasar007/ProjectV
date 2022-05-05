@@ -17,7 +17,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
 
 
-        public static Task ScheduleRequestAsync(IBotService botService, IServiceProxy serviceProxy,
+        public static Task ScheduleRequestAsync(IBotService botService, IServiceProxyClient serviceProxy,
             long chatId, StartJobParamsRequest jobParams, CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
@@ -30,7 +30,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         }
 
         private static async Task ScheduleRequestImplementation(IBotService botService,
-            IServiceProxy serviceProxy, long chatId, StartJobParamsRequest jobParams)
+            IServiceProxyClient serviceProxy, long chatId, StartJobParamsRequest jobParams)
         {
             _logger.Info("Trying to send request to ProjectV service.");
 
