@@ -108,6 +108,10 @@ namespace ProjectV.Core.Net.Http
             {
                 _logger.Warn(outcome.Exception, $"Request failed. {commonPart}");
             }
+            else
+            {
+                _logger.Warn($"Request failed. {commonPart}");
+            }
         }
     }
 }

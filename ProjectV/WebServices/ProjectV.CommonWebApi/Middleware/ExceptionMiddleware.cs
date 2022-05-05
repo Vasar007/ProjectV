@@ -34,7 +34,7 @@ namespace ProjectV.CommonWebApi.Middleware
             }
             catch (Exception ex)
             {
-                //_logger.Error(ex, "Request failed with an error.");
+                _logger.Error(ex, "Request failed with an error.");
                 await HandleExceptionAsync(context, ex);
             }
         }
