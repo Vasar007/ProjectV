@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjectV.Options;
 
 namespace ProjectV.Configuration.Options
 {
@@ -13,11 +14,23 @@ namespace ProjectV.Configuration.Options
         public string? AccessToken { get; set; } =
             EnvironmentVariablesParser.GetValueOrDefault("AccessToken", string.Empty);
 
+        public string HttpClientDefaultName { get; set; } = CommonConstants.ApplicationName;
+
         // It is common practice to not dispose HttpClient.
         public bool DisposeHttpClient { get; set; } = false;
 
-        public int HttpClientRetryCount { get; set; } = 3;
-        public TimeSpan HttpClientRetryTimeout { get; set; } = TimeSpan.FromSeconds(2);
+        public TimeSpan HttpClientRetryTimeoutOnRequest { get; set; } = TimeSpan.FromMinutes(1);
+
+        public int HttpClientRetryCountOnFailed { get; set; } = 3;
+
+        public TimeSpan HttpClientRetryTimeoutOnFailed { get; set; } = TimeSpan.FromSeconds(2);
+
+        // Consider how many retries. If auth lapses and you have valid credentials,
+        // one should be enough; too many tries can cause some auth systems to block or
+        // throttle the caller. 
+        public int HttpClientRetryCountOnAuth { get; set; } = 1;
+
+        public TimeSpan HttpClientRetryTimeoutOnAuth { get; set; } = TimeSpan.FromSeconds(1);
 
 
         public ProjectVServiceOptions()

@@ -6,6 +6,7 @@ using Acolyte.Assertions;
 using Google.Apis.Drive.v3;
 using ProjectV.Communication;
 using ProjectV.Logging;
+using ProjectV.Options;
 using GoogleDriveData = Google.Apis.Drive.v3.Data;
 
 namespace ProjectV.IO
@@ -33,7 +34,7 @@ namespace ProjectV.IO
         /// <summary>
         /// The name of the application that is used to obtain the required credentials.
         /// </summary>
-        public static string ApplicationName { get; } = "ProjectV";
+        public static string ApplicationName { get; } = CommonConstants.ApplicationName;
 
         /// <summary>
         /// Instance of Drive Service to send requests and get responses from Google Drive API.

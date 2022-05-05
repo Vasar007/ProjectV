@@ -16,6 +16,7 @@ using ProjectV.Core.Net.Http;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
+using ProjectV.Options;
 
 namespace ProjectV.DesktopApp
 {
@@ -73,7 +74,7 @@ namespace ProjectV.DesktopApp
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClientWithOptions("ProjectV", ConfigOptions.ProjectVService);
+            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService);
         }
 
         private static IServiceProvider CreateServices()

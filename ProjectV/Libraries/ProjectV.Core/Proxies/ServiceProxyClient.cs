@@ -77,7 +77,8 @@ namespace ProjectV.Core.Proxies
                 return Result.Ok(result);
             }
 
-            _logger.Error($"Got an error status code from '{RequestApiUrl}': {response.ReasonPhrase} (code: {response.StatusCode}).");
+            var statusCode = ((int)response.StatusCode).ToString();
+            _logger.Error($"Got an error status code from '{RequestApiUrl}': {response.ReasonPhrase} (code: {statusCode}).");
 
             // Response does not have content for 401 error, e.g. calling method with "Authorize"
             // attribute but request does not contain "Authorization" header.
@@ -88,7 +89,7 @@ namespace ProjectV.Core.Proxies
                 error = new ErrorResponse
                 {
                     Success = false,
-                    ErrorCode = ((int)response.StatusCode).ToString(),
+                    ErrorCode = statusCode,
                     ErrorMessage = response.ReasonPhrase
                 };
             }

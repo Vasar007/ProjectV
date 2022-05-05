@@ -9,7 +9,8 @@ namespace ProjectV.Core.Net.Http
 {
     public static class HttpClientFactoryExtensions
     {
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(HttpClientExtensions));
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor(typeof(HttpClientExtensions));
 
         public static HttpClient CreateClientWithOptions(this IHttpClientFactory httpClientFactory,
             ProjectVServiceOptions serviceOptions)
@@ -18,12 +19,14 @@ namespace ProjectV.Core.Net.Http
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             string baseAddress = serviceOptions.CommunicationServiceBaseAddress;
-            _logger.Info($"ProjectV service URL: {baseAddress}");
+            string defaultClientName = serviceOptions.HttpClientDefaultName;
+            _logger.Info($"Using client '{defaultClientName}' and service URL: {baseAddress}");
 
-            HttpClient client = httpClientFactory.CreateClient();
+            HttpClient client = httpClientFactory.CreateClient(defaultClientName);
             try
             {
                 client.BaseAddress = new Uri(baseAddress);
+                client.Timeout = serviceOptions.HttpClientRetryTimeoutOnRequest;
 
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

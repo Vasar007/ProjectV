@@ -43,7 +43,7 @@ namespace ProjectV.CommunicationWebService
             services.AddTransient<ITokenService, TokenService>();
             services.AddSingleton<IUserService, UserService>();
 
-            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<JwtConfiguration>(jwtConfigSecion)
                 .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)))

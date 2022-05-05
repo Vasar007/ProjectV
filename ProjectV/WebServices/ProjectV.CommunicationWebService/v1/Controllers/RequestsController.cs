@@ -45,13 +45,15 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProcessingResponse>> PostInitialRequest(
+        public async Task<ActionResult<ProcessingResponse>> ProcessJobRequest(
             StartJobParamsRequest jobParams)
         {
+            Foo();
+
             _logger.Info("Got request to add in processing queue.");
 
             StartJobDataResponce jobData =
@@ -61,6 +63,11 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
                 await _processingResponseReceiver.ReceiveProcessingResponseAsync(jobData);
 
             return Ok(response);
+        }
+
+        private void Foo()
+        {
+            throw new System.Exception("Try again.");
         }
     }
 }

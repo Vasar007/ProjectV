@@ -26,7 +26,7 @@ namespace ProjectV.ConfigurationWebService
         {
             services.AddTransient<IConfigCreator, ConfigCreator>();
 
-            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<JwtConfiguration>(jwtConfigSecion);
 

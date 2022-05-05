@@ -33,10 +33,10 @@ namespace ProjectV.TelegramBotWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationSection serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
+            var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
 
             services.AddSingleton<IServiceSetup, ServiceSetup>();
-            services.AddHttpClientWithOptions("ProjectV", serviceOptionsSection.Get<ProjectVServiceOptions>());
+            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
             services.AddTransient<IServiceProxyClient, ServiceProxyClient>();
 
             services.AddSingleton<IUpdateService, UpdateService>();
@@ -44,7 +44,7 @@ namespace ProjectV.TelegramBotWebService
             services.AddTransient<IUserCache, UserCache>();
             services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
 
-            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtConfiguration>(jwtConfigSecion)

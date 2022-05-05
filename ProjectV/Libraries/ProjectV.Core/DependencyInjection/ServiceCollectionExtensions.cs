@@ -8,13 +8,13 @@ namespace ProjectV.Core.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddHttpClientWithOptions(this IServiceCollection services,
-            string clientName, ProjectVServiceOptions serviceOptions)
+            ProjectVServiceOptions serviceOptions)
         {
             services.ThrowIfNull(nameof(services));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             services
-                .AddHttpClient(clientName)
+                .AddHttpClient(serviceOptions.HttpClientDefaultName)
                 .AddTransientHttpErrorPolicyWithOptions(serviceOptions);
 
             return services;

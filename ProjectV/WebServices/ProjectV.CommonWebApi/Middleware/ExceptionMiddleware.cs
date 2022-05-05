@@ -34,12 +34,12 @@ namespace ProjectV.CommonWebApi.Middleware
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Request failed with an error.");
+                //_logger.Error(ex, "Request failed with an error.");
                 await HandleExceptionAsync(context, ex);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

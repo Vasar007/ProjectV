@@ -33,7 +33,7 @@ namespace ProjectV.ProcessingWebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ProjectVDbContext>();
 
-            IConfigurationSection jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<JwtConfiguration>(jwtConfigSecion)
                 .Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));

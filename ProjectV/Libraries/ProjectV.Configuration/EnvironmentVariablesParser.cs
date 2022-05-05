@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Acolyte.Assertions;
 using Acolyte.Linq;
+using ProjectV.Options;
 
 namespace ProjectV
 {
@@ -16,7 +17,7 @@ namespace ProjectV
         /// <summary>
         /// Name of the environment variable to read.
         /// </summary>
-        private static string EnvironmentVariableName { get; } = "ProjectV";
+        private static string EnvironmentVariableName { get; } = CommonConstants.ApplicationName;
 
         /// <summary>
         /// Specifies the target where the variable is located.
