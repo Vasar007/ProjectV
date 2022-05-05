@@ -15,7 +15,8 @@ namespace ProjectV.Core.DependencyInjection
 
             services
                 .AddHttpClient(serviceOptions.HttpClientDefaultName)
-                .AddTransientHttpErrorPolicyWithOptions(serviceOptions);
+                .AddHttpErrorPoliciesWithOptions(serviceOptions)
+                .AddHttpMessageHandlersWithOptions(serviceOptions); // Common handlers should be placed after Polly ones!
 
             return services;
         }

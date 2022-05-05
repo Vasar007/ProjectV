@@ -238,7 +238,8 @@ namespace ProjectV.DesktopApp.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
-                MessageBoxProvider.ShowError(ex.Message);
+                string errorMessage = GetProcessingErrorMessage(ex.Message);
+                MessageBoxProvider.ShowError(errorMessage);
 
                 ForceReturnToStartViewCommand.Execute(null);
             }
@@ -246,6 +247,18 @@ namespace ProjectV.DesktopApp.ViewModels
             {
                 IsNotBusy = true;
             }
+        }
+
+        private static string GetProcessingErrorMessage(string errorDetails)
+        {
+            const string errorMessageFormat = "Processing request to service failed: {0}{1}";
+
+            if (errorDetails.EndsWith('.'))
+            {
+                return string.Format(errorMessageFormat, errorDetails, string.Empty);
+            }
+
+            return string.Format(errorMessageFormat, errorDetails, ".");
         }
 
         private void ProcessStatusOperation(ThingResultInfo info)
@@ -258,8 +271,8 @@ namespace ProjectV.DesktopApp.ViewModels
             }
             else
             {
-                string? errorDetails = info.Result.Error?.ErrorMessage ?? "Unknown error";
-                string errorMessage = $"Processing request to service failed: {errorDetails}.";
+                string errorDetails = info.Result.Error?.ErrorMessage ?? "Unknown error";
+                string errorMessage = GetProcessingErrorMessage(errorDetails);
                 MessageBoxProvider.ShowError(errorMessage);
                 ForceReturnToStartViewCommand.Execute(null);
             }

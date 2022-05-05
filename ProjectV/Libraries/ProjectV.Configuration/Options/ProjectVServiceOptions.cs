@@ -19,7 +19,9 @@ namespace ProjectV.Configuration.Options
         // It is common practice to not dispose HttpClient.
         public bool DisposeHttpClient { get; set; } = false;
 
-        public TimeSpan HttpClientRetryTimeoutOnRequest { get; set; } = TimeSpan.FromMinutes(1);
+        public TimeSpan HttpHandlerTimeout { get; set; } = TimeSpan.FromMinutes(1);
+
+        public TimeSpan HttpClientTimeoutOnRequest { get; set; } = TimeSpan.FromMinutes(2);
 
         public int HttpClientRetryCountOnFailed { get; set; } = 3;
 

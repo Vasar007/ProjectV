@@ -15,6 +15,18 @@ namespace ProjectV.Core.Net.Http
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor(typeof(HttpClientBuilderExtensions));
 
+        public static IHttpClientBuilder AddHttpMessageHandlersWithOptions(
+           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+        {
+            builder.ThrowIfNull(nameof(builder));
+            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+
+            builder
+                .AddHttpMessageHandler(() => new HttpClientTimeoutHandler(serviceOptions));
+
+            return builder;
+        }
+
         /// <summary>
         /// Configures common project error policy for HTTP client.
         /// </summary>
@@ -24,30 +36,31 @@ namespace ProjectV.Core.Net.Http
         /// An <see cref="IHttpClientBuilder" /> that can be used to configure the client.
         /// </returns>
         /// <remarks>
-        /// Policies configured by default handle the following responses:
+        /// Policies configured by AddTransientHttpErrorPolicy handle the following responses:
         /// • Network failures (as <see cref="HttpRequestException" />)<br/>
         /// • HTTP 5XX status codes (server errors)<br/>
         /// • HTTP 408 status code (request timeout)<br/>
-        /// You can reconfigure this if needed.
+        /// Or you can create custom policy and add it by AddPolicyHandler.
         /// </remarks>
-        public static IHttpClientBuilder AddTransientHttpErrorPolicyWithOptions(
+        public static IHttpClientBuilder AddHttpErrorPoliciesWithOptions(
             this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
         {
             builder.ThrowIfNull(nameof(builder));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             builder
-                .AddPolicyHandler(WaitAndRetryWithOptionsAsync(serviceOptions))
+                .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.WaitAndRetryWithOptionsAsync(serviceOptions))
+                .AddPolicyHandler(WaitAndRetryWithOptionsOnTimeoutExceptionAsync(serviceOptions))
                 .AddPolicyHandler(HandleUnauthorizedAsync(serviceOptions));
 
             return builder;
         }
 
         private static IAsyncPolicy<HttpResponseMessage> WaitAndRetryWithOptionsAsync(
+            this PolicyBuilder<HttpResponseMessage> policyBuilder,
             ProjectVServiceOptions serviceOptions)
         {
-            return Policy<HttpResponseMessage>
-                .HandleResult(response => IsFailed(response))
+            return policyBuilder
                 .WaitAndRetryAsync(
                     serviceOptions.HttpClientRetryCountOnFailed,
                     retryCount => serviceOptions.HttpClientRetryTimeoutOnFailed,
@@ -55,10 +68,12 @@ namespace ProjectV.Core.Net.Http
                 );
         }
 
-        private static bool IsFailed(HttpResponseMessage response)
+        private static IAsyncPolicy<HttpResponseMessage> WaitAndRetryWithOptionsOnTimeoutExceptionAsync(
+            ProjectVServiceOptions serviceOptions)
         {
-            // We handle all errors which is not unauthorized errors.
-            return !IsUnauthorized(response);
+            return Policy<HttpResponseMessage>
+                .Handle<TimeoutException>()
+                .WaitAndRetryWithOptionsAsync(serviceOptions);
         }
 
         private static Task OnFailedAsync(DelegateResult<HttpResponseMessage> outcome,
@@ -71,7 +86,6 @@ namespace ProjectV.Core.Net.Http
         private static IAsyncPolicy<HttpResponseMessage> HandleUnauthorizedAsync(
             ProjectVServiceOptions serviceOptions)
         {
-
             return Policy<HttpResponseMessage>
                 .HandleResult(response => IsUnauthorized(response))
                 .WaitAndRetryAsync(
@@ -89,6 +103,7 @@ namespace ProjectV.Core.Net.Http
         private static Task RefreshAuthorizationAsync(DelegateResult<HttpResponseMessage> outcome,
             TimeSpan sleepDuration, int retryCount, Context context)
         {
+            // TODO 2: process error response and on 401 error try to authorize and retry.
             LogRetryingInfo(outcome, sleepDuration, retryCount);
             return Task.CompletedTask;
         }

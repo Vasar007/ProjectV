@@ -46,7 +46,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
                 Subject = claimsIdentity,
                 Issuer = _settings.Issuer,
                 Audience = _settings.Audience,
-                Expires = DateTime.Now.AddHours(3),
+                Expires = DateTime.UtcNow.Add(_settings.ClaimExpirationTimeout),
                 SigningCredentials = signingCredentials,
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);

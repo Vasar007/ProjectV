@@ -11,23 +11,23 @@ namespace ProjectV.Models.Authorization.Tokens
         public UserId UserId { get; }
         public Password TokenHash { get; }
         public string TokenSalt { get; }
-        public DateTime Ts { get; }
-        public DateTime ExpiryDate { get; }
+        public DateTime TimestampUtc { get; }
+        public DateTime ExpiryDateUtc { get; }
 
         public RefreshTokenInfo(
             RefreshTokenId id,
             UserId userId,
             Password tokenHash,
             string tokenSalt,
-            DateTime ts,
-            DateTime expiryDate)
+            DateTime timestampUtc,
+            DateTime expiryDateUtc)
         {
             Id = id;
             UserId = userId;
             TokenHash = tokenHash;
             TokenSalt = tokenSalt.ThrowIfNull(nameof(tokenSalt));
-            Ts = ts;
-            ExpiryDate = expiryDate;
+            TimestampUtc = timestampUtc;
+            ExpiryDateUtc = expiryDateUtc;
         }
     }
 }

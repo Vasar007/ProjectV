@@ -115,7 +115,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
                     userName: userInfo.UserName,
                     password: userInfo.Password,
                     passwordSalt: userInfo.PasswordSalt,
-                    timestamp: userInfo.Timestamp,
+                    timestampUtc: userInfo.TimestampUtc,
                     active: userInfo.Active,
                     refreshToken: refreshToken
                 );

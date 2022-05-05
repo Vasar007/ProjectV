@@ -26,7 +26,7 @@ namespace ProjectV.Core.Net.Http
             try
             {
                 client.BaseAddress = new Uri(baseAddress);
-                client.Timeout = serviceOptions.HttpClientRetryTimeoutOnRequest;
+                client.Timeout = serviceOptions.HttpClientTimeoutOnRequest;
 
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

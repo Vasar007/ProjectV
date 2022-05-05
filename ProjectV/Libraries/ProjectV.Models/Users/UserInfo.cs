@@ -12,7 +12,7 @@ namespace ProjectV.Models.Users
         public UserName UserName { get; }
         public Password Password { get; }
         public string PasswordSalt { get; }
-        public DateTime Timestamp { get; }
+        public DateTime TimestampUtc { get; }
         public bool Active { get; }
 
         public RefreshTokenInfo? RefreshToken { get; }
@@ -24,7 +24,7 @@ namespace ProjectV.Models.Users
             UserName userName,
             Password password,
             string passwordSalt,
-            DateTime timestamp,
+            DateTime timestampUtc,
             bool active,
             RefreshTokenInfo? refreshToken)
         {
@@ -32,7 +32,7 @@ namespace ProjectV.Models.Users
             UserName = userName;
             Password = password;
             PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(passwordSalt));
-            Timestamp = timestamp;
+            TimestampUtc = timestampUtc;
             Active = active;
             RefreshToken = refreshToken;
         }

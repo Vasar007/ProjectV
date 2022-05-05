@@ -220,7 +220,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 return systemUser;
             }
 
-            UserInfo createdUser = CreateUser(systemUserName, systemUserPassword, DateTime.Now);
+            UserInfo createdUser = CreateUser(systemUserName, systemUserPassword, DateTime.UtcNow);
             int addCounter = await _userInfoService.AddAsync(createdUser);
 
             if (addCounter >= 0)
@@ -241,7 +241,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 userName: userName,
                 password: passwordHash,
                 passwordSalt: Convert.ToBase64String(salt),
-                timestamp: timestamp,
+                timestampUtc: timestamp.ToUniversalTime(),
                 active: true, // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true.
                 refreshToken: null
             );

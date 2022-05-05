@@ -61,8 +61,8 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 userId: userId,
                 tokenHash: refreshTokenHashed,
                 tokenSalt: Convert.ToBase64String(salt),
-                ts: DateTime.Now,
-                expiryDate: DateTime.Now.AddDays(30)
+                timestampUtc: DateTime.UtcNow,
+                expiryDateUtc: DateTime.UtcNow.AddDays(30)
             );
             await _refreshTokenInfoService.AddAsync(refreshTokenInfo);
 
@@ -125,7 +125,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 };
             }
 
-            if (refreshToken.ExpiryDate < DateTime.Now)
+            if (refreshToken.ExpiryDateUtc < DateTime.UtcNow)
             {
                 return new ValidateRefreshTokenResponse
                 {
