@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using Acolyte.Assertions;
 
 namespace ProjectV.Core.Net.Http
@@ -26,6 +27,16 @@ namespace ProjectV.Core.Net.Http
             }
 
             return null;
+        }
+
+        public static HttpRequestMessage AsJson<TValue>(this HttpRequestMessage request,
+            TValue value)
+            where TValue : class
+        {
+            request.ThrowIfNull(nameof(request));
+
+            request.Content = new ObjectContent<TValue>(value, new JsonMediaTypeFormatter());
+            return request;
         }
     }
 }

@@ -62,7 +62,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 tokenHash: refreshTokenHashed,
                 tokenSalt: Convert.ToBase64String(salt),
                 timestampUtc: DateTime.UtcNow,
-                expiryDateUtc: DateTime.UtcNow.AddDays(30)
+                expiryDateUtc: DateTime.UtcNow.Add(_tokenGenerator.RefreshTokenExpirationTimeout)
             );
             await _refreshTokenInfoService.AddAsync(refreshTokenInfo);
 

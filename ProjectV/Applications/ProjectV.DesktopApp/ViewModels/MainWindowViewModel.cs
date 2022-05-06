@@ -230,7 +230,7 @@ namespace ProjectV.DesktopApp.ViewModels
                 IsNotBusy = false;
 
                 using var thingPerformer = new ThingPerformer(
-                    _httpClientFactory, ConfigOptions.ProjectVService
+                    _httpClientFactory, ConfigOptions.ProjectVService, ConfigOptions.UserService
                 );
                 ThingResultInfo result = await thingPerformer.PerformAsync(thingsInfo);
                 ProcessStatusOperation(result);

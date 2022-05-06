@@ -36,7 +36,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             try
             {
-                var result = await serviceProxy.SendRequest(jobParams);
+                var result = await serviceProxy.StartJobAsync(jobParams);
 
                 if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {

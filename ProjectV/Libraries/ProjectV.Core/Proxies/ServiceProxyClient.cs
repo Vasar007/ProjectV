@@ -1,10 +1,16 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
 using Microsoft.Extensions.Options;
+using Polly;
 using ProjectV.Configuration.Options;
+using ProjectV.Core.Logging;
 using ProjectV.Core.Net.Http;
+using ProjectV.Core.Net.Polly;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
@@ -13,22 +19,27 @@ namespace ProjectV.Core.Proxies
 {
     public sealed class ServiceProxyClient : IServiceProxyClient
     {
-        // TODO 2: process error response and on 401 error try to authorize and retry.
-
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxyClient>();
 
+        private const string AccessTokenKey = "AccessToken";
+        private const string RefreshTokenKey = "RefreshToken";
+
         private readonly ProjectVServiceOptions _serviceOptions;
+        private readonly UserServiceOptions _userServiceOptions;
 
         private readonly HttpClient _client;
 
         private string RequestApiUrl => _serviceOptions.CommunicationServiceRequestApiUrl;
+        private string LoginApiUrl => _serviceOptions.CommunicationServiceLoginApiUrl;
 
 
         public ServiceProxyClient(
            IHttpClientFactory httpClientFactory,
-           ProjectVServiceOptions serviceOptions)
+           ProjectVServiceOptions serviceOptions,
+           UserServiceOptions userServiceOptions)
         {
             _serviceOptions = serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            _userServiceOptions = userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
 
             _client = httpClientFactory.CreateClientWithOptions(serviceOptions);
@@ -36,8 +47,13 @@ namespace ProjectV.Core.Proxies
 
         public ServiceProxyClient(
             IHttpClientFactory httpClientFactory,
-            IOptions<ProjectVServiceOptions> settings)
-            : this(httpClientFactory, settings.ThrowIfNull(nameof(settings)).Value)
+            IOptions<ProjectVServiceOptions> serivceSettings,
+            IOptions<UserServiceOptions> userServiceSettings)
+            : this(
+                httpClientFactory,
+                serivceSettings.ThrowIfNull(nameof(serivceSettings)).Value,
+                userServiceSettings.ThrowIfNull(nameof(userServiceSettings)).Value
+            )
         {
         }
 
@@ -61,43 +77,95 @@ namespace ProjectV.Core.Proxies
 
         #region IServiceProxyClient Implementation
 
-        public async Task<Result<ProcessingResponse, ErrorResponse>> SendRequest(
+        public async Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login)
+        {
+            login.ThrowIfNull(nameof(login));
+
+            var request = new HttpRequestMessage(HttpMethod.Post, LoginApiUrl)
+                .AsJson(login);
+
+            return await _client.SendAndReadAsync<TokenResponse>(request, _logger);
+        }
+
+        public async Task<Result<ProcessingResponse, ErrorResponse>> StartJobAsync(
             StartJobParamsRequest jobParams)
         {
             jobParams.ThrowIfNull(nameof(jobParams));
 
-            _logger.Info($"Sending POST request to '{RequestApiUrl}'.");
+            // Using policy to catch unauthorized error and handle it.
+            // This trick requires to recreate HttpRequestMessage, so we cannot do it with
+            // predefined global policies for HttpClient.
+            var refreshAuthenticationPolicy = PolicyCreator.HandleUnauthorizedAsync(
+                _serviceOptions, RefreshAuthorizationAsync
+            );
 
-            using var response = await _client.PostAsJsonAsync(RequestApiUrl, jobParams);
-
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.Info($"Got a success status code {response.StatusCode} from '{RequestApiUrl}'.");
-                var result = await response.Content.ReadAsAsync<ProcessingResponse>();
-                return Result.Ok(result);
-            }
-
-            var statusCode = ((int)response.StatusCode).ToString();
-            _logger.Error($"Got an error status code from '{RequestApiUrl}': {response.ReasonPhrase} (code: {statusCode}).");
-
-            // Response does not have content for 401 error, e.g. calling method with "Authorize"
-            // attribute but request does not contain "Authorization" header.
-            var error = await response.Content.ReadAsAsync<ErrorResponse>();
-            if (error is null)
-            {
-                // In case response does not have any content, create error from common properties.
-                error = new ErrorResponse
+            var response = await refreshAuthenticationPolicy.ExecuteAsync(
+                context => StartJobInternalAsync(jobParams, context),
+                new Dictionary<string, object?>
                 {
-                    Success = false,
-                    ErrorCode = statusCode,
-                    ErrorMessage = response.ReasonPhrase
-                };
-            }
+                    { AccessTokenKey, _serviceOptions.AccessToken },
+                    { RefreshTokenKey, _serviceOptions.RefreshToken }
+                }
+            );
 
-            // TODO: process error response and on 401 error try to authorize and retry.
-            return Result.Error(error);
+            return await response.ReadContentAsAsync<ProcessingResponse>(_logger);
         }
 
         #endregion
+
+        private async Task<Result<TokenResponse, ErrorResponse>> LoginToRefreshAuthorizationAsync()
+        {
+            // TODO: add option to login for user and use user's access token.
+            if (string.IsNullOrWhiteSpace(_userServiceOptions.SystemUserName) ||
+                string.IsNullOrWhiteSpace(_userServiceOptions.SystemUserPassword))
+            {
+                _logger.Warn("No system user specified. Cannot refresh authorization.");
+                var response = new ErrorResponse();
+                return Result.Error(response);
+            }
+
+            _logger.Warn("Trying to use system user to refresh authorization.");
+            var login = new LoginRequest
+            {
+                UserName = _userServiceOptions.SystemUserName,
+                Password = _userServiceOptions.SystemUserPassword
+            };
+
+            return await LoginAsync(login);
+        }
+
+        private async Task RefreshAuthorizationAsync(DelegateResult<HttpResponseMessage> outcome,
+           TimeSpan sleepDuration, int retryCount, Context context)
+        {
+            _logger.LogRetryingInfo(outcome, sleepDuration, retryCount);
+
+            var result = await LoginToRefreshAuthorizationAsync();
+
+            if (result.IsSuccess && result.Ok is not null)
+            {
+                var tokenResponse = result.Ok;
+                context[AccessTokenKey] = tokenResponse.AccessToken;
+                context[RefreshTokenKey] = tokenResponse.RefreshToken;
+            }
+        }
+
+        private async Task<HttpResponseMessage> StartJobInternalAsync(
+            StartJobParamsRequest jobParams, Context context)
+        {
+            jobParams.ThrowIfNull(nameof(jobParams));
+
+            var request = new HttpRequestMessage(HttpMethod.Post, RequestApiUrl)
+                .AsJson(jobParams);
+
+            if (context.TryGetValue(AccessTokenKey, out object? value) &&
+                value is string accessToken &&
+                !string.IsNullOrWhiteSpace(accessToken))
+            {
+                var authentication = new AuthenticationHeaderValue("Bearer", accessToken);
+                request.Headers.Authorization = authentication;
+            }
+
+            return await _client.SendAsync(request);
+        }
     }
 }

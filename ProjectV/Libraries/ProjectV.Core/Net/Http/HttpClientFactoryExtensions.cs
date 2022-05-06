@@ -31,12 +31,6 @@ namespace ProjectV.Core.Net.Http
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                // TODO: add option to login for user and use user's access token.
-                if (!string.IsNullOrWhiteSpace(serviceOptions.AccessToken))
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {serviceOptions.AccessToken}");
-                }
-
                 return client;
             }
             catch (Exception)

@@ -15,6 +15,9 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
     {
         private readonly JwtConfiguration _settings;
 
+        public TimeSpan AccessTokenExpirationTimeout => _settings.AccessTokenExpirationTimeout;
+        public TimeSpan RefreshTokenExpirationTimeout => _settings.RefreshTokenExpirationTimeout;
+
 
         public TokenGenerator(
             IOptions<JwtConfiguration> settingsOptions)
@@ -46,7 +49,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
                 Subject = claimsIdentity,
                 Issuer = _settings.Issuer,
                 Audience = _settings.Audience,
-                Expires = DateTime.UtcNow.Add(_settings.ClaimExpirationTimeout),
+                Expires = DateTime.UtcNow.Add(AccessTokenExpirationTimeout),
                 SigningCredentials = signingCredentials,
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);

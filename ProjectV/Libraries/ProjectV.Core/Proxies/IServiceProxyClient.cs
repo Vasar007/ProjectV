@@ -8,6 +8,7 @@ namespace ProjectV.Core.Proxies
 {
     public interface IServiceProxyClient : IDisposable
     {
-        Task<Result<ProcessingResponse, ErrorResponse>> SendRequest(StartJobParamsRequest jobParams);
+        Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login);
+        Task<Result<ProcessingResponse, ErrorResponse>> StartJobAsync(StartJobParamsRequest jobParams);
     }
 }

@@ -12,7 +12,8 @@ namespace ProjectV.CommonWebApi.Models.Config
 
         public string Audience { get; set; } = default!;
 
-        public TimeSpan ClaimExpirationTimeout { get; set; } = TimeSpan.FromHours(3);
+        public TimeSpan AccessTokenExpirationTimeout { get; set; } = TimeSpan.FromHours(3);
+        public TimeSpan RefreshTokenExpirationTimeout { get; set; } = TimeSpan.FromDays(30);
 
 
         public JwtConfiguration()

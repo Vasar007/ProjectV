@@ -14,6 +14,9 @@ namespace ProjectV.Configuration.Options
         public string? AccessToken { get; set; } =
             EnvironmentVariablesParser.GetValueOrDefault("AccessToken", string.Empty);
 
+        public string? RefreshToken { get; set; } =
+            EnvironmentVariablesParser.GetValueOrDefault("RefreshToken", string.Empty);
+
         public string HttpClientDefaultName { get; set; } = CommonConstants.ApplicationName;
 
         // It is common practice to not dispose HttpClient.

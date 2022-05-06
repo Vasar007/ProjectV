@@ -29,13 +29,17 @@ namespace ProjectV.DesktopApp.Models.Things
 
         public ThingPerformer(
             IHttpClientFactory httpClientFactory,
-            ProjectVServiceOptions serviceOptions)
+            ProjectVServiceOptions serviceOptions,
+            UserServiceOptions userServiceOptions)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
 
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxyClient = new ServiceProxyClient(httpClientFactory, serviceOptions);
+            _serviceProxyClient = new ServiceProxyClient(
+                httpClientFactory, serviceOptions, userServiceOptions
+            );
         }
 
         #region IDisposable Implementation
@@ -65,7 +69,7 @@ namespace ProjectV.DesktopApp.Models.Things
             var requestParams = await ConfigureServiceRequest(thingsInfo)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            var result = await _serviceProxyClient.SendRequest(requestParams)
+            var result = await _serviceProxyClient.StartJobAsync(requestParams)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return new ThingResultInfo(thingsInfo.ServiceName, result);

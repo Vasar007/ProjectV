@@ -23,8 +23,12 @@ namespace ProjectV.CommonWebApi.Controllers
         private UserId TryParseUserId()
         {
             var claim = FindClaim(ClaimTypes.NameIdentifier);
-            UserId.TryParse(claim?.Value, out UserId userId);
-            return userId;
+            if (UserId.TryParse(claim?.Value, out UserId userId))
+            {
+                return userId;
+            }
+
+            return UserId.None;
         }
     }
 }
