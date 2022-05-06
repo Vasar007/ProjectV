@@ -15,6 +15,19 @@ namespace ProjectV.Core.Net.Http
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor(typeof(HttpClientBuilderExtensions));
 
+        public static IHttpClientBuilder AddHttpOptions(
+           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+        {
+            builder.ThrowIfNull(nameof(builder));
+            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+
+            builder
+                .AddHttpErrorPoliciesWithOptions(serviceOptions)
+                .AddHttpMessageHandlersWithOptions(serviceOptions); // Common handlers should be placed after Polly ones!
+
+            return builder;
+        }
+
         public static IHttpClientBuilder AddHttpMessageHandlersWithOptions(
            this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
         {

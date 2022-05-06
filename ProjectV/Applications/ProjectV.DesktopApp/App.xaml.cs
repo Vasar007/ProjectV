@@ -12,11 +12,10 @@ using Prism.Regions;
 using Prism.Unity;
 using ProjectV.Configuration;
 using ProjectV.Core.DependencyInjection;
-using ProjectV.Core.Net.Http;
+using ProjectV.Core.Proxies;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
-using ProjectV.Options;
 
 namespace ProjectV.DesktopApp
 {
@@ -74,7 +73,7 @@ namespace ProjectV.DesktopApp
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService);
+            services.AddHttpClientWithOptions<IServiceProxyClient, ServiceProxyClient>(ConfigOptions.ProjectVService);
         }
 
         private static IServiceProvider CreateServices()
