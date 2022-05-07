@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
@@ -9,8 +10,20 @@ namespace ProjectV.Core.Net.Http
 {
     public static class HttpResponseMessageExtensions
     {
-        public static async Task<Result<TResponse, ErrorResponse>> ReadContentAsAsync<TResponse>(
+        public static Task<Result<TResponse, ErrorResponse>> ReadContentAsAsync<TResponse>(
            this HttpResponseMessage response, ILogger logger)
+           where TResponse : class
+        {
+            return response.ReadContentAsAsync<TResponse>(
+                logger,
+                continueOnCapturedContext: false,
+                cancellationToken: CancellationToken.None
+            );
+        }
+
+        public static async Task<Result<TResponse, ErrorResponse>> ReadContentAsAsync<TResponse>(
+           this HttpResponseMessage response, ILogger logger, bool continueOnCapturedContext,
+           CancellationToken cancellationToken)
            where TResponse : class
         {
             response.ThrowIfNull(nameof(response));
@@ -23,7 +36,9 @@ namespace ProjectV.Core.Net.Http
             if (response.IsSuccessStatusCode)
             {
                 logger.Info($"Got a success status code from '{requestUri}': {responseDetails}.");
-                var result = await response.Content.ReadAsAsync<TResponse>();
+                var result = await response.Content.ReadAsAsync<TResponse>(cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext);
+
                 return Result.Ok(result);
             }
 
@@ -31,7 +46,9 @@ namespace ProjectV.Core.Net.Http
 
             // Response does not have content for 401 error, e.g. calling method with "Authorize"
             // attribute but request does not contain "Authorization" header.
-            var error = await response.Content.ReadAsAsync<ErrorResponse>();
+            var error = await response.Content.ReadAsAsync<ErrorResponse>(cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext);
+
             if (error is null)
             {
                 // In case response does not have any content, create error from common properties.

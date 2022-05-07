@@ -1,9 +1,11 @@
-﻿namespace ProjectV.Models.WebServices.Responses
+﻿using ProjectV.Models.Authorization.Tokens;
+
+namespace ProjectV.Models.WebServices.Responses
 {
     public sealed class TokenResponse : BaseResponse
     {
-        public string AccessToken { get; set; } = default!;
-        public string RefreshToken { get; set; } = default!;
+        public AccessTokenData AccessToken { get; set; } = default!;
+        public RefreshTokenData RefreshToken { get; set; } = default!;
 
 
         public TokenResponse()

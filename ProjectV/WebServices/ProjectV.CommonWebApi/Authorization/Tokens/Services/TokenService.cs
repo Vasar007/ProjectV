@@ -37,8 +37,10 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
 
         public async Task<TokensHolder?> GenerateTokensAsync(UserId userId)
         {
-            string accessToken = await _tokenGenerator.GenerateAccessTokenAsync(userId);
-            string refreshToken = await _tokenGenerator.GenerateRefreshTokenAsync();
+            var utcNow = DateTime.UtcNow;
+
+            var accessToken = await _tokenGenerator.GenerateAccessTokenAsync(userId, utcNow);
+            var refreshToken = await _tokenGenerator.GenerateRefreshTokenAsync(utcNow);
 
             UserInfo? user = await _userInfoService.FindByIdAsync(userId);
             if (user is null)
@@ -47,7 +49,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
             }
 
             var salt = _passwordManager.GetSecureSalt();
-            var password = Password.Wrap(refreshToken);
+            var password = Password.Wrap(refreshToken.Token);
 
             var refreshTokenHashed = _passwordManager.HashUsingPbkdf2(password, salt);
 
@@ -61,8 +63,8 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Services
                 userId: userId,
                 tokenHash: refreshTokenHashed,
                 tokenSalt: Convert.ToBase64String(salt),
-                timestampUtc: DateTime.UtcNow,
-                expiryDateUtc: DateTime.UtcNow.Add(_tokenGenerator.RefreshTokenExpirationTimeout)
+                timestampUtc: utcNow,
+                expiryDateUtc: refreshToken.ExpiryDateUtc
             );
             await _refreshTokenInfoService.AddAsync(refreshTokenInfo);
 

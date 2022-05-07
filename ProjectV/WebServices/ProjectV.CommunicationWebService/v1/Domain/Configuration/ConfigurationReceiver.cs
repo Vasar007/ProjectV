@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
@@ -12,20 +13,21 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 {
-    public sealed class ConfigurationReceiverAsync : IConfigurationReceiverAsync
+    public sealed class ConfigurationReceiver : IConfigurationReceiver
     {
         private static readonly ILogger _logger =
-           LoggerFactory.CreateLoggerFor<ConfigurationReceiverAsync>();
+           LoggerFactory.CreateLoggerFor<ConfigurationReceiver>();
 
         private readonly ProjectVServiceOptions _serviceOptions;
 
         private readonly HttpClient _client;
+        private readonly bool _continueOnCapturedContext;
 
         private string BaseAddress => _serviceOptions.RestApi.ConfigurationServiceBaseAddress;
         private string ApiUrl => _serviceOptions.RestApi.ConfigurationServiceApiUrl;
 
 
-        public ConfigurationReceiverAsync(
+        public ConfigurationReceiver(
             IHttpClientFactory httpClientFactory,
             IOptions<ProjectVServiceOptions> serivceSettings)
         {
@@ -33,6 +35,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             _serviceOptions = serivceSettings.Value.ThrowIfNull(nameof(serivceSettings));
 
             _client = httpClientFactory.CreateClientWithOptions(BaseAddress, _serviceOptions);
+            _continueOnCapturedContext = false;
         }
 
         #region IDisposable Implementation
@@ -65,7 +68,10 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
                 .AsJson(jobParams.Requirements);
 
-            var result = await _client.SendAndReadAsync<ConfigurationXml>(request, _logger);
+            var result = await _client.SendAndReadAsync<ConfigurationXml>(
+                    request, _logger, _continueOnCapturedContext, CancellationToken.None
+                )
+                .ConfigureAwait(_continueOnCapturedContext);
 
             if (result.IsSuccess && result.Ok is not null)
             {
@@ -80,7 +86,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
                 return Result.Ok(requestData);
             }
 
-            _logger.Info("Received bad config response.");
+            _logger.Error("Received bad config response.");
 
             if (!result.IsSuccess)
             {
@@ -91,7 +97,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             var error = new ErrorResponse
             {
                 Success = false,
-                ErrorCode = "C1",
+                ErrorCode = "C01",
                 ErrorMessage = "Config request failed."
             };
             return Result.Error(error);

@@ -6,7 +6,7 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 {
-    public interface IConfigurationReceiverAsync : IDisposable
+    public interface IConfigurationReceiver : IDisposable
     {
         Task<Result<StartJobDataResponce, ErrorResponse>> ReceiveConfigForRequestAsync(StartJobParamsRequest jobParams);
     }

@@ -160,7 +160,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
             {
                 Success = true,
                 AccessToken = token.AccessToken,
-                RefreshToken = token.RefreshToken,
+                RefreshToken = token.RefreshToken
             };
         }
 

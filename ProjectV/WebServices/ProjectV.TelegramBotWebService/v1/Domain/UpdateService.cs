@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Building;
 using ProjectV.Configuration;
-using ProjectV.Core.Proxies;
+using ProjectV.Core.Services.Clients;
 using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
@@ -28,7 +28,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         private readonly IBotService _botService;
 
-        private readonly IProxyClient _serviceProxy;
+        private readonly ICommunicationServiceClient _serviceClient;
 
         private readonly IUserCache _userCache;
 
@@ -37,12 +37,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         public UpdateService(
             IBotService botService,
-            IProxyClient serviceProxy,
+            ICommunicationServiceClient serviceClient,
             IUserCache userCache,
             ITelegramTextProcessor textProcessor)
         {
             _botService = botService.ThrowIfNull(nameof(botService));
-            _serviceProxy = serviceProxy.ThrowIfNull(nameof(serviceProxy));
+            _serviceClient = serviceClient.ThrowIfNull(nameof(serviceClient));
             _userCache = userCache.ThrowIfNull(nameof(userCache));
             _textProcessor = textProcessor.ThrowIfNull(nameof(textProcessor));
         }
@@ -58,7 +58,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         {
             if (_disposed) return;
 
-            _serviceProxy.Dispose();
+            _serviceClient.Dispose();
 
             _disposed = true;
         }
@@ -261,7 +261,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             // Schedule task for request and waiting for service response.
             _ = ProcessingResponseReceiver.ScheduleRequestAsync(
-                _botService, _serviceProxy, chatId, jobParams
+                _botService, _serviceClient, chatId, jobParams
             );
 
             _userCache.TryRemoveUser(chatId);

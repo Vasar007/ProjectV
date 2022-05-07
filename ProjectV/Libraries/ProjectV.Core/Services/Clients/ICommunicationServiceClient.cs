@@ -4,9 +4,9 @@ using Acolyte.Common;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 
-namespace ProjectV.Core.Proxies
+namespace ProjectV.Core.Services.Clients
 {
-    public interface IProxyClient : IDisposable
+    public interface ICommunicationServiceClient : IDisposable
     {
         Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login);
         Task<Result<ProcessingResponse, ErrorResponse>> StartJobAsync(StartJobParamsRequest jobParams);

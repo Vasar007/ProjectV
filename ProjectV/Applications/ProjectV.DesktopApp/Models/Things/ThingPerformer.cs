@@ -8,7 +8,7 @@ using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
-using ProjectV.Core.Proxies;
+using ProjectV.Core.Services.Clients;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Executor;
 using ProjectV.IO.Input.File;
@@ -24,7 +24,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
         private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly IProxyClient _serviceProxyClient;
+        private readonly ICommunicationServiceClient _serviceClient;
 
 
         public ThingPerformer(
@@ -37,7 +37,7 @@ namespace ProjectV.DesktopApp.Models.Things
             userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
 
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxyClient = new CommunicationProxyClient(
+            _serviceClient = new CommunicationServiceClient(
                 httpClientFactory, serviceOptions, userServiceOptions
             );
         }
@@ -53,7 +53,7 @@ namespace ProjectV.DesktopApp.Models.Things
         {
             if (_disposed) return;
 
-            _serviceProxyClient.Dispose();
+            _serviceClient.Dispose();
 
             _disposed = true;
         }
@@ -67,10 +67,10 @@ namespace ProjectV.DesktopApp.Models.Things
             thingsInfo.ThrowIfNull(nameof(thingsInfo));
 
             var requestParams = await ConfigureServiceRequest(thingsInfo)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
-            var result = await _serviceProxyClient.StartJobAsync(requestParams)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            var result = await _serviceClient.StartJobAsync(requestParams)
+                .ConfigureAwait(false);
 
             return new ThingResultInfo(thingsInfo.ServiceName, result);
         }
@@ -92,11 +92,11 @@ namespace ProjectV.DesktopApp.Models.Things
 
                 DataSource.LocalFile => await CreateRequestWithLocalFileData(
                                             thingsInfo.ServiceName, thingsInfo.Data.StorageName
-                                        ).ConfigureAwait(continueOnCapturedContext: false),
+                                        ).ConfigureAwait(false),
 
                 DataSource.GoogleDrive => await CreateGoogleDriveRequest(
                                               thingsInfo.ServiceName, thingsInfo.Data.StorageName
-                                          ).ConfigureAwait(continueOnCapturedContext: false),
+                                          ).ConfigureAwait(false),
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(thingsInfo), thingsInfo.Data.DataSource,
@@ -144,7 +144,7 @@ namespace ProjectV.DesktopApp.Models.Things
             var localFileReader = new LocalFileReader(new SimpleFileReader());
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             ThrowIfDataIsInvalid(thingNames);
             return new StartJobParamsRequest
@@ -171,7 +171,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => googleDriveReader.ReadThingNames(storageName).ToReadOnlyList())
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             ThrowIfDataIsInvalid(thingNames);
             return new StartJobParamsRequest

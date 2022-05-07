@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectV.Core.Proxies;
+using ProjectV.Core.Services.Clients;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.WebServices.Requests;
@@ -17,26 +17,27 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
 
 
-        public static Task ScheduleRequestAsync(IBotService botService, IProxyClient serviceProxy,
-            long chatId, StartJobParamsRequest jobParams, CancellationToken token = default)
+        public static Task ScheduleRequestAsync(IBotService botService,
+            ICommunicationServiceClient serviceClient, long chatId, StartJobParamsRequest jobParams,
+            CancellationToken token = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
             // Otherwise Telegram will retry to send event again until service send a response.
             return Task.Run(
-                () => ScheduleRequestImplementation(botService, serviceProxy, chatId, jobParams),
+                () => ScheduleRequestImplementation(botService, serviceClient, chatId, jobParams),
                 token
             );
         }
 
         private static async Task ScheduleRequestImplementation(IBotService botService,
-            IProxyClient serviceProxy, long chatId, StartJobParamsRequest jobParams)
+            ICommunicationServiceClient serviceClient, long chatId, StartJobParamsRequest jobParams)
         {
             _logger.Info("Trying to send request to ProjectV service.");
 
             try
             {
-                var result = await serviceProxy.StartJobAsync(jobParams);
+                var result = await serviceClient.StartJobAsync(jobParams);
 
                 if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {

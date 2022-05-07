@@ -36,8 +36,8 @@ namespace ProjectV.CommunicationWebService
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
 
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
-            services.AddSingleton<IConfigurationReceiverAsync, ConfigurationReceiverAsync>();
-            services.AddSingleton<IProcessingResponseReceiverAsync, ProcessingResponseReceiverAsync>();
+            services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
+            services.AddSingleton<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
             services.AddTransient<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();

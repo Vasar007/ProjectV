@@ -8,7 +8,7 @@ using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Config;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.DependencyInjection;
-using ProjectV.Core.Proxies;
+using ProjectV.Core.Services.Clients;
 using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
@@ -36,7 +36,7 @@ namespace ProjectV.TelegramBotWebService
 
             services.AddSingleton<IServiceSetup, ServiceSetup>();
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
-            services.AddTransient<IProxyClient, CommunicationProxyClient>();
+            services.AddTransient<ICommunicationServiceClient, CommunicationServiceClient>();
 
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();

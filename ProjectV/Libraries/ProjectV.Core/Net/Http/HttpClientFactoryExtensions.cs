@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Acolyte.Assertions;
 using ProjectV.Configuration.Options;
 using ProjectV.Logging;
@@ -16,6 +15,7 @@ namespace ProjectV.Core.Net.Http
             string baseAddress, ProjectVServiceOptions serviceOptions)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
+            baseAddress.ThrowIfNull(nameof(baseAddress));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             string defaultClientName = serviceOptions.HttpClientDefaultName;
@@ -24,11 +24,7 @@ namespace ProjectV.Core.Net.Http
             HttpClient client = httpClientFactory.CreateClient(defaultClientName);
             try
             {
-                client.BaseAddress = new Uri(baseAddress);
-                client.Timeout = serviceOptions.HttpClientTimeoutOnRequest;
-
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.ConfigureWithJsonMedia(baseAddress, serviceOptions);
 
                 return client;
             }

@@ -5,7 +5,7 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Processing
 {
-    public interface IProcessingResponseReceiverAsync : IDisposable
+    public interface IProcessingResponseReceiver : IDisposable
     {
         Task<Result<ProcessingResponse, ErrorResponse>> ReceiveProcessingResponseAsync(StartJobDataResponce jobData);
     }

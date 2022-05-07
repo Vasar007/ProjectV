@@ -7,16 +7,10 @@ namespace ProjectV.Configuration.Options
     {
         public RestApiOptions RestApi { get; set; } = default!;
 
-        public string? AccessToken { get; set; } =
-            EnvironmentVariablesParser.GetValueOrDefault("AccessToken", string.Empty);
-
-        public string? RefreshToken { get; set; } =
-            EnvironmentVariablesParser.GetValueOrDefault("RefreshToken", string.Empty);
-
         public string HttpClientDefaultName { get; set; } = CommonConstants.ApplicationName;
 
         // It is common practice to not dispose HttpClient.
-        public bool DisposeHttpClient { get; set; } = false;
+        public bool ShouldDisposeHttpClient { get; set; } = false;
 
         public TimeSpan HttpHandlerTimeout { get; set; } = TimeSpan.FromMinutes(1);
 

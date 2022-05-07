@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
@@ -10,20 +11,21 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Processing
 {
-    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync
+    public sealed class ProcessingResponseReceiver : IProcessingResponseReceiver
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<ProcessingResponseReceiverAsync>();
+            LoggerFactory.CreateLoggerFor<ProcessingResponseReceiver>();
 
         private readonly ProjectVServiceOptions _serviceOptions;
 
         private readonly HttpClient _client;
+        private readonly bool _continueOnCapturedContext;
 
         private string BaseAddress => _serviceOptions.RestApi.ProcessingServiceBaseAddress;
         private string ApiUrl => _serviceOptions.RestApi.ProcessingServiceApiUrl;
 
 
-        public ProcessingResponseReceiverAsync(
+        public ProcessingResponseReceiver(
             IHttpClientFactory httpClientFactory,
             IOptions<ProjectVServiceOptions> serivceSettings)
         {
@@ -31,6 +33,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
             _serviceOptions = serivceSettings.Value.ThrowIfNull(nameof(serivceSettings));
 
             _client = httpClientFactory.CreateClientWithOptions(BaseAddress, _serviceOptions);
+            _continueOnCapturedContext = false;
         }
 
         #region IDisposable Implementation
@@ -63,7 +66,10 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
             var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
                 .AsJson(jobData);
 
-            return await _client.SendAndReadAsync<ProcessingResponse>(request, _logger);
+            return await _client.SendAndReadAsync<ProcessingResponse>(
+                    request, _logger, _continueOnCapturedContext, CancellationToken.None
+                )
+                .ConfigureAwait(_continueOnCapturedContext);
         }
 
         #endregion

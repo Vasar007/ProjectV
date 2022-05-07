@@ -17,13 +17,12 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<RequestsController>();
 
-        private readonly IConfigurationReceiverAsync _configurationReceiver;
-
-        private readonly IProcessingResponseReceiverAsync _processingResponseReceiver;
+        private readonly IConfigurationReceiver _configurationReceiver;
+        private readonly IProcessingResponseReceiver _processingResponseReceiver;
 
         public RequestsController(
-            IConfigurationReceiverAsync configurationReceiver,
-            IProcessingResponseReceiverAsync processingResponseReceiver)
+            IConfigurationReceiver configurationReceiver,
+            IProcessingResponseReceiver processingResponseReceiver)
         {
             _configurationReceiver = configurationReceiver.ThrowIfNull(
                 nameof(configurationReceiver)
