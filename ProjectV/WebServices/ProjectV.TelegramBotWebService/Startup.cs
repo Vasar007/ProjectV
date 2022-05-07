@@ -35,7 +35,8 @@ namespace ProjectV.TelegramBotWebService
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
 
             services.AddSingleton<IServiceSetup, ServiceSetup>();
-            services.AddHttpClientWithOptions<IServiceProxyClient, ServiceProxyClient>(serviceOptionsSection.Get<ProjectVServiceOptions>());
+            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
+            services.AddTransient<IServiceProxyClient, ServiceProxyClient>();
 
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();

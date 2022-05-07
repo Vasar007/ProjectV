@@ -73,7 +73,7 @@ namespace ProjectV.DesktopApp
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClientWithOptions<IServiceProxyClient, ServiceProxyClient>(ConfigOptions.ProjectVService);
+            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService);
         }
 
         private static IServiceProvider CreateServices()
