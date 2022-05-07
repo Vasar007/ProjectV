@@ -17,9 +17,10 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Core.Proxies
 {
-    public sealed class ServiceProxyClient : IServiceProxyClient
+    public sealed class CommunicationProxyClient : IProxyClient
     {
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceProxyClient>();
+        private static readonly ILogger _logger =
+            LoggerFactory.CreateLoggerFor<CommunicationProxyClient>();
 
         private const string AccessTokenKey = "AccessToken";
         private const string RefreshTokenKey = "RefreshToken";
@@ -29,23 +30,24 @@ namespace ProjectV.Core.Proxies
 
         private readonly HttpClient _client;
 
-        private string RequestApiUrl => _serviceOptions.CommunicationServiceRequestApiUrl;
-        private string LoginApiUrl => _serviceOptions.CommunicationServiceLoginApiUrl;
+        private string BaseAddress => _serviceOptions.RestApi.CommunicationServiceBaseAddress;
+        private string RequestApiUrl => _serviceOptions.RestApi.CommunicationServiceRequestApiUrl;
+        private string LoginApiUrl => _serviceOptions.RestApi.CommunicationServiceLoginApiUrl;
 
 
-        public ServiceProxyClient(
+        public CommunicationProxyClient(
            IHttpClientFactory httpClientFactory,
            ProjectVServiceOptions serviceOptions,
            UserServiceOptions userServiceOptions)
         {
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             _serviceOptions = serviceOptions.ThrowIfNull(nameof(serviceOptions));
             _userServiceOptions = userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
-            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
 
-            _client = httpClientFactory.CreateClientWithOptions(serviceOptions);
+            _client = httpClientFactory.CreateClientWithOptions(BaseAddress, serviceOptions);
         }
 
-        public ServiceProxyClient(
+        public CommunicationProxyClient(
             IHttpClientFactory httpClientFactory,
             IOptions<ProjectVServiceOptions> serivceSettings,
             IOptions<UserServiceOptions> userServiceSettings)
@@ -144,8 +146,13 @@ namespace ProjectV.Core.Proxies
             if (result.IsSuccess && result.Ok is not null)
             {
                 var tokenResponse = result.Ok;
+
+                // Update tokens in the options and in the context.
                 context[AccessTokenKey] = tokenResponse.AccessToken;
+                _serviceOptions.AccessToken = tokenResponse.AccessToken;
+
                 context[RefreshTokenKey] = tokenResponse.RefreshToken;
+                _serviceOptions.RefreshToken = tokenResponse.RefreshToken;
             }
         }
 

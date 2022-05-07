@@ -7,7 +7,6 @@ using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
-using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Controllers
 {
@@ -47,20 +46,29 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProcessingResponse>> ProcessJobRequest(
+        public async Task<IActionResult> ProcessJobRequest(
             StartJobParamsRequest jobParams)
         {
             _logger.Info("Got request to add in processing queue.");
 
-            StartJobDataResponce jobData =
-                await _configurationReceiver.ReceiveConfigForRequestAsync(jobParams);
+            var jobDataResult = await _configurationReceiver.ReceiveConfigForRequestAsync(jobParams);
+            if (!jobDataResult.IsSuccess)
+            {
+                return BadRequest(jobDataResult.Error);
+            }
 
-            ProcessingResponse response =
-                await _processingResponseReceiver.ReceiveProcessingResponseAsync(jobData);
+            // Process the things with received config.
+            // "_configurationReceiver" ensures that result will return not-null config.
+            var responseResult = await _processingResponseReceiver.ReceiveProcessingResponseAsync(jobDataResult.Ok!);
+            if (!responseResult.IsSuccess)
+            {
+                return BadRequest(responseResult.Error);
+            }
 
-            return Ok(response);
+            return Ok(responseResult.Ok);
         }
     }
 }

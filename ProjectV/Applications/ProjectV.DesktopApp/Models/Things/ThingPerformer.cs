@@ -24,7 +24,7 @@ namespace ProjectV.DesktopApp.Models.Things
 
         private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly IServiceProxyClient _serviceProxyClient;
+        private readonly IProxyClient _serviceProxyClient;
 
 
         public ThingPerformer(
@@ -37,7 +37,7 @@ namespace ProjectV.DesktopApp.Models.Things
             userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
 
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxyClient = new ServiceProxyClient(
+            _serviceProxyClient = new CommunicationProxyClient(
                 httpClientFactory, serviceOptions, userServiceOptions
             );
         }

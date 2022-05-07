@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
   </ItemGroup>
 
 </Project>

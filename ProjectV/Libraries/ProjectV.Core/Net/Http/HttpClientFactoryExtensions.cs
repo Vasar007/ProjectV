@@ -13,12 +13,11 @@ namespace ProjectV.Core.Net.Http
             LoggerFactory.CreateLoggerFor(typeof(HttpClientExtensions));
 
         public static HttpClient CreateClientWithOptions(this IHttpClientFactory httpClientFactory,
-            ProjectVServiceOptions serviceOptions)
+            string baseAddress, ProjectVServiceOptions serviceOptions)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
-            string baseAddress = serviceOptions.CommunicationServiceBaseAddress;
             string defaultClientName = serviceOptions.HttpClientDefaultName;
             _logger.Info($"Using client '{defaultClientName}' and service URL: {baseAddress}");
 

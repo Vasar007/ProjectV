@@ -85,7 +85,7 @@ namespace ProjectV.Configuration
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigNames.Crawlers.TmdbCrawlerName,
                 new XElement("TmdbCrawler",
-                    new XAttribute("TmdbApiKey", ConfigOptions.Api.TmdbApiKey),
+                    new XAttribute("TmdbApiKey", ConfigOptions.ApiKeys.TmdbApiKey),
                     new XAttribute("TmdbMaxRetryCount", "10")
                 )
             );
@@ -93,14 +93,14 @@ namespace ProjectV.Configuration
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigNames.Crawlers.OmdbCrawlerName,
                 new XElement("OmdbCrawler",
-                    new XAttribute("OmdbApiKey", ConfigOptions.Api.OmdbApiKey)
+                    new XAttribute("OmdbApiKey", ConfigOptions.ApiKeys.OmdbApiKey)
                 )
             );
 
             _serviceConfigRegistry.RegisterCrawler(
                 ConfigNames.Crawlers.SteamCrawlerName,
                 new XElement("SteamCrawler",
-                    new XAttribute("SteamApiKey", ConfigOptions.Api.SteamApiKey)
+                    new XAttribute("SteamApiKey", ConfigOptions.ApiKeys.SteamApiKey)
                 )
             );
         }

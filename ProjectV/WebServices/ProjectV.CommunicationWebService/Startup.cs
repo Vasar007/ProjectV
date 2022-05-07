@@ -10,10 +10,10 @@ using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Config;
-using ProjectV.CommunicationWebService.Config;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
 using ProjectV.Configuration.Options;
+using ProjectV.Core.DependencyInjection;
 using ProjectV.DataAccessLayer.Services.Tokens;
 using ProjectV.DataAccessLayer.Services.Users;
 
@@ -33,6 +33,9 @@ namespace ProjectV.CommunicationWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
+
+            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
             services.AddSingleton<IConfigurationReceiverAsync, ConfigurationReceiverAsync>();
             services.AddSingleton<IProcessingResponseReceiverAsync, ProcessingResponseReceiverAsync>();
 
@@ -45,9 +48,9 @@ namespace ProjectV.CommunicationWebService
 
             var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
+                .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtConfiguration>(jwtConfigSecion)
-                .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)))
-                .Configure<CommunicationWebServiceSettings>(Configuration.GetSection(nameof(CommunicationWebServiceSettings)));
+                .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

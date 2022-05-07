@@ -20,7 +20,7 @@ namespace ProjectV.Configuration
 
         #region Options
 
-        public static ApiOptions Api => GetOptions<ApiOptions>();
+        public static ApiKeysOptions ApiKeys => GetOptions<ApiKeysOptions>();
 
         public static ProjectVServiceOptions ProjectVService => GetOptions<ProjectVServiceOptions>();
 

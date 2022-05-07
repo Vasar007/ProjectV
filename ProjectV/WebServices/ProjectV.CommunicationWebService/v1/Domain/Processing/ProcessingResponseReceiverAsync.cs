@@ -1,67 +1,37 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using Microsoft.Extensions.Options;
-using ProjectV.CommunicationWebService.Config;
+using ProjectV.Configuration.Options;
+using ProjectV.Core.Net.Http;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.CommunicationWebService.v1.Domain.Processing
 {
-    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync,
-        IDisposable
+    public sealed class ProcessingResponseReceiverAsync : IProcessingResponseReceiverAsync
     {
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<ProcessingResponseReceiverAsync>();
 
-        private readonly CommunicationWebServiceSettings _settings;
+        private readonly ProjectVServiceOptions _serviceOptions;
 
         private readonly HttpClient _client;
 
+        private string BaseAddress => _serviceOptions.RestApi.ProcessingServiceBaseAddress;
+        private string ApiUrl => _serviceOptions.RestApi.ProcessingServiceApiUrl;
 
-        public ProcessingResponseReceiverAsync(IOptions<CommunicationWebServiceSettings> settingsOptions)
+
+        public ProcessingResponseReceiverAsync(
+            IHttpClientFactory httpClientFactory,
+            IOptions<ProjectVServiceOptions> serivceSettings)
         {
-            _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
+            _serviceOptions = serivceSettings.Value.ThrowIfNull(nameof(serivceSettings));
 
-            _client = new HttpClient
-            {
-                BaseAddress = new Uri(_settings.ProcessingServiceBaseAddress)
-            };
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json")
-            );
+            _client = httpClientFactory.CreateClientWithOptions(BaseAddress, _serviceOptions);
         }
-
-        #region IProcessingResponseReceiverAsync Implementation
-
-        public async Task<ProcessingResponse> ReceiveProcessingResponseAsync(
-            StartJobDataResponce jobData)
-        {
-            _logger.Info("Sending data request and trying to receive response.");
-
-            using (HttpResponseMessage responseMessage = await _client.PostAsJsonAsync(
-                    _settings.ProcessingServiceApiUrl, jobData
-                  )
-            )
-            {
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    _logger.Info("Received successful data response.");
-
-                    var result = await responseMessage.Content.ReadAsAsync<ProcessingResponse>();
-                    return result;
-                }
-            }
-
-            _logger.Info("Received bad data response.");
-
-            throw new Exception("Data processing request failed.");
-        }
-
-        #endregion
 
         #region IDisposable Implementation
 
@@ -74,9 +44,26 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
         {
             if (_disposed) return;
 
-            _client.Dispose();
+            _client.DisposeClient(_serviceOptions);
 
             _disposed = true;
+        }
+
+        #endregion
+
+        #region IProcessingResponseReceiverAsync Implementation
+
+        public async Task<Result<ProcessingResponse, ErrorResponse>> ReceiveProcessingResponseAsync(
+            StartJobDataResponce jobData)
+        {
+            jobData.ThrowIfNull(nameof(jobData));
+
+            _logger.Info("Sending config request and trying to receive response.");
+
+            var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
+                .AsJson(jobData);
+
+            return await _client.SendAndReadAsync<ProcessingResponse>(request, _logger);
         }
 
         #endregion

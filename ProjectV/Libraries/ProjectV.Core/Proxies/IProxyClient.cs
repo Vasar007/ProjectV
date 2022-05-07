@@ -6,7 +6,7 @@ using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Core.Proxies
 {
-    public interface IServiceProxyClient : IDisposable
+    public interface IProxyClient : IDisposable
     {
         Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login);
         Task<Result<ProcessingResponse, ErrorResponse>> StartJobAsync(StartJobParamsRequest jobParams);

@@ -12,7 +12,6 @@ using Prism.Regions;
 using Prism.Unity;
 using ProjectV.Configuration;
 using ProjectV.Core.DependencyInjection;
-using ProjectV.Core.Proxies;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
