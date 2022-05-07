@@ -22,7 +22,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
         private readonly bool _shouldDisposeHttpClient;
         private readonly bool _continueOnCapturedContext;
 
-        
+
         // We added this ctor to reuse HttpClient from other client wrappers.
         public TokenClient(
            HttpClient client,
