@@ -9,20 +9,24 @@ using ProjectV.Models.Users;
 namespace ProjectV.DataAccessLayer.Services.Tokens
 {
     public sealed class InMemoryRefreshTokenInfoService :
-        InMemoryDataService<RefreshTokenId, RefreshTokenInfo>, IRefreshTokenInfoService, IDisposable
+        InMemoryTimeBasedDataService<RefreshTokenId, RefreshTokenInfo>, IRefreshTokenInfoService, IDisposable
     {
         private readonly InMemoryUserInfoService _userInfoService;
 
 
         public InMemoryRefreshTokenInfoService(
+            TimeSpan refreshTokenExpirationTimeout,
             IUserInfoService userInfoService)
+            : base(refreshTokenExpirationTimeout)
         {
             userInfoService.ThrowIfNull(nameof(userInfoService));
 
             // We accept interface to allow DI inject object.
             if (userInfoService is not InMemoryUserInfoService inMemoryUserInfoService)
             {
-                throw new ArgumentException("In-memory IUserInfoService expected.", nameof(userInfoService));
+                throw new ArgumentException(
+                    "In-memory IUserInfoService expected.", nameof(userInfoService)
+                );
             }
 
             _userInfoService = inMemoryUserInfoService;
@@ -115,7 +119,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
                     userName: userInfo.UserName,
                     password: userInfo.Password,
                     passwordSalt: userInfo.PasswordSalt,
-                    timestampUtc: userInfo.TimestampUtc,
+                    creationTimeUtc: userInfo.CreationTimeUtc,
                     active: userInfo.Active,
                     refreshToken: refreshToken
                 );

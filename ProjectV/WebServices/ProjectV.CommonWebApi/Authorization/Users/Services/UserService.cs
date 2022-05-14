@@ -241,7 +241,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
                 userName: userName,
                 password: passwordHash,
                 passwordSalt: Convert.ToBase64String(salt),
-                timestampUtc: timestamp.ToUniversalTime(),
+                creationTimeUtc: timestamp.ToUniversalTime(),
                 active: true, // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true.
                 refreshToken: null
             );

@@ -28,8 +28,8 @@ namespace ProjectV.DataAccessLayer
 
         public ProjectVDbContext(
             IOptions<DatabaseOptions> storageOptions)
+            : this(storageOptions.ThrowIfNull(nameof(storageOptions)).Value)
         {
-            _storageOptions = storageOptions.Value.ThrowIfNull(nameof(storageOptions));
         }
 
         public DbSet<JobDbInfo> GetJobDbSet()

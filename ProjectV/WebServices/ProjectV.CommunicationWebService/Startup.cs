@@ -34,6 +34,8 @@ namespace ProjectV.CommunicationWebService
         public void ConfigureServices(IServiceCollection services)
         {
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfig = jwtConfigSecion.Get<JwtConfiguration>();
 
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
             services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
@@ -41,12 +43,16 @@ namespace ProjectV.CommunicationWebService
 
             services.AddTransient<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();
-            services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>();
+            services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>(
+                provider => new InMemoryRefreshTokenInfoService(
+                    jwtConfig.RefreshTokenExpirationTimeout,
+                    provider.GetRequiredService<IUserInfoService>()
+                )
+            );
             services.AddTransient<ITokenGenerator, TokenGenerator>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddSingleton<IUserService, UserService>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtConfiguration>(jwtConfigSecion)
@@ -65,7 +71,7 @@ namespace ProjectV.CommunicationWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtConfiguration>());
+            services.AddJtwAuthentication(jwtConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

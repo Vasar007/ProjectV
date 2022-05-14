@@ -1,18 +1,19 @@
 ﻿using System;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using ProjectV.Models.Authorization;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Basic;
 
 namespace ProjectV.Models.Users
 {
-    public sealed class UserInfo : IEntity<UserId>
+    public sealed class UserInfo : IEntity<UserId>, IHaveCreationTime
     {
         public UserId Id { get; }
         public UserName UserName { get; }
         public Password Password { get; }
         public string PasswordSalt { get; }
-        public DateTime TimestampUtc { get; }
+        public DateTime CreationTimeUtc { get; }
         public bool Active { get; }
 
         public RefreshTokenInfo? RefreshToken { get; }
@@ -24,7 +25,7 @@ namespace ProjectV.Models.Users
             UserName userName,
             Password password,
             string passwordSalt,
-            DateTime timestampUtc,
+            DateTime creationTimeUtc,
             bool active,
             RefreshTokenInfo? refreshToken)
         {
@@ -32,7 +33,7 @@ namespace ProjectV.Models.Users
             UserName = userName;
             Password = password;
             PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(passwordSalt));
-            TimestampUtc = timestampUtc;
+            CreationTimeUtc = creationTimeUtc;
             Active = active;
             RefreshToken = refreshToken;
         }
