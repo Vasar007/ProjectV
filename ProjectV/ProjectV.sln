@@ -311,7 +311,6 @@ Global
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Debug|Windows x64.ActiveCfg = Debug|x64
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Debug|Windows x64.Build.0 = Debug|x64
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|Linux x64.ActiveCfg = Release|x64
-		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|Linux x64.Build.0 = Release|x64
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|Windows x64.ActiveCfg = Release|x64
 		{21EA00DC-FCBA-430B-9F05-7971785AA17A}.Release|Windows x64.Build.0 = Release|x64
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133}.Debug|Linux x64.ActiveCfg = Debug|x64
