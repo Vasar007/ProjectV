@@ -45,7 +45,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageVersion Include="NLog" Version="4.7.15" />
     <PackageVersion Include="NLog.Config" Version="4.7.15" />
-    <PackageVersion Include="NLog.Schema" Version="4.7.15" />
+    <PackageVersion Include="NLog.Schema" Version="5.0.0" />
     <PackageVersion Include="NLog.Extensions.Logging" Version="1.7.4" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
     <PackageVersion Include="OmdbApiNet" Version="1.3.0" />
