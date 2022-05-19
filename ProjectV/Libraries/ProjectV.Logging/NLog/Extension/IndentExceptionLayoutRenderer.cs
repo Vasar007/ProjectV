@@ -19,7 +19,6 @@ namespace NLog.Extension
     /// </remarks>
     [LayoutRenderer("indent-exception")]
     [ThreadAgnostic]
-    [ThreadSafe]
     public sealed class IndentExceptionLayoutRenderer : LayoutRenderer
     {
         /// <summary>
