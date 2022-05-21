@@ -29,7 +29,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         public async Task<DisposableActionAsync> SetWebhookAsync()
         {
-            string serviceUrl = _settings.NgrokUrl + _settings.ServiceApiUrl;
+            string serviceUrl = _settings.WebhookUrl + _settings.ServiceApiUrl;
 
             _logger.Info($"Try to set webhook to {serviceUrl}");
             await _botService.Client.SetWebhookAsync(serviceUrl);
