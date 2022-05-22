@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Common.Disposal;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Config;
@@ -29,7 +30,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         #region IServiceSetup Implementation
 
-        public async Task<DisposableActionAsync> SetWebhookAsync()
+        public async Task<AsyncDisposableAction> SetWebhookAsync()
         {
             string serviceUrl = $"{_settings.WebhookUrl}{_settings.ServiceApiUrl}";
 
@@ -51,7 +52,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
             _logger.Info("Webhook was set.");
 
-            return new DisposableActionAsync(() => DeleteWebhookAsync());
+            return new AsyncDisposableAction(() => DeleteWebhookAsync());
         }
 
         public async Task DeleteWebhookAsync()

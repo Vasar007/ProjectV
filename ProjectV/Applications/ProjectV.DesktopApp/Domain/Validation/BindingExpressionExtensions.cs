@@ -16,7 +16,7 @@ namespace ProjectV.DesktopApp.Domain.Validation
             if (resolvedSource is null)
             {
                 throw new ArgumentException(
-                    "Failed to evalute binding expression. Source is not resolved.",
+                    "Failed to evaluate binding expression. Source is not resolved.",
                     nameof(bindingExpression)
                 );
             }
@@ -30,7 +30,7 @@ namespace ProjectV.DesktopApp.Domain.Validation
             if (prop is null)
             {
                 throw new ArgumentException(
-                    "Failed to evalute binding expression.", nameof(bindingExpression)
+                    "Failed to evaluate binding expression.", nameof(bindingExpression)
                 );
             }
 
@@ -57,9 +57,9 @@ namespace ProjectV.DesktopApp.Domain.Validation
                 bindingExpression.ResolvedSourcePropertyName
             );
 
-            if (!(prop is null) &&
+            if (prop is not null &&
                 prop.GetValue(bindingExpression.ResolvedSource) is T value &&
-                !(value is null))
+                value is not null)
             {
                 result = value;
                 return true;

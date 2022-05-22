@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using Acolyte.Exceptions;
+using Acolyte.Exceptions.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prism.Ioc;
@@ -38,7 +40,9 @@ namespace ProjectV.DesktopApp
                 )
             );
 
-            UnhandledExceptionEventRegistrator.Register(Application_OnUnhandledException);
+            AppDomainUnhandledExceptionManager.SetHandler(
+                new UnhandledExceptionHandlerWrapper(Application_OnUnhandledException)
+            );
 
             _logger.PrintHeader("Desktop client application started.");
         }
