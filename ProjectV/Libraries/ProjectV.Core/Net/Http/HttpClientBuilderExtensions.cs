@@ -13,36 +13,36 @@ namespace ProjectV.Core.Net.Http
             LoggerFactory.CreateLoggerFor(typeof(HttpClientBuilderExtensions));
 
         public static IHttpClientBuilder AddHttpOptions(
-           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+           this IHttpClientBuilder builder, HttpClientOptions options)
         {
             builder.ThrowIfNull(nameof(builder));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             builder
-                .ConfigurePrimaryHttpMessageHandlerWithOptions(serviceOptions)
-                .AddHttpErrorPoliciesWithOptions(serviceOptions)
-                .AddHttpMessageHandlersWithOptions(serviceOptions); // Common handlers should be placed after Polly ones!
+                .ConfigurePrimaryHttpMessageHandlerWithOptions(options)
+                .AddHttpErrorPoliciesWithOptions(options)
+                .AddHttpMessageHandlersWithOptions(options); // Common handlers should be placed after Polly ones!
 
             return builder;
         }
 
         public static IHttpClientBuilder AddHttpMessageHandlersWithOptions(
-           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+           this IHttpClientBuilder builder, HttpClientOptions options)
         {
             builder.ThrowIfNull(nameof(builder));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             builder
-                .AddHttpMessageHandler(() => new HttpClientTimeoutHandler(serviceOptions));
+                .AddHttpMessageHandler(() => new HttpClientTimeoutHandler(options));
 
             return builder;
         }
 
         public static IHttpClientBuilder ConfigurePrimaryHttpMessageHandlerWithOptions(
-           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+           this IHttpClientBuilder builder, HttpClientOptions options)
         {
             builder.ThrowIfNull(nameof(builder));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             builder
                 .ConfigurePrimaryHttpMessageHandler(() =>
@@ -53,7 +53,7 @@ namespace ProjectV.Core.Net.Http
                         UseCookies = true
                     };
 
-                    if (!serviceOptions.ValidateSslCertificates)
+                    if (!options.ValidateSslCertificates)
                     {
                         _logger.Warn("ATTENTION! SSL certificates validation is disabled.");
                         httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
@@ -81,14 +81,14 @@ namespace ProjectV.Core.Net.Http
         /// Or you can create custom policy and add it by AddPolicyHandler.
         /// </remarks>
         public static IHttpClientBuilder AddHttpErrorPoliciesWithOptions(
-            this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+            this IHttpClientBuilder builder, HttpClientOptions options)
         {
             builder.ThrowIfNull(nameof(builder));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             builder
-                .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.WaitAndRetryWithOptionsAsync(serviceOptions))
-                .AddPolicyHandler(PolicyCreator.WaitAndRetryWithOptionsOnTimeoutExceptionAsync(serviceOptions));
+                .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.WaitAndRetryWithOptionsAsync(options))
+                .AddPolicyHandler(PolicyCreator.WaitAndRetryWithOptionsOnTimeoutExceptionAsync(options));
 
             return builder;
         }

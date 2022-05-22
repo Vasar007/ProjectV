@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ProjectV.TelegramBotWebService.Config
+﻿namespace ProjectV.TelegramBotWebService.Options
 {
     // TODO: make this DTO immutable.
     public sealed class BotConfiguration

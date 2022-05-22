@@ -13,12 +13,11 @@ namespace ProjectV.Core.Net.Http
 {
     public static class HttpClientExtensions
     {
-        public static bool DisposeClient(this HttpClient? client,
-            ProjectVServiceOptions serviceOptions)
+        public static bool DisposeClient(this HttpClient? client, HttpClientOptions options)
         {
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
-            return client.DisposeClient(serviceOptions.ShouldDisposeHttpClient);
+            return client.DisposeClient(options.ShouldDisposeHttpClient);
         }
 
         public static bool DisposeClient(this HttpClient? client,
@@ -26,22 +25,30 @@ namespace ProjectV.Core.Net.Http
         {
             if (shouldDisposeHttpClient)
             {
-                client?.Dispose();
+                client.DisposeSafe();
                 return true;
             }
 
             return false;
         }
 
-        public static HttpClient ConfigureWithJsonMedia(this HttpClient client, string baseAddress,
-            ProjectVServiceOptions serviceOptions)
+        public static HttpClient ConfigureWithOptions(this HttpClient client,
+            HttpClientOptions options)
+        {
+            client.ThrowIfNull(nameof(client));
+            options.ThrowIfNull(nameof(options));
+
+            client.Timeout = options.HttpClientTimeoutOnRequest;
+
+            return client;
+        }
+
+        public static HttpClient ConfigureWithJsonMedia(this HttpClient client, string baseAddress)
         {
             client.ThrowIfNull(nameof(client));
             baseAddress.ThrowIfNull(nameof(baseAddress));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             client.BaseAddress = new Uri(baseAddress);
-            client.Timeout = serviceOptions.HttpClientTimeoutOnRequest;
 
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

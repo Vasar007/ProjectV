@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.CommonWebApi.Models.Options;
 
 namespace ProjectV.CommonWebApi.Extensions
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddJtwAuthentication(this IServiceCollection services,
-            JwtConfiguration config)
+            JwtOptions config)
         {
             services.ThrowIfNull(nameof(services));
             config.ThrowIfNull(nameof(config));

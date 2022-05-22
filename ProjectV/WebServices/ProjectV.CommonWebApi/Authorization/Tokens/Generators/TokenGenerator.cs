@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
 
@@ -14,14 +14,14 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
 {
     public sealed class TokenGenerator : ITokenGenerator
     {
-        private readonly JwtConfiguration _settings;
+        private readonly JwtOptions _settings;
 
         private TimeSpan AccessTokenExpirationTimeout => _settings.AccessTokenExpirationTimeout;
         private TimeSpan RefreshTokenExpirationTimeout => _settings.RefreshTokenExpirationTimeout;
 
 
         public TokenGenerator(
-            IOptions<JwtConfiguration> settingsOptions)
+            IOptions<JwtOptions> settingsOptions)
         {
             _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
         }

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
-using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.ConfigurationWebService.v1.Domain;
 
 namespace ProjectV.ConfigurationWebService
@@ -26,9 +26,9 @@ namespace ProjectV.ConfigurationWebService
         {
             services.AddTransient<IConfigCreator, ConfigCreator>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
             services
-                .Configure<JwtConfiguration>(jwtConfigSecion);
+                .Configure<JwtOptions>(jwtConfigSecion);
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -43,7 +43,7 @@ namespace ProjectV.ConfigurationWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtConfiguration>());
+            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

@@ -42,7 +42,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
             : this(
                 CreateClient(httpClientFactory, serviceOptions),
                 serviceOptions.RestApi.CommunicationServiceLoginApiUrl,
-                serviceOptions.ShouldDisposeHttpClient,
+                serviceOptions.HttpClient.ShouldDisposeHttpClient,
                 continueOnCapturedContext: false
             )
         {
@@ -100,7 +100,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             string baseAddress = serviceOptions.RestApi.CommunicationServiceBaseAddress;
-            return httpClientFactory.CreateClientWithOptions(baseAddress, serviceOptions);
+            return httpClientFactory.CreateClientWithOptions(baseAddress, serviceOptions.HttpClient);
         }
     }
 }

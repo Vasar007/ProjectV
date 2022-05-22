@@ -8,31 +8,54 @@ namespace ProjectV.Core.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddHttpClientWithOptions(
-            this IServiceCollection services, ProjectVServiceOptions serviceOptions)
+            this IServiceCollection services, HttpClientOptions options)
         {
             services.ThrowIfNull(nameof(services));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             services
-                .AddHttpClient(serviceOptions.HttpClientDefaultName)
-                .AddHttpOptions(serviceOptions);
+                .AddHttpClient(options.HttpClientDefaultName)
+                .AddBuilderOptionsInternal(options);
+
+            return services;
+        }
+
+        public static IServiceCollection AddHttpClientWithOptions<TClient>(
+           this IServiceCollection services, HttpClientOptions options)
+           where TClient : class
+        {
+            services.ThrowIfNull(nameof(services));
+            options.ThrowIfNull(nameof(options));
+
+            services
+                .AddHttpClient<TClient>(options.HttpClientDefaultName)
+                .AddBuilderOptionsInternal(options);
 
             return services;
         }
 
         public static IServiceCollection AddHttpClientWithOptions<TClient, TImplementation>(
-            this IServiceCollection services, ProjectVServiceOptions serviceOptions)
+            this IServiceCollection services, HttpClientOptions options)
             where TClient : class
             where TImplementation : class, TClient
         {
             services.ThrowIfNull(nameof(services));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
             services
-                .AddHttpClient<TClient, TImplementation>(serviceOptions.HttpClientDefaultName)
-                .AddHttpOptions(serviceOptions);
+                .AddHttpClient<TClient, TImplementation>(options.HttpClientDefaultName)
+                .AddBuilderOptionsInternal(options);
 
             return services;
+        }
+
+        private static IHttpClientBuilder AddBuilderOptionsInternal(this IHttpClientBuilder builder,
+            HttpClientOptions options)
+        {
+            builder
+                .AddHttpOptions(options);
+
+            return builder;
         }
     }
 }

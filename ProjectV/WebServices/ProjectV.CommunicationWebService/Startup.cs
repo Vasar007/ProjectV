@@ -9,7 +9,7 @@ using ProjectV.CommonWebApi.Authorization.Tokens.Generators;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Extensions;
-using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.CommunicationWebService.v1.Domain.Configuration;
 using ProjectV.CommunicationWebService.v1.Domain.Processing;
 using ProjectV.Configuration.Options;
@@ -34,10 +34,10 @@ namespace ProjectV.CommunicationWebService
         public void ConfigureServices(IServiceCollection services)
         {
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
-            var jwtConfig = jwtConfigSecion.Get<JwtConfiguration>();
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
+            var jwtConfig = jwtConfigSecion.Get<JwtOptions>();
 
-            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>());
+            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
             services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
             services.AddSingleton<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
@@ -55,7 +55,7 @@ namespace ProjectV.CommunicationWebService
 
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
-                .Configure<JwtConfiguration>(jwtConfigSecion)
+                .Configure<JwtOptions>(jwtConfigSecion)
                 .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             services

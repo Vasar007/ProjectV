@@ -4,7 +4,7 @@ using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
-using ProjectV.TelegramBotWebService.Config;
+using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot;
 using Telegram.Bot.Types.InputFiles;

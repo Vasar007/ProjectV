@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Extensions;
-using ProjectV.CommonWebApi.Models.Config;
+using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.DataAccessLayer;
 using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.ProcessingWebService.v1.Domain;
@@ -33,9 +33,9 @@ namespace ProjectV.ProcessingWebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ProjectVDbContext>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtConfiguration));
+            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
             services
-                .Configure<JwtConfiguration>(jwtConfigSecion)
+                .Configure<JwtOptions>(jwtConfigSecion)
                 .Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
 
             services
@@ -51,7 +51,7 @@ namespace ProjectV.ProcessingWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtConfiguration>());
+            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

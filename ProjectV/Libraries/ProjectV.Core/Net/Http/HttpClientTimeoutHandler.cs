@@ -20,13 +20,13 @@ namespace ProjectV.Core.Net.Http
         }
 
         public HttpClientTimeoutHandler(
-            ProjectVServiceOptions serviceOptions)
-            : this(serviceOptions.ThrowIfNull(nameof(serviceOptions)).HttpHandlerTimeout)
+            HttpClientOptions options)
+            : this(options.ThrowIfNull(nameof(options)).HttpHandlerTimeout)
         {
         }
 
         public HttpClientTimeoutHandler(
-            IOptions<ProjectVServiceOptions> settings)
+            IOptions<HttpClientOptions> settings)
             : this(settings.ThrowIfNull(nameof(settings)).Value)
         {
         }

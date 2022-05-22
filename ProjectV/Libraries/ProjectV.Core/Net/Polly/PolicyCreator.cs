@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Polly;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Logging;
@@ -16,22 +17,27 @@ namespace ProjectV.Core.Net.Polly
 
         public static IAsyncPolicy<HttpResponseMessage> WaitAndRetryWithOptionsAsync(
             this PolicyBuilder<HttpResponseMessage> policyBuilder,
-            ProjectVServiceOptions serviceOptions)
+            HttpClientOptions options)
         {
+            policyBuilder.ThrowIfNull(nameof(policyBuilder));
+            options.ThrowIfNull(nameof(options));
+
             return policyBuilder
                 .WaitAndRetryAsync(
-                    serviceOptions.HttpClientRetryCountOnFailed,
-                    retryCount => serviceOptions.HttpClientRetryTimeoutOnFailed,
+                    options.HttpClientRetryCountOnFailed,
+                    retryCount => options.HttpClientRetryTimeoutOnFailed,
                     OnFailedAsync
                 );
         }
 
         public static IAsyncPolicy<HttpResponseMessage> WaitAndRetryWithOptionsOnTimeoutExceptionAsync(
-            ProjectVServiceOptions serviceOptions)
+            HttpClientOptions options)
         {
+            options.ThrowIfNull(nameof(options));
+
             return Policy<HttpResponseMessage>
                 .Handle<TimeoutException>()
-                .WaitAndRetryWithOptionsAsync(serviceOptions);
+                .WaitAndRetryWithOptionsAsync(options);
         }
 
         private static Task OnFailedAsync(DelegateResult<HttpResponseMessage> outcome,
@@ -42,14 +48,17 @@ namespace ProjectV.Core.Net.Polly
         }
 
         public static IAsyncPolicy<HttpResponseMessage> HandleUnauthorizedAsync(
-            ProjectVServiceOptions serviceOptions,
+            HttpClientOptions options,
             Func<DelegateResult<HttpResponseMessage>, TimeSpan, int, Context, Task> onRetryAsync)
         {
+            options.ThrowIfNull(nameof(options));
+            onRetryAsync.ThrowIfNull(nameof(onRetryAsync));
+
             return Policy<HttpResponseMessage>
                 .HandleResult(response => IsUnauthorized(response))
                 .WaitAndRetryAsync(
-                    serviceOptions.HttpClientRetryCountOnAuth,
-                    retryCount => serviceOptions.HttpClientRetryTimeoutOnAuth,
+                    options.HttpClientRetryCountOnAuth,
+                    retryCount => options.HttpClientRetryTimeoutOnAuth,
                     onRetryAsync
                 );
         }

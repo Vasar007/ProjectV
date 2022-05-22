@@ -53,13 +53,15 @@ namespace ProjectV.Core.Services.Clients
 
             try
             {
-                _client = httpClientFactory.CreateClientWithOptions(BaseAddress, serviceOptions);
+                _client = httpClientFactory.CreateClientWithOptions(
+                    BaseAddress, serviceOptions.HttpClient
+                );
                 _continueOnCapturedContext = false;
 
                 _tokenClient = new TokenClient(
                     _client,
                     LoginApiUrl,
-                    _serviceOptions.ShouldDisposeHttpClient,
+                    _serviceOptions.HttpClient.ShouldDisposeHttpClient,
                     _continueOnCapturedContext
                 );
 
@@ -67,7 +69,7 @@ namespace ProjectV.Core.Services.Clients
             }
             catch (Exception)
             {
-                _client.DisposeClient(_serviceOptions);
+                _client.DisposeClient(_serviceOptions.HttpClient);
                 _tokenClient.DisposeSafe();
                 throw;
             }
@@ -96,7 +98,7 @@ namespace ProjectV.Core.Services.Clients
         {
             if (_disposed) return;
 
-            _client.DisposeClient(_serviceOptions);
+            _client.DisposeClient(_serviceOptions.HttpClient);
             _tokenClient.Dispose();
 
             _disposed = true;
@@ -123,7 +125,7 @@ namespace ProjectV.Core.Services.Clients
             // This trick requires to recreate HttpRequestMessage, so we cannot do it with
             // predefined global policies for HttpClient.
             var refreshAuthenticationPolicy = PolicyCreator.HandleUnauthorizedAsync(
-                _serviceOptions, RefreshAuthorizationAsync
+                _serviceOptions.HttpClient, RefreshAuthorizationAsync
             );
 
             // Try to get authorization tokens from cache.

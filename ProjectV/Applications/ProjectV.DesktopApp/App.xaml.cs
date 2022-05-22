@@ -76,7 +76,7 @@ namespace ProjectV.DesktopApp
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService);
+            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService.HttpClient);
         }
 
         private static IServiceProvider CreateServices()

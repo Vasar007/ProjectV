@@ -1,9 +1,10 @@
 ﻿using System;
+using ProjectV.Configuration;
 
-namespace ProjectV.CommonWebApi.Models.Config
+namespace ProjectV.CommonWebApi.Models.Options
 {
     // TODO: make this DTO immutable.
-    public sealed class JwtConfiguration
+    public sealed class JwtOptions : IOptions
     {
         public string SecretKey { get; set; } =
             EnvironmentVariablesParser.GetValueOrDefault("JwtSecretKey", string.Empty);
@@ -16,7 +17,7 @@ namespace ProjectV.CommonWebApi.Models.Config
         public TimeSpan RefreshTokenExpirationTimeout { get; set; } = TimeSpan.FromDays(7);
 
 
-        public JwtConfiguration()
+        public JwtOptions()
         {
         }
     }

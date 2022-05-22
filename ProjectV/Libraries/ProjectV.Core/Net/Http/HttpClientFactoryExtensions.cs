@@ -9,28 +9,28 @@ namespace ProjectV.Core.Net.Http
     public static class HttpClientFactoryExtensions
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(HttpClientExtensions));
+            LoggerFactory.CreateLoggerFor(typeof(HttpClientFactoryExtensions));
 
         public static HttpClient CreateClientWithOptions(this IHttpClientFactory httpClientFactory,
-            string baseAddress, ProjectVServiceOptions serviceOptions)
+            string baseAddress, HttpClientOptions options)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             baseAddress.ThrowIfNull(nameof(baseAddress));
-            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            options.ThrowIfNull(nameof(options));
 
-            string defaultClientName = serviceOptions.HttpClientDefaultName;
+            string defaultClientName = options.HttpClientDefaultName;
             _logger.Info($"Using client '{defaultClientName}' and service URL: {baseAddress}");
 
             HttpClient client = httpClientFactory.CreateClient(defaultClientName);
             try
             {
-                client.ConfigureWithJsonMedia(baseAddress, serviceOptions);
-
-                return client;
+                return client
+                    .ConfigureWithJsonMedia(baseAddress)
+                    .ConfigureWithOptions(options);
             }
             catch (Exception)
             {
-                client.DisposeClient(serviceOptions);
+                client.DisposeClient(options);
                 throw;
             }
         }

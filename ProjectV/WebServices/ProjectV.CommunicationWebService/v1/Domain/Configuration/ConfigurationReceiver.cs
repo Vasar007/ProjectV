@@ -30,12 +30,14 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 
         public ConfigurationReceiver(
             IHttpClientFactory httpClientFactory,
-            IOptions<ProjectVServiceOptions> serivceSettings)
+            IOptions<ProjectVServiceOptions> serviceSettings)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
-            _serviceOptions = serivceSettings.Value.ThrowIfNull(nameof(serivceSettings));
+            _serviceOptions = serviceSettings.Value.ThrowIfNull(nameof(serviceSettings));
 
-            _client = httpClientFactory.CreateClientWithOptions(BaseAddress, _serviceOptions);
+            _client = httpClientFactory.CreateClientWithOptions(
+                BaseAddress, _serviceOptions.HttpClient
+            );
             _continueOnCapturedContext = false;
         }
 
@@ -50,7 +52,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
         {
             if (_disposed) return;
 
-            _client.DisposeClient(_serviceOptions);
+            _client.DisposeClient(_serviceOptions.HttpClient);
 
             _disposed = true;
         }

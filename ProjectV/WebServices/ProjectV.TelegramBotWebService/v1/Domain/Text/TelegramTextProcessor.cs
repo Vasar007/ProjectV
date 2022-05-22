@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
-using ProjectV.TelegramBotWebService.Config;
+using ProjectV.TelegramBotWebService.Options;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Text
 {

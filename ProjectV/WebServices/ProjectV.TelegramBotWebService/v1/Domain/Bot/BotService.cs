@@ -2,7 +2,7 @@
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using MihaZupan;
-using ProjectV.TelegramBotWebService.Config;
+using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
@@ -13,24 +13,33 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 
         #region IBotService Implementation
 
-        public TelegramBotClient Client { get; }
+        public ITelegramBotClient Client { get; }
 
         #endregion
 
 
         public BotService(
+           IHttpClientFactory httpClientFactory,
             IOptions<BotConfiguration> config)
         {
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             _config = config.Value.ThrowIfNull(nameof(config));
 
             // Use proxy if configured in appsettings.*.json
-            Client = !_config.UseProxy
-                ? new TelegramBotClient(_config.BotToken)
-                : new TelegramBotClient(
-                    _config.BotToken,
-                    new HttpClient(new HttpClientHandler { Proxy = new HttpToSocks5Proxy(_config.Socks5Host, _config.Socks5Port), UseProxy = true })
-                );
+            Client = CreateClient(_config);
         }
 
+        private static TelegramBotClient CreateClient(BotConfiguration config)
+        {
+            if (!config.UseProxy)
+            {
+                return new TelegramBotClient(config.BotToken);
+            }
+
+            return new TelegramBotClient(
+                config.BotToken,
+                new HttpClient(new HttpClientHandler { Proxy = new HttpToSocks5Proxy(config.Socks5HostName, config.Socks5Port), UseProxy = true })
+            );
+        }
     }
 }
