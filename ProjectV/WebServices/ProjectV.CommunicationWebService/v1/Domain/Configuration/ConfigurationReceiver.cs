@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
@@ -68,39 +69,54 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
                 .AsJson(jobParams.Requirements);
 
-            var result = await _client.SendAndReadAsync<ConfigurationXml>(
-                    request, _logger, _continueOnCapturedContext, CancellationToken.None
-                )
-                .ConfigureAwait(_continueOnCapturedContext);
-
-            if (result.IsSuccess && result.Ok is not null)
+            try
             {
-                _logger.Info("Received successful config response.");
-                var config = result.Ok;
+                var result = await _client.SendAndReadAsync<ConfigurationXml>(
+                  request, _logger, _continueOnCapturedContext, CancellationToken.None
+              )
+              .ConfigureAwait(_continueOnCapturedContext);
 
-                var requestData = new StartJobDataResponce
+                if (result.IsSuccess && result.Ok is not null)
                 {
-                    ThingNames = jobParams.ThingNames,
-                    ConfigurationXml = config
+                    _logger.Info("Received successful config response.");
+                    var config = result.Ok;
+
+                    var requestData = new StartJobDataResponce
+                    {
+                        ThingNames = jobParams.ThingNames,
+                        ConfigurationXml = config
+                    };
+                    return Result.Ok(requestData);
+                }
+
+                _logger.Error("Received bad config response.");
+
+                if (!result.IsSuccess)
+                {
+                    return Result.Error(result.Error!);
+                }
+
+                // In case service returns null config and no error.
+                var error = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorCode = "C01",
+                    ErrorMessage = "Config request failed."
                 };
-                return Result.Ok(requestData);
+                return Result.Error(error);
             }
-
-            _logger.Error("Received bad config response.");
-
-            if (!result.IsSuccess)
+            catch (Exception ex)
             {
-                return Result.Error(result.Error!);
+                _logger.Error(ex, "Failed to receive config response.");
+
+                var error = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorCode = "C02",
+                    ErrorMessage = ex.Message
+                };
+                return Result.Error(error);
             }
-
-            // In case service returns null config and no error.
-            var error = new ErrorResponse
-            {
-                Success = false,
-                ErrorCode = "C01",
-                ErrorMessage = "Config request failed."
-            };
-            return Result.Error(error);
         }
 
         #endregion

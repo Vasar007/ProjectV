@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
@@ -61,15 +62,30 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
         {
             jobData.ThrowIfNull(nameof(jobData));
 
-            _logger.Info("Sending config request and trying to receive response.");
+            _logger.Info("Sending processing request and trying to receive response.");
 
-            var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
-                .AsJson(jobData);
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
+              .AsJson(jobData);
 
-            return await _client.SendAndReadAsync<ProcessingResponse>(
-                    request, _logger, _continueOnCapturedContext, CancellationToken.None
-                )
-                .ConfigureAwait(_continueOnCapturedContext);
+                return await _client.SendAndReadAsync<ProcessingResponse>(
+                        request, _logger, _continueOnCapturedContext, CancellationToken.None
+                    )
+                    .ConfigureAwait(_continueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Failed to receive processing response.");
+
+                var error = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorCode = "P01",
+                    ErrorMessage = ex.Message
+                };
+                return Result.Error(error);
+            }
         }
 
         #endregion
