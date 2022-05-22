@@ -1,5 +1,6 @@
 ﻿#pragma warning disable format // dotnet format fails indentation for switch :(
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -79,9 +81,16 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             {
                 case UpdateType.Message:
                 {
-                    Message message = update.Message;
-                    _logger.Info($"Received Message from {message.Chat.Id}.");
-                    await ProcessMessage(message);
+                    Message? message = update.Message;
+                    if (message is null)
+                    {
+                        _logger.Warn("Message is empty, skipping processing");
+                    }
+                    else
+                    {
+                        _logger.Info($"Received Message from {message.Chat.Id}.");
+                        await ProcessMessage(message);
+                    }
                     break;
                 }
 
@@ -99,7 +108,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         private async Task ProcessMessage(Message message)
         {
+            if (message.Text is null)
+            {
+                _logger.Warn("Message does not contain text.");
+                return;
+            }
+
             IReadOnlyList<string> data = _textProcessor.ParseAsSeparateLines(message.Text);
+
             string command = _textProcessor.ParseCommand(data[0]);
 
             switch (command)
@@ -196,10 +212,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             var jobParams = new StartJobParamsRequest();
             _userCache.TryAddUser(chatId, jobParams);
 
-            ReplyKeyboardMarkup replyKeyboard = new[]
+            ReplyKeyboardMarkup? replyKeyboard = new[]
             {
                 ConfigContract.AvailableBeautifiedServices.ToArray(),
-                new[] { "/cancel" },
+                new[] { "/cancel" }
             };
 
             await _botService.Client.SendTextMessageAsync(
@@ -214,10 +230,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         {
             string encodedUserInput = UserInputEncoder.Encode(serviceName);
             _logger.Info($"Continue process /request command with service {encodedUserInput}.");
-            ReplyKeyboardMarkup replyKeyboard = new[]
+
+            ReplyKeyboardMarkup? replyKeyboard = new[]
             {
                 ConfigContract.AvailableBeautifiedServices.ToArray(),
-                new[] { "/cancel" },
+                new[] { "/cancel" }
             };
 
             if (!ConfigContract.ContainsService(serviceName))

@@ -4,13 +4,13 @@ using Microsoft.Extensions.Options;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
+using Telegram.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 {
     public sealed class ServiceSetup : IServiceSetup
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateService>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceSetup>();
 
         private readonly TelegramBotWebServiceSettings _settings;
 
