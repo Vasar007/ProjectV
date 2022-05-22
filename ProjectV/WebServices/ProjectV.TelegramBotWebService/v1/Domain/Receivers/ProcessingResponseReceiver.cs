@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using ProjectV.Core.Services.Clients;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
@@ -12,33 +13,62 @@ using Telegram.Bot;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
 {
-    public static class ProcessingResponseReceiver
+    public sealed class ProcessingResponseReceiver : IProcessingResponseReceiver
     {
         private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(ProcessingResponseReceiver));
+            LoggerFactory.CreateLoggerFor<ProcessingResponseReceiver>();
+
+        private readonly ICommunicationServiceClient _serviceClient;
 
 
-        public static Task ScheduleRequestAsync(IBotService botService,
-            ICommunicationServiceClient serviceClient, long chatId, StartJobParamsRequest jobParams,
-            CancellationToken token = default)
+        public ProcessingResponseReceiver(
+            ICommunicationServiceClient serviceClient)
+        {
+            _serviceClient = serviceClient.ThrowIfNull(nameof(serviceClient));
+        }
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _serviceClient.Dispose();
+
+            _disposed = true;
+        }
+
+        #endregion
+
+        #region IProcessingResponseReceiver Implementation
+
+        public Task ScheduleRequestAsync(IBotService botService, long chatId,
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken = default)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
             // Otherwise Telegram will retry to send event again until service send a response.
             return Task.Run(
-                () => ScheduleRequestImplementation(botService, serviceClient, chatId, jobParams),
-                token
+                () => ScheduleRequestImplementation(botService, chatId, jobParams),
+                cancellationToken
             );
         }
 
-        private static async Task ScheduleRequestImplementation(IBotService botService,
-            ICommunicationServiceClient serviceClient, long chatId, StartJobParamsRequest jobParams)
+        #endregion
+
+        private async Task ScheduleRequestImplementation(IBotService botService, long chatId,
+            StartJobParamsRequest jobParams)
         {
             _logger.Info("Trying to send request to ProjectV service.");
 
             try
             {
-                var result = await serviceClient.StartJobAsync(jobParams);
+                var result = await _serviceClient.StartJobAsync(jobParams);
 
                 if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
@@ -94,6 +124,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
                     }
                 }
             }
+
             return converted;
         }
 

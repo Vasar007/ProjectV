@@ -6,7 +6,6 @@ using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.Building;
 using ProjectV.Configuration;
-using ProjectV.Core.Services.Clients;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.Options;
@@ -16,9 +15,7 @@ using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
@@ -29,22 +26,28 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             LoggerFactory.CreateLoggerFor<BotMessageHandler>();
 
         private readonly IBotService _botService;
-        private readonly ICommunicationServiceClient _serviceClient;
+        private readonly IProcessingResponseReceiver _responseReceiver;
         private readonly IUserCache _userCache;
         private readonly ITelegramTextProcessor _textProcessor;
 
         private readonly TelegramBotWebServiceOptions _options;
 
+        private string StartCommand => _options.Bot.Commands.StartCommand;
+        private string ServicesCommand => _options.Bot.Commands.ServicesCommand;
+        private string RequestCommand => _options.Bot.Commands.RequestCommand;
+        private string CancelCommand => _options.Bot.Commands.CancelCommand;
+        private string HelpCommand => _options.Bot.Commands.HelpCommand;
+
 
         public BotMessageHandler(
             IBotService botService,
-            ICommunicationServiceClient serviceClient,
+            IProcessingResponseReceiver responseReceiver,
             IUserCache userCache,
             ITelegramTextProcessor textProcessor,
             IOptions<TelegramBotWebServiceOptions> options)
         {
             _botService = botService.ThrowIfNull(nameof(botService));
-            _serviceClient = serviceClient.ThrowIfNull(nameof(serviceClient));
+            _responseReceiver = responseReceiver.ThrowIfNull(nameof(responseReceiver));
             _userCache = userCache.ThrowIfNull(nameof(userCache));
             _textProcessor = textProcessor.ThrowIfNull(nameof(textProcessor));
             _options = options.GetCheckedValue();
@@ -61,7 +64,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             if (_disposed) return;
 
-            _serviceClient.Dispose();
+            _responseReceiver.Dispose();
 
             _disposed = true;
         }
@@ -82,69 +85,36 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             IReadOnlyList<string> data = _textProcessor.ParseAsSeparateLines(message.Text);
 
-            string firstLine = data[0];
-            string command = _textProcessor.ParseCommand(firstLine);
+            string command = _textProcessor.ParseCommand(data[0]);
 
-            switch (command)
+            Task responseTask = command switch
             {
-                case "/start":
-                    {
-                        await SendResponseToStartCommand(message.Chat.Id);
-                        break;
-                    }
+                _ when IsCommand(command, StartCommand) => SendResponseToStartCommand(message.Chat.Id),
 
-                case "/services":
-                    {
-                        await SendResponseToServicesCommand(message.Chat.Id);
-                        break;
-                    }
+                _ when IsCommand(command, ServicesCommand) => SendResponseToServicesCommand(message.Chat.Id),
 
-                case "/request":
-                    {
-                        await SendResponseToRequestCommand(message.Chat.Id);
-                        break;
-                    }
+                _ when IsCommand(command, RequestCommand) => SendResponseToRequestCommand(message.Chat.Id),
 
-                case "/cancel":
-                    {
-                        await SendResponseToCancelCommand(message.Chat.Id);
-                        break;
-                    }
+                _ when IsCommand(command, CancelCommand) => SendResponseToCancelCommand(message.Chat.Id),
 
-                case "/help":
-                    {
-                        await SendResponseToHelpCommand(message.Chat.Id);
-                        break;
-                    }
+                _ when IsCommand(command, HelpCommand) => SendResponseToHelpCommand(message.Chat.Id),
 
-                default:
-                    {
-                        if (!_userCache.TryGetUser(message.Chat.Id, out StartJobParamsRequest? jobData))
-                        {
-                            await SendResponseToInvalidMessage(message.Chat.Id);
-                            return;
-                        }
+                _ => TryHandleContinuation(message, data)
+            };
 
-                        if (jobData.Requirements is null)
-                        {
-                            string serviceName = firstLine;
-                            await ContinueRequestCommandWithService(
-                                message.Chat.Id, serviceName, jobData
-                            );
-                            return;
-                        }
-
-                        await ContinueRequestCommandWithData(message.Chat.Id, data, jobData);
-                        break;
-                    }
-            }
+            await responseTask;
         }
 
         #endregion
 
+        private static bool IsCommand(string expectedCommand, string actualCommand)
+        {
+            return StringComparer.Ordinal.Equals(expectedCommand, actualCommand);
+        }
+
         private async Task SendResponseToStartCommand(long chatId)
         {
-            _logger.Info("Processes /start command.");
+            _logger.Info($"Processes {StartCommand} command.");
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
@@ -155,7 +125,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
         private async Task SendResponseToHelpCommand(long chatId)
         {
-            _logger.Info("Processes /help command.");
+            _logger.Info($"Processes {HelpCommand} command.");
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
@@ -166,7 +136,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
         private async Task SendResponseToServicesCommand(long chatId)
         {
-            _logger.Info("Processes /services command.");
+            _logger.Info($"Processes {ServicesCommand} command.");
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
@@ -177,7 +147,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
         private async Task SendResponseToRequestCommand(long chatId)
         {
-            _logger.Info("Processes /request command.");
+            _logger.Info($"Processes {RequestCommand} command.");
 
             var jobParams = new StartJobParamsRequest();
             _userCache.TryAddUser(chatId, jobParams);
@@ -185,7 +155,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             ReplyKeyboardMarkup? replyKeyboard = new[]
             {
                 ConfigContract.AvailableBeautifiedServices.ToArray(),
-                new[] { "/cancel" }
+                new[] { CancelCommand }
             };
 
             await _botService.Client.SendTextMessageAsync(
@@ -199,12 +169,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             StartJobParamsRequest requestParams)
         {
             string userInput = _textProcessor.TrimNewLineSeparator(serviceName);
-            _logger.Info($"Continue process /request command with service {userInput}.");
+            _logger.Info($"Continue process {RequestCommand} command with service {userInput}.");
 
             ReplyKeyboardMarkup? replyKeyboard = new[]
             {
                 ConfigContract.AvailableBeautifiedServices.ToArray(),
-                new[] { "/cancel" }
+                new[] { CancelCommand }
             };
 
             if (!ConfigContract.ContainsService(serviceName))
@@ -237,7 +207,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         private async Task ContinueRequestCommandWithData(long chatId, IReadOnlyList<string> data,
             StartJobParamsRequest jobParams)
         {
-            _logger.Info("Continue process /request command with data.");
+            _logger.Info($"Continue process {RequestCommand} command with data.");
 
             jobParams.ThingNames = data.ToList();
 
@@ -248,16 +218,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             );
 
             // Schedule task for request and waiting for service response.
-            _ = ProcessingResponseReceiver.ScheduleRequestAsync(
-                _botService, _serviceClient, chatId, jobParams
-            );
+            _ = _responseReceiver.ScheduleRequestAsync(_botService, chatId, jobParams);
 
             _userCache.TryRemoveUser(chatId);
         }
 
         private async Task SendResponseToCancelCommand(long chatId)
         {
-            _logger.Info("Processes /cancel command.");
+            _logger.Info($"Processes {CancelCommand} command.");
 
             string message;
             if (_userCache.TryRemoveUser(chatId))
@@ -282,9 +250,29 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             await _botService.Client.SendTextMessageAsync(
                 chatId,
-                "Invalid message. See usage at /help command.",
+                $"Invalid message. See usage at {HelpCommand} command.",
                 replyMarkup: new ReplyKeyboardRemove()
             );
+        }
+
+        private async Task TryHandleContinuation(Message message, IReadOnlyList<string> data)
+        {
+            if (!_userCache.TryGetUser(message.Chat.Id, out StartJobParamsRequest? jobData))
+            {
+                await SendResponseToInvalidMessage(message.Chat.Id);
+                return;
+            }
+
+            if (jobData.Requirements is null)
+            {
+                string serviceName = data[0];
+                await ContinueRequestCommandWithService(
+                    message.Chat.Id, serviceName, jobData
+                );
+                return;
+            }
+
+            await ContinueRequestCommandWithData(message.Chat.Id, data, jobData);
         }
 
         private static ConfigRequirements CreateRequirements(string serviceName,

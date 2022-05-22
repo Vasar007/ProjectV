@@ -13,8 +13,11 @@ using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
+using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
+using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Setup;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService
 {
@@ -40,8 +43,10 @@ namespace ProjectV.TelegramBotWebService
 
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IBotService, BotService>();
+            services.AddSingleton<IBotHandler<Message>, BotMessageHandler>();
             services.AddTransient<IUserCache, UserCache>();
             services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
+            services.AddTransient<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
             var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
             services
