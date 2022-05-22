@@ -3,10 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProjectV.CommonWebApi.Models.Options;
+using ProjectV.Configuration;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.Users;
 
@@ -23,7 +23,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
         public TokenGenerator(
             IOptions<JwtOptions> options)
         {
-            _options = options.Value.ThrowIfNull(nameof(options));
+            _options = options.GetCheckedValue();
         }
 
         #region ITokenGenerator Implementation

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Net.Http;
 using ProjectV.Logging;
@@ -32,7 +33,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
             IOptions<ProjectVServiceOptions> serviceSettings)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
-            _serviceOptions = serviceSettings.Value.ThrowIfNull(nameof(serviceSettings));
+            _serviceOptions = serviceSettings.GetCheckedValue();
 
             _client = httpClientFactory.CreateClientWithOptions(BaseAddress, HcOptions);
             _continueOnCapturedContext = false;

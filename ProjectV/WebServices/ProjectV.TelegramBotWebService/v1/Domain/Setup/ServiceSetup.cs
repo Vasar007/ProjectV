@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
@@ -29,7 +30,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
             IOptions<TelegramBotWebServiceOptions> options,
             IBotService botService)
         {
-            _options = options.Value.ThrowIfNull(nameof(options));
+            _options = options.GetCheckedValue();
             _botService = botService.ThrowIfNull(nameof(botService));
         }
 

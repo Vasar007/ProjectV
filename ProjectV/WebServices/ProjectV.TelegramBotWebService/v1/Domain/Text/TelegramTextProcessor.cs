@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.TelegramBotWebService.Options;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Text
@@ -15,7 +16,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Text
         public TelegramTextProcessor(
             IOptions<TelegramBotWebServiceOptions> options)
         {
-            _options = options.Value.ThrowIfNull(nameof(options));
+            _options = options.GetCheckedValue();
         }
 
         #region ITelegramTextProcessor Implementation

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.DataAccessLayer.Services.Jobs.Models;
 using ProjectV.DataAccessLayer.Services.Tokens.Models;
 using ProjectV.DataAccessLayer.Services.Users.Models;
@@ -28,7 +29,7 @@ namespace ProjectV.DataAccessLayer
 
         public ProjectVDbContext(
             IOptions<DatabaseOptions> storageOptions)
-            : this(storageOptions.ThrowIfNull(nameof(storageOptions)).Value)
+            : this(storageOptions.GetCheckedValue())
         {
         }
 

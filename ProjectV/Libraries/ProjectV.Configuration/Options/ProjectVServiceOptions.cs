@@ -7,8 +7,7 @@ namespace ProjectV.Configuration.Options
         [Required]
         public RestApiOptions RestApi { get; set; } = default!;
 
-        [Required]
-        public HttpClientOptions HttpClient { get; set; } = default!;
+        public HttpClientOptions HttpClient { get; set; } = new();
 
 
         public ProjectVServiceOptions()

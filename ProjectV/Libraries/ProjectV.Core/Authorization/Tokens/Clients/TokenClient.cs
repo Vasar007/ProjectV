@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Net.Http;
 using ProjectV.Logging;
@@ -53,7 +54,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
             IOptions<ProjectVServiceOptions> serivceSettings)
             : this(
                 httpClientFactory,
-                serivceSettings.ThrowIfNull(nameof(serivceSettings)).Value
+                serivceSettings.GetCheckedValue()
             )
         {
         }

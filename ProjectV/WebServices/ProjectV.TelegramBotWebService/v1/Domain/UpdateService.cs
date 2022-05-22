@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Microsoft.Extensions.Options;
 using ProjectV.Building;
 using ProjectV.Configuration;
 using ProjectV.Core.Services.Clients;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
+using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
@@ -26,14 +28,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<UpdateService>();
 
-        // TODO: add settings to configure bot commands.
-
         private readonly IBotService _botService;
-
         private readonly ICommunicationServiceClient _serviceClient;
-
         private readonly IUserCache _userCache;
-
         private readonly ITelegramTextProcessor _textProcessor;
 
 

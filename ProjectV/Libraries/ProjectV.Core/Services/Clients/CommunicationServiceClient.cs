@@ -8,6 +8,7 @@ using Acolyte.Assertions;
 using Acolyte.Common;
 using Microsoft.Extensions.Options;
 using Polly;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Authorization.Tokens.Caches;
 using ProjectV.Core.Authorization.Tokens.Clients;
@@ -80,8 +81,8 @@ namespace ProjectV.Core.Services.Clients
             IOptions<UserServiceOptions> userServiceSettings)
             : this(
                 httpClientFactory,
-                serivceSettings.ThrowIfNull(nameof(serivceSettings)).Value,
-                userServiceSettings.ThrowIfNull(nameof(userServiceSettings)).Value
+                serivceSettings.GetCheckedValue(),
+                userServiceSettings.GetCheckedValue()
             )
         {
         }

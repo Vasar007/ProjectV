@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 
 namespace ProjectV.Core.Net.Http
@@ -27,7 +28,7 @@ namespace ProjectV.Core.Net.Http
 
         public HttpClientTimeoutHandler(
             IOptions<HttpClientOptions> options)
-            : this(options.ThrowIfNull(nameof(options)).Value)
+            : this(options.GetCheckedValue())
         {
         }
 

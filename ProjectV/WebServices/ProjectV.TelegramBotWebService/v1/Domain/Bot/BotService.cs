@@ -2,6 +2,7 @@
 using System.Net.Http;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Net.Http;
 using ProjectV.TelegramBotWebService.Options;
@@ -33,8 +34,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             IOptions<TelegramBotWebServiceOptions> botServiceOptions)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
-            _serviceOptions = serviceOptions.Value.ThrowIfNull(nameof(serviceOptions));
-            _botServiceOptions = botServiceOptions.Value.ThrowIfNull(nameof(botServiceOptions));
+            _serviceOptions = serviceOptions.GetCheckedValue();
+            _botServiceOptions = botServiceOptions.GetCheckedValue();
 
             try
             {

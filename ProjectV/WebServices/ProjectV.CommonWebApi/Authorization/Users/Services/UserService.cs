@@ -4,6 +4,7 @@ using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.CommonWebApi.Authorization.Passwords;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
+using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.DataAccessLayer.Services.Tokens;
 using ProjectV.DataAccessLayer.Services.Users;
@@ -23,6 +24,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
         private readonly IUserInfoService _userInfoService;
         private readonly IRefreshTokenInfoService _refreshTokenInfoService;
 
+
         public UserService(
             IOptions<UserServiceOptions> userServiceOptions,
             ITokenService tokenService,
@@ -30,7 +32,7 @@ namespace ProjectV.CommonWebApi.Authorization.Users.Services
             IUserInfoService userInfoService,
             IRefreshTokenInfoService refreshTokenInfoService)
         {
-            _userServiceOptions = userServiceOptions.Value.ThrowIfNull(nameof(userServiceOptions));
+            _userServiceOptions = userServiceOptions.GetCheckedValue();
             _tokenService = tokenService.ThrowIfNull(nameof(tokenService));
             _passwordManager = passwordManager.ThrowIfNull(nameof(passwordManager));
             _userInfoService = userInfoService.ThrowIfNull(nameof(userInfoService));

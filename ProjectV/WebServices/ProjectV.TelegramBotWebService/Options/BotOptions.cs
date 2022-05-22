@@ -5,8 +5,10 @@ namespace ProjectV.TelegramBotWebService.Options
 {
     public sealed class BotOptions : IOptions
     {
+        public BotCommandsOptions Commands { get; set; } = new();
+
         public string Token { get; } =
-            EnvironmentVariablesParser.GetValueOrDefault("BotToken", "BOT_TOKEN");
+            EnvironmentVariablesParser.GetValueOrDefault("BotToken", string.Empty);
 
         [Required(AllowEmptyStrings = false)]
         public string WebhookUrl { get; set; } = default!;
