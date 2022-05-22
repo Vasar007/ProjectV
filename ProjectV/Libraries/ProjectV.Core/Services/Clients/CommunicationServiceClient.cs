@@ -40,6 +40,7 @@ namespace ProjectV.Core.Services.Clients
         private string BaseAddress => _serviceOptions.RestApi.CommunicationServiceBaseAddress;
         private string RequestApiUrl => _serviceOptions.RestApi.CommunicationServiceRequestApiUrl;
         private string LoginApiUrl => _serviceOptions.RestApi.CommunicationServiceLoginApiUrl;
+        private HttpClientOptions HcOptions => _serviceOptions.HttpClient;
 
 
         public CommunicationServiceClient(
@@ -53,15 +54,13 @@ namespace ProjectV.Core.Services.Clients
 
             try
             {
-                _client = httpClientFactory.CreateClientWithOptions(
-                    BaseAddress, serviceOptions.HttpClient
-                );
+                _client = httpClientFactory.CreateClientWithOptions(BaseAddress, HcOptions);
                 _continueOnCapturedContext = false;
 
                 _tokenClient = new TokenClient(
                     _client,
                     LoginApiUrl,
-                    _serviceOptions.HttpClient.ShouldDisposeHttpClient,
+                    HcOptions.ShouldDisposeHttpClient,
                     _continueOnCapturedContext
                 );
 
@@ -69,7 +68,7 @@ namespace ProjectV.Core.Services.Clients
             }
             catch (Exception)
             {
-                _client.DisposeClient(_serviceOptions.HttpClient);
+                _client.DisposeClient(HcOptions);
                 _tokenClient.DisposeSafe();
                 throw;
             }
@@ -98,7 +97,7 @@ namespace ProjectV.Core.Services.Clients
         {
             if (_disposed) return;
 
-            _client.DisposeClient(_serviceOptions.HttpClient);
+            _client.DisposeClient(HcOptions);
             _tokenClient.Dispose();
 
             _disposed = true;
@@ -125,7 +124,7 @@ namespace ProjectV.Core.Services.Clients
             // This trick requires to recreate HttpRequestMessage, so we cannot do it with
             // predefined global policies for HttpClient.
             var refreshAuthenticationPolicy = PolicyCreator.HandleUnauthorizedAsync(
-                _serviceOptions.HttpClient, RefreshAuthorizationAsync
+                HcOptions, RefreshAuthorizationAsync
             );
 
             // Try to get authorization tokens from cache.

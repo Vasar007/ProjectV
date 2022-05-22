@@ -26,6 +26,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
 
         private string BaseAddress => _serviceOptions.RestApi.ConfigurationServiceBaseAddress;
         private string ApiUrl => _serviceOptions.RestApi.ConfigurationServiceApiUrl;
+        private HttpClientOptions HcOptions => _serviceOptions.HttpClient;
 
 
         public ConfigurationReceiver(
@@ -35,9 +36,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             _serviceOptions = serviceSettings.Value.ThrowIfNull(nameof(serviceSettings));
 
-            _client = httpClientFactory.CreateClientWithOptions(
-                BaseAddress, _serviceOptions.HttpClient
-            );
+            _client = httpClientFactory.CreateClientWithOptions(BaseAddress, HcOptions);
             _continueOnCapturedContext = false;
         }
 
@@ -52,7 +51,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
         {
             if (_disposed) return;
 
-            _client.DisposeClient(_serviceOptions.HttpClient);
+            _client.DisposeClient(HcOptions);
 
             _disposed = true;
         }

@@ -20,9 +20,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         private readonly IBotService _botService;
 
         private string FullServiceUrl => $"{_options.Bot.WebhookUrl}{_options.ServiceApiUrl}";
-        private string? SslCertificatePath => _options.Bot.SslCertificatePath;
-        private bool? DropPendingUpdates => _options.Bot.DropPendingUpdates;
-        private int? MaxConnections => _options.Bot.MaxConnections;
+        private string? BotSslCertificatePath => _options.Bot.SslCertificatePath;
+        private bool? BotDropPendingUpdates => _options.Bot.DropPendingUpdates;
+        private int? BotMaxConnections => _options.Bot.MaxConnections;
 
 
         public ServiceSetup(
@@ -39,11 +39,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         {
             _logger.Info($"Try to set webhook to {FullServiceUrl}");
 
-            if (!string.IsNullOrWhiteSpace(SslCertificatePath))
+            if (!string.IsNullOrWhiteSpace(BotSslCertificatePath))
             {
-                _logger.Info($"Trying to upload certificate additionally {SslCertificatePath}");
+                _logger.Info($"Trying to upload certificate additionally {BotSslCertificatePath}");
 
-                using var certificateFile = File.OpenRead(SslCertificatePath);
+                using var certificateFile = File.OpenRead(BotSslCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
                 await SetWebhookInternalAsync(certificate);
             }
@@ -78,8 +78,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
             await _botService.Client.SetWebhookAsync(
                 url: FullServiceUrl,
                 certificate: certificate,
-                dropPendingUpdates: DropPendingUpdates,
-                maxConnections: MaxConnections
+                dropPendingUpdates: BotDropPendingUpdates,
+                maxConnections: BotMaxConnections
             );
         }
     }

@@ -47,7 +47,6 @@ namespace ProjectV.TelegramBotWebService
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtOptions>(jwtConfigSecion)
-                .Configure<BotOptions>(Configuration.GetSection(nameof(BotOptions)))
                 .Configure<TelegramBotWebServiceOptions>(Configuration.GetSection(nameof(TelegramBotWebServiceOptions)));
 
             services

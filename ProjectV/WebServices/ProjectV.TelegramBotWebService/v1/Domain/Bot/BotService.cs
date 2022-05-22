@@ -1,7 +1,9 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
-using MihaZupan;
+using ProjectV.Configuration.Options;
+using ProjectV.Core.Net.Http;
 using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot;
 
@@ -9,7 +11,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 {
     public sealed class BotService : IBotService
     {
-        private readonly BotOptions _config;
+        private readonly ProjectVServiceOptions _serviceOptions;
+        private readonly TelegramBotWebServiceOptions _botServiceOptions;
+
+        private readonly HttpClient _httpClient;
+        private readonly bool _continueOnCapturedContext;
 
         #region IBotService Implementation
 
@@ -17,29 +23,49 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 
         #endregion
 
+        private HttpClientOptions HcOptions => _serviceOptions.HttpClient;
+        private string BotToken => _botServiceOptions.Bot.Token;
+
 
         public BotService(
-           IHttpClientFactory httpClientFactory,
-            IOptions<BotOptions> config)
+            IHttpClientFactory httpClientFactory,
+            IOptions<ProjectVServiceOptions> serviceOptions,
+            IOptions<TelegramBotWebServiceOptions> botServiceOptions)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
-            _config = config.Value.ThrowIfNull(nameof(config));
+            _serviceOptions = serviceOptions.Value.ThrowIfNull(nameof(serviceOptions));
+            _botServiceOptions = botServiceOptions.Value.ThrowIfNull(nameof(botServiceOptions));
 
-            // Use proxy if configured in appsettings.*.json
-            Client = CreateClient(_config);
-        }
-
-        private static TelegramBotClient CreateClient(BotOptions config)
-        {
-            if (!config.UseProxy)
+            try
             {
-                return new TelegramBotClient(config.Token);
-            }
+                _httpClient = httpClientFactory.CreateClientWithOptions(HcOptions);
+                _continueOnCapturedContext = false;
 
-            return new TelegramBotClient(
-                config.Token,
-                new HttpClient(new HttpClientHandler { Proxy = new HttpToSocks5Proxy(config.Socks5HostName, config.Socks5Port), UseProxy = true })
-            );
+                Client = new TelegramBotClient(BotToken, _httpClient);
+            }
+            catch (Exception)
+            {
+                _httpClient.DisposeClient(HcOptions);
+                throw;
+            }
         }
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _httpClient.DisposeClient(HcOptions);
+
+            _disposed = true;
+        }
+
+        #endregion
     }
 }

@@ -14,22 +14,34 @@ namespace ProjectV.Configuration.Options
         /// </summary>
         public bool ShouldDisposeHttpClient { get; set; } = false;
 
+        /// <summary>
+        /// Timeout for custom handler for <see cref="HttpClient" />. Used to prevent hanging.
+        /// </summary>
         public TimeSpan HttpHandlerTimeout { get; set; } = TimeSpan.FromMinutes(1);
 
-        public TimeSpan HttpClientTimeoutOnRequest { get; set; } = TimeSpan.FromMinutes(2);
+        /// <summary>
+        /// Common timeout for <see cref="HttpClient" />. It is the last priority timeout to use.
+        /// </summary>
+        public TimeSpan TimeoutOnRequest { get; set; } = TimeSpan.FromMinutes(2);
 
-        public int HttpClientRetryCountOnFailed { get; set; } = 3;
-
-        public TimeSpan HttpClientRetryTimeoutOnFailed { get; set; } = TimeSpan.FromSeconds(2);
+        public int RetryCountOnFailed { get; set; } = 3;
 
         /// <summary>
+        /// Timeout on request failed for <see cref="HttpClient" />.
+        /// </summary>
+        public TimeSpan RetryTimeoutOnFailed { get; set; } = TimeSpan.FromSeconds(2);
+
+        /// <summary>
+        /// Timeout on authentication failed for <see cref="HttpClient" />.
+        /// </summary>
+        /// <remarks>
         /// Consider how many retries. If auth lapses and you have valid credentials,
         /// one should be enough; too many tries can cause some auth systems to block or
         /// throttle the caller.
-        /// </summary>
-        public int HttpClientRetryCountOnAuth { get; set; } = 1;
+        /// </remarks>
+        public int RetryCountOnAuth { get; set; } = 1;
 
-        public TimeSpan HttpClientRetryTimeoutOnAuth { get; set; } = TimeSpan.FromSeconds(1);
+        public TimeSpan RetryTimeoutOnAuth { get; set; } = TimeSpan.FromSeconds(1);
 
         public bool ValidateServerCertificates { get; set; } = true;
 

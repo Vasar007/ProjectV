@@ -21,5 +21,7 @@
         public static string DefaultLogFilenameSeparator { get; } = "-";
 
         public static string DefaultResultFilename { get; } = "results.xlsx";
+
+        public static string NotAvailable { get; } = "N/A";
     }
 }

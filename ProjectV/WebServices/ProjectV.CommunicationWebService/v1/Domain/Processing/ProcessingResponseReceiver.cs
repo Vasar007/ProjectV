@@ -24,6 +24,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
 
         private string BaseAddress => _serviceOptions.RestApi.ProcessingServiceBaseAddress;
         private string ApiUrl => _serviceOptions.RestApi.ProcessingServiceApiUrl;
+        private HttpClientOptions HcOptions => _serviceOptions.HttpClient;
 
 
         public ProcessingResponseReceiver(
@@ -33,9 +34,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             _serviceOptions = serviceSettings.Value.ThrowIfNull(nameof(serviceSettings));
 
-            _client = httpClientFactory.CreateClientWithOptions(
-                BaseAddress, _serviceOptions.HttpClient
-            );
+            _client = httpClientFactory.CreateClientWithOptions(BaseAddress, HcOptions);
             _continueOnCapturedContext = false;
         }
 
@@ -50,7 +49,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
         {
             if (_disposed) return;
 
-            _client.DisposeClient(_serviceOptions.HttpClient);
+            _client.DisposeClient(HcOptions);
 
             _disposed = true;
         }

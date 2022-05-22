@@ -24,8 +24,8 @@ namespace ProjectV.Core.Net.Polly
 
             return policyBuilder
                 .WaitAndRetryAsync(
-                    options.HttpClientRetryCountOnFailed,
-                    retryCount => options.HttpClientRetryTimeoutOnFailed,
+                    options.RetryCountOnFailed,
+                    retryCount => options.RetryTimeoutOnFailed,
                     OnFailedAsync
                 );
         }
@@ -57,8 +57,8 @@ namespace ProjectV.Core.Net.Polly
             return Policy<HttpResponseMessage>
                 .HandleResult(response => IsUnauthorized(response))
                 .WaitAndRetryAsync(
-                    options.HttpClientRetryCountOnAuth,
-                    retryCount => options.HttpClientRetryTimeoutOnAuth,
+                    options.RetryCountOnAuth,
+                    retryCount => options.RetryTimeoutOnAuth,
                     onRetryAsync
                 );
         }
