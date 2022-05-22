@@ -7,7 +7,6 @@ using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using Telegram.Bot;
 using Telegram.Bot.Types.InputFiles;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
@@ -61,11 +60,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         public async Task DeleteWebhookAsync()
         {
             _logger.Info($"Try to delete webhook.");
-            var info = await _botService.Client.GetWebhookInfoAsync();
+            var info = await _botService.GetWebhookInfoAsync();
 
             if (!string.IsNullOrEmpty(info.Url))
             {
-                await _botService.Client.DeleteWebhookAsync();
+                await _botService.DeleteWebhookAsync();
                 _logger.Info("Webhook was deleted.");
             }
 
@@ -76,7 +75,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         private async Task SetWebhookInternalAsync(InputFileStream? certificate)
         {
-            await _botService.Client.SetWebhookAsync(
+            await _botService.SetWebhookAsync(
                 url: FullServiceUrl,
                 certificate: certificate,
                 dropPendingUpdates: BotDropPendingUpdates,

@@ -89,15 +89,15 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             Task responseTask = command switch
             {
-                _ when IsCommand(command, StartCommand) => SendResponseToStartCommand(message.Chat.Id),
+                _ when IsCommand(StartCommand, command) => SendResponseToStartCommand(message.Chat.Id),
 
-                _ when IsCommand(command, ServicesCommand) => SendResponseToServicesCommand(message.Chat.Id),
+                _ when IsCommand(ServicesCommand, command) => SendResponseToServicesCommand(message.Chat.Id),
 
-                _ when IsCommand(command, RequestCommand) => SendResponseToRequestCommand(message.Chat.Id),
+                _ when IsCommand(RequestCommand, command) => SendResponseToRequestCommand(message.Chat.Id),
 
-                _ when IsCommand(command, CancelCommand) => SendResponseToCancelCommand(message.Chat.Id),
+                _ when IsCommand(CancelCommand, command) => SendResponseToCancelCommand(message.Chat.Id),
 
-                _ when IsCommand(command, HelpCommand) => SendResponseToHelpCommand(message.Chat.Id),
+                _ when IsCommand(HelpCommand, command) => SendResponseToHelpCommand(message.Chat.Id),
 
                 _ => TryHandleContinuation(message, data)
             };
@@ -116,7 +116,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {StartCommand} command.");
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 Messages.HelloMessage,
                 replyMarkup: new ReplyKeyboardRemove()
@@ -127,7 +127,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {HelpCommand} command.");
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 Messages.HelpMessage,
                 replyMarkup: new ReplyKeyboardRemove()
@@ -138,7 +138,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {ServicesCommand} command.");
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 "Available services: " +
                 $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}."
@@ -158,7 +158,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 new[] { CancelCommand }
             };
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 "Enter service name.",
                 replyMarkup: replyKeyboard
@@ -179,7 +179,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             if (!ConfigContract.ContainsService(serviceName))
             {
-                await _botService.Client.SendTextMessageAsync(
+                await _botService.SendTextMessageAsync(
                     chatId,
                     "Invalid service name. Please, try again.",
                     replyMarkup: replyKeyboard
@@ -197,7 +197,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 "thingName2"
             });
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 message,
                 replyMarkup: new ReplyKeyboardRemove()
@@ -211,7 +211,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             jobParams.ThingNames = data.ToList();
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 "Send request to process data. Return later to see results.",
                 replyMarkup: new ReplyKeyboardRemove()
@@ -237,7 +237,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 message = "No request to cancel.";
             }
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 message,
                 replyMarkup: new ReplyKeyboardRemove()
@@ -248,7 +248,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info("Processes invalid message.");
 
-            await _botService.Client.SendTextMessageAsync(
+            await _botService.SendTextMessageAsync(
                 chatId,
                 $"Invalid message. See usage at {HelpCommand} command.",
                 replyMarkup: new ReplyKeyboardRemove()

@@ -75,7 +75,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
                     string? errorDetails = result.Error?.ErrorMessage ?? "Unknown error";
                     string errorMessage = $"Processing request to service failed: {errorDetails}.";
                     _logger.Error(errorMessage);
-                    await botService.Client.SendTextMessageAsync(
+                    await botService.SendTextMessageAsync(
                         chatId,
                         $"Cannot process request. Error: {errorMessage}"
                     );
@@ -87,7 +87,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
 
                 _logger.Info("Got response. Output message to Telegram chat.");
 
-                await botService.Client.SendTextMessageAsync(
+                await botService.SendTextMessageAsync(
                     chatId,
                     CreateResponseMessage(converted)
                 );
@@ -97,7 +97,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
-                await botService.Client.SendTextMessageAsync(
+                await botService.SendTextMessageAsync(
                     chatId,
                     $"Cannot process request. Error: {ex.Message}"
                 );
