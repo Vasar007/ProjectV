@@ -19,6 +19,7 @@ namespace ProjectV.CommunicationWebService
         {
             return WebHost
                 .CreateDefaultBuilder(args)
+                .ConfigureKestrel(options => options.ConfigureHttpsDefaults(x => x.AllowAnyClientCertificate()))
                 .UseStartup<Startup>();
         }
 
