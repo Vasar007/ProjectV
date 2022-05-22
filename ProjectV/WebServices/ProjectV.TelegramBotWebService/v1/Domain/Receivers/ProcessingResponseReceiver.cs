@@ -10,7 +10,7 @@ using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain
+namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
 {
     public static class ProcessingResponseReceiver
     {
