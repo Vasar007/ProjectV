@@ -9,7 +9,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 {
     public sealed class BotService : IBotService
     {
-        private readonly BotConfiguration _config;
+        private readonly BotOptions _config;
 
         #region IBotService Implementation
 
@@ -20,7 +20,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 
         public BotService(
            IHttpClientFactory httpClientFactory,
-            IOptions<BotConfiguration> config)
+            IOptions<BotOptions> config)
         {
             httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
             _config = config.Value.ThrowIfNull(nameof(config));
@@ -29,7 +29,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             Client = CreateClient(_config);
         }
 
-        private static TelegramBotClient CreateClient(BotConfiguration config)
+        private static TelegramBotClient CreateClient(BotOptions config)
         {
             if (!config.UseProxy)
             {

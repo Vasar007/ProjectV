@@ -47,8 +47,8 @@ namespace ProjectV.TelegramBotWebService
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtOptions>(jwtConfigSecion)
-                .Configure<BotConfiguration>(Configuration.GetSection(nameof(BotConfiguration)))
-                .Configure<TelegramBotWebServiceSettings>(Configuration.GetSection(nameof(TelegramBotWebServiceSettings)));
+                .Configure<BotOptions>(Configuration.GetSection(nameof(BotOptions)))
+                .Configure<TelegramBotWebServiceOptions>(Configuration.GetSection(nameof(TelegramBotWebServiceOptions)));
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

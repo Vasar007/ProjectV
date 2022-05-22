@@ -1,7 +1,9 @@
-﻿namespace ProjectV.TelegramBotWebService.Options
+﻿using ProjectV.Configuration;
+
+namespace ProjectV.TelegramBotWebService.Options
 {
     // TODO: make this DTO immutable.
-    public sealed class TelegramBotWebServiceSettings
+    public sealed class TelegramBotWebServiceOptions : IOptions
     {
         public string WebhookUrl { get; set; } = default!;
 
@@ -16,7 +18,7 @@
         public string NewLineSeparator { get; set; } = default!;
 
 
-        public TelegramBotWebServiceSettings()
+        public TelegramBotWebServiceOptions()
         {
         }
     }
