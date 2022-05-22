@@ -73,8 +73,8 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             {
                 var result = await _client.SendAndReadAsync<ConfigurationXml>(
                   request, _logger, _continueOnCapturedContext, CancellationToken.None
-              )
-              .ConfigureAwait(_continueOnCapturedContext);
+                )
+                .ConfigureAwait(_continueOnCapturedContext);
 
                 if (result.IsSuccess && result.Ok is not null)
                 {

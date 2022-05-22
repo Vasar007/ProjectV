@@ -27,6 +27,8 @@ namespace ProjectV.Configuration.Options
 
         public TimeSpan HttpClientRetryTimeoutOnAuth { get; set; } = TimeSpan.FromSeconds(1);
 
+        public bool ValidateSslCertificates { get; set; } = true;
+
 
         public ProjectVServiceOptions()
         {

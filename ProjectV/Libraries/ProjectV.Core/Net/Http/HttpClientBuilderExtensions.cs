@@ -19,6 +19,7 @@ namespace ProjectV.Core.Net.Http
             serviceOptions.ThrowIfNull(nameof(serviceOptions));
 
             builder
+                .ConfigurePrimaryHttpMessageHandlerWithOptions(serviceOptions)
                 .AddHttpErrorPoliciesWithOptions(serviceOptions)
                 .AddHttpMessageHandlersWithOptions(serviceOptions); // Common handlers should be placed after Polly ones!
 
@@ -33,6 +34,33 @@ namespace ProjectV.Core.Net.Http
 
             builder
                 .AddHttpMessageHandler(() => new HttpClientTimeoutHandler(serviceOptions));
+
+            return builder;
+        }
+
+        public static IHttpClientBuilder ConfigurePrimaryHttpMessageHandlerWithOptions(
+           this IHttpClientBuilder builder, ProjectVServiceOptions serviceOptions)
+        {
+            builder.ThrowIfNull(nameof(builder));
+            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+
+            builder
+                .ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    var httpClientHandler = new HttpClientHandler
+                    {
+                        AllowAutoRedirect = true,
+                        UseCookies = true
+                    };
+
+                    if (!serviceOptions.ValidateSslCertificates)
+                    {
+                        _logger.Warn("ATTENTION! SSL certificates validation is disabled.");
+                        httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    }
+
+                    return httpClientHandler;
+                });
 
             return builder;
         }

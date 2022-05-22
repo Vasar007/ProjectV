@@ -67,7 +67,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
-              .AsJson(jobData);
+                    .AsJson(jobData);
 
                 return await _client.SendAndReadAsync<ProcessingResponse>(
                         request, _logger, _continueOnCapturedContext, CancellationToken.None

@@ -20,7 +20,6 @@ namespace ProjectV.TelegramBotWebService
         {
             return WebHost
                 .CreateDefaultBuilder(args)
-                .ConfigureKestrel(options => options.ConfigureHttpsDefaults(x => x.AllowAnyClientCertificate()))
                 .UseStartup<Startup>();
         }
 
