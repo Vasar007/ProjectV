@@ -14,16 +14,16 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
 {
     public sealed class TokenGenerator : ITokenGenerator
     {
-        private readonly JwtOptions _settings;
+        private readonly JwtOptions _options;
 
-        private TimeSpan AccessTokenExpirationTimeout => _settings.AccessTokenExpirationTimeout;
-        private TimeSpan RefreshTokenExpirationTimeout => _settings.RefreshTokenExpirationTimeout;
+        private TimeSpan AccessTokenExpirationTimeout => _options.AccessTokenExpirationTimeout;
+        private TimeSpan RefreshTokenExpirationTimeout => _options.RefreshTokenExpirationTimeout;
 
 
         public TokenGenerator(
-            IOptions<JwtOptions> settingsOptions)
+            IOptions<JwtOptions> options)
         {
-            _settings = settingsOptions.Value.ThrowIfNull(nameof(settingsOptions));
+            _options = options.Value.ThrowIfNull(nameof(options));
         }
 
         #region ITokenGenerator Implementation
@@ -32,7 +32,7 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
             DateTime utcDateTime)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Convert.FromBase64String(_settings.SecretKey);
+            var key = Convert.FromBase64String(_options.SecretKey);
 
             var claimsIdentity = new ClaimsIdentity(
                 new[]
@@ -50,8 +50,8 @@ namespace ProjectV.CommonWebApi.Authorization.Tokens.Generators
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
-                Issuer = _settings.Issuer,
-                Audience = _settings.Audience,
+                Issuer = _options.Issuer,
+                Audience = _options.Audience,
                 Expires = expires,
                 SigningCredentials = signingCredentials,
             };

@@ -7,15 +7,15 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Text
 {
     public sealed class TelegramTextProcessor : ITelegramTextProcessor
     {
-        private readonly TelegramBotWebServiceOptions _settings;
+        private readonly TelegramBotWebServiceOptions _options;
 
-        private string NewLineSeparator => _settings.NewLineSeparator;
+        private string NewLineSeparator => _options.Bot.NewLineSeparator;
 
 
         public TelegramTextProcessor(
-                 IOptions<TelegramBotWebServiceOptions> settings)
+            IOptions<TelegramBotWebServiceOptions> options)
         {
-            _settings = settings.Value.ThrowIfNull(nameof(settings));
+            _options = options.Value.ThrowIfNull(nameof(options));
         }
 
         #region ITelegramTextProcessor Implementation

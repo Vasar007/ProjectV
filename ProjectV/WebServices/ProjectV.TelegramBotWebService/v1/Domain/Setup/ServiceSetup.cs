@@ -15,16 +15,21 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceSetup>();
 
-        private readonly TelegramBotWebServiceOptions _settings;
+        private readonly TelegramBotWebServiceOptions _options;
 
         private readonly IBotService _botService;
 
+        private string FullServiceUrl => $"{_options.Bot.WebhookUrl}{_options.ServiceApiUrl}";
+        private string? SslCertificatePath => _options.Bot.SslCertificatePath;
+        private bool? DropPendingUpdates => _options.Bot.DropPendingUpdates;
+        private int? MaxConnections => _options.Bot.MaxConnections;
+
 
         public ServiceSetup(
-            IOptions<TelegramBotWebServiceOptions> settings,
+            IOptions<TelegramBotWebServiceOptions> options,
             IBotService botService)
         {
-            _settings = settings.Value.ThrowIfNull(nameof(settings));
+            _options = options.Value.ThrowIfNull(nameof(options));
             _botService = botService.ThrowIfNull(nameof(botService));
         }
 
@@ -32,22 +37,19 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         public async Task<AsyncDisposableAction> SetWebhookAsync()
         {
-            string serviceUrl = $"{_settings.WebhookUrl}{_settings.ServiceApiUrl}";
+            _logger.Info($"Try to set webhook to {FullServiceUrl}");
 
-            _logger.Info($"Try to set webhook to {serviceUrl}");
-
-            var certificatePath = _settings.SslCertificatePath;
-            if (!string.IsNullOrWhiteSpace(certificatePath))
+            if (!string.IsNullOrWhiteSpace(SslCertificatePath))
             {
-                _logger.Info($"Trying to upload certificate additionally {certificatePath}");
+                _logger.Info($"Trying to upload certificate additionally {SslCertificatePath}");
 
-                using var certificateFile = File.OpenRead(certificatePath);
+                using var certificateFile = File.OpenRead(SslCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
-                await SetWebhookInternalAsync(serviceUrl, certificate);
+                await SetWebhookInternalAsync(certificate);
             }
             else
             {
-                await SetWebhookInternalAsync(serviceUrl, certificate: null);
+                await SetWebhookInternalAsync(certificate: null);
             }
 
             _logger.Info("Webhook was set.");
@@ -71,13 +73,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         #endregion
 
-        private async Task SetWebhookInternalAsync(string serviceUrl, InputFileStream? certificate)
+        private async Task SetWebhookInternalAsync(InputFileStream? certificate)
         {
             await _botService.Client.SetWebhookAsync(
-                url: serviceUrl,
+                url: FullServiceUrl,
                 certificate: certificate,
-                dropPendingUpdates: _settings.DropPendingUpdates,
-                maxConnections: _settings.MaxConnections
+                dropPendingUpdates: DropPendingUpdates,
+                maxConnections: MaxConnections
             );
         }
     }

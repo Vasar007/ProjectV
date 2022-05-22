@@ -1,6 +1,5 @@
 ﻿namespace ProjectV.Configuration.Options
 {
-    // TODO: make this DTO immutable.
     public sealed class UserServiceOptions : IOptions
     {
         public bool AllowSignup { get; set; }

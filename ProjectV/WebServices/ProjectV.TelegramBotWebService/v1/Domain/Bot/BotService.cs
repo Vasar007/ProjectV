@@ -33,11 +33,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
         {
             if (!config.UseProxy)
             {
-                return new TelegramBotClient(config.BotToken);
+                return new TelegramBotClient(config.Token);
             }
 
             return new TelegramBotClient(
-                config.BotToken,
+                config.Token,
                 new HttpClient(new HttpClientHandler { Proxy = new HttpToSocks5Proxy(config.Socks5HostName, config.Socks5Port), UseProxy = true })
             );
         }

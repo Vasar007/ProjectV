@@ -31,9 +31,15 @@ namespace ProjectV.Configuration.Options
 
         public TimeSpan HttpClientRetryTimeoutOnAuth { get; set; } = TimeSpan.FromSeconds(1);
 
-        public bool ValidateSslCertificates { get; set; } = true;
+        public bool ValidateServerCertificates { get; set; } = true;
 
-        public bool UseProxy { get; set; } = false;
+        public bool AllowAutoRedirect { get; set; } = true;
+
+        public bool UseCookies { get; set; } = true;
+
+        public bool UseDefaultProxy { get; set; } = true;
+
+        public bool UseSocks5Proxy { get; set; } = false;
 
         public string? Socks5HostName { get; set; }
 

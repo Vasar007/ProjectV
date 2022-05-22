@@ -3,27 +3,21 @@ using Acolyte.Assertions;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Net.Polly;
-using ProjectV.Logging;
 
 namespace ProjectV.Core.Net.Http
 {
     public static class HttpClientBuilderExtensions
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor(typeof(HttpClientBuilderExtensions));
-
         public static IHttpClientBuilder AddHttpOptions(
            this IHttpClientBuilder builder, HttpClientOptions options)
         {
             builder.ThrowIfNull(nameof(builder));
             options.ThrowIfNull(nameof(options));
 
-            builder
+            return builder
                 .ConfigurePrimaryHttpMessageHandlerWithOptions(options)
                 .AddHttpErrorPoliciesWithOptions(options)
                 .AddHttpMessageHandlersWithOptions(options); // Common handlers should be placed after Polly ones!
-
-            return builder;
         }
 
         public static IHttpClientBuilder AddHttpMessageHandlersWithOptions(
@@ -32,10 +26,8 @@ namespace ProjectV.Core.Net.Http
             builder.ThrowIfNull(nameof(builder));
             options.ThrowIfNull(nameof(options));
 
-            builder
+            return builder
                 .AddHttpMessageHandler(() => new HttpClientTimeoutHandler(options));
-
-            return builder;
         }
 
         public static IHttpClientBuilder ConfigurePrimaryHttpMessageHandlerWithOptions(
@@ -44,25 +36,8 @@ namespace ProjectV.Core.Net.Http
             builder.ThrowIfNull(nameof(builder));
             options.ThrowIfNull(nameof(options));
 
-            builder
-                .ConfigurePrimaryHttpMessageHandler(() =>
-                {
-                    var httpClientHandler = new HttpClientHandler
-                    {
-                        AllowAutoRedirect = true,
-                        UseCookies = true
-                    };
-
-                    if (!options.ValidateSslCertificates)
-                    {
-                        _logger.Warn("ATTENTION! SSL certificates validation is disabled.");
-                        httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                    }
-
-                    return httpClientHandler;
-                });
-
-            return builder;
+            return builder
+                .ConfigurePrimaryHttpMessageHandler(() => options.ConfigureHandlerWithOptions());
         }
 
         /// <summary>
@@ -86,11 +61,9 @@ namespace ProjectV.Core.Net.Http
             builder.ThrowIfNull(nameof(builder));
             options.ThrowIfNull(nameof(options));
 
-            builder
+            return builder
                 .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.WaitAndRetryWithOptionsAsync(options))
                 .AddPolicyHandler(PolicyCreator.WaitAndRetryWithOptionsOnTimeoutExceptionAsync(options));
-
-            return builder;
         }
     }
 }
