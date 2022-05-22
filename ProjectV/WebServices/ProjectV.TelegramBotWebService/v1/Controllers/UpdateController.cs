@@ -14,7 +14,8 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         private readonly IUpdateService _updateService;
 
 
-        public UpdateController(IUpdateService updateService)
+        public UpdateController(
+            IUpdateService updateService)
         {
             _updateService = updateService.ThrowIfNull(nameof(updateService));
         }
@@ -31,7 +32,7 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromBody] Update update)
         {
-            await _updateService.ProcessUpdateMessage(update);
+            await _updateService.ProcessUpdateRequestAsync(update);
             return Ok();
         }
     }

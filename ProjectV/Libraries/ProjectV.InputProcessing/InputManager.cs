@@ -16,8 +16,7 @@ namespace ProjectV.IO.Input
         /// <summary>
         /// Logger instance for current class.
         /// </summary>
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<InputManager>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<InputManager>();
 
         /// <summary>
         /// Default storage name if user will not specify it.
@@ -27,7 +26,7 @@ namespace ProjectV.IO.Input
         /// <summary>
         /// Collection of concrete inputter classes which can save results to specified source.
         /// </summary>
-        private readonly List<IInputter> _inputters = new List<IInputter>();
+        private readonly List<IInputter> _inputters;
 
 
         /// <summary>
@@ -35,23 +34,26 @@ namespace ProjectV.IO.Input
         /// </summary>
         /// <param name="defaultStorageName">Default file name when user doesn't provide it.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="defaultStorageName" /> is <c>null</c>.
+        /// <paramref name="defaultStorageName" /> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="defaultStorageName" /> presents empty strings or contains only
         /// whitespaces.
         /// </exception>
-        public InputManager(string defaultStorageName)
+        public InputManager(
+            string defaultStorageName)
         {
             _defaultStorageName =
                 defaultStorageName.ThrowIfNullOrWhiteSpace(nameof(defaultStorageName));
+
+            _inputters = new List<IInputter>();
         }
 
         #region IManager<IInputter> Implementation
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item" /> is <c>null</c>.
+        /// <paramref name="item" /> is <see langword="null" />.
         /// </exception>
         public void Add(IInputter item)
         {
@@ -64,7 +66,7 @@ namespace ProjectV.IO.Input
 
         /// <inheritdoc />
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="item" /> is <c>null</c>.
+        /// <paramref name="item" /> is <see langword="null" />.
         /// </exception>
         public bool Remove(IInputter item)
         {
@@ -93,7 +95,7 @@ namespace ProjectV.IO.Input
 
             var inputtersFlow = new InputtersFlow(inputtersFunc);
 
-            _logger.Info($"Conctructed inputters pipeline for \"{storageName}\".");
+            _logger.Info($"Constructed inputters pipeline for \"{storageName}\".");
             return inputtersFlow;
         }
 

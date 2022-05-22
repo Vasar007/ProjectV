@@ -13,7 +13,7 @@
 
         public int? MaxConnections { get; set; } = null;
 
-        public string EndlineSeparator { get; set; } = default!;
+        public string NewLineSeparator { get; set; } = default!;
 
 
         public TelegramBotWebServiceSettings()

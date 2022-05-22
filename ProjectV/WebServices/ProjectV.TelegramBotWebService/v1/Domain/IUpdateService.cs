@@ -6,6 +6,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 {
     public interface IUpdateService : IDisposable
     {
-        Task ProcessUpdateMessage(Update update);
+        Task ProcessUpdateRequestAsync(Update update);
     }
 }

@@ -8,7 +8,6 @@ using Acolyte.Assertions;
 using ProjectV.Building;
 using ProjectV.Configuration;
 using ProjectV.Core.Services.Clients;
-using ProjectV.IO.Input;
 using ProjectV.Logging;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.Properties;
@@ -16,6 +15,7 @@ using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -69,14 +69,28 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #region IUpdateService Implementation
 
-        public async Task ProcessUpdateMessage(Update update)
+        public async Task ProcessUpdateRequestAsync(Update update)
         {
             if (update is null)
             {
-                _logger.Warn("Received empty Message.");
+                _logger.Warn("Received empty update request.");
                 return;
             }
 
+            try
+            {
+                await ProcessUpdateMessageInternalAsync(update);
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+        }
+
+        #endregion
+
+        private async Task ProcessUpdateMessageInternalAsync(Update update)
+        {
             switch (update.Type)
             {
                 case UpdateType.Message:
@@ -96,15 +110,27 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
                 default:
                 {
-                    string encodedMessage = UserInputEncoder.Encode($"Skipped {update.Type}.");
-                    _logger.Warn(encodedMessage);
+                    string message = _textProcessor.TrimNewLineSeparator($"Skipped {update.Type}.");
+                    _logger.Warn(message);
                     break;
                 }
             }
-
         }
 
-        #endregion
+        private static Task HandleErrorAsync(Exception ex)
+        {
+            var errorMessage = ex switch
+            {
+                ApiRequestException apiRequestException =>
+                    $"Telegram API Error [{apiRequestException.ErrorCode}]: " +
+                    $"{apiRequestException.Message}",
+
+                _ => ex.Message
+            };
+
+            _logger.Error(ex, $"Failed to process update request: {errorMessage}");
+            return Task.CompletedTask;
+        }
 
         private async Task ProcessMessage(Message message)
         {
@@ -228,8 +254,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
         private async Task ContinueRequestCommandWithService(long chatId, string serviceName,
             StartJobParamsRequest requestParams)
         {
-            string encodedUserInput = UserInputEncoder.Encode(serviceName);
-            _logger.Info($"Continue process /request command with service {encodedUserInput}.");
+            string userInput = _textProcessor.TrimNewLineSeparator(serviceName);
+            _logger.Info($"Continue process /request command with service {userInput}.");
 
             ReplyKeyboardMarkup? replyKeyboard = new[]
             {
@@ -250,7 +276,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             serviceName = ConfigContract.GetProperServiceName(serviceName);
             requestParams.Requirements = CreateRequirements(serviceName, $"{serviceName}Common");
 
-            string message = _textProcessor.JoinWithNewLineSeparator(new[] {
+            string message = _textProcessor.JoinWithNewLineLSeparator(new[] {
                 $"Enter data for {serviceName}. Please, use this format:",
                  "thingName1",
                  "thingName2"

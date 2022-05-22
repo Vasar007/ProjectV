@@ -9,7 +9,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Text
     {
         private readonly TelegramBotWebServiceSettings _settings;
 
-        private string EndlineSeparator => _settings.EndlineSeparator;
+        private string NewLineSeparator => _settings.NewLineSeparator;
 
 
         public TelegramTextProcessor(
@@ -20,19 +20,30 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Text
 
         #region ITelegramTextProcessor Implementation
 
-        public string JoinWithNewLineSeparator(IEnumerable<string> messages)
+        public string JoinWithNewLineLSeparator(IEnumerable<string> messages)
         {
-            return string.Join(EndlineSeparator, messages);
+            return string.Join(NewLineSeparator, messages);
+        }
+
+        public string TrimNewLineSeparator(string message)
+        {
+            message.ThrowIfNull(nameof(message));
+
+            return message.Replace(NewLineSeparator, string.Empty);
         }
 
         public IReadOnlyList<string> ParseAsSeparateLines(string message)
         {
-            var data = message.Split(EndlineSeparator);
+            message.ThrowIfNull(nameof(message));
+
+            var data = message.Split(NewLineSeparator);
             return data;
         }
 
         public string ParseCommand(string message)
         {
+            message.ThrowIfNull(nameof(message));
+
             IReadOnlyList<string> firstLine = message.Split(' ');
             string command = firstLine[0];
             return command;

@@ -4,7 +4,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Text
 {
     public interface ITelegramTextProcessor
     {
-        string JoinWithNewLineSeparator(IEnumerable<string> messages);
+        string JoinWithNewLineLSeparator(IEnumerable<string> messages);
+        string TrimNewLineSeparator(string message);
+
         IReadOnlyList<string> ParseAsSeparateLines(string message);
         string ParseCommand(string message);
     }
