@@ -2,11 +2,10 @@
 
 namespace ProjectV.Configuration
 {
-    // TODO: crete common options class with node names.
+    // TODO: create common options class with node names.
     public static class ConfigModule
     {
-        private static readonly ServiceConfigRegistry _serviceConfigRegistry =
-            new ServiceConfigRegistry();
+        private static readonly ServiceConfigRegistry _serviceConfigRegistry = new();
 
 
         static ConfigModule()

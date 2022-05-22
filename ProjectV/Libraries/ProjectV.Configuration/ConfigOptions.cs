@@ -16,8 +16,6 @@ namespace ProjectV.Configuration
 
         public static string DefaultOptionsPath => PredefinedPaths.DefaultOptionsPath;
 
-        public static string AlternativeOptionsPath => PredefinedPaths.AlternativeOptionsPath;
-
         #region Options
 
         public static ApiKeysOptions ApiKeys => GetOptions<ApiKeysOptions>();
@@ -82,12 +80,8 @@ namespace ProjectV.Configuration
         {
             var configurationBuilder = new ConfigurationBuilder();
 
-            string configPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? DefaultOptionsPath
-                : AlternativeOptionsPath;
-
             configurationBuilder.AddJsonFile(
-                path: configPath,
+                path: DefaultOptionsPath,
                 optional: true,
                 reloadOnChange: true
             );
