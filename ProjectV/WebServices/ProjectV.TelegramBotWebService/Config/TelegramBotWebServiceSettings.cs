@@ -7,6 +7,12 @@
 
         public string ServiceApiUrl { get; set; } = default!;
 
+        public string? SslCertificatePath { get; set; } = null;
+
+        public bool? DropPendingUpdates { get; set; } = null;
+
+        public int? MaxConnections { get; set; } = null;
+
         public string EndlineSeparator { get; set; } = default!;
 
 

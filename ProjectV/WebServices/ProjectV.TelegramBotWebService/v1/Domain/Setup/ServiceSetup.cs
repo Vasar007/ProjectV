@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Config;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot;
+using Telegram.Bot.Types.InputFiles;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 {
@@ -29,10 +31,24 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
 
         public async Task<DisposableActionAsync> SetWebhookAsync()
         {
-            string serviceUrl = _settings.WebhookUrl + _settings.ServiceApiUrl;
+            string serviceUrl = $"{_settings.WebhookUrl}{_settings.ServiceApiUrl}";
 
             _logger.Info($"Try to set webhook to {serviceUrl}");
-            await _botService.Client.SetWebhookAsync(serviceUrl);
+
+            var certificatePath = _settings.SslCertificatePath;
+            if (!string.IsNullOrWhiteSpace(certificatePath))
+            {
+                _logger.Info($"Trying to upload certificate additionally {certificatePath}");
+
+                using var certificateFile = File.OpenRead(certificatePath);
+                var certificate = new InputFileStream(certificateFile);
+                await SetWebhookInternalAsync(serviceUrl, certificate);
+            }
+            else
+            {
+                await SetWebhookInternalAsync(serviceUrl, certificate: null);
+            }
+
             _logger.Info("Webhook was set.");
 
             return new DisposableActionAsync(() => DeleteWebhookAsync());
@@ -53,5 +69,15 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         }
 
         #endregion
+
+        private async Task SetWebhookInternalAsync(string serviceUrl, InputFileStream? certificate)
+        {
+            await _botService.Client.SetWebhookAsync(
+                url: serviceUrl,
+                certificate: certificate,
+                dropPendingUpdates: _settings.DropPendingUpdates,
+                maxConnections: _settings.MaxConnections
+            );
+        }
     }
 }
