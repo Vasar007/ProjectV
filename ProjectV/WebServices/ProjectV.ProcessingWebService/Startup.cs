@@ -80,6 +80,7 @@ namespace ProjectV.ProcessingWebService
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

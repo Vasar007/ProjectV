@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.Configuration.Options;
@@ -96,11 +97,24 @@ namespace ProjectV.TelegramBotWebService
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                var config = app.ApplicationServices
+                    .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
+
+                // Configure custom endpoint per Telegram API recommendations:
+                // https://core.telegram.org/bots/api#setwebhook
+                var token = config.Value.Bot.Token;
+                endpoints.MapControllerRoute(
+                    name: "tgwebhook",
+                    pattern: $"bot/{token}",
+                    new { controller = "Update", action = "Post" }
+                );
+
                 endpoints.MapControllers();
             });
         }
