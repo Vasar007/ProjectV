@@ -13,7 +13,7 @@ namespace ProjectV.TelegramBotWebService.Options
         [Required(AllowEmptyStrings = false)]
         public string WebhookUrl { get; set; } = default!;
 
-        public string? SslCertificatePath { get; set; } = null;
+        public string? CertificatePath { get; set; } = null;
 
         public bool? DropPendingUpdates { get; set; } = null;
 
