@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
@@ -19,7 +20,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 
         private readonly IBotService _botService;
 
-        private string FullWebhookUrl => $"{_options.Bot.WebhookUrl}{_options.ServiceApiUrl}";
+        private string FullWebhookUrl => _options.GetFullWebhookUrl();
         private string? BotCertificatePath => _options.Bot.CertificatePath;
         private bool? BotDropPendingUpdates => _options.Bot.DropPendingUpdates;
         private int? BotMaxConnections => _options.Bot.MaxConnections;

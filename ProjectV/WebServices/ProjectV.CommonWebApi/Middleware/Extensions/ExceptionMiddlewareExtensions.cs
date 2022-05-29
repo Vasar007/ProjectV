@@ -3,7 +3,6 @@ using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using ProjectV.CommonWebApi.Middleware;
 using ProjectV.CommonWebApi.Models;
 using ProjectV.Logging;
 

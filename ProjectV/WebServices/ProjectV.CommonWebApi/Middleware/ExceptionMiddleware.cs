@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
-using ProjectV.CommonWebApi.Extensions;
 using ProjectV.CommonWebApi.Models;
 using ProjectV.Logging;
 
