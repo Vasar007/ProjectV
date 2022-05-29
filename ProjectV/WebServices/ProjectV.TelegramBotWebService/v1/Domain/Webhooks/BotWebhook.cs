@@ -22,7 +22,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 
         private string FullWebhookUrl => _options.GetFullWebhookUrl();
         private string? BotCertificatePath => _options.Bot.CertificatePath;
-        private bool? BotDropPendingUpdates => _options.Bot.DropPendingUpdates;
+        private bool? DropPendingUpdatesOnSet => _options.Bot.DropPendingUpdatesOnSet;
+        private bool? DropPendingUpdatesOnDelete => _options.Bot.DropPendingUpdatesOnDelete;
         private int? BotMaxConnections => _options.Bot.MaxConnections;
 
 
@@ -36,7 +37,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 
         #region IBotWebhook Implementation
 
-        public async Task<AsyncDisposableAction> SetWebhookAsync()
+        public async Task<AsyncDisposableAction> SetWebhookAsync(
+            CancellationToken cancellationToken = default)
         {
             _logger.Info($"Try to set webhook to {FullWebhookUrl}");
 
@@ -46,22 +48,22 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 
                 using var certificateFile = File.OpenRead(BotCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
-                await SetWebhookInternalAsync(certificate);
+                await SetWebhookInternalAsync(certificate, cancellationToken);
             }
             else
             {
-                await SetWebhookInternalAsync(certificate: null);
+                await SetWebhookInternalAsync(certificate: null, cancellationToken);
             }
 
             _logger.Info("Webhook was set.");
 
-            return new AsyncDisposableAction(() => DeleteWebhookAsync());
+            return new AsyncDisposableAction(() => DeleteWebhookAsync(cancellationToken));
         }
 
-        public async Task DeleteWebhookAsync()
+        public async Task DeleteWebhookAsync(CancellationToken cancellationToken = default)
         {
             _logger.Info($"Try to delete webhook.");
-            var info = await _botService.GetWebhookInfoAsync();
+            var info = await _botService.GetWebhookInfoAsync(cancellationToken);
 
             if (string.IsNullOrEmpty(info.Url))
             {
@@ -69,19 +71,24 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
                 return;
             }
 
-            await _botService.DeleteWebhookAsync();
+            await _botService.DeleteWebhookAsync(
+                dropPendingUpdates: DropPendingUpdatesOnDelete,
+                cancellationToken: cancellationToken
+            );
             _logger.Info("Webhook was deleted.");
         }
 
         #endregion
 
-        private async Task SetWebhookInternalAsync(InputFileStream? certificate)
+        private async Task SetWebhookInternalAsync(InputFileStream? certificate,
+            CancellationToken cancellationToken)
         {
             await _botService.SetWebhookAsync(
                 url: FullWebhookUrl,
                 certificate: certificate,
-                dropPendingUpdates: BotDropPendingUpdates,
-                maxConnections: BotMaxConnections
+                dropPendingUpdates: DropPendingUpdatesOnSet,
+                maxConnections: BotMaxConnections,
+                cancellationToken: cancellationToken
             );
         }
     }

@@ -44,6 +44,12 @@ namespace ProjectV.TelegramBotWebService.Options
 
         private string ConstructWebhookUrlWithBotToken()
         {
+            // Configure custom endpoint per Telegram API recommendations:
+            // https://core.telegram.org/bots/api#setwebhook
+            // If we'd like to make sure that the Webhook request comes from Telegram, API
+            // developers recommend using a secret path in the URL: https://www.example.com/<token>.
+            // Since nobody else knows our bot's token, we can be pretty sure it's Telegram API.
+
             var botApiUrl = Bot.BotWebhookApiUrl;
             if (!botApiUrl.EndsWith('/'))
             {

@@ -34,9 +34,9 @@ namespace ProjectV.ProcessingWebService
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<ProjectVDbContext>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
+            var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
             services
-                .Configure<JwtOptions>(jwtConfigSecion)
+                .Configure<JwtOptions>(jwtOptionsSecion)
                 .Configure<DatabaseOptions>(Configuration.GetSection(nameof(DatabaseOptions)));
 
             services
@@ -52,7 +52,7 @@ namespace ProjectV.ProcessingWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtOptions>());
+            services.AddJtwAuthentication(jwtOptionsSecion.Get<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

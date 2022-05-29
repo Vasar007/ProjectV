@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
@@ -17,43 +17,33 @@ namespace ProjectV.CommonWebApi.Service.Setup
 
         private readonly IServiceSetupActionsFactory _actionsFactory;
 
-        private readonly Lazy<ServicePreRunHandler> _preRunLazy;
-        private ServicePreRunHandler PreRun => _preRunLazy.Value;
-
-        private readonly Lazy<ServicePostRunHandler> _postRunLazy;
-        private ServicePostRunHandler PostRun => _postRunLazy.Value;
-
 
         public ServiceSetup(
             IServiceSetupActionsFactory actionsFactory)
         {
             _actionsFactory = actionsFactory.ThrowIfNull(nameof(actionsFactory));
-
-            _preRunLazy = new Lazy<ServicePreRunHandler>(
-                () => _actionsFactory.CreatePreRunActions()
-            );
-            _postRunLazy = new Lazy<ServicePostRunHandler>(
-                () => _actionsFactory.CreatePostRunActions()
-            );
         }
 
         #region IServiceSetup Implementation
 
-        public async Task<AsyncDisposableAction> PreRunAsync()
+        public async Task<AsyncDisposableAction> PreRunAsync(
+            CancellationToken cancellationToken = default)
         {
             _logger.Info("Executing pre-run actions.");
 
-            await ProcessActionsAsync(PreRun.Actions, "Failed to perform pre-run action.");
+            var preRunHanlder = _actionsFactory.CreatePreRunActions(cancellationToken);
+            await ProcessActionsAsync(preRunHanlder.Actions, "Failed to perform pre-run action.");
 
             _logger.Info("Pre-run actions have been completed.");
-            return new AsyncDisposableAction(() => PreRun.OnRunFailAction.DoAsync());
+            return new AsyncDisposableAction(() => preRunHanlder.OnRunFailAction.DoAsync());
         }
 
-        public async Task PostRunAsync()
+        public async Task PostRunAsync(CancellationToken cancellationToken = default)
         {
             _logger.Info("Executing post-run actions.");
 
-            await ProcessActionsAsync(PostRun.Actions, "Failed to perform post-run action.");
+            var postRunHanlder = _actionsFactory.CreatePostRunActions(cancellationToken);
+            await ProcessActionsAsync(postRunHanlder.Actions, "Failed to perform post-run action.");
 
             _logger.Info("Post-run actions have been completed.");
         }

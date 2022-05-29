@@ -35,8 +35,8 @@ namespace ProjectV.CommunicationWebService
         public void ConfigureServices(IServiceCollection services)
         {
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
-            var jwtConfig = jwtConfigSecion.Get<JwtOptions>();
+            var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
+            var jwtConfig = jwtOptionsSecion.Get<JwtOptions>();
 
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
             services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
@@ -56,7 +56,7 @@ namespace ProjectV.CommunicationWebService
 
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
-                .Configure<JwtOptions>(jwtConfigSecion)
+                .Configure<JwtOptions>(jwtOptionsSecion)
                 .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             services

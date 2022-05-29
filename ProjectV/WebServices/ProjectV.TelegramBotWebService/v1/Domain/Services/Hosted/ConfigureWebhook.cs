@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Acolyte.Assertions;
 using Microsoft.Extensions.Hosting;
 using ProjectV.Logging;
+using ProjectV.TelegramBotWebService.v1.Domain.Webhooks;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted
 {
@@ -9,45 +11,27 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted
     {
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ConfigureWebhook>();
 
-        private readonly IServiceProvider _services;
-        private readonly BotConfiguration _botConfig;
+        private readonly IBotWebhook _botWebhook;
+
 
         public ConfigureWebhook(
-            ILogger<ConfigureWebhook> logger,
-            IServiceProvider serviceProvider,
-            IConfiguration configuration)
+            IBotWebhook botWebhook)
         {
-            _logger = logger;
-            _services = serviceProvider;
-            _botConfig = configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
+            _botWebhook = botWebhook.ThrowIfNull(nameof(botWebhook));
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+            _logger.Info("Setting webhook over hosted service.");
 
-            // Configure custom endpoint per Telegram API recommendations:
-            // https://core.telegram.org/bots/api#setwebhook
-            // If you'd like to make sure that the Webhook request comes from Telegram, we recommend
-            // using a secret path in the URL, e.g. https://www.example.com/<token>.
-            // Since nobody else knows your bot's token, you can be pretty sure it's us.
-            var webhookAddress = @$"{_botConfig.HostAddress}/bot/{_botConfig.BotToken}";
-            _logger.LogInformation("Setting webhook: {webhookAddress}", webhookAddress);
-            await botClient.SetWebhookAsync(
-                url: webhookAddress,
-                allowedUpdates: Array.Empty<UpdateType>(),
-                cancellationToken: cancellationToken);
+            await _botWebhook.SetWebhookAsync(cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+            _logger.Info("Deleting webhook over hosted service.");
 
-            // Remove webhook upon app shutdown
-            _logger.LogInformation("Removing webhook");
-            await botClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
+            await _botWebhook.DeleteWebhookAsync(cancellationToken);
         }
     }
 }

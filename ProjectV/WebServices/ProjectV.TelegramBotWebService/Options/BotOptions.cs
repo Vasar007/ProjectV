@@ -16,11 +16,13 @@ namespace ProjectV.TelegramBotWebService.Options
         [Required(AllowEmptyStrings = false)]
         public string BotWebhookApiUrl { get; set; } = default!;
 
-        public bool UseBotTokenInWebhookUrl { get; set; } = true;
+        public bool UseBotTokenInWebhookUrl { get; set; } = false;
 
         public string? CertificatePath { get; set; } = null;
 
-        public bool? DropPendingUpdates { get; set; } = null;
+        public bool? DropPendingUpdatesOnSet { get; set; } = null;
+
+        public bool? DropPendingUpdatesOnDelete { get; set; } = null;
 
         public int? MaxConnections { get; set; } = null;
 

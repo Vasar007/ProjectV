@@ -27,9 +27,9 @@ namespace ProjectV.ConfigurationWebService
         {
             services.AddTransient<IConfigCreator, ConfigCreator>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
+            var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
             services
-                .Configure<JwtOptions>(jwtConfigSecion);
+                .Configure<JwtOptions>(jwtOptionsSecion);
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -44,7 +44,7 @@ namespace ProjectV.ConfigurationWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtOptions>());
+            services.AddJtwAuthentication(jwtOptionsSecion.Get<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

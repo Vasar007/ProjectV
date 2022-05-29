@@ -12,29 +12,31 @@ namespace ProjectV.CommonWebApi.Service.Extensions
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddJtwAuthentication(this IServiceCollection services,
-            JwtOptions config)
+            JwtOptions jwtOptions)
         {
             services.ThrowIfNull(nameof(services));
-            config.ThrowIfNull(nameof(config));
+            jwtOptions.ThrowIfNull(nameof(jwtOptions));
 
-            if (string.IsNullOrWhiteSpace(config.SecretKey))
+            if (string.IsNullOrWhiteSpace(jwtOptions.SecretKey))
             {
-                throw new ArgumentException("Config does not have secret key.", nameof(config));
+                throw new ArgumentException("Config does not have secret key.", nameof(jwtOptions));
             }
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(bearerOptions =>
                 {
-                    var key = new SymmetricSecurityKey(Convert.FromBase64String(config.SecretKey));
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    var key = new SymmetricSecurityKey(
+                        Convert.FromBase64String(jwtOptions.SecretKey)
+                    );
+                    bearerOptions.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = config.Issuer,
-                        ValidAudience = config.Audience,
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidAudience = jwtOptions.Audience,
                         IssuerSigningKey = key,
                         ClockSkew = TimeSpan.Zero
                     };

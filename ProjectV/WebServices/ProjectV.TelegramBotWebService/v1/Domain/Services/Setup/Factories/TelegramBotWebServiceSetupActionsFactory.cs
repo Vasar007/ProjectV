@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Acolyte.Assertions;
 using Acolyte.Common.Monads;
 using Microsoft.Extensions.Options;
@@ -33,26 +34,28 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
 
         #region IServiceSetupActionsFactory Implementation
 
-        public ServicePreRunHandler CreatePreRunActions()
+        public ServicePreRunHandler CreatePreRunActions(
+            CancellationToken cancellationToken = default)
         {
             _logger.Info("Creating pre-run actions.");
 
             IServiceSetupAction? onRunFailAction = null;
 
             var actions = new List<IServiceSetupAction>()
-                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendSetWebhookTask(x, out onRunFailAction));
+                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendSetWebhookTask(x, cancellationToken, out onRunFailAction));
 
             var handler = ServicePreRunHandler.CreateWithPossibleNoOpOnRunAction(actions, onRunFailAction);
             _logger.Info("Pre-run actions have been created.");
             return handler;
         }
 
-        public ServicePostRunHandler CreatePostRunActions()
+        public ServicePostRunHandler CreatePostRunActions(
+            CancellationToken cancellationToken = default)
         {
             _logger.Info("Creating post-run actions.");
 
             var actions = new List<IServiceSetupAction>()
-                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendDeleteWebhookTask(x));
+                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendDeleteWebhookTask(x, cancellationToken));
 
             var handler = new ServicePostRunHandler(actions);
             _logger.Info("Post-run actions have been created.");
@@ -62,22 +65,23 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
         #endregion
 
         private List<IServiceSetupAction> AppendSetWebhookTask(List<IServiceSetupAction> actions,
-            out IServiceSetupAction? onRunFailAction)
+            CancellationToken cancellationToken, out IServiceSetupAction? onRunFailAction)
         {
             _logger.Info("Appending set webhook action.");
 
-            var wrapper = new FuncServiceSetupAction(() => _botWebhook.SetWebhookAsync());
+            var wrapper = new FuncServiceSetupAction(() => _botWebhook.SetWebhookAsync(cancellationToken));
             actions.Add(wrapper);
 
             onRunFailAction = wrapper;
             return actions;
         }
 
-        private List<IServiceSetupAction> AppendDeleteWebhookTask(List<IServiceSetupAction> actions)
+        private List<IServiceSetupAction> AppendDeleteWebhookTask(List<IServiceSetupAction> actions,
+            CancellationToken cancellationToken)
         {
             _logger.Info("Appending delete webhook action.");
 
-            var wrapper = new FuncServiceSetupAction(() => _botWebhook.DeleteWebhookAsync());
+            var wrapper = new FuncServiceSetupAction(() => _botWebhook.DeleteWebhookAsync(cancellationToken));
             actions.Add(wrapper);
 
             return actions;

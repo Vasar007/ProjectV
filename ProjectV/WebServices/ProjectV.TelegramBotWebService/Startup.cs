@@ -1,5 +1,5 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
+using Acolyte.Common.Monads;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -25,6 +25,7 @@ using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories;
+using ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using ProjectV.TelegramBotWebService.v1.Domain.Webhooks;
 using Telegram.Bot.Types;
@@ -65,14 +66,17 @@ namespace ProjectV.TelegramBotWebService
             services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
             services.AddTransient<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
-            var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
-            var botWebServiceOptions = Configuration.GetSection(nameof(TelegramBotWebServiceOptions));
+            var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
+            var botWebServiceSecion = Configuration.GetSection(nameof(TelegramBotWebServiceOptions));
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
-                .Configure<JwtOptions>(jwtConfigSecion)
-                .Configure<TelegramBotWebServiceOptions>(botWebServiceOptions);
+                .Configure<JwtOptions>(jwtOptionsSecion)
+                .Configure<TelegramBotWebServiceOptions>(botWebServiceSecion);
 
-            services.AddHostedService<>();
+            // Add hosted service to configure webhook if needed.
+            var botWebServiceOptions = botWebServiceSecion.Get<TelegramBotWebServiceOptions>();
+            services
+                .ApplyIf(!botWebServiceOptions.PreferServiceSetupOverHostedService, x => x.AddHostedService<ConfigureWebhook>());
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -87,7 +91,7 @@ namespace ProjectV.TelegramBotWebService
                apiVersion: "v1"
            );
 
-            services.AddJtwAuthentication(jwtConfigSecion.Get<JwtOptions>());
+            services.AddJtwAuthentication(jwtOptionsSecion.Get<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 
@@ -130,13 +134,12 @@ namespace ProjectV.TelegramBotWebService
         private static void ConfigureCustomBotEndpoint(IApplicationBuilder app,
             IEndpointRouteBuilder endpoints)
         {
-            var config = app.ApplicationServices
+            // See note in TelegramBotWebServiceOptions.ConstructWebhookUrlWithBotToken method.
+            var wrappedOptions = app.ApplicationServices
                 .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
 
-            // Configure custom endpoint per Telegram API recommendations:
-            // https://core.telegram.org/bots/api#setwebhook
-            var options = config.Value;
-            var pattern = options.GetServiceApiUrl();
+            var botOptions = wrappedOptions.Value;
+            var pattern = botOptions.GetServiceApiUrl();
             var controller = ControllerExtensions.GetControllerNameFromType<UpdateController>();
             _logger.Info($"Configuring custom endpoint for {controller} controller: [{pattern}].");
 
