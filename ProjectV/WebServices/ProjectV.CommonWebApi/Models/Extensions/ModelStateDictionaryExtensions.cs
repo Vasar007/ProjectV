@@ -3,7 +3,7 @@ using Acolyte.Assertions;
 using Acolyte.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ProjectV.CommonWebApi.Extensions
+namespace ProjectV.CommonWebApi.Models.Extensions
 {
     public static class ModelStateDictionaryExtensions
     {

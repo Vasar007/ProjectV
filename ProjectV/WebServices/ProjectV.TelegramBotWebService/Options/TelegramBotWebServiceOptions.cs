@@ -11,9 +11,59 @@ namespace ProjectV.TelegramBotWebService.Options
         [Required(AllowEmptyStrings = false)]
         public string ServiceApiUrl { get; set; } = default!;
 
+        public bool PreferServiceSetupOverHostedService { get; set; } = true;
+
 
         public TelegramBotWebServiceOptions()
         {
+        }
+
+        public string GetFullWebhookUrl()
+        {
+            var webhookUrl = Bot.WebhookUrl;
+            var serviceApiUrl = GetServiceApiUrl();
+
+            if (!webhookUrl.EndsWith('/') && !serviceApiUrl.StartsWith('/'))
+            {
+                // Append exactly one slash to the start of API URL.
+                serviceApiUrl = $"/{serviceApiUrl}";
+            }
+
+            return $"{webhookUrl}{serviceApiUrl}";
+        }
+
+        public string GetServiceApiUrl()
+        {
+            if (Bot.UseBotTokenInWebhookUrl)
+            {
+                return ConstructWebhookUrlWithBotToken();
+            }
+
+            return ConstructWebhookUrlWithServiceApi();
+        }
+
+        private string ConstructWebhookUrlWithBotToken()
+        {
+            var botApiUrl = Bot.BotWebhookApiUrl;
+            if (!botApiUrl.EndsWith('/'))
+            {
+                // Append exactly one slash to the end of API URL.
+                botApiUrl = $"{botApiUrl}/";
+            }
+
+            return $"{botApiUrl}{Bot.Token}";
+        }
+
+        private string ConstructWebhookUrlWithServiceApi()
+        {
+            var serviceApiUrl = ServiceApiUrl;
+            if (serviceApiUrl.StartsWith('/'))
+            {
+                // Trim exactly one slash from the start.
+                serviceApiUrl = serviceApiUrl[1..];
+            }
+
+            return serviceApiUrl;
         }
     }
 }

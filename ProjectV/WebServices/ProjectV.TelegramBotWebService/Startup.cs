@@ -1,29 +1,43 @@
-﻿using Acolyte.Assertions;
+﻿using System;
+using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Controllers.Extensions;
+using ProjectV.CommonWebApi.Middleware.Extensions;
 using ProjectV.CommonWebApi.Models.Options;
+using ProjectV.CommonWebApi.Service.Extensions;
+using ProjectV.CommonWebApi.Service.Setup;
+using ProjectV.CommonWebApi.Service.Setup.Factories;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.DependencyInjection;
 using ProjectV.Core.Services.Clients;
+using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
+using ProjectV.TelegramBotWebService.v1.Controllers;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
-using ProjectV.TelegramBotWebService.v1.Domain.Setup;
+using ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using ProjectV.TelegramBotWebService.v1.Domain.Webhooks;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService
 {
     public sealed class Startup
     {
+        /// <summary>
+        /// Logger instance for current class.
+        /// </summary>
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<Startup>();
+
         public IConfiguration Configuration { get; }
 
 
@@ -38,11 +52,13 @@ namespace ProjectV.TelegramBotWebService
         {
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
 
+            services.AddSingleton<IServiceSetupActionsFactory, TelegramBotWebServiceSetupActionsFactory>();
             services.AddSingleton<IServiceSetup, ServiceSetup>();
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
             services.AddTransient<ICommunicationServiceClient, CommunicationServiceClient>();
 
             services.AddSingleton<IUpdateService, UpdateService>();
+            services.AddSingleton<IBotWebhook, BotWebhook>();
             services.AddSingleton<IBotService, BotService>();
             services.AddSingleton<IBotHandler<Message>, BotMessageHandler>();
             services.AddTransient<IUserCache, UserCache>();
@@ -50,10 +66,13 @@ namespace ProjectV.TelegramBotWebService
             services.AddTransient<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
             var jwtConfigSecion = Configuration.GetSection(nameof(JwtOptions));
+            var botWebServiceOptions = Configuration.GetSection(nameof(TelegramBotWebServiceOptions));
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtOptions>(jwtConfigSecion)
-                .Configure<TelegramBotWebServiceOptions>(Configuration.GetSection(nameof(TelegramBotWebServiceOptions)));
+                .Configure<TelegramBotWebServiceOptions>(botWebServiceOptions);
+
+            services.AddHostedService<>();
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
@@ -103,20 +122,33 @@ namespace ProjectV.TelegramBotWebService
 
             app.UseEndpoints(endpoints =>
             {
-                var config = app.ApplicationServices
-                    .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
-
-                // Configure custom endpoint per Telegram API recommendations:
-                // https://core.telegram.org/bots/api#setwebhook
-                var token = config.Value.Bot.Token;
-                endpoints.MapControllerRoute(
-                    name: "tgwebhook",
-                    pattern: $"bot/{token}",
-                    new { controller = "Update", action = "Post" }
-                );
-
+                ConfigureCustomBotEndpoint(app, endpoints);
                 endpoints.MapControllers();
             });
+        }
+
+        private static void ConfigureCustomBotEndpoint(IApplicationBuilder app,
+            IEndpointRouteBuilder endpoints)
+        {
+            var config = app.ApplicationServices
+                .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
+
+            // Configure custom endpoint per Telegram API recommendations:
+            // https://core.telegram.org/bots/api#setwebhook
+            var options = config.Value;
+            var pattern = options.GetServiceApiUrl();
+            var controller = ControllerExtensions.GetControllerNameFromType<UpdateController>();
+            _logger.Info($"Configuring custom endpoint for {controller} controller: [{pattern}].");
+
+            endpoints.MapControllerRoute(
+                name: "tgwebhook",
+                pattern: pattern,
+                new
+                {
+                    controller,
+                    action = nameof(UpdateController.Post)
+                }
+            );
         }
     }
 }

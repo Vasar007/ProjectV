@@ -9,23 +9,23 @@ using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot.Types.InputFiles;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
+namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 {
-    public sealed class ServiceSetup : IServiceSetup
+    public sealed class BotWebhook : IBotWebhook
     {
-        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ServiceSetup>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<BotWebhook>();
 
         private readonly TelegramBotWebServiceOptions _options;
 
         private readonly IBotService _botService;
 
-        private string FullWebhookServiceUrl => $"{_options.Bot.WebhookUrl}{_options.ServiceApiUrl}";
+        private string FullWebhookUrl => $"{_options.Bot.WebhookUrl}{_options.ServiceApiUrl}";
         private string? BotCertificatePath => _options.Bot.CertificatePath;
         private bool? BotDropPendingUpdates => _options.Bot.DropPendingUpdates;
         private int? BotMaxConnections => _options.Bot.MaxConnections;
 
 
-        public ServiceSetup(
+        public BotWebhook(
             IOptions<TelegramBotWebServiceOptions> options,
             IBotService botService)
         {
@@ -33,11 +33,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
             _botService = botService.ThrowIfNull(nameof(botService));
         }
 
-        #region IServiceSetup Implementation
+        #region IBotWebhook Implementation
 
         public async Task<AsyncDisposableAction> SetWebhookAsync()
         {
-            _logger.Info($"Try to set webhook to {FullWebhookServiceUrl}");
+            _logger.Info($"Try to set webhook to {FullWebhookUrl}");
 
             if (!string.IsNullOrWhiteSpace(BotCertificatePath))
             {
@@ -77,11 +77,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Setup
         private async Task SetWebhookInternalAsync(InputFileStream? certificate)
         {
             await _botService.SetWebhookAsync(
-                url: FullWebhookServiceUrl,
+                url: FullWebhookUrl,
                 certificate: certificate,
                 dropPendingUpdates: BotDropPendingUpdates,
                 maxConnections: BotMaxConnections
             );
         }
     }
+
 }

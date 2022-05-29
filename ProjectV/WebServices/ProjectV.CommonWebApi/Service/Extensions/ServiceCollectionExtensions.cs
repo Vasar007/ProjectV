@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectV.CommonWebApi.Models.Options;
 
-namespace ProjectV.CommonWebApi.Extensions
+namespace ProjectV.CommonWebApi.Service.Extensions
 {
     public static class ServiceCollectionExtensions
     {

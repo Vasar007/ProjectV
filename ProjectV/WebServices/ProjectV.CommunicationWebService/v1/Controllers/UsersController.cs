@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.CommonWebApi.Authorization.Tokens.Services;
 using ProjectV.CommonWebApi.Authorization.Users.Services;
 using ProjectV.CommonWebApi.Controllers;
-using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Models.Extensions;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 

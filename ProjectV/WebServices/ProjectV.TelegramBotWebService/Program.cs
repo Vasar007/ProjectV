@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using ProjectV.CommonWebApi.Service.Setup;
 using ProjectV.Logging;
-using ProjectV.TelegramBotWebService.v1.Domain.Setup;
 
 namespace ProjectV.TelegramBotWebService
 {
@@ -30,14 +30,20 @@ namespace ProjectV.TelegramBotWebService
                 _logger.PrintHeader("Telegram bot web service started.");
 
                 var host = CreateWebHostBuilder(args).Build();
-
-                // Set web hook to get messages from Telegram Bot.
                 var serviceSetup = host.Services.GetRequiredService<IServiceSetup>();
-                await using var webhookHandler = await serviceSetup.SetWebhookAsync();
 
-                // Run the WebHost, and start accepting requests.
-                // There's an async overload, so we may as well use it.
-                await host.RunAsync();
+                // Execute pre-run actions.
+                await using (var onRunFailAction = await serviceSetup.PreRunAsync())
+                {
+                    // Run the WebHost, and start accepting requests.
+                    await host.RunAsync();
+
+                    // If WebHost finished work without issues, cancel fail callback.
+                    onRunFailAction.Cancel();
+                }
+
+                // Execute post-run actions.
+                await serviceSetup.PostRunAsync();
             }
             catch (Exception ex)
             {

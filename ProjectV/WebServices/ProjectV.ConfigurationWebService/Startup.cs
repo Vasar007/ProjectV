@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Middleware.Extensions;
 using ProjectV.CommonWebApi.Models.Options;
+using ProjectV.CommonWebApi.Service.Extensions;
 using ProjectV.ConfigurationWebService.v1.Domain;
 
 namespace ProjectV.ConfigurationWebService

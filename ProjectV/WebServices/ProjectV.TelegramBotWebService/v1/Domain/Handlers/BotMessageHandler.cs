@@ -14,7 +14,6 @@ using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 

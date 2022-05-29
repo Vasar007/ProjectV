@@ -7,7 +7,7 @@ using ProjectV.CommonWebApi.Middleware;
 using ProjectV.CommonWebApi.Models;
 using ProjectV.Logging;
 
-namespace ProjectV.CommonWebApi.Extensions
+namespace ProjectV.CommonWebApi.Middleware.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {

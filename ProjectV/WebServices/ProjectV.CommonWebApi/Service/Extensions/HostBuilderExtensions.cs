@@ -4,7 +4,7 @@ using Acolyte.Assertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ProjectV.CommonWebApi.Extensions
+namespace ProjectV.CommonWebApi.Service.Extensions
 {
     public static class HostBuilderExtensions
     {
