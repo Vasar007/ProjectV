@@ -137,8 +137,13 @@ namespace ProjectV.TelegramBotWebService
             // See note in TelegramBotWebServiceOptions.ConstructWebhookUrlWithBotToken method.
             var wrappedOptions = app.ApplicationServices
                 .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
-
             var botOptions = wrappedOptions.Value;
+            if (!botOptions.Bot.UseBotTokenInWebhookUrl)
+            {
+                _logger.Info("Using default mapping for controllers.");
+                return;
+            }
+
             var pattern = botOptions.GetServiceApiUrl();
             var controller = ControllerExtensions.GetControllerNameFromType<UpdateController>();
             _logger.Info($"Configuring custom endpoint for {controller} controller: [{pattern}].");
