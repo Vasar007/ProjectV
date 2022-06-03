@@ -19,6 +19,7 @@
   },
 
   "UserServiceOptions": {
-    "ShouldCreateSystemUser": "true"
+    "ShouldCreateSystemUser": "true",
+    "CanUseSystemUserToAuthenticate": "true"
   }
 }

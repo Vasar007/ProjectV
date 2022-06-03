@@ -194,6 +194,20 @@ namespace ProjectV.Core.Services.Clients
             bool forceRefresh)
         {
             // TODO: add option to login for user and use user's access token.
+            if (!_userServiceOptions.CanUseSystemUserToAuthenticate)
+            {
+                string message = "Cannot get authorization tokens: system user cannot be used.";
+                _logger.Warn(message);
+
+                var response = new ErrorResponse
+                {
+                    Success = false,
+                    ErrorCode = "T01",
+                    ErrorMessage = message
+                };
+                return Result.Error(response);
+            }
+
             if (string.IsNullOrWhiteSpace(_userServiceOptions.SystemUserName) ||
                 string.IsNullOrWhiteSpace(_userServiceOptions.SystemUserPassword))
             {
@@ -203,7 +217,7 @@ namespace ProjectV.Core.Services.Clients
                 var response = new ErrorResponse
                 {
                     Success = false,
-                    ErrorCode = "T01",
+                    ErrorCode = "T02",
                     ErrorMessage = message
                 };
                 return Result.Error(response);

@@ -4,7 +4,9 @@
     {
         public bool AllowSignup { get; set; }
 
-        public bool ShouldCreateSystemUser { get; set; }
+        public bool ShouldCreateSystemUser { get; set; } = false;
+
+        public bool CanUseSystemUserToAuthenticate { get; set; } = false;
 
         public string? SystemUserName { get; set; } =
             EnvironmentVariablesParser.GetValueOrDefault("SystemUserName", string.Empty);
