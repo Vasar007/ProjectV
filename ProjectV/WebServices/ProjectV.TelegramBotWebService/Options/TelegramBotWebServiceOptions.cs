@@ -13,6 +13,8 @@ namespace ProjectV.TelegramBotWebService.Options
 
         public bool PreferServiceSetupOverHostedService { get; set; } = true;
 
+        public bool IgnoreServiceSetupErrors { get; set; } = false;
+
 
         public TelegramBotWebServiceOptions()
         {

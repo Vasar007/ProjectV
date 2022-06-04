@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using ProjectV.CommonWebApi.Service.Setup.Actions;
 
-namespace ProjectV.CommonWebApi.Service.Setup.Actions
+namespace ProjectV.CommonWebApi.Service.Setup.Handlers
 {
     public sealed class ServicePreRunHandler
     {

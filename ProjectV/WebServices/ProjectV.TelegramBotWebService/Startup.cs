@@ -76,7 +76,10 @@ namespace ProjectV.TelegramBotWebService
             // Add hosted service to configure webhook if needed.
             var botWebServiceOptions = botWebServiceSecion.Get<TelegramBotWebServiceOptions>();
             services
-                .ApplyIf(!botWebServiceOptions.PreferServiceSetupOverHostedService, x => x.AddHostedService<ConfigureWebhook>());
+                .ApplyIf(
+                    !botWebServiceOptions.PreferServiceSetupOverHostedService,
+                    x => x.AddHostedService(ConfigureWebhook.Create, botWebServiceOptions.IgnoreServiceSetupErrors)
+                );
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Monads;
 using Microsoft.Extensions.Options;
 using ProjectV.CommonWebApi.Service.Setup.Actions;
 using ProjectV.CommonWebApi.Service.Setup.Factories;
+using ProjectV.CommonWebApi.Service.Setup.Handlers;
 using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
@@ -21,7 +24,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
 
         private readonly IBotWebhook _botWebhook;
 
+        private readonly FuncServiceSetupActionFactory _funcServiceActionFactory;
+
         private bool PreferServiceSetupOverHostedService => _options.PreferServiceSetupOverHostedService;
+        private bool IgnoreServiceSetupErrors => _options.IgnoreServiceSetupErrors;
 
 
         public TelegramBotWebServiceSetupActionsFactory(
@@ -30,6 +36,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
         {
             _options = options.GetCheckedValue();
             _botWebhook = botWebhook.ThrowIfNull(nameof(botWebhook));
+
+            _funcServiceActionFactory = new FuncServiceSetupActionFactory();
         }
 
         #region IServiceSetupActionsFactory Implementation
@@ -64,15 +72,30 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
 
         #endregion
 
+        private IServiceSetupAction CreateServiceSetupAction(Func<Task> action)
+        {
+            return _funcServiceActionFactory.Create(action, IgnoreServiceSetupErrors);
+        }
+
+        private IServiceSetupAction CreateSetWebhookTask(CancellationToken cancellationToken)
+        {
+            return CreateServiceSetupAction(() => _botWebhook.SetWebhookAsync(cancellationToken));
+        }
+
+        private IServiceSetupAction CreateDeleteWebhookTask(CancellationToken cancellationToken)
+        {
+            return CreateServiceSetupAction(() => _botWebhook.DeleteWebhookAsync(cancellationToken));
+        }
+
         private List<IServiceSetupAction> AppendSetWebhookTask(List<IServiceSetupAction> actions,
             CancellationToken cancellationToken, out IServiceSetupAction? onRunFailAction)
         {
             _logger.Info("Appending set webhook action.");
 
-            var wrapper = new FuncServiceSetupAction(() => _botWebhook.SetWebhookAsync(cancellationToken));
+            var wrapper = CreateSetWebhookTask(cancellationToken);
             actions.Add(wrapper);
 
-            onRunFailAction = wrapper;
+            onRunFailAction = CreateDeleteWebhookTask(cancellationToken);
             return actions;
         }
 
@@ -81,7 +104,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
         {
             _logger.Info("Appending delete webhook action.");
 
-            var wrapper = new FuncServiceSetupAction(() => _botWebhook.DeleteWebhookAsync(cancellationToken));
+            var wrapper = CreateDeleteWebhookTask(cancellationToken);
             actions.Add(wrapper);
 
             return actions;

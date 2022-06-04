@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.v1.Domain.Webhooks;
@@ -20,6 +22,17 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted
             _botWebhook = botWebhook.ThrowIfNull(nameof(botWebhook));
         }
 
+        public static ConfigureWebhook Create(
+            IServiceProvider provider)
+        {
+            provider.ThrowIfNull(nameof(provider));
+
+            var botWebhook = provider.GetRequiredService<IBotWebhook>();
+            return new ConfigureWebhook(botWebhook);
+        }
+
+        #region IHostedService Implementation
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.Info("Setting webhook over hosted service.");
@@ -33,5 +46,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted
 
             await _botWebhook.DeleteWebhookAsync(cancellationToken);
         }
+
+        #endregion
     }
 }

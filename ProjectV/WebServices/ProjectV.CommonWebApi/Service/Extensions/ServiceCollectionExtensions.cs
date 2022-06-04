@@ -3,9 +3,11 @@ using Acolyte.Assertions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjectV.CommonWebApi.Models.Options;
+using ProjectV.CommonWebApi.Service.Hosted;
 
 namespace ProjectV.CommonWebApi.Service.Extensions
 {
@@ -96,6 +98,26 @@ namespace ProjectV.CommonWebApi.Service.Extensions
            );
 
             return services;
+        }
+
+        public static IServiceCollection AddHostedService<THostedService>(
+           this IServiceCollection services,
+           Func<IServiceProvider, THostedService> implementationFactory,
+           bool ignoreServiceSetupErrors)
+            where THostedService : class, IHostedService
+        {
+            services.ThrowIfNull(nameof(services));
+
+            if (ignoreServiceSetupErrors)
+            {
+                return services.AddHostedService(provider =>
+                {
+                    var realHostedService = implementationFactory(provider);
+                    return new HostedServiceSafeWrapper(realHostedService);
+                });
+            }
+
+            return services.AddHostedService(implementationFactory);
         }
     }
 }
