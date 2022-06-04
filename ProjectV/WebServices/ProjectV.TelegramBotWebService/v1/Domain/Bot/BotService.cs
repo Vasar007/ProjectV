@@ -4,12 +4,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using Microsoft.Extensions.Options;
 using ProjectV.Configuration;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Net.Http;
 using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
@@ -81,12 +83,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             IEnumerable<UpdateType>? allowedUpdates = null,
             CancellationToken cancellationToken = default)
         {
-            return await _botClient.GetUpdatesAsync(
-                offset: offset,
-                limit: limit,
-                timeout: timeout,
-                allowedUpdates: allowedUpdates,
-                cancellationToken: cancellationToken
+            return await InternalCall(
+                () => _botClient.GetUpdatesAsync(
+                    offset: offset,
+                    limit: limit,
+                    timeout: timeout,
+                    allowedUpdates: allowedUpdates,
+                    cancellationToken: cancellationToken
+                )
             ).ConfigureAwait(_continueOnCapturedContext);
         }
 
@@ -100,14 +104,16 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             bool? dropPendingUpdates = null,
             CancellationToken cancellationToken = default)
         {
-            await _botClient.SetWebhookAsync(
-                url: url,
-                certificate: certificate,
-                ipAddress: ipAddress,
-                maxConnections: maxConnections,
-                allowedUpdates: allowedUpdates,
-                dropPendingUpdates: dropPendingUpdates,
-                cancellationToken: cancellationToken
+            await InternalCall(
+               () => _botClient.SetWebhookAsync(
+                    url: url,
+                    certificate: certificate,
+                    ipAddress: ipAddress,
+                    maxConnections: maxConnections,
+                    allowedUpdates: allowedUpdates,
+                    dropPendingUpdates: dropPendingUpdates,
+                    cancellationToken: cancellationToken
+                )
             ).ConfigureAwait(_continueOnCapturedContext);
         }
 
@@ -116,9 +122,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             bool? dropPendingUpdates = null,
             CancellationToken cancellationToken = default)
         {
-            await _botClient.DeleteWebhookAsync(
-                dropPendingUpdates: dropPendingUpdates,
-                cancellationToken: cancellationToken
+            await InternalCall(
+                () => _botClient.DeleteWebhookAsync(
+                    dropPendingUpdates: dropPendingUpdates,
+                    cancellationToken: cancellationToken
+                )
             ).ConfigureAwait(_continueOnCapturedContext);
         }
 
@@ -126,9 +134,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
         public async Task<WebhookInfo> GetWebhookInfoAsync(
             CancellationToken cancellationToken = default)
         {
-            return await _botClient.GetWebhookInfoAsync(
-                cancellationToken: cancellationToken
-            ).ConfigureAwait(_continueOnCapturedContext);
+            return await InternalCall(
+                 () => _botClient.GetWebhookInfoAsync(
+                     cancellationToken: cancellationToken
+                 )
+             ).ConfigureAwait(_continueOnCapturedContext);
         }
 
         /// <inheritdoc />
@@ -144,20 +154,67 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             IReplyMarkup? replyMarkup = null,
             CancellationToken cancellationToken = default)
         {
-            return await _botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: text,
-                parseMode: parseMode,
-                entities: entities,
-                disableWebPagePreview: disableWebPagePreview,
-                disableNotification: disableNotification,
-                replyToMessageId: replyToMessageId,
-                allowSendingWithoutReply: allowSendingWithoutReply,
-                replyMarkup: replyMarkup,
-                cancellationToken: cancellationToken
+            return await InternalCall(
+                () => _botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: text,
+                    parseMode: parseMode,
+                    entities: entities,
+                    disableWebPagePreview: disableWebPagePreview,
+                    disableNotification: disableNotification,
+                    replyToMessageId: replyToMessageId,
+                    allowSendingWithoutReply: allowSendingWithoutReply,
+                    replyMarkup: replyMarkup,
+                    cancellationToken: cancellationToken
+                )
             ).ConfigureAwait(_continueOnCapturedContext);
         }
 
         #endregion
+
+        private Task InternalCall(Func<Task> action)
+        {
+            return InternalCall(async () =>
+            {
+                await action()
+                    .ConfigureAwait(_continueOnCapturedContext);
+                return default(bool);
+            });
+        }
+
+        private async Task<TResult> InternalCall<TResult>(Func<Task<TResult>> action)
+        {
+            try
+            {
+                return await action()
+                    .ConfigureAwait(_continueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                throw ReconstructExceptionIfNeeded(ex);
+            }
+        }
+
+        private static Exception ReconstructExceptionIfNeeded(Exception ex)
+        {
+            return ex switch
+            {
+                ApiRequestException apiEx => new Exception(ConstructMessageFrom(apiEx), apiEx),
+
+                _ => ex
+            };
+        }
+
+        private static string ConstructMessageFrom(ApiRequestException ex)
+        {
+            var requestParameters = ex.Parameters;
+
+            string parameters = requestParameters is null
+                ? "No parameters were specified"
+                : $"[MigrateToChatId: {requestParameters.MigrateToChatId.ToStringNullSafe()}, " +
+                  $"RetryAfter: {requestParameters.RetryAfter.ToStringNullSafe()}]";
+
+            return $"Telegram API exception: {ex.Message} ({ex.ErrorCode}). Parameters: {parameters}.";
+        }
     }
 }
