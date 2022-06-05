@@ -26,7 +26,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
 
         private readonly FuncServiceSetupActionFactory _funcServiceActionFactory;
 
-        private bool PreferServiceSetupOverHostedService => _options.PreferServiceSetupOverHostedService;
+        private bool ShouldRunWebhookTaskOnSetup => _options.IsMode(TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup);
         private bool IgnoreServiceSetupErrors => _options.IgnoreServiceSetupErrors;
 
 
@@ -49,7 +49,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
             IServiceSetupAction? onRunFailAction = null;
 
             var actions = new List<IServiceSetupAction>()
-                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendSetWebhookTask(x, cancellationToken, out onRunFailAction));
+                .ApplyIf(ShouldRunWebhookTaskOnSetup, x => AppendSetWebhookTask(x, cancellationToken, out onRunFailAction));
 
             var handler = ServicePreRunHandler.CreateWithPossibleNoOpOnRunAction(actions, onRunFailAction);
             _logger.Info("Pre-run actions have been created.");
@@ -61,7 +61,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
             _logger.Info("Creating post-run actions.");
 
             var actions = new List<IServiceSetupAction>()
-                .ApplyIf(PreferServiceSetupOverHostedService, x => AppendDeleteWebhookTask(x, cancellationToken));
+                .ApplyIf(ShouldRunWebhookTaskOnSetup, x => AppendDeleteWebhookTask(x, cancellationToken));
 
             var handler = new ServicePostRunHandler(actions);
             _logger.Info("Post-run actions have been created.");

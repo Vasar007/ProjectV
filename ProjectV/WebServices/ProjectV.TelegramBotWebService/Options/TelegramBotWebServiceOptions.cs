@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Acolyte.Assertions;
 using ProjectV.Configuration;
 
 namespace ProjectV.TelegramBotWebService.Options
@@ -11,13 +12,31 @@ namespace ProjectV.TelegramBotWebService.Options
         [Required(AllowEmptyStrings = false)]
         public string ServiceApiUrl { get; set; } = default!;
 
-        public bool PreferServiceSetupOverHostedService { get; set; } = true;
+        public TelegramBotWebServiceWorkingMode WorkingMode { get; set; } =
+            TelegramBotWebServiceWorkingMode.Default;
 
         public bool IgnoreServiceSetupErrors { get; set; } = false;
 
 
         public TelegramBotWebServiceOptions()
         {
+        }
+
+        public TelegramBotWebServiceWorkingMode GetWorkingModeForDefault()
+        {
+            return TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup;
+        }
+
+        public bool IsMode(TelegramBotWebServiceWorkingMode expectedWorkingMode)
+        {
+            expectedWorkingMode.ThrowIfEnumValueIsUndefined(nameof(expectedWorkingMode));
+
+            if (WorkingMode == TelegramBotWebServiceWorkingMode.Default)
+            {
+                return GetWorkingModeForDefault() == expectedWorkingMode;
+            }
+
+            return WorkingMode == expectedWorkingMode;
         }
 
         public string GetFullWebhookUrl()

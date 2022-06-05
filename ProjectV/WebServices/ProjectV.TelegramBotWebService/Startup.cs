@@ -21,7 +21,6 @@ using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Controllers;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Cache.Users;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers;
@@ -29,6 +28,7 @@ using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories;
 using ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using ProjectV.TelegramBotWebService.v1.Domain.Users.Cache;
 using ProjectV.TelegramBotWebService.v1.Domain.Webhooks;
 using Telegram.Bot.Types;
 
@@ -80,12 +80,16 @@ namespace ProjectV.TelegramBotWebService
                 .Configure<JwtOptions>(jwtOptionsSecion)
                 .Configure<TelegramBotWebServiceOptions>(botWebServiceSecion);
 
-            // Add hosted service to configure webhook if needed.
+            // Add hosted service as background activities depending on the set working mode.
             var botWebServiceOptions = botWebServiceSecion.Get<TelegramBotWebServiceOptions>();
             services
                 .ApplyIf(
-                    !botWebServiceOptions.PreferServiceSetupOverHostedService,
+                    botWebServiceOptions.IsMode(TelegramBotWebServiceWorkingMode.WebhookViaHostedService),
                     x => x.AddHostedService(ConfigureWebhook.Create, botWebServiceOptions.IgnoreServiceSetupErrors)
+                )
+                .ApplyIf(
+                    botWebServiceOptions.IsMode(TelegramBotWebServiceWorkingMode.PollingViaHostedService),
+                    x => x.AddHostedService(PoolingProcessor.Create, botWebServiceOptions.IgnoreServiceSetupErrors)
                 );
 
             services

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Acolyte.Assertions;
 using ProjectV.Models.WebServices.Requests;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain.Cache.Users
+namespace ProjectV.TelegramBotWebService.v1.Domain.Users.Cache
 {
     public sealed class TelegramUserCache : ITelegramUserCache
     {

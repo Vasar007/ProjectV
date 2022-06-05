@@ -12,9 +12,9 @@ using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Cache.Users;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using ProjectV.TelegramBotWebService.v1.Domain.Users.Cache;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
