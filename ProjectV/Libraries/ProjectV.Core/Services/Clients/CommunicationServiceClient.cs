@@ -108,16 +108,17 @@ namespace ProjectV.Core.Services.Clients
 
         #region ICommunicationProxyClient Implementation
 
-        public async Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login)
+        public async Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login,
+            CancellationToken cancellationToken = default)
         {
             login.ThrowIfNull(nameof(login));
 
-            return await _tokenClient.LoginAsync(login)
+            return await _tokenClient.LoginAsync(login, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
         }
 
         public async Task<Result<ProcessingResponse, ErrorResponse>> StartJobAsync(
-            StartJobParamsRequest jobParams)
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken = default)
         {
             jobParams.ThrowIfNull(nameof(jobParams));
 
@@ -125,11 +126,11 @@ namespace ProjectV.Core.Services.Clients
             // This trick requires to recreate HttpRequestMessage, so we cannot do it with
             // predefined global policies for HttpClient.
             var refreshAuthenticationPolicy = PolicyCreator.HandleUnauthorizedAsync(
-                HcOptions, RefreshAuthorizationAsync
+                HcOptions, (o, t, r, c) => RefreshAuthorizationAsync(o, t, r, c, cancellationToken)
             );
 
             // Try to get authorization tokens from cache.
-            var result = await TryGetTokensFromCacheAsync()
+            var result = await TryGetTokensFromCacheAsync(cancellationToken)
                .ConfigureAwait(_continueOnCapturedContext);
 
             // If we cannot get tokens -> it is an error.
@@ -143,29 +144,30 @@ namespace ProjectV.Core.Services.Clients
 
             // Using refresh policy to retry on unauthorized error.
             var response = await refreshAuthenticationPolicy.ExecuteAsync(
-                (context, token) => StartJobInternalAsync(jobParams, context),
+                (context, token) => StartJobInternalAsync(jobParams, context, cancellationToken),
                 new Dictionary<string, object?>
                 {
                     { AccessTokenKey, tokenResponse.AccessToken },
                     { RefreshTokenKey, tokenResponse.RefreshToken }
                 },
-                CancellationToken.None,
+                cancellationToken,
                 _continueOnCapturedContext
             ).ConfigureAwait(_continueOnCapturedContext);
 
             // Read result.
             return await response.ReadContentAsAsync<ProcessingResponse>(
-                    _logger, _continueOnCapturedContext, CancellationToken.None
+                    _logger, _continueOnCapturedContext, cancellationToken
                 )
                 .ConfigureAwait(_continueOnCapturedContext);
         }
 
         #endregion
 
-        private async Task<Result<TokenResponse, ErrorResponse>> TryGetTokensFromCacheAsync()
+        private async Task<Result<TokenResponse, ErrorResponse>> TryGetTokensFromCacheAsync(
+            CancellationToken cancellationToken)
         {
             // Try to get authorization tokens.
-            var result = await GetTokensToRefreshAuthorization(forceRefresh: false)
+            var result = await GetTokensToRefreshAuthorization(forceRefresh: false, cancellationToken)
                .ConfigureAwait(_continueOnCapturedContext);
 
             // Process result and append additional data if needed.
@@ -191,7 +193,7 @@ namespace ProjectV.Core.Services.Clients
         }
 
         private async Task<Result<TokenResponse, ErrorResponse>> GetTokensToRefreshAuthorization(
-            bool forceRefresh)
+            bool forceRefresh, CancellationToken cancellationToken)
         {
             // TODO: add option to login for user and use user's access token.
             if (!_userServiceOptions.CanUseSystemUserToAuthenticate)
@@ -230,16 +232,17 @@ namespace ProjectV.Core.Services.Clients
                 Password = _userServiceOptions.SystemUserPassword
             };
 
-            return await _tokenCache.GetTokensAsync(login, forceRefresh)
+            return await _tokenCache.GetTokensAsync(login, forceRefresh, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
         }
 
         private async Task RefreshAuthorizationAsync(DelegateResult<HttpResponseMessage> outcome,
-           TimeSpan sleepDuration, int retryCount, Context context)
+           TimeSpan sleepDuration, int retryCount, Context context,
+           CancellationToken cancellationToken)
         {
             _logger.LogRetryingInfo(outcome, sleepDuration, retryCount);
 
-            var result = await GetTokensToRefreshAuthorization(forceRefresh: true)
+            var result = await GetTokensToRefreshAuthorization(forceRefresh: true, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
 
             if (result.IsSuccess && result.Ok is not null)
@@ -253,7 +256,7 @@ namespace ProjectV.Core.Services.Clients
         }
 
         private async Task<HttpResponseMessage> StartJobInternalAsync(
-            StartJobParamsRequest jobParams, Context context)
+            StartJobParamsRequest jobParams, Context context, CancellationToken cancellationToken)
         {
             jobParams.ThrowIfNull(nameof(jobParams));
 
@@ -268,7 +271,7 @@ namespace ProjectV.Core.Services.Clients
                 request.Headers.Authorization = authentication;
             }
 
-            return await _client.SendAsync(request)
+            return await _client.SendAsync(request, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
         }
     }

@@ -12,6 +12,7 @@ using ProjectV.Core.Net.Http;
 using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
@@ -165,6 +166,21 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
                     replyToMessageId: replyToMessageId,
                     allowSendingWithoutReply: allowSendingWithoutReply,
                     replyMarkup: replyMarkup,
+                    cancellationToken: cancellationToken
+                )
+            ).ConfigureAwait(_continueOnCapturedContext);
+        }
+
+        /// <inheritdoc />
+        public async Task ReceiveAsync(
+            IUpdateHandler updateHandler,
+            ReceiverOptions? receiverOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            await InternalCall(
+                () => _botClient.ReceiveAsync(
+                    updateHandler: updateHandler,
+                    receiverOptions: receiverOptions,
                     cancellationToken: cancellationToken
                 )
             ).ConfigureAwait(_continueOnCapturedContext);

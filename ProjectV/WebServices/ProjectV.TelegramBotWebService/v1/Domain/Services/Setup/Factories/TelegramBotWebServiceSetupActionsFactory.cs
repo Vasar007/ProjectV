@@ -42,8 +42,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
 
         #region IServiceSetupActionsFactory Implementation
 
-        public ServicePreRunHandler CreatePreRunActions(
-            CancellationToken cancellationToken = default)
+        public ServicePreRunHandler CreatePreRunActions(CancellationToken cancellationToken)
         {
             _logger.Info("Creating pre-run actions.");
 
@@ -57,8 +56,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories
             return handler;
         }
 
-        public ServicePostRunHandler CreatePostRunActions(
-            CancellationToken cancellationToken = default)
+        public ServicePostRunHandler CreatePostRunActions(CancellationToken cancellationToken)
         {
             _logger.Info("Creating post-run actions.");
 

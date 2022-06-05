@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ProjectV.Models.WebServices.Requests;
 
-namespace ProjectV.TelegramBotWebService.v1.Domain.Cache
+namespace ProjectV.TelegramBotWebService.v1.Domain.Cache.Users
 {
-    public interface IUserCache
+    public interface ITelegramUserCache
     {
         bool TryAddUser(long id, StartJobParamsRequest jobParams);
 

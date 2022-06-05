@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,7 @@ using ProjectV.Models.WebServices.Requests;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Properties;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Cache;
+using ProjectV.TelegramBotWebService.v1.Domain.Cache.Users;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
 using Telegram.Bot.Types;
@@ -26,7 +27,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
         private readonly IBotService _botService;
         private readonly IProcessingResponseReceiver _responseReceiver;
-        private readonly IUserCache _userCache;
+        private readonly ITelegramUserCache _userCache;
         private readonly ITelegramTextProcessor _textProcessor;
 
         private readonly TelegramBotWebServiceOptions _options;
@@ -41,7 +42,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         public BotMessageHandler(
             IBotService botService,
             IProcessingResponseReceiver responseReceiver,
-            IUserCache userCache,
+            ITelegramUserCache userCache,
             ITelegramTextProcessor textProcessor,
             IOptions<TelegramBotWebServiceOptions> options)
         {
@@ -72,7 +73,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
         #region IBotCommandHandler Implementation
 
-        public async Task ProcessAsync(Message message)
+        public async Task ProcessAsync(Message message, CancellationToken cancellationToken)
         {
             _logger.Info($"Received Message from {message.Chat.Id}.");
 
@@ -88,17 +89,17 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             Task responseTask = command switch
             {
-                _ when IsCommand(StartCommand, command) => SendResponseToStartCommand(message.Chat.Id),
+                _ when IsCommand(StartCommand, command) => SendResponseToStartCommand(message.Chat.Id, cancellationToken),
 
-                _ when IsCommand(ServicesCommand, command) => SendResponseToServicesCommand(message.Chat.Id),
+                _ when IsCommand(ServicesCommand, command) => SendResponseToServicesCommand(message.Chat.Id, cancellationToken),
 
-                _ when IsCommand(RequestCommand, command) => SendResponseToRequestCommand(message.Chat.Id),
+                _ when IsCommand(RequestCommand, command) => SendResponseToRequestCommand(message.Chat.Id, cancellationToken),
 
-                _ when IsCommand(CancelCommand, command) => SendResponseToCancelCommand(message.Chat.Id),
+                _ when IsCommand(CancelCommand, command) => SendResponseToCancelCommand(message.Chat.Id, cancellationToken),
 
-                _ when IsCommand(HelpCommand, command) => SendResponseToHelpCommand(message.Chat.Id),
+                _ when IsCommand(HelpCommand, command) => SendResponseToHelpCommand(message.Chat.Id, cancellationToken),
 
-                _ => TryHandleContinuation(message, data)
+                _ => TryHandleContinuation(message, data, cancellationToken)
             };
 
             await responseTask;
@@ -111,40 +112,47 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             return StringComparer.Ordinal.Equals(expectedCommand, actualCommand);
         }
 
-        private async Task SendResponseToStartCommand(long chatId)
+        private async Task SendResponseToStartCommand(long chatId,
+            CancellationToken cancellationToken)
         {
             _logger.Info($"Processes {StartCommand} command.");
 
             await _botService.SendTextMessageAsync(
                 chatId,
                 Messages.HelloMessage,
-                replyMarkup: new ReplyKeyboardRemove()
+                replyMarkup: new ReplyKeyboardRemove(),
+                cancellationToken: cancellationToken
             );
         }
 
-        private async Task SendResponseToHelpCommand(long chatId)
+        private async Task SendResponseToHelpCommand(long chatId,
+            CancellationToken cancellationToken)
         {
             _logger.Info($"Processes {HelpCommand} command.");
 
             await _botService.SendTextMessageAsync(
                 chatId,
                 Messages.HelpMessage,
-                replyMarkup: new ReplyKeyboardRemove()
+                replyMarkup: new ReplyKeyboardRemove(),
+                cancellationToken: cancellationToken
             );
         }
 
-        private async Task SendResponseToServicesCommand(long chatId)
+        private async Task SendResponseToServicesCommand(long chatId,
+            CancellationToken cancellationToken)
         {
             _logger.Info($"Processes {ServicesCommand} command.");
 
             await _botService.SendTextMessageAsync(
                 chatId,
                 "Available services: " +
-                $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}."
+                $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}.",
+                cancellationToken: cancellationToken
             );
         }
 
-        private async Task SendResponseToRequestCommand(long chatId)
+        private async Task SendResponseToRequestCommand(long chatId,
+            CancellationToken cancellationToken)
         {
             _logger.Info($"Processes {RequestCommand} command.");
 
@@ -160,12 +168,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             await _botService.SendTextMessageAsync(
                 chatId,
                 "Enter service name.",
-                replyMarkup: replyKeyboard
+                replyMarkup: replyKeyboard,
+                cancellationToken: cancellationToken
             );
         }
 
         private async Task ContinueRequestCommandWithService(long chatId, string serviceName,
-            StartJobParamsRequest requestParams)
+            StartJobParamsRequest requestParams, CancellationToken cancellationToken)
         {
             string userInput = _textProcessor.TrimNewLineSeparator(serviceName);
             _logger.Info($"Continue process {RequestCommand} command with service {userInput}.");
@@ -181,7 +190,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 await _botService.SendTextMessageAsync(
                     chatId,
                     "Invalid service name. Please, try again.",
-                    replyMarkup: replyKeyboard
+                    replyMarkup: replyKeyboard,
+                    cancellationToken: cancellationToken
                 );
                 return;
             }
@@ -199,12 +209,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             await _botService.SendTextMessageAsync(
                 chatId,
                 message,
-                replyMarkup: new ReplyKeyboardRemove()
+                replyMarkup: new ReplyKeyboardRemove(),
+                cancellationToken: cancellationToken
             );
         }
 
         private async Task ContinueRequestCommandWithData(long chatId, IReadOnlyList<string> data,
-            StartJobParamsRequest jobParams)
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken)
         {
             _logger.Info($"Continue process {RequestCommand} command with data.");
 
@@ -213,16 +224,20 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             await _botService.SendTextMessageAsync(
                 chatId,
                 "Send request to process data. Return later to see results.",
-                replyMarkup: new ReplyKeyboardRemove()
+                replyMarkup: new ReplyKeyboardRemove(),
+                cancellationToken: cancellationToken
             );
 
             // Schedule task for request and waiting for service response.
-            _ = _responseReceiver.ScheduleRequestAsync(_botService, chatId, jobParams);
+            _ = _responseReceiver.ScheduleRequestAsync(
+                _botService, chatId, jobParams, cancellationToken
+            );
 
             _userCache.TryRemoveUser(chatId);
         }
 
-        private async Task SendResponseToCancelCommand(long chatId)
+        private async Task SendResponseToCancelCommand(long chatId,
+            CancellationToken cancellationToken)
         {
             _logger.Info($"Processes {CancelCommand} command.");
 
@@ -239,7 +254,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             await _botService.SendTextMessageAsync(
                 chatId,
                 message,
-                replyMarkup: new ReplyKeyboardRemove()
+                replyMarkup: new ReplyKeyboardRemove(),
+                cancellationToken: cancellationToken
             );
         }
 
@@ -254,7 +270,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             );
         }
 
-        private async Task TryHandleContinuation(Message message, IReadOnlyList<string> data)
+        private async Task TryHandleContinuation(Message message, IReadOnlyList<string> data,
+            CancellationToken cancellationToken)
         {
             if (!_userCache.TryGetUser(message.Chat.Id, out StartJobParamsRequest? jobData))
             {
@@ -266,12 +283,12 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             {
                 string serviceName = data[0];
                 await ContinueRequestCommandWithService(
-                    message.Chat.Id, serviceName, jobData
+                    message.Chat.Id, serviceName, jobData, cancellationToken
                 );
                 return;
             }
 
-            await ContinueRequestCommandWithData(message.Chat.Id, data, jobData);
+            await ContinueRequestCommandWithData(message.Chat.Id, data, jobData, cancellationToken);
         }
 
         private static ConfigRequirements CreateRequirements(string serviceName,
@@ -280,7 +297,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
             serviceName.ThrowIfNullOrEmpty(nameof(serviceName));
             appraisalName.ThrowIfNullOrEmpty(nameof(appraisalName));
 
-            IRequirementsCreator requirementsCreator = new RequirementsCreator();
+            var requirementsCreator = new RequirementsCreator();
 
             requirementsCreator.AddServiceRequirement(serviceName);
             requirementsCreator.AddAppraisalRequirement(appraisalName);

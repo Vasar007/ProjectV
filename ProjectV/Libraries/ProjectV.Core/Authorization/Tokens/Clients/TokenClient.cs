@@ -78,7 +78,8 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
 
         #region ITokenClient Implementation
 
-        public async Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login)
+        public async Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login,
+            CancellationToken cancellationToken = default)
         {
             login.ThrowIfNull(nameof(login));
 
@@ -86,7 +87,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
                 .AsJson(login);
 
             return await _client.SendAndReadAsync<TokenResponse>(
-                    request, _logger, _continueOnCapturedContext, CancellationToken.None
+                    request, _logger, _continueOnCapturedContext, cancellationToken
                 )
                 .ConfigureAwait(_continueOnCapturedContext);
         }

@@ -20,17 +20,13 @@ namespace ProjectV.CommunicationWebService.v1.Controllers
         private readonly IConfigurationReceiver _configurationReceiver;
         private readonly IProcessingResponseReceiver _processingResponseReceiver;
 
+
         public RequestsController(
             IConfigurationReceiver configurationReceiver,
             IProcessingResponseReceiver processingResponseReceiver)
         {
-            _configurationReceiver = configurationReceiver.ThrowIfNull(
-                nameof(configurationReceiver)
-            );
-
-            _processingResponseReceiver = processingResponseReceiver.ThrowIfNull(
-                nameof(processingResponseReceiver)
-            );
+            _configurationReceiver = configurationReceiver.ThrowIfNull(nameof(configurationReceiver));
+            _processingResponseReceiver = processingResponseReceiver.ThrowIfNull(nameof(processingResponseReceiver));
         }
 
         [HttpGet]

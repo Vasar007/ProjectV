@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
@@ -54,6 +55,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             int? replyToMessageId = default,
             bool? allowSendingWithoutReply = default,
             IReplyMarkup? replyMarkup = default,
+            CancellationToken cancellationToken = default
+        );
+
+        /// <inheritdoc cref="TelegramBotClientPollingExtensions.ReceiveAsync(ITelegramBotClient, IUpdateHandler, ReceiverOptions?, CancellationToken)" />
+        public Task ReceiveAsync(
+            IUpdateHandler updateHandler,
+            ReceiverOptions? receiverOptions = default,
             CancellationToken cancellationToken = default
         );
     }

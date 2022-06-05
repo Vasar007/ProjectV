@@ -6,8 +6,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 {
     public interface IBotWebhook
     {
-        Task<AsyncDisposableAction> SetWebhookAsync(CancellationToken cancellationToken = default);
+        Task<AsyncDisposableAction> SetWebhookAsync(CancellationToken cancellationToken);
 
-        Task DeleteWebhookAsync(CancellationToken cancellationToken = default);
+        Task DeleteWebhookAsync(CancellationToken cancellationToken);
     }
 }

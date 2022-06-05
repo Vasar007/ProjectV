@@ -32,7 +32,11 @@ namespace ProjectV.CommonWebApi.Service.Setup
             _logger.Info("Executing pre-run actions.");
 
             var preRunHanlder = _actionsFactory.CreatePreRunActions(cancellationToken);
-            await ProcessActionsAsync(preRunHanlder.Actions, "Failed to perform pre-run action.");
+            await ProcessActionsAsync(
+                preRunHanlder.Actions,
+                "Failed to perform pre-run action.",
+                cancellationToken
+            );
 
             _logger.Info("Pre-run actions have been completed.");
             return new AsyncDisposableAction(() => preRunHanlder.OnRunFailAction.DoAsync());
@@ -43,7 +47,11 @@ namespace ProjectV.CommonWebApi.Service.Setup
             _logger.Info("Executing post-run actions.");
 
             var postRunHanlder = _actionsFactory.CreatePostRunActions(cancellationToken);
-            await ProcessActionsAsync(postRunHanlder.Actions, "Failed to perform post-run action.");
+            await ProcessActionsAsync(
+                postRunHanlder.Actions,
+                "Failed to perform post-run action.",
+                cancellationToken
+            );
 
             _logger.Info("Post-run actions have been completed.");
         }
@@ -51,10 +59,10 @@ namespace ProjectV.CommonWebApi.Service.Setup
         #endregion
 
         private static async Task ProcessActionsAsync(IReadOnlyList<IServiceSetupAction> actions,
-            string errorMessage)
+            string errorMessage, CancellationToken cancellationToken)
         {
             var resultsOrExceptions = await actions
-                .SafeParallelForEachAwaitAsync(action => action.DoAsync());
+                .SafeParallelForEachAwaitAsync(action => action.DoAsync(), cancellationToken);
 
             var exceptions = resultsOrExceptions.UnwrapResultsOrExceptions();
             _logger.Errors(exceptions, errorMessage);

@@ -62,7 +62,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
         #region IConfigurationReceiverAsync Implementation
 
         public async Task<Result<StartJobDataResponce, ErrorResponse>> ReceiveConfigForRequestAsync(
-            StartJobParamsRequest jobParams)
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken = default)
         {
             jobParams.ThrowIfNull(nameof(jobParams));
 
@@ -74,7 +74,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Configuration
             try
             {
                 var result = await _client.SendAndReadAsync<ConfigurationXml>(
-                  request, _logger, _continueOnCapturedContext, CancellationToken.None
+                  request, _logger, _continueOnCapturedContext, cancellationToken
                 )
                 .ConfigureAwait(_continueOnCapturedContext);
 

@@ -60,7 +60,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
         #region IProcessingResponseReceiverAsync Implementation
 
         public async Task<Result<ProcessingResponse, ErrorResponse>> ReceiveProcessingResponseAsync(
-            StartJobDataResponce jobData)
+            StartJobDataResponce jobData, CancellationToken cancellationToken = default)
         {
             jobData.ThrowIfNull(nameof(jobData));
 
@@ -72,7 +72,7 @@ namespace ProjectV.CommunicationWebService.v1.Domain.Processing
                     .AsJson(jobData);
 
                 return await _client.SendAndReadAsync<ProcessingResponse>(
-                        request, _logger, _continueOnCapturedContext, CancellationToken.None
+                        request, _logger, _continueOnCapturedContext, cancellationToken
                     )
                     .ConfigureAwait(_continueOnCapturedContext);
             }

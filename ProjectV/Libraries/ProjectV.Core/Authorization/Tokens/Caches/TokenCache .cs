@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common;
@@ -25,7 +26,7 @@ namespace ProjectV.Core.Authorization.Tokens.Caches
         }
 
         public async Task<Result<TokenResponse, ErrorResponse>> GetTokensAsync(LoginRequest login,
-            bool forceRefresh)
+            bool forceRefresh, CancellationToken cancellationToken)
         {
             login.ThrowIfNull(nameof(login));
 
@@ -38,7 +39,7 @@ namespace ProjectV.Core.Authorization.Tokens.Caches
                 }
             }
 
-            _cachedResponse = await RequestToken(login)
+            _cachedResponse = await RequestToken(login, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
 
             return _cachedResponse.Value;
@@ -70,9 +71,10 @@ namespace ProjectV.Core.Authorization.Tokens.Caches
             return _cachedResponse.Value.Ok.AccessToken.ExpiryDateUtc > DateTime.UtcNow;
         }
 
-        private async Task<Result<TokenResponse, ErrorResponse>> RequestToken(LoginRequest login)
+        private async Task<Result<TokenResponse, ErrorResponse>> RequestToken(LoginRequest login,
+            CancellationToken cancellationToken)
         {
-            return await _tokenClient.LoginAsync(login)
+            return await _tokenClient.LoginAsync(login, cancellationToken)
                 .ConfigureAwait(_continueOnCapturedContext);
         }
     }

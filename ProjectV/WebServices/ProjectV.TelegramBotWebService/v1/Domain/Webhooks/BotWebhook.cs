@@ -38,13 +38,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
         #region IBotWebhook Implementation
 
         public async Task<AsyncDisposableAction> SetWebhookAsync(
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
-            _logger.Info($"Try to set webhook to {FullWebhookUrl}");
+            _logger.Info($"Try to set webhook for Telegram API to {FullWebhookUrl}");
 
             if (!string.IsNullOrWhiteSpace(BotCertificatePath))
             {
-                _logger.Info($"Trying to upload certificate additionally {BotCertificatePath}");
+                _logger.Info($"Trying to upload certificate additionally: [{BotCertificatePath}].");
 
                 using var certificateFile = File.OpenRead(BotCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
@@ -55,19 +55,19 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
                 await SetWebhookInternalAsync(certificate: null, cancellationToken);
             }
 
-            _logger.Info("Webhook was set.");
+            _logger.Info("Webhook for Telegram API was set.");
 
             return new AsyncDisposableAction(() => DeleteWebhookAsync(cancellationToken));
         }
 
-        public async Task DeleteWebhookAsync(CancellationToken cancellationToken = default)
+        public async Task DeleteWebhookAsync(CancellationToken cancellationToken)
         {
-            _logger.Info($"Try to delete webhook.");
+            _logger.Info($"Try to delete webhook for Telegram API.");
             var info = await _botService.GetWebhookInfoAsync(cancellationToken);
 
             if (string.IsNullOrEmpty(info.Url))
             {
-                _logger.Info("Webhook wasn't set, no need to delete.");
+                _logger.Info("Webhook for Telegram API wasn't set, no need to delete.");
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
                 dropPendingUpdates: DropPendingUpdatesOnDelete,
                 cancellationToken: cancellationToken
             );
-            _logger.Info("Webhook was deleted.");
+            _logger.Info("Webhook for Telegram API was deleted.");
         }
 
         #endregion

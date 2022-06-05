@@ -21,8 +21,9 @@ using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Controllers;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Cache;
+using ProjectV.TelegramBotWebService.v1.Domain.Cache.Users;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
+using ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories;
 using ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted;
@@ -58,13 +59,15 @@ namespace ProjectV.TelegramBotWebService
             services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
             services.AddTransient<ICommunicationServiceClient, CommunicationServiceClient>();
 
-            services.AddSingleton<IUpdateService, UpdateService>();
-            services.AddSingleton<IBotWebhook, BotWebhook>();
             services.AddSingleton<IBotService, BotService>();
-            services.AddSingleton<IBotHandler<Message>, BotMessageHandler>();
-            services.AddTransient<IUserCache, UserCache>();
+            services.AddSingleton<ITelegramUserCache, TelegramUserCache>();
             services.AddTransient<ITelegramTextProcessor, TelegramTextProcessor>();
             services.AddTransient<IProcessingResponseReceiver, ProcessingResponseReceiver>();
+            services.AddSingleton<IBotHandler<Message>, BotMessageHandler>();
+
+            services.AddSingleton<IUpdateService, UpdateService>();
+
+            services.AddSingleton<IBotWebhook, BotWebhook>();
 
             var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
             var botWebServiceSecion = Configuration.GetSection(nameof(TelegramBotWebServiceOptions));

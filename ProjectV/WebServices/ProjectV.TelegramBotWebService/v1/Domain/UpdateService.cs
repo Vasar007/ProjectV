@@ -1,12 +1,12 @@
 ﻿#pragma warning disable format // dotnet format fails indentation for switch :(
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -48,7 +48,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #region IUpdateService Implementation
 
-        public async Task ProcessUpdateRequestAsync(Update update)
+        public async Task ProcessUpdateRequestAsync(Update update,
+            CancellationToken cancellationToken = default)
         {
             if (update is null)
             {
@@ -58,23 +59,31 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             try
             {
-                await ProcessUpdateMessageInternalAsync(update);
+                await ProcessUpdateMessageInternalAsync(update, cancellationToken);
             }
             catch (Exception ex)
             {
-                await HandleErrorAsync(ex);
+                await HandleErrorAsync(ex, cancellationToken);
             }
+        }
+
+        public Task HandleErrorAsync(Exception exception,
+            CancellationToken cancellationToken = default)
+        {
+            _logger.Error(exception, $"Failed to process update request.");
+            return Task.CompletedTask;
         }
 
         #endregion
 
-        private async Task ProcessUpdateMessageInternalAsync(Update update)
+        private async Task ProcessUpdateMessageInternalAsync(Update update,
+            CancellationToken cancellationToken)
         {
             switch (update.Type)
             {
                 case UpdateType.Message:
                 {
-                    await ProcessIfNotNull(update.Message, _messageHandler.ProcessAsync);
+                    await ProcessIfNotNull(update.Message, _messageHandler.ProcessAsync, cancellationToken);
                     break;
                 }
 
@@ -87,7 +96,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             }
         }
 
-        private static async Task ProcessIfNotNull<TType>(TType? type, Func<TType, Task> handle)
+        private static async Task ProcessIfNotNull<TType>(TType? type, Func<TType, CancellationToken, Task> handle,
+            CancellationToken cancellationToken)
         {
             if (type is null)
             {
@@ -95,22 +105,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
                 return;
             }
 
-            await handle(type);
-        }
-
-        private static Task HandleErrorAsync(Exception ex)
-        {
-            var errorMessage = ex switch
-            {
-                ApiRequestException apiRequestException =>
-                    $"Telegram API Error [{apiRequestException.ErrorCode}]: " +
-                    $"{apiRequestException.Message}",
-
-                _ => ex.Message
-            };
-
-            _logger.Error(ex, $"Failed to process update request: {errorMessage}");
-            return Task.CompletedTask;
+            await handle(type, cancellationToken);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Common;
 using ProjectV.Models.WebServices.Requests;
@@ -8,6 +9,7 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
 {
     public interface ITokenClient : IDisposable
     {
-        Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login);
+        Task<Result<TokenResponse, ErrorResponse>> LoginAsync(LoginRequest login,
+            CancellationToken cancellationToken);
     }
 }

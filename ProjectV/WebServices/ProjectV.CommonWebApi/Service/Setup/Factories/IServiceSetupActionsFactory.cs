@@ -5,7 +5,7 @@ namespace ProjectV.CommonWebApi.Service.Setup.Factories
 {
     public interface IServiceSetupActionsFactory
     {
-        ServicePreRunHandler CreatePreRunActions(CancellationToken cancellationToken = default);
-        ServicePostRunHandler CreatePostRunActions(CancellationToken cancellationToken = default);
+        ServicePreRunHandler CreatePreRunActions(CancellationToken cancellationToken);
+        ServicePostRunHandler CreatePostRunActions(CancellationToken cancellationToken);
     }
 }

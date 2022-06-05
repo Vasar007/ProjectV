@@ -9,6 +9,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
     public interface IProcessingResponseReceiver : IDisposable
     {
         Task ScheduleRequestAsync(IBotService botService, long chatId,
-            StartJobParamsRequest jobParams, CancellationToken cancellationToken = default);
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken);
     }
 }

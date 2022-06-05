@@ -47,13 +47,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
         #region IProcessingResponseReceiver Implementation
 
         public Task ScheduleRequestAsync(IBotService botService, long chatId,
-            StartJobParamsRequest jobParams, CancellationToken cancellationToken = default)
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken)
         {
             // Tricky code to send request in additional thread and transmit response to user.
             // Need to schedule task because our service should send response to Telegram.
             // Otherwise Telegram will retry to send event again until service send a response.
             return Task.Run(
-                () => ScheduleRequestImplementation(botService, chatId, jobParams),
+                () => ScheduleRequestImplementation(botService, chatId, jobParams, cancellationToken),
                 cancellationToken
             );
         }
@@ -61,13 +61,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
         #endregion
 
         private async Task ScheduleRequestImplementation(IBotService botService, long chatId,
-            StartJobParamsRequest jobParams)
+            StartJobParamsRequest jobParams, CancellationToken cancellationToken)
         {
             _logger.Info("Trying to send request to ProjectV service.");
 
             try
             {
-                var result = await _serviceClient.StartJobAsync(jobParams);
+                var result = await _serviceClient.StartJobAsync(jobParams, cancellationToken);
 
                 if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
@@ -75,8 +75,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
                     string errorMessage = $"Processing request to service failed: {errorDetails}.";
                     _logger.Error(errorMessage);
                     await botService.SendTextMessageAsync(
-                        chatId,
-                        $"Cannot process request. Error: {errorMessage}"
+                        chatId: chatId,
+                        text: $"Cannot process request. Error: {errorMessage}",
+                        cancellationToken: cancellationToken
                     );
                     return;
                 }
@@ -87,8 +88,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
                 _logger.Info("Got response. Output message to Telegram chat.");
 
                 await botService.SendTextMessageAsync(
-                    chatId,
-                    CreateResponseMessage(converted)
+                    chatId: chatId,
+                    text: CreateResponseMessage(converted),
+                    cancellationToken: cancellationToken
                 );
 
                 _logger.Info("Request was processed.");
@@ -97,8 +99,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
                 await botService.SendTextMessageAsync(
-                    chatId,
-                    $"Cannot process request. Error: {ex.Message}"
+                    chatId: chatId,
+                    text: $"Cannot process request. Error: {ex.Message}",
+                    cancellationToken: cancellationToken
                 );
             }
         }
