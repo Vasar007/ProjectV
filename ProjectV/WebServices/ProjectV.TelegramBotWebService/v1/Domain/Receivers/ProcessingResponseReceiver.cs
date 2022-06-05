@@ -71,8 +71,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
 
                 if (!result.IsSuccess || result.Ok?.Metadata.ResultStatus != ServiceStatus.Ok)
                 {
-                    string? errorDetails = result.Error?.ErrorMessage ?? "Unknown error";
-                    string errorMessage = $"Processing request to service failed: {errorDetails}.";
+                    string? errorDetails = result.Error?.ErrorMessage ?? "Unknown error.";
+                    string errorMessage = GetProcessingErrorMessage(errorDetails);
                     _logger.Error(errorMessage);
                     await botService.SendTextMessageAsync(
                         chatId: chatId,
@@ -104,6 +104,18 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Receivers
                     cancellationToken: cancellationToken
                 );
             }
+        }
+
+        private static string GetProcessingErrorMessage(string errorDetails)
+        {
+            const string errorMessageFormat = "Processing request to service failed: {0}{1}";
+
+            if (errorDetails.EndsWith('.'))
+            {
+                return string.Format(errorMessageFormat, errorDetails, string.Empty);
+            }
+
+            return string.Format(errorMessageFormat, errorDetails, ".");
         }
 
         private static IReadOnlyDictionary<string, IList<double>> ConvertResultsToDict(
