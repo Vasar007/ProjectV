@@ -6,6 +6,6 @@
 
         LoopReceiving = 1,
         AsyncQueuedReceiving = 2,
-        BlockingReceiving = 3
+        AsyncBlockingReceiving = 3
     }
 }

@@ -3,6 +3,7 @@ using Acolyte.Assertions;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
+using ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers;
 using Telegram.Bot.Extensions.Polling;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
@@ -35,9 +36,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
             {
                 _ when options.IsMode(BotPollingProcessingMode.LoopReceiving) => new DefaultUpdateReceiver(_botService.BotClient, receiverOptions),
 
-                _ when options.IsMode(BotPollingProcessingMode.AsyncQueuedReceiving) => new DefaultUpdateReceiver(_botService.BotClient, receiverOptions),
+                _ when options.IsMode(BotPollingProcessingMode.AsyncQueuedReceiving) => new AsyncQueuedUpdateReceiver(_botService.BotClient, receiverOptions),
 
-                _ when options.IsMode(BotPollingProcessingMode.BlockingReceiving) => new DefaultUpdateReceiver(_botService.BotClient, receiverOptions),
+                _ when options.IsMode(BotPollingProcessingMode.AsyncBlockingReceiving) => new AsyncBlockingUpdateReceiver(_botService.BotClient, receiverOptions),
 
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(options),
