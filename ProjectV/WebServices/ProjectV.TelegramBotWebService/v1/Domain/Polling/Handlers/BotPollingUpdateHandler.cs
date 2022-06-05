@@ -23,12 +23,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
 
         #region IBotPollingUpdateHandler Implementation
 
+        /// <inheritdoc />
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
             CancellationToken cancellationToken)
         {
             await _updateService.ProcessUpdateRequestAsync(update, cancellationToken);
         }
 
+        /// <inheritdoc />
         public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
             CancellationToken cancellationToken)
         {

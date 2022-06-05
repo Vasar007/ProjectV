@@ -5,6 +5,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
 {
     public interface IBotPolling
     {
-        Task ResiveUpdatesAsync(CancellationToken cancellationToken);
+        Task StartReceivingUpdatesAsync(CancellationToken cancellationToken);
     }
 }

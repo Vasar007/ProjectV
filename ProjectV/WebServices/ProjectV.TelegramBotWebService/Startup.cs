@@ -152,7 +152,7 @@ namespace ProjectV.TelegramBotWebService
             var wrappedOptions = app.ApplicationServices
                 .GetRequiredService<IOptions<TelegramBotWebServiceOptions>>();
             var botOptions = wrappedOptions.Value;
-            if (!botOptions.Bot.UseBotTokenInWebhookUrl)
+            if (!botOptions.Bot.Webhook.UseBotTokenInUrl)
             {
                 _logger.Info("Using default mapping for controllers.");
                 return;

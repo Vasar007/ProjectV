@@ -12,7 +12,6 @@ using ProjectV.Core.Net.Http;
 using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
@@ -26,11 +25,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
         private readonly TelegramBotWebServiceOptions _botServiceOptions;
 
         private readonly HttpClient _httpClient;
-        private readonly ITelegramBotClient _botClient;
+
         private readonly bool _continueOnCapturedContext;
 
         private HttpClientOptions HcOptions => _serviceOptions.HttpClient;
         private string BotToken => _botServiceOptions.Bot.Token;
+
+        /// <inheritdoc />
+        public ITelegramBotClient BotClient { get; }
 
 
         public BotService(
@@ -47,7 +49,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
                 _httpClient = httpClientFactory.CreateClientWithOptions(HcOptions);
                 _continueOnCapturedContext = false;
 
-                _botClient = new TelegramBotClient(BotToken, _httpClient);
+                BotClient = new TelegramBotClient(BotToken, _httpClient);
             }
             catch (Exception)
             {
@@ -85,7 +87,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                () => _botClient.GetUpdatesAsync(
+                () => BotClient.GetUpdatesAsync(
                     offset: offset,
                     limit: limit,
                     timeout: timeout,
@@ -106,7 +108,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             await InternalCall(
-               () => _botClient.SetWebhookAsync(
+               () => BotClient.SetWebhookAsync(
                     url: url,
                     certificate: certificate,
                     ipAddress: ipAddress,
@@ -124,7 +126,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             await InternalCall(
-                () => _botClient.DeleteWebhookAsync(
+                () => BotClient.DeleteWebhookAsync(
                     dropPendingUpdates: dropPendingUpdates,
                     cancellationToken: cancellationToken
                 )
@@ -136,7 +138,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                 () => _botClient.GetWebhookInfoAsync(
+                 () => BotClient.GetWebhookInfoAsync(
                      cancellationToken: cancellationToken
                  )
              ).ConfigureAwait(_continueOnCapturedContext);
@@ -156,7 +158,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                () => _botClient.SendTextMessageAsync(
+                () => BotClient.SendTextMessageAsync(
                     chatId: chatId,
                     text: text,
                     parseMode: parseMode,
@@ -166,21 +168,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
                     replyToMessageId: replyToMessageId,
                     allowSendingWithoutReply: allowSendingWithoutReply,
                     replyMarkup: replyMarkup,
-                    cancellationToken: cancellationToken
-                )
-            ).ConfigureAwait(_continueOnCapturedContext);
-        }
-
-        /// <inheritdoc />
-        public async Task ReceiveAsync(
-            IUpdateHandler updateHandler,
-            ReceiverOptions? receiverOptions = null,
-            CancellationToken cancellationToken = default)
-        {
-            await InternalCall(
-                () => _botClient.ReceiveAsync(
-                    updateHandler: updateHandler,
-                    receiverOptions: receiverOptions,
                     cancellationToken: cancellationToken
                 )
             ).ConfigureAwait(_continueOnCapturedContext);

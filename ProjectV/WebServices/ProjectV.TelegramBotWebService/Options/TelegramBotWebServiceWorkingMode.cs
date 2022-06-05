@@ -7,6 +7,6 @@
         WebhookViaServiceSetup = 1,
         WebhookViaHostedService = 2,
 
-        PollingViaHostedService = 3,
+        PollingViaHostedService = 3
     }
 }

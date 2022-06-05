@@ -21,10 +21,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
         private readonly IBotService _botService;
 
         private string FullWebhookUrl => _options.GetFullWebhookUrl();
-        private string? BotCertificatePath => _options.Bot.CertificatePath;
-        private bool? DropPendingUpdatesOnSet => _options.Bot.DropPendingUpdatesOnSet;
-        private bool? DropPendingUpdatesOnDelete => _options.Bot.DropPendingUpdatesOnDelete;
-        private int? BotMaxConnections => _options.Bot.MaxConnections;
+        private string? BotCertificatePath => _options.Bot.Webhook.CertificatePath;
+        private bool? DropPendingUpdatesOnSet => _options.Bot.Webhook.DropPendingUpdatesOnSet;
+        private bool? DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
+        private int? BotMaxConnections => _options.Bot.Webhook.MaxConnections;
 
 
         public BotWebhook(

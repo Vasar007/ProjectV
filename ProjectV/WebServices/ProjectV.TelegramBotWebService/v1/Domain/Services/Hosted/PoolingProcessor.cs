@@ -37,7 +37,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Services.Hosted
         {
             _logger.Info("Starting polling over background service.");
 
-            await _botPolling.ResiveUpdatesAsync(stoppingToken);
+            await _botPolling.StartReceivingUpdatesAsync(stoppingToken);
 
             _logger.Info("Polling over background service has been finished.");
         }

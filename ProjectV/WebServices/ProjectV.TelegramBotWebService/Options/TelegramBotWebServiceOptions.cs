@@ -27,21 +27,21 @@ namespace ProjectV.TelegramBotWebService.Options
             return TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup;
         }
 
-        public bool IsMode(TelegramBotWebServiceWorkingMode expectedWorkingMode)
+        public bool IsMode(TelegramBotWebServiceWorkingMode expectedMode)
         {
-            expectedWorkingMode.ThrowIfEnumValueIsUndefined(nameof(expectedWorkingMode));
+            expectedMode.ThrowIfEnumValueIsUndefined(nameof(expectedMode));
 
             if (WorkingMode == TelegramBotWebServiceWorkingMode.Default)
             {
-                return GetWorkingModeForDefault() == expectedWorkingMode;
+                return GetWorkingModeForDefault() == expectedMode;
             }
 
-            return WorkingMode == expectedWorkingMode;
+            return WorkingMode == expectedMode;
         }
 
         public string GetFullWebhookUrl()
         {
-            var webhookUrl = Bot.WebhookUrl;
+            var webhookUrl = Bot.Webhook.Url;
             var serviceApiUrl = GetServiceApiUrl();
 
             if (!webhookUrl.EndsWith('/') && !serviceApiUrl.StartsWith('/'))
@@ -55,12 +55,12 @@ namespace ProjectV.TelegramBotWebService.Options
 
         public string GetServiceApiUrl()
         {
-            if (Bot.UseBotTokenInWebhookUrl)
+            if (Bot.Webhook.UseBotTokenInUrl)
             {
                 return ConstructWebhookUrlWithBotToken();
             }
 
-            return ConstructWebhookUrlWithServiceApi();
+            return ConstructUrlWithServiceApi();
         }
 
         private string ConstructWebhookUrlWithBotToken()
@@ -71,7 +71,7 @@ namespace ProjectV.TelegramBotWebService.Options
             // developers recommend using a secret path in the URL: https://www.example.com/<token>.
             // Since nobody else knows our bot's token, we can be pretty sure it's Telegram API.
 
-            var botApiUrl = Bot.BotWebhookApiUrl;
+            var botApiUrl = Bot.Webhook.BotApiUrl;
             if (!botApiUrl.EndsWith('/'))
             {
                 // Append exactly one slash to the end of API URL.
@@ -81,7 +81,7 @@ namespace ProjectV.TelegramBotWebService.Options
             return $"{botApiUrl}{Bot.Token}";
         }
 
-        private string ConstructWebhookUrlWithServiceApi()
+        private string ConstructUrlWithServiceApi()
         {
             var serviceApiUrl = ServiceApiUrl;
             if (serviceApiUrl.StartsWith('/'))
