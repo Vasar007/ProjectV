@@ -80,7 +80,8 @@ namespace ProjectV.TelegramBotWebService
             services
                 .Configure<ProjectVServiceOptions>(serviceOptionsSection)
                 .Configure<JwtOptions>(jwtOptionsSecion)
-                .Configure<TelegramBotWebServiceOptions>(botWebServiceSecion);
+                .Configure<TelegramBotWebServiceOptions>(botWebServiceSecion)
+                .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             // Add hosted service as background activities depending on the set working mode.
             var botWebServiceOptions = botWebServiceSecion.Get<TelegramBotWebServiceOptions>();
