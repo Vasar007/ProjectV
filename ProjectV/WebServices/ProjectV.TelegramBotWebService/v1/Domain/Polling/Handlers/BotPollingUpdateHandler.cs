@@ -27,7 +27,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
             CancellationToken cancellationToken)
         {
-            await _updateService.ProcessUpdateRequestAsync(update, cancellationToken);
+            await _updateService.HandleUpdateAsync(update, cancellationToken);
         }
 
         /// <inheritdoc />

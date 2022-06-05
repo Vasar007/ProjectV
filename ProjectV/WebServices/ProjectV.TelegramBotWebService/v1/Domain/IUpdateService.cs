@@ -7,7 +7,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 {
     public interface IUpdateService : IDisposable
     {
-        Task ProcessUpdateRequestAsync(Update update, CancellationToken cancellationToken = default);
+        Task HandleUpdateAsync(Update update, CancellationToken cancellationToken = default);
         Task HandleErrorAsync(Exception exception, CancellationToken cancellationToken = default);
     }
 }

@@ -48,7 +48,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #region IUpdateService Implementation
 
-        public async Task ProcessUpdateRequestAsync(Update update,
+        public async Task HandleUpdateAsync(Update update,
             CancellationToken cancellationToken = default)
         {
             if (update is null)
@@ -59,7 +59,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
             try
             {
-                await ProcessUpdateMessageInternalAsync(update, cancellationToken);
+                await HandleUpdateInternalAsync(update, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
 
         #endregion
 
-        private async Task ProcessUpdateMessageInternalAsync(Update update,
+        private async Task HandleUpdateInternalAsync(Update update,
             CancellationToken cancellationToken)
         {
             switch (update.Type)

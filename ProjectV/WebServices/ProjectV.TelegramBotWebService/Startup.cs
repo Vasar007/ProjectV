@@ -23,6 +23,7 @@ using ProjectV.TelegramBotWebService.v1.Domain;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling;
+using ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Receivers;
 using ProjectV.TelegramBotWebService.v1.Domain.Service.Setup.Factories;
@@ -71,6 +72,7 @@ namespace ProjectV.TelegramBotWebService
             services.AddSingleton<IBotWebhook, BotWebhook>();
 
             services.AddSingleton<IBotPollingUpdateHandler, BotPollingUpdateHandler>();
+            services.AddSingleton<IBotPollingReceiverFactory, BotPollingReceiverFactory>();
             services.AddSingleton<IBotPolling, BotPolling>();
 
             var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));

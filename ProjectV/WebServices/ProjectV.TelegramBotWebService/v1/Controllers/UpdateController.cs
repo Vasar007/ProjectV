@@ -32,7 +32,7 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromBody] Update update)
         {
-            await _updateService.ProcessUpdateRequestAsync(update);
+            await _updateService.HandleUpdateAsync(update);
             return Ok();
         }
     }
