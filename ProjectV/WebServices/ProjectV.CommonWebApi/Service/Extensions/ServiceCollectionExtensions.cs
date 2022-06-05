@@ -101,23 +101,35 @@ namespace ProjectV.CommonWebApi.Service.Extensions
         }
 
         public static IServiceCollection AddHostedService<THostedService>(
-           this IServiceCollection services,
-           Func<IServiceProvider, THostedService> implementationFactory,
-           bool ignoreServiceSetupErrors)
+            this IServiceCollection services,
+            Func<IServiceProvider, THostedService> implementationFactory,
+            bool ignoreServiceSetupErrors)
             where THostedService : class, IHostedService
         {
             services.ThrowIfNull(nameof(services));
+            implementationFactory.ThrowIfNull(nameof(implementationFactory));
 
             if (ignoreServiceSetupErrors)
             {
-                return services.AddHostedService(provider =>
-                {
-                    var realHostedService = implementationFactory(provider);
-                    return new HostedServiceSafeWrapper(realHostedService);
-                });
+                return services.AddHostedServiceAsSafe(implementationFactory);
             }
 
             return services.AddHostedService(implementationFactory);
+        }
+
+        public static IServiceCollection AddHostedServiceAsSafe<THostedService>(
+            this IServiceCollection services,
+            Func<IServiceProvider, THostedService> implementationFactory)
+            where THostedService : class, IHostedService
+        {
+            services.ThrowIfNull(nameof(services));
+            implementationFactory.ThrowIfNull(nameof(implementationFactory));
+
+            return services.AddHostedService(provider =>
+            {
+                var realHostedService = implementationFactory(provider);
+                return new HostedServiceSafeWrapper(realHostedService);
+            });
         }
     }
 }

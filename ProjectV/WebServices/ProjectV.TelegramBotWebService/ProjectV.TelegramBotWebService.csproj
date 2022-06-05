@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Telegram.Bot" />
+    <PackageReference Include="Telegram.Bot.Extensions.Polling" />
   </ItemGroup>
 
   <ItemGroup>
