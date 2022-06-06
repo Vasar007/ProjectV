@@ -20,7 +20,7 @@ namespace ProjectV.Core.Net.Http
             options.ThrowIfNull(nameof(options));
 
             return new HttpClientHandler()
-                .ConfigureHandlerWithOptions(options); ;
+                .ConfigureHandlerWithOptions(options);
         }
 
         public static HttpClientHandler ConfigureHandlerWithOptions(
