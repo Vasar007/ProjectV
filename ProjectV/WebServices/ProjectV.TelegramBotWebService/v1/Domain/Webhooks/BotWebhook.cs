@@ -75,7 +75,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
                 dropPendingUpdates: DropPendingUpdatesOnDelete,
                 cancellationToken: cancellationToken
             );
-            _logger.Info("Webhook for Telegram API was deleted.");
+            _logger.Info($"Webhook [{info.Url}] for Telegram API was deleted.");
         }
 
         #endregion
