@@ -10,10 +10,14 @@ namespace ProjectV.Configuration
         [return: NotNull]
         public static TOptions GetCheckedValue<TOptions>(this IOptions<TOptions>? options,
             [CallerArgumentExpression("options")] string paramName = "")
-            where TOptions : class
+            where TOptions : class, IOptions
         {
-            return options.ThrowIfNull(paramName)
+            var value = options.ThrowIfNull(paramName)
                 .Value.ThrowIfNull(paramName);
+
+            value.Validate();
+
+            return value;
         }
     }
 }

@@ -4,9 +4,9 @@ namespace ProjectV.SteamService.Models
 {
     public sealed class SteamBriefInfo
     {
-        public int AppId { get; set; }
+        public int AppId { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
 
         public SteamBriefInfo(int appId, string name)

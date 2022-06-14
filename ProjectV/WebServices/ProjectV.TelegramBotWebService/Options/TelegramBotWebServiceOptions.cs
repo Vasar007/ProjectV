@@ -7,24 +7,35 @@ namespace ProjectV.TelegramBotWebService.Options
     public sealed class TelegramBotWebServiceOptions : IOptions
     {
         [Required]
-        public BotOptions Bot { get; set; } = default!;
+        public BotOptions Bot { get; init; } = default!;
 
         [Required(AllowEmptyStrings = false)]
-        public string ServiceApiUrl { get; set; } = default!;
+        public string ServiceApiUrl { get; init; } = default!;
 
-        public TelegramBotWebServiceWorkingMode WorkingMode { get; set; } =
+        public TelegramBotWebServiceWorkingMode WorkingMode { get; init; } =
             TelegramBotWebServiceWorkingMode.Default;
 
-        public bool IgnoreServiceSetupErrors { get; set; } = false;
+        public bool IgnoreServiceSetupErrors { get; init; } = false;
 
 
         public TelegramBotWebServiceOptions()
         {
         }
 
+        #region IOptions Implementation
+
+        public void Validate()
+        {
+            Bot.ThrowIfNull(nameof(Bot));
+            ServiceApiUrl.ThrowIfNullOrWhiteSpace(nameof(ServiceApiUrl));
+            WorkingMode.ThrowIfEnumValueIsUndefined(nameof(WorkingMode));
+        }
+
+        #endregion
+
         public TelegramBotWebServiceWorkingMode GetWorkingModeForDefault()
         {
-            return TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup;
+            return TelegramBotWebServiceWorkingMode.PollingViaHostedService;
         }
 
         public bool IsMode(TelegramBotWebServiceWorkingMode expectedMode)

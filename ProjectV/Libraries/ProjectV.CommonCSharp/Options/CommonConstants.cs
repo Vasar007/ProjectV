@@ -23,5 +23,8 @@
         public static string DefaultResultFilename { get; } = "results.xlsx";
 
         public static string NotAvailable { get; } = "N/A";
+
+        public const int MinPort = 0;
+        public const int MaxPort = 65535;
     }
 }
