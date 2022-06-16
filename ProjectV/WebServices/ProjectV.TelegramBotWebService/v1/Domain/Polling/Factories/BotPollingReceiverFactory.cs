@@ -4,7 +4,7 @@ using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers;
-using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Polling;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
 {

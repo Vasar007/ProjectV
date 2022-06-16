@@ -31,7 +31,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
         }
 
         /// <inheritdoc />
-        public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
+        public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
             CancellationToken cancellationToken)
         {
             await _updateService.HandleErrorAsync(exception, cancellationToken);

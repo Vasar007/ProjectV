@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Telegram.Bot;
-using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers

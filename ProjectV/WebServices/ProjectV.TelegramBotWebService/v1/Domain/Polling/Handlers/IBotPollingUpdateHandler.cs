@@ -1,4 +1,4 @@
-﻿using Telegram.Bot.Extensions.Polling;
+﻿using Telegram.Bot.Polling;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
 {
