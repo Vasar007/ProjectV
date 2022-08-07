@@ -10,7 +10,8 @@ shallow_clone: true
 
 # Build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
-  - x64
+  - Windows x64
+  # No Linux build yet.
 
 configuration:
   - Debug
