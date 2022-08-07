@@ -4,9 +4,10 @@
     <Platforms>$(AppPlatforms)</Platforms>
     <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Library</OutputType>
-    <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(FSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.Activities</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
@@ -15,10 +16,6 @@
 
   <ItemGroup>
     <Compile Include="PolicyModels.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>

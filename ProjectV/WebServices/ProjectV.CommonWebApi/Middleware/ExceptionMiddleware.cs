@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
-using ProjectV.CommonWebApi.Extensions;
+using ProjectV.CommonWebApi.Middleware.Extensions;
 using ProjectV.CommonWebApi.Models;
 using ProjectV.Logging;
 
@@ -39,10 +39,10 @@ namespace ProjectV.CommonWebApi.Middleware
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
             string message = exception.GetErrorMessage();
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ProjectV.DesktopApp.Models.Things;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {

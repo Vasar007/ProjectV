@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.ConfigurationWebService.v1.Domain;
 using ProjectV.Logging;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.ConfigurationWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/configuration")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class ConfigurationController : ControllerBase
     {

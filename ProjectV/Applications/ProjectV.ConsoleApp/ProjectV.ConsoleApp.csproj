@@ -7,11 +7,12 @@
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.ConsoleApp</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>
-    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\Resources\ProjectV_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,12 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="games.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="thing_names.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="..\..\Resources\games.csv" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="..\..\Resources\thing_names.csv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

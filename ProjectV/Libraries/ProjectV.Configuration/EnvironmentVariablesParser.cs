@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Acolyte.Assertions;
 using Acolyte.Linq;
+using ProjectV.Options;
 
 namespace ProjectV
 {
@@ -15,7 +17,7 @@ namespace ProjectV
         /// <summary>
         /// Name of the environment variable to read.
         /// </summary>
-        private static string EnvironmentVariableName { get; } = "ProjectV";
+        private static string EnvironmentVariableName { get; } = CommonConstants.ApplicationName;
 
         /// <summary>
         /// Specifies the target where the variable is located.
@@ -83,7 +85,7 @@ namespace ProjectV
             where T : IConvertible
         {
             string stringValue = GetValue(variableName);
-            return (T)Convert.ChangeType(stringValue, typeof(T));
+            return (T) Convert.ChangeType(stringValue, typeof(T));
         }
 
         /// <summary>
@@ -99,15 +101,15 @@ namespace ProjectV
         /// <exception cref="ArgumentException">
         /// <paramref name="variableName" /> presents empty string.
         /// </exception>
-        public static T GetValueOrDefault<T>(string variableName, T defaultValue)
+        [return: NotNullIfNotNull("defaultValue")]
+        public static T? GetValueOrDefault<T>(string variableName, T? defaultValue)
             where T : IConvertible
         {
             variableName.ThrowIfNullOrEmpty(nameof(variableName));
 
             try
             {
-                string stringValue = GetValue(variableName);
-                return (T)Convert.ChangeType(stringValue, typeof(T));
+                return GetValue<T>(variableName);
             }
             catch (Exception)
             {
@@ -166,15 +168,13 @@ namespace ProjectV
             if (string.IsNullOrWhiteSpace(keyValuePair[0]))
             {
                 throw new InvalidOperationException(
-                    "Environment variable has empty value among keys: " +
-                    $"'{keyValuePair[0]}'."
+                    $"Environment variable has empty value among keys: '{keyValuePair[0]}'."
                 );
             }
             if (string.IsNullOrWhiteSpace(keyValuePair[1]))
             {
                 throw new InvalidOperationException(
-                    "Environment variable has empty value among values: " +
-                    $"'{keyValuePair[1]}'."
+                    $"Environment variable has empty value among values: '{keyValuePair[1]}'."
                 );
             }
 

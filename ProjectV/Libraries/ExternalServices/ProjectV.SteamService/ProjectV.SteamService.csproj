@@ -4,9 +4,10 @@
     <Platforms>$(AppPlatforms)</Platforms>
     <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Library</OutputType>
-    <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.SteamService</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
@@ -14,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SteamWebApiLib" Version="$(SteamWebApiLibPackageVersion)" />
+    <PackageReference Include="SteamWebApiLib" />
   </ItemGroup>
 
   <ItemGroup>

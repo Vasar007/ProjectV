@@ -12,7 +12,6 @@ namespace NLog.Extension
     /// </remarks>
     [LayoutRenderer("replace-newlines-withlayout")]
     [ThreadAgnostic]
-    [ThreadSafe]
     public sealed class ReplaceNewLinesFormatWrapperLayoutRenderer : WrapperLayoutRendererBase
     {
         private string _replacementString = " ";

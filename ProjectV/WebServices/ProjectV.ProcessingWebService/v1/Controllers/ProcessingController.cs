@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectV.DataAccessLayer.Services.Jobs;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 using ProjectV.ProcessingWebService.v1.Domain;
 
 namespace ProjectV.ProcessingWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/processing")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class ProcessingController : ControllerBase
     {
@@ -42,16 +42,16 @@ namespace ProjectV.ProcessingWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProcessingResponse>> PostRequestData(
-            RequestData requestData)
+            StartJobDataResponce jobData)
         {
             _logger.Info("Processing data request.");
-            _logger.Debug($"ThingNames: [{requestData.ThingNames.ToSingleString()}]");
+            _logger.Debug($"ThingNames: [{jobData.ThingNames.ToSingleString()}]");
 
             IServiceRequestProcessor requestProcessor = _serviceCreator.CreateRequestProcessor(
-                requestData.ConfigurationXml.ServiceType, _jobInfoService
+                jobData.ConfigurationXml.ServiceType, _jobInfoService
             );
 
-            ProcessingResponse response = await requestProcessor.ProcessRequest(requestData);
+            ProcessingResponse response = await requestProcessor.ProcessRequest(jobData);
             if (response.Metadata.ResultStatus != ServiceStatus.Ok)
             {
                 return BadRequest(response);

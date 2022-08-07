@@ -5,9 +5,9 @@ namespace ProjectV.DataAccessLayer
 {
     public sealed class DatabaseOptions : IOptions
     {
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; init; }
 
-        public bool CanUseDatabase { get; set; }
+        public bool CanUseDatabase { get; init; }
 
 
         public DatabaseOptions()
@@ -20,8 +20,20 @@ namespace ProjectV.DataAccessLayer
             string dbConnectionString,
             bool canUseDatabase)
         {
-            ConnectionString = dbConnectionString.ThrowIfNullOrEmpty(nameof(dbConnectionString));
+            ConnectionString = dbConnectionString.ThrowIfNullOrWhiteSpace(nameof(dbConnectionString));
             CanUseDatabase = canUseDatabase;
         }
+
+        #region IOptions Implementation
+
+        public void Validate()
+        {
+            if (CanUseDatabase)
+            {
+                ConnectionString.ThrowIfNullOrWhiteSpace(nameof(ConnectionString));
+            }
+        }
+
+        #endregion
     }
 }

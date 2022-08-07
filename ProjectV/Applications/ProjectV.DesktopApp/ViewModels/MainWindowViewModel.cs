@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,6 +8,7 @@ using Acolyte.Assertions;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using ProjectV.Configuration;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Commands;
 using ProjectV.DesktopApp.Domain.Messages;
@@ -17,7 +19,7 @@ using ProjectV.DesktopApp.Models.Things;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.ViewModels
 {
@@ -27,6 +29,7 @@ namespace ProjectV.DesktopApp.ViewModels
             LoggerFactory.CreateLoggerFor<MainWindowViewModel>();
 
         private readonly IEventAggregator _eventAggregator;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         private readonly SceneItemsCollection _scenes;
 
@@ -79,9 +82,12 @@ namespace ProjectV.DesktopApp.ViewModels
         public IReadOnlyList<SceneItem> SceneItems => _scenes.SceneItems;
 
 
-        public MainWindowViewModel(IEventAggregator eventAggregator)
+        public MainWindowViewModel(
+            IEventAggregator eventAggregator,
+            IHttpClientFactory httpClientFactory)
         {
             _eventAggregator = eventAggregator.ThrowIfNull(nameof(eventAggregator));
+            _httpClientFactory = httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
 
             _eventAggregator
                 .GetEvent<AppraiseInputThingsMessage>()
@@ -118,7 +124,13 @@ namespace ProjectV.DesktopApp.ViewModels
             );
             ForceReturnToStartViewCommand = new DelegateCommand<UserControl>(ReturnToStartView);
             GoToSettingsViewCommand = new DelegateCommand(GoToSettingsView);
+            AddScenes(eventAggregator);
 
+            ChangeScene(DesktopOptions.PageNames.StartPage);
+        }
+
+        private void AddScenes(IEventAggregator eventAggregator)
+        {
             // TODO: create new scenes to set views dynamically in separate tabs.
             _scenes.AddScene(
                 DesktopOptions.PageNames.StartPage,
@@ -159,8 +171,6 @@ namespace ProjectV.DesktopApp.ViewModels
                 DesktopOptions.PageNames.SettingsPage,
                 new SettingsView()
             );
-
-            ChangeScene(DesktopOptions.PageNames.StartPage);
         }
 
         private string GetServiceNameFromStartControl()
@@ -219,14 +229,17 @@ namespace ProjectV.DesktopApp.ViewModels
             {
                 IsNotBusy = false;
 
-                var thingPerformer = new ThingPerformer();
+                using var thingPerformer = new ThingPerformer(
+                    _httpClientFactory, ConfigOptions.ProjectVService, ConfigOptions.UserService
+                );
                 ThingResultInfo result = await thingPerformer.PerformAsync(thingsInfo);
                 ProcessStatusOperation(result);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Exception occurred during data processing request.");
-                MessageBoxProvider.ShowError(ex.Message);
+                string errorMessage = GetProcessingErrorMessage(ex.Message);
+                MessageBoxProvider.ShowError(errorMessage);
 
                 ForceReturnToStartViewCommand.Execute(null);
             }
@@ -236,17 +249,31 @@ namespace ProjectV.DesktopApp.ViewModels
             }
         }
 
-        private void ProcessStatusOperation(ThingResultInfo result)
+        private static string GetProcessingErrorMessage(string errorDetails)
         {
-            result.ThrowIfNull(nameof(result));
+            const string errorMessageFormat = "Processing request to service failed: {0}{1}";
 
-            if (result.Response?.Metadata.ResultStatus == ServiceStatus.Ok)
+            if (errorDetails.EndsWith('.'))
             {
-                ChangeSceneAndUpdateItems(result.ServiceName, result.Response);
+                return string.Format(errorMessageFormat, errorDetails, string.Empty);
+            }
+
+            return string.Format(errorMessageFormat, errorDetails, ".");
+        }
+
+        private void ProcessStatusOperation(ThingResultInfo info)
+        {
+            info.ThrowIfNull(nameof(info));
+
+            if (info.Result.IsSuccess && info.Result.Ok?.Metadata.ResultStatus == ServiceStatus.Ok)
+            {
+                ChangeSceneAndUpdateItems(info.ServiceName, info.Result.Ok);
             }
             else
             {
-                MessageBoxProvider.ShowError("Request to ProjectV service failed.");
+                string errorDetails = info.Result.Error?.ErrorMessage ?? "Unknown error";
+                string errorMessage = GetProcessingErrorMessage(errorDetails);
+                MessageBoxProvider.ShowError(errorMessage);
                 ForceReturnToStartViewCommand.Execute(null);
             }
         }

@@ -1,6 +1,6 @@
 ﻿using ProjectV.Configuration;
 using ProjectV.Models.Configuration;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.ConfigurationWebService.v1.Domain
 {
@@ -15,8 +15,9 @@ namespace ProjectV.ConfigurationWebService.v1.Domain
         public ConfigurationXml CreateConfigBasedOnRequirements(
             ConfigRequirements configRequirements)
         {
-            ConfigurationXml configurationXml =
-                XmlConfigCreator.CreateXmlConfigBasedOnRequirements(configRequirements);
+            ConfigurationXml configurationXml = XmlConfigCreator.CreateXmlConfigBasedOnRequirements(
+                configRequirements
+            );
             return configurationXml;
         }
 

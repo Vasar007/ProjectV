@@ -4,9 +4,10 @@
     <Platforms>$(AppPlatforms)</Platforms>
     <Configurations>$(AppConfigurations)</Configurations>
     <OutputType>Library</OutputType>
-    <TargetFramework>$(LibraryTargetFramework)</TargetFramework>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(FSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.ContentDirectories</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
@@ -17,10 +18,6 @@
     <Compile Include="ContentModels.fs" />
     <Compile Include="ContentFinderInternal.fs" />
     <Compile Include="ContentFinder.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>

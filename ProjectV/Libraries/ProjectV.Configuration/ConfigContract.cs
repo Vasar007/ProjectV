@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Acolyte.Assertions;
-using Acolyte.Linq;
 using Acolyte.Common;
+using Acolyte.Linq;
 
 namespace ProjectV.Configuration
 {

@@ -11,7 +11,7 @@ using ProjectV.IO.Output.WebService;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 using ProjectV.TmdbService;
 
 namespace ProjectV.ProcessingWebService.v1.Domain
@@ -35,17 +35,17 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         #region IServiceRequestProcessor Implementation
 
-        public async Task<ProcessingResponse> ProcessRequest(RequestData requestData)
+        public async Task<ProcessingResponse> ProcessRequest(StartJobDataResponce jobData)
         {
             _logger.Info("Processing request with async processor.");
 
-            var inputTransmitter = new InputTransmitter(requestData.ThingNames);
+            var inputTransmitter = new InputTransmitter(jobData.ThingNames);
             var outputTransmitter = new OutputTransmitter();
 
-            SimpleExecutor simpleExecutor = await CreateExecutorAsync(requestData);
+            SimpleExecutor simpleExecutor = await CreateExecutorAsync(jobData);
 
             IReadOnlyList<ServiceStatus> resultStatuses = await simpleExecutor.ExecuteAsync(
-                requestData, inputTransmitter, outputTransmitter
+                jobData, inputTransmitter, outputTransmitter
             );
 
             ServiceStatus status = resultStatuses.Single();
@@ -57,7 +57,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
             var response = new ProcessingResponse
             {
-                Metadata = new ResponseMetadata
+                Metadata = new ProcessingResponseMetadata
                 {
                     CommonResultsNumber = results.Sum(rating => rating.Count),
                     CommonResultCollectionsNumber = results.Count,
@@ -73,7 +73,7 @@ namespace ProjectV.ProcessingWebService.v1.Domain
 
         #endregion
 
-        private async Task<SimpleExecutor> CreateExecutorAsync(RequestData requestData)
+        private async Task<SimpleExecutor> CreateExecutorAsync(StartJobDataResponce requestData)
         {
             // TODO: refactor this code.
             var jobInfo = JobInfo.Create(

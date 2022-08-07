@@ -1,35 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Linq;
 using ProjectV.Building;
 using ProjectV.Building.Service;
 using ProjectV.Configuration;
+using ProjectV.Configuration.Options;
+using ProjectV.Core.Services.Clients;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Domain.Executor;
-using ProjectV.DesktopApp.Models.DataSuppliers;
 using ProjectV.IO.Input.File;
 using ProjectV.Logging;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Requests;
 
 namespace ProjectV.DesktopApp.Models.Things
 {
-    internal sealed class ThingPerformer : IPerformer<ThingPerformerInfo, ThingResultInfo>
+    internal sealed class ThingPerformer : IPerformer<ThingPerformerInfo, ThingResultInfo>,
+        IDisposable
     {
-        private static readonly ILogger _logger =
-               LoggerFactory.CreateLoggerFor<ThingPerformer>();
+        private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor<ThingPerformer>();
 
         private readonly IRequirementsCreator _requirementsCreator;
 
-        private readonly ServiceProxy _serviceProxy;
+        private readonly ICommunicationServiceClient _serviceClient;
 
 
-        public ThingPerformer()
+        public ThingPerformer(
+            IHttpClientFactory httpClientFactory,
+            ProjectVServiceOptions serviceOptions,
+            UserServiceOptions userServiceOptions)
         {
+            httpClientFactory.ThrowIfNull(nameof(httpClientFactory));
+            serviceOptions.ThrowIfNull(nameof(serviceOptions));
+            userServiceOptions.ThrowIfNull(nameof(userServiceOptions));
+
             _requirementsCreator = new RequirementsCreator();
-            _serviceProxy = new ServiceProxy();
+            _serviceClient = new CommunicationServiceClient(
+                httpClientFactory, serviceOptions, userServiceOptions
+            );
         }
+
+        #region IDisposable Implementation
+
+        /// <summary>
+        /// Boolean flag used to show that object has already been disposed.
+        /// </summary>
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _serviceClient.Dispose();
+
+            _disposed = true;
+        }
+
+        #endregion
 
         #region IPerformer<ThingPerformerInfo, ThingResultInfo> Implementation
 
@@ -37,18 +66,19 @@ namespace ProjectV.DesktopApp.Models.Things
         {
             thingsInfo.ThrowIfNull(nameof(thingsInfo));
 
-            RequestParams requestParams = await ConfigureServiceRequest(thingsInfo)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            var requestParams = await ConfigureServiceRequest(thingsInfo)
+                .ConfigureAwait(false);
 
-            ProcessingResponse? response = await _serviceProxy.SendPostRequest(requestParams)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            var result = await _serviceClient.StartJobAsync(requestParams)
+                .ConfigureAwait(false);
 
-            return new ThingResultInfo(thingsInfo.ServiceName, response);
+            return new ThingResultInfo(thingsInfo.ServiceName, result);
         }
 
         #endregion
 
-        private async Task<RequestParams> ConfigureServiceRequest(ThingPerformerInfo thingsInfo)
+        private async Task<StartJobParamsRequest> ConfigureServiceRequest(
+            ThingPerformerInfo thingsInfo)
         {
             return thingsInfo.Data.DataSource switch
             {
@@ -62,11 +92,11 @@ namespace ProjectV.DesktopApp.Models.Things
 
                 DataSource.LocalFile => await CreateRequestWithLocalFileData(
                                             thingsInfo.ServiceName, thingsInfo.Data.StorageName
-                                        ).ConfigureAwait(continueOnCapturedContext: false),
+                                        ).ConfigureAwait(false),
 
                 DataSource.GoogleDrive => await CreateGoogleDriveRequest(
                                               thingsInfo.ServiceName, thingsInfo.Data.StorageName
-                                          ).ConfigureAwait(continueOnCapturedContext: false),
+                                          ).ConfigureAwait(false),
 
                 _ => throw new ArgumentOutOfRangeException(
                          nameof(thingsInfo), thingsInfo.Data.DataSource,
@@ -85,7 +115,7 @@ namespace ProjectV.DesktopApp.Models.Things
             }
         }
 
-        private RequestParams CreateRequestWithUserInputData(string serviceName,
+        private StartJobParamsRequest CreateRequestWithUserInputData(string serviceName,
             IReadOnlyList<string> thingNames)
         {
             _logger.Info($"Perform request with user input data for service \"{serviceName}\". " +
@@ -94,14 +124,14 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()
             };
         }
 
-        private async Task<RequestParams> CreateRequestWithLocalFileData(string serviceName,
+        private async Task<StartJobParamsRequest> CreateRequestWithLocalFileData(string serviceName,
             string storageName)
         {
             _logger.Info($"Perform request with local file data for service \"{serviceName}\". " +
@@ -110,21 +140,21 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             // Read local file, retrieve all things and send them as list to service to crawling
-            // and appaise.
+            // and appraise.
             var localFileReader = new LocalFileReader(new SimpleFileReader());
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => localFileReader.ReadThingNames(storageName).ToReadOnlyList())
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()
             };
         }
 
-        private async Task<RequestParams> CreateGoogleDriveRequest(string serviceName,
+        private async Task<StartJobParamsRequest> CreateGoogleDriveRequest(string serviceName,
             string storageName)
         {
             _logger.Info($"Perform request with google drive data for service \"{serviceName}\". " +
@@ -133,7 +163,7 @@ namespace ProjectV.DesktopApp.Models.Things
             CreateBasicRequirements(serviceName);
 
             // Read file from Google Drive, retrieve all things and send them as list to service to
-            // crawling and appaise.
+            // crawling and appraise.
             var serviceBuilder = new ServiceBuilderForXmlConfig();
             var googleDriveReader = serviceBuilder.CreateInputter(
                 ConfigModule.GetConfigForInputter(ConfigNames.Inputters.GoogleDriveReaderSimpleName)
@@ -141,10 +171,10 @@ namespace ProjectV.DesktopApp.Models.Things
 
             IReadOnlyList<string> thingNames = await Task
                 .Run(() => googleDriveReader.ReadThingNames(storageName).ToReadOnlyList())
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             ThrowIfDataIsInvalid(thingNames);
-            return new RequestParams
+            return new StartJobParamsRequest
             {
                 ThingNames = thingNames,
                 Requirements = _requirementsCreator.GetResult()

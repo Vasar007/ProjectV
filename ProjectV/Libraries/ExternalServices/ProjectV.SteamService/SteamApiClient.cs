@@ -70,7 +70,7 @@ namespace ProjectV.SteamService
             try
             {
                 SteamApp response = await _steamApiClient.GetSteamAppAsync(
-                    appId, (CountryCode)countryCode, (Language)language, token
+                    appId, (CountryCode) countryCode, (Language) language, token
                 );
 
                 return _dataMapper.Transform(response);

@@ -7,17 +7,17 @@
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
+    <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ProjectV.TelegramBotWebService</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>
-    <ApplicationIcon>ta_thumb.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\Resources\ProjectV_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HttpToSocks5Proxy" Version="$(HttpToSocks5ProxyPackageVersion)" />
-    <PackageReference Include="Telegram.Bot" Version="$(TelegramBotPackageVersion)" />
+    <PackageReference Include="Telegram.Bot" />
   </ItemGroup>
 
   <ItemGroup>

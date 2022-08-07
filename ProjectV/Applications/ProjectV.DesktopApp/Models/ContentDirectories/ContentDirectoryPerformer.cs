@@ -24,7 +24,7 @@ namespace ProjectV.DesktopApp.Models.ContentDirectories
 
             ContentDirectoryInfo result = await _contentFinder
                 .GetAllDirectoryContentAsync(parameters.DirectoryPath, parameters.ContentType)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return result;
         }

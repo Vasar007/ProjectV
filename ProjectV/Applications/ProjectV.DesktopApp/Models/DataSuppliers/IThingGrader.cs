@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ProjectV.DesktopApp.Models.Things;
 using ProjectV.Models.Internal;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.DesktopApp.Models.DataSuppliers
 {
@@ -9,6 +9,6 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
     {
         IReadOnlyList<Thing> ProcessRatings(IReadOnlyList<RatingDataContainer> rating);
 
-        void ProcessMetadata(ResponseMetadata metadata);
+        void ProcessMetadata(ProcessingResponseMetadata metadata);
     }
 }

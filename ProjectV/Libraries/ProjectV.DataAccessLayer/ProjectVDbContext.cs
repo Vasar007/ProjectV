@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ProjectV.DataAccessLayer.Services.Jobs;
+using ProjectV.Configuration;
+using ProjectV.DataAccessLayer.Services.Jobs.Models;
+using ProjectV.DataAccessLayer.Services.Tokens.Models;
+using ProjectV.DataAccessLayer.Services.Users.Models;
 
 namespace ProjectV.DataAccessLayer
 {
@@ -13,25 +16,48 @@ namespace ProjectV.DataAccessLayer
 
         public DbSet<JobDbInfo>? Jobs { private get; set; }
 
+        public DbSet<UserDbInfo>? Users { private get; set; }
 
-        public ProjectVDbContext(DatabaseOptions storageOptions)
+        public DbSet<RefreshTokenDbInfo>? Tokens { private get; set; }
+
+
+        public ProjectVDbContext(
+            DatabaseOptions storageOptions)
         {
             _storageOptions = storageOptions.ThrowIfNull(nameof(storageOptions));
         }
 
-        public ProjectVDbContext(IOptions<DatabaseOptions> storageOptions)
+        public ProjectVDbContext(
+            IOptions<DatabaseOptions> storageOptions)
+            : this(storageOptions.GetCheckedValue())
         {
-            _storageOptions = storageOptions.Value.ThrowIfNull(nameof(storageOptions));
         }
 
         public DbSet<JobDbInfo> GetJobDbSet()
         {
-            if (Jobs is null)
+            return Jobs switch
             {
-                throw new InvalidOperationException($"{nameof(Jobs)} DB set is not initialized.");
-            }
+                null => throw new InvalidOperationException($"{nameof(Jobs)} DB set is not initialized."),
+                _ => Jobs
+            };
+        }
 
-            return Jobs;
+        public DbSet<UserDbInfo> GetUserDbSet()
+        {
+            return Users switch
+            {
+                null => throw new InvalidOperationException($"{nameof(Users)} DB set is not initialized."),
+                _ => Users
+            };
+        }
+
+        public DbSet<RefreshTokenDbInfo> GetTokenDbSet()
+        {
+            return Tokens switch
+            {
+                null => throw new InvalidOperationException($"{nameof(Tokens)} DB set is not initialized."),
+                _ => Tokens
+            };
         }
 
         public bool CanUseDb()
@@ -39,8 +65,11 @@ namespace ProjectV.DataAccessLayer
             return _storageOptions.CanUseDatabase;
         }
 
-        public async ValueTask ExecuteIfCanUseDb(Func<DbSet<JobDbInfo>, ValueTask> action)
+        public async Task ExecuteIfCanUseDb<TDbInfo>(Func<DbSet<TDbInfo>> getDbSet,
+            Func<DbSet<TDbInfo>, Task> action)
+            where TDbInfo : class
         {
+            getDbSet.ThrowIfNull(nameof(getDbSet));
             action.ThrowIfNull(nameof(action));
 
             if (!CanUseDb())
@@ -48,20 +77,54 @@ namespace ProjectV.DataAccessLayer
                 return;
             }
 
-            await action(GetJobDbSet());
+            await action(getDbSet());
         }
 
-        public async ValueTask<TReturn?> ExecuteIfCanUseDb<TReturn>(
-            Func<DbSet<JobDbInfo>, ValueTask<TReturn>> action)
+        public async Task<TReturn?> ExecuteIfCanUseDb<TDbInfo, TReturn>(
+            Func<DbSet<TDbInfo>> getDbSet,
+            Func<DbSet<TDbInfo>, Task<TReturn>> action)
+            where TDbInfo : class
         {
+            getDbSet.ThrowIfNull(nameof(getDbSet));
             action.ThrowIfNull(nameof(action));
 
             if (!CanUseDb())
             {
-                return await ValueTask.FromResult<TReturn>(default!);
+                return await Task.FromResult<TReturn?>(default);
             }
 
-            return await action(GetJobDbSet());
+            return await action(getDbSet());
+        }
+
+        public async ValueTask ExecuteIfCanUseDb<TDbInfo>(Func<DbSet<TDbInfo>> getDbSet,
+            Func<DbSet<TDbInfo>, ValueTask> action)
+            where TDbInfo : class
+        {
+            getDbSet.ThrowIfNull(nameof(getDbSet));
+            action.ThrowIfNull(nameof(action));
+
+            if (!CanUseDb())
+            {
+                return;
+            }
+
+            await action(getDbSet());
+        }
+
+        public async ValueTask<TReturn?> ExecuteIfCanUseDb<TDbInfo, TReturn>(
+            Func<DbSet<TDbInfo>> getDbSet,
+            Func<DbSet<TDbInfo>, ValueTask<TReturn>> action)
+            where TDbInfo : class
+        {
+            getDbSet.ThrowIfNull(nameof(getDbSet));
+            action.ThrowIfNull(nameof(action));
+
+            if (!CanUseDb())
+            {
+                return await ValueTask.FromResult<TReturn?>(default);
+            }
+
+            return await action(getDbSet());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

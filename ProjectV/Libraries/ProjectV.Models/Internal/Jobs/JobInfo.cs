@@ -1,9 +1,10 @@
 ﻿using System.Text;
 using Acolyte.Assertions;
+using ProjectV.Models.Basic;
 
 namespace ProjectV.Models.Internal.Jobs
 {
-    public sealed class JobInfo
+    public sealed class JobInfo : IEntity<JobId>
     {
         public JobId Id { get; }
 

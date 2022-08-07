@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Acolyte.Assertions;
 
 namespace ProjectV.Communication
@@ -12,7 +11,7 @@ namespace ProjectV.Communication
         /// <summary>
         /// Synchronization object for lock statement.
         /// </summary>
-        private static readonly object _syncRoot = new object();
+        private static readonly object _syncRoot = new();
 
         /// <summary>
         /// Message handler to control communications with service and its components.
@@ -76,7 +75,7 @@ namespace ProjectV.Communication
             string message = outputObjects.Length > 0
                              ? ", params: " + string.Join(", ", outputObjects)
                              : string.Empty;
-            OutputMessage($"On thread {Thread.CurrentThread.ManagedThreadId}" + message);
+            OutputMessage($"On thread {Environment.CurrentManagedThreadId}" + message);
         }
     }
 }

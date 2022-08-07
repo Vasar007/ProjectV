@@ -2,23 +2,20 @@
 using Acolyte.Assertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.v1.Domain;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Controllers
 {
-    [Route("api/v{version:apiVersion}/update")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public sealed class UpdateController : Controller
     {
-        private static readonly ILogger _logger =
-            LoggerFactory.CreateLoggerFor<UpdateController>();
-
         private readonly IUpdateService _updateService;
 
 
-        public UpdateController(IUpdateService updateService)
+        public UpdateController(
+            IUpdateService updateService)
         {
             _updateService = updateService.ThrowIfNull(nameof(updateService));
         }
@@ -35,7 +32,7 @@ namespace ProjectV.TelegramBotWebService.v1.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post([FromBody] Update update)
         {
-            await _updateService.ProcessUpdateMessage(update);
+            await _updateService.HandleUpdateAsync(update);
             return Ok();
         }
     }

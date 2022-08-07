@@ -1,14 +1,22 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using ProjectV.CommonWebApi.Extensions;
-using ProjectV.CommunicationWebService.v1.Domain;
+using ProjectV.CommonWebApi.Authorization.Passwords;
+using ProjectV.CommonWebApi.Authorization.Tokens.Generators;
+using ProjectV.CommonWebApi.Authorization.Tokens.Services;
+using ProjectV.CommonWebApi.Authorization.Users.Services;
+using ProjectV.CommonWebApi.Middleware.Extensions;
+using ProjectV.CommonWebApi.Models.Options;
+using ProjectV.CommonWebApi.Service.Extensions;
+using ProjectV.CommunicationWebService.v1.Domain.Configuration;
+using ProjectV.CommunicationWebService.v1.Domain.Processing;
+using ProjectV.Configuration.Options;
+using ProjectV.Core.DependencyInjection;
+using ProjectV.DataAccessLayer.Services.Tokens;
+using ProjectV.DataAccessLayer.Services.Users;
 
 namespace ProjectV.CommunicationWebService
 {
@@ -17,7 +25,8 @@ namespace ProjectV.CommunicationWebService
         public IConfiguration Configuration { get; }
 
 
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration)
         {
             Configuration = configuration.ThrowIfNull(nameof(configuration));
         }
@@ -25,54 +34,45 @@ namespace ProjectV.CommunicationWebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfigurationReceiverAsync,
-                                  ConfigurationReceiverAsync>();
-            services.AddSingleton<IProcessingResponseReceiverAsync,
-                                  ProcessingResponseReceiverAsync>();
+            var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
+            var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
+            var jwtConfig = jwtOptionsSecion.Get<JwtOptions>();
 
-            services.Configure<CommunicationWebServiceSettings>(
-                Configuration.GetSection(nameof(CommunicationWebServiceSettings))
+            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
+            services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
+            services.AddSingleton<IProcessingResponseReceiver, ProcessingResponseReceiver>();
+
+            services.AddTransient<IPasswordManager, PasswordManager>();
+            services.AddSingleton<IUserInfoService, InMemoryUserInfoService>();
+            services.AddSingleton<IRefreshTokenInfoService, InMemoryRefreshTokenInfoService>(
+                provider => new InMemoryRefreshTokenInfoService(
+                    jwtConfig.RefreshTokenExpirationTimeout,
+                    provider.GetRequiredService<IUserInfoService>()
+                )
             );
+            services.AddTransient<ITokenGenerator, TokenGenerator>();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddSingleton<IUserService, UserService>();
+
+            services
+                .Configure<ProjectVServiceOptions>(serviceOptionsSection)
+                .Configure<JwtOptions>(jwtOptionsSecion)
+                .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             services
                 .AddMvc(mvcOptions => mvcOptions.EnableEndpointRouting = false)
                 .AddNewtonsoftJson();
 
-            services.AddApiVersioning(
-                options =>
-                {
-                    // Reporting api versions will return the headers "api-supported-versions" and 
-                    // "api-deprecated-versions".
-                    options.ReportApiVersions = true;
-
-                    // Automatically applies an api version based on the name of the defining 
-                    // controller's namespace.
-                    options.Conventions.Add(new VersionByNamespaceConvention());
-                }
-            );
+            services.AddApiVersioningByNamespaceConvention();
 
             // Register the Swagger generator, defining 1 or more Swagger documents.
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "ProjectV Communication API",
-                    Description = "Public Web API to make requests to ThingAppriser service.",
-                    //TermsOfService = "None",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Vasily Vasilyev",
-                        Email = "vasar007@yandex.ru",
-                        Url = new Uri("https://t.me/Vasar007")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Apache License 2.0",
-                        Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0")
-                    }
-                });
-            });
+            services.ConfigureSwaggerGenWithOpenApi(
+                title: "ProjectV Communication API",
+                description: "Public Web API to make requests to ThingAppriser service.",
+                apiVersion: "v1"
+            );
+
+            services.AddJtwAuthentication(jwtConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 
@@ -99,7 +99,16 @@ namespace ProjectV.CommunicationWebService
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseRouting();
+            app.UseCors();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

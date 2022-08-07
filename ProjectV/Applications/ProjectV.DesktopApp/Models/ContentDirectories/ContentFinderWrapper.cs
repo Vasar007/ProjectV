@@ -24,7 +24,7 @@ namespace ProjectV.DesktopApp.Models.ContentDirectories
                     contentType: contentType.ConvertToLibraryEnum(),
                     pagingInfo: FSharpHelper.CreateOption(new ContentModels.PagingInfo(0, 10))
                 )
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .ConfigureAwait(false);
 
             return new ContentDirectoryInfo(directoryPath, contentType, result);
         }

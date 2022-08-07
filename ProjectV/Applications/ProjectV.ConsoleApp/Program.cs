@@ -7,7 +7,7 @@ using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
 using ProjectV.Core;
 using ProjectV.DataAccessLayer;
-using ProjectV.DataAccessLayer.Services.Jobs;
+using ProjectV.DataAccessLayer.Services.Jobs.Models;
 using ProjectV.Logging;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
@@ -29,6 +29,7 @@ namespace ProjectV.ConsoleApp
         /// Main method of the Console Application which using config to manipulate Shell.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
+        /// <returns>Asynchronous result without value.</returns>
         private static async Task MainXDocument(IReadOnlyList<string> args)
         {
             // Show the case when we have a movies to appraise.
@@ -45,6 +46,7 @@ namespace ProjectV.ConsoleApp
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
         /// <param name="shell">Represents the main manager of the library.</param>
+        /// <returns>Asynchronous result without value.</returns>
         private static async Task Run(IReadOnlyList<string> args, Shell shell)
         {
             ServiceStatus status;
@@ -54,9 +56,7 @@ namespace ProjectV.ConsoleApp
             }
             else
             {
-                GlobalMessageHandler.OutputMessage(
-                    "Enter filename which contains the Things: "
-                );
+                GlobalMessageHandler.OutputMessage("Enter filename which contains the Things: ");
                 status = await shell.Run(GlobalMessageHandler.GetMessage());
             }
 
@@ -75,6 +75,7 @@ namespace ProjectV.ConsoleApp
         /// Console application start point.
         /// </summary>
         /// <param name="args">Represents the command-line arguments.</param>
+        /// <returns>Asynchronous result with exit code.</returns>
         private static async Task<int> Main(string[] args)
         {
             try
@@ -132,7 +133,7 @@ namespace ProjectV.ConsoleApp
                 foreach (JobDbInfo jobDbInfo in context.GetJobDbSet())
                 {
                     string message =
-                        $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                        $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                         $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                         $"{jobDbInfo.Config.ToString()}";
 
@@ -165,7 +166,7 @@ namespace ProjectV.ConsoleApp
                 config: "TaskConfig"
             );
             string message =
-                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                 $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                 $"{jobDbInfo.Config.ToString()}";
 
@@ -181,7 +182,7 @@ namespace ProjectV.ConsoleApp
 
             jobDbInfo = mapper.Map<JobDbInfo>(jobInfo);
             message =
-                $"Job DB info: {jobDbInfo.Id.ToString()}, {jobDbInfo.Name}, " +
+                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
                 $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
                 $"{jobDbInfo.Config.ToString()}";
 
@@ -192,7 +193,7 @@ namespace ProjectV.ConsoleApp
         {
             IReadOnlyDictionary<string, IReadOnlyList<string>> result =
                 await ContentFinder.FindContentForDirAsync(
-                    @"C:\Users\vasar\Documents\GitHub",
+                    @"%USERPROFILE%\Documents\GitHub",
                     ContentModels.ContentType.Text
                 );
 

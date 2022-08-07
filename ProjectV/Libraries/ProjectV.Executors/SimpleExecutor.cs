@@ -8,7 +8,7 @@ using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Executors
 {
@@ -52,11 +52,11 @@ namespace ProjectV.Executors
         }
 
         // TODO: remove this method later.
-        public async Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
+        public async Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(StartJobDataResponce jobData,
              IInputter additionalInputter, IOutputter additionalOutputter)
         {
             var builderDirector = Shell.CreateBuilderDirector(
-               XmlConfigCreator.TransformConfigToXDocument(requestData.ConfigurationXml)
+               XmlConfigCreator.TransformConfigToXDocument(jobData.ConfigurationXml)
             );
             using Shell shell = builderDirector.MakeShell();
 

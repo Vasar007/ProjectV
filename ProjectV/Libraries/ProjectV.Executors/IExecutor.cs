@@ -5,7 +5,7 @@ using ProjectV.IO.Input;
 using ProjectV.IO.Output;
 using ProjectV.Models.Internal;
 using ProjectV.Models.Internal.Jobs;
-using ProjectV.Models.WebService;
+using ProjectV.Models.WebServices.Responses;
 
 namespace ProjectV.Executors
 {
@@ -22,7 +22,7 @@ namespace ProjectV.Executors
 
         Task<IReadOnlyList<ServiceStatus>> ExecuteAsync();
 
-        Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(RequestData requestData,
+        Task<IReadOnlyList<ServiceStatus>> ExecuteAsync(StartJobDataResponce jobData,
             IInputter additionalInputterAsync, IOutputter additionalOutputterAsync);
     }
 }

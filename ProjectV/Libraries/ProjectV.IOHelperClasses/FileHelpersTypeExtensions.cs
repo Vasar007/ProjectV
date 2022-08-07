@@ -64,7 +64,7 @@ namespace FileHelpers
             if (value is null)
                 return 0;
 
-            return (int)value;
+            return (int) value;
         }
     }
 }

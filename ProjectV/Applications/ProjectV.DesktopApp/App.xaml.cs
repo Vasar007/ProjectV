@@ -1,11 +1,19 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Net.Http;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using Acolyte.Exceptions;
+using Acolyte.Exceptions.Handlers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Unity;
+using ProjectV.Configuration;
+using ProjectV.Core.DependencyInjection;
 using ProjectV.DesktopApp.Domain;
 using ProjectV.DesktopApp.Views;
 using ProjectV.Logging;
@@ -30,6 +38,10 @@ namespace ProjectV.DesktopApp
                 new FrameworkPropertyMetadata(
                     XmlLanguage.GetLanguage(CultureInfo.InvariantCulture.Name)
                 )
+            );
+
+            AppDomainUnhandledExceptionManager.SetHandler(
+                new UnhandledExceptionHandlerWrapper(Application_OnUnhandledException)
             );
 
             _logger.PrintHeader("Desktop client application started.");
@@ -62,9 +74,26 @@ namespace ProjectV.DesktopApp
             return Container.Resolve<MainWindow>();
         }
 
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHttpClientWithOptions(ConfigOptions.ProjectVService.HttpClient);
+        }
+
+        private static IServiceProvider CreateServices()
+        {
+            var host = new HostBuilder()
+                .ConfigureServices(services => ConfigureServices(services))
+                .Build();
+
+            return host.Services;
+        }
+
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            var services = CreateServices();
+
             // TODO: register common domain and models classes here.
+            containerRegistry.Register<IHttpClientFactory>(() => services.GetRequiredService<IHttpClientFactory>());
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -75,6 +104,12 @@ namespace ProjectV.DesktopApp
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             _logger.PrintFooter("Desktop client application stopped.");
+        }
+
+        private void Application_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var ex = (Exception) e.ExceptionObject;
+            _logger.Error(ex, "Unhandled exception has been occurred.");
         }
     }
 }

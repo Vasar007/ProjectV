@@ -5,7 +5,21 @@
   },
 
   "ProjectVServiceOptions": {
-    "CommunicationServiceBaseAddress": "https://localhost:44322/",
-    "CommunicationServiceApiUrl": "api/v1/requests"
+    "RestApi": {
+      "CommunicationServiceBaseAddress": "https://localhost:44322/",
+      "CommunicationServiceRequestApiUrl": "api/v1/requests",
+      "CommunicationServiceLoginApiUrl": "/api/v1/users/login",
+
+      "ConfigurationServiceBaseAddress": "https://localhost:44321/",
+      "ConfigurationServiceApiUrl": "api/v1/configuration",
+
+      "ProcessingServiceBaseAddress": "https://localhost:44320/",
+      "ProcessingServiceApiUrl": "api/v1/processing"
+    }
+  },
+
+  "UserServiceOptions": {
+    "ShouldCreateSystemUser": "true",
+    "CanUseSystemUserToAuthenticate": "true"
   }
 }
