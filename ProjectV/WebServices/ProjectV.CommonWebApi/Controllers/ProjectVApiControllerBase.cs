@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using ProjectV.Models.Users;
-using System.Security.Claims;
 
 namespace ProjectV.CommonWebApi.Controllers
 {

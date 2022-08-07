@@ -85,7 +85,7 @@ namespace ProjectV
             where T : IConvertible
         {
             string stringValue = GetValue(variableName);
-            return (T)Convert.ChangeType(stringValue, typeof(T));
+            return (T) Convert.ChangeType(stringValue, typeof(T));
         }
 
         /// <summary>

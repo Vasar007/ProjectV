@@ -66,7 +66,7 @@ namespace ProjectV.Core.Authorization.Tokens.Caches
             {
                 return false;
             }
-            
+
             // Now we check only access token.
             return _cachedResponse.Value.Ok.AccessToken.ExpiryDateUtc > DateTime.UtcNow;
         }

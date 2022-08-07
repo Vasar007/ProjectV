@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
-using ProjectV.Options;
-using ProjectV.Json;
 using ProjectV.Configuration.Options;
+using ProjectV.Json;
+using ProjectV.Options;
 
 namespace ProjectV.Configuration
 {

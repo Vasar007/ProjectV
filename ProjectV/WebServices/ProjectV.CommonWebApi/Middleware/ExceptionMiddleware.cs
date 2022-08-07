@@ -42,7 +42,7 @@ namespace ProjectV.CommonWebApi.Middleware
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
             string message = exception.GetErrorMessage();
 

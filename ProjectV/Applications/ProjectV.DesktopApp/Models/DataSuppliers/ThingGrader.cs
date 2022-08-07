@@ -60,7 +60,7 @@ namespace ProjectV.DesktopApp.Models.DataSuppliers
 
                 if (!TmdbServiceConfiguration.HasValue)
                 {
-                    var tmdbServiceConfig = (TmdbServiceConfigurationInfo)optionalData;
+                    var tmdbServiceConfig = (TmdbServiceConfigurationInfo) optionalData;
                     TmdbServiceConfiguration.SetServiceConfigurationAnyway(tmdbServiceConfig);
                 }
             }

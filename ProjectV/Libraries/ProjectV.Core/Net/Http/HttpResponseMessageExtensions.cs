@@ -30,7 +30,7 @@ namespace ProjectV.Core.Net.Http
             logger.ThrowIfNull(nameof(logger));
 
             var requestUri = response.RequestMessage?.RequestUri;
-            var statusCode = ((int)response.StatusCode).ToString();
+            var statusCode = ((int) response.StatusCode).ToString();
             string responseDetails = $"[{response.ReasonPhrase}] (code: {statusCode})";
 
             if (response.IsSuccessStatusCode)

@@ -18,7 +18,7 @@ namespace ProjectV.Core.Logging
 
             if (outcome.Result is not null)
             {
-                string statusCode = ((int)outcome.Result.StatusCode).ToString();
+                string statusCode = ((int) outcome.Result.StatusCode).ToString();
                 string details = $"{outcome.Result.ReasonPhrase} (code: {statusCode})";
                 logger.Warn($"Request failed: {details}. {commonPart}");
             }

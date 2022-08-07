@@ -6,7 +6,7 @@ namespace ProjectV.DesktopApp.Domain.Commands
     {
         public static bool CanExecute()
         {
-            return !(Application.Current is null) && !(Application.Current.MainWindow is null);
+            return Application.Current is not null && Application.Current.MainWindow is not null;
         }
 
         public static void Execute()

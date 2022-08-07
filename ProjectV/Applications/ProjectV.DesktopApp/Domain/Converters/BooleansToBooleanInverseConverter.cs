@@ -41,7 +41,7 @@ namespace ProjectV.DesktopApp.Domain.Converters
             // booleanValue may be Validation.HasError.
             if (value is bool booleanValue) return !booleanValue;
 
-            return !(value is null);
+            return value is not null;
         }
     }
 }

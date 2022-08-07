@@ -9,7 +9,7 @@
 
     public static class ExitCodes
     {
-        public const int Success = (int)ExitCode.Success;
-        public const int Fail = (int)ExitCode.Fail;
+        public const int Success = (int) ExitCode.Success;
+        public const int Fail = (int) ExitCode.Fail;
     }
 }

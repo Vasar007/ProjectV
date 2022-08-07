@@ -108,7 +108,7 @@ namespace ProjectV.DesktopApp
 
         private void Application_OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            var ex = (Exception)e.ExceptionObject;
+            var ex = (Exception) e.ExceptionObject;
             _logger.Error(ex, "Unhandled exception has been occurred.");
         }
     }

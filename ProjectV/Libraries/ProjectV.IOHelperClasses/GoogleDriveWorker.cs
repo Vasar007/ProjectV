@@ -220,7 +220,7 @@ namespace ProjectV.IO
                 // Building the initial request.
                 FilesResource.ListRequest request = GoogleDriveService.Files.List();
                 // Applying optional parameters to the request.
-                request = (FilesResource.ListRequest)ApplyOptionalParams(request, optional);
+                request = (FilesResource.ListRequest) ApplyOptionalParams(request, optional);
                 // Requesting data.
                 return request.Execute();
             }
