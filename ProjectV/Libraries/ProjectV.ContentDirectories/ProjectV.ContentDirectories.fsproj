@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonFSharp\ProjectV.CommonFSharp.fsproj" />
   </ItemGroup>

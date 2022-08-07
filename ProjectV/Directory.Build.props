@@ -10,7 +10,6 @@
     <TestTargetFrameworks>net6.0</TestTargetFrameworks>
     <CSharpLangVersion>10.0</CSharpLangVersion>
     <FSharpLangVersion>5.0</FSharpLangVersion>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
 </Project>
