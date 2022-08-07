@@ -10,8 +10,8 @@ shallow_clone: true
 
 # Build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
-  - Windows x64
-  # No Linux build yet.
+  - x64
+  # Only Windows build, no Linux build yet.
 
 configuration:
   - Debug
@@ -35,7 +35,7 @@ after_test:
   # F# tests does not execute at all.
   - ps: dotnet test --configuration $env:configuration --no-build "ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj"
   # Check code style.
-  - ps: dotnet format ProjectV --severity warn --verbosity diagnostic --verify-no-changes
+  #- ps: dotnet format ProjectV --severity warn --verbosity diagnostic --verify-no-changes
 
 pull_requests:
     do_not_increment_build_number: true
