@@ -7,9 +7,6 @@
     <TargetFramework>$(WindowsAppTargetFramework)</TargetFramework>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
     <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
-    <Deterministic>true</Deterministic>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.DesktopApp</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>

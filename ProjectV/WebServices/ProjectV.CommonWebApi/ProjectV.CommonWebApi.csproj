@@ -6,9 +6,6 @@
     <OutputType>Library</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
-    <Nullable>enable</Nullable>
-    <Deterministic>true</Deterministic>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ProjectV.CommonWebApi</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>

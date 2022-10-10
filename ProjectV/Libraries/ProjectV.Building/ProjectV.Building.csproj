@@ -6,9 +6,6 @@
     <OutputType>Library</OutputType>
     <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
-    <Nullable>enable</Nullable>
-    <Deterministic>true</Deterministic>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV.Building</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>

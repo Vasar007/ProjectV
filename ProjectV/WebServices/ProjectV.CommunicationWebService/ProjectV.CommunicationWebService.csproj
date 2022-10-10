@@ -6,9 +6,6 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
-    <Nullable>enable</Nullable>
-    <Deterministic>true</Deterministic>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <RootNamespace>ProjectV.CommunicationWebService</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
