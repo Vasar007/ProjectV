@@ -4,9 +4,9 @@
     <PackageReference Update="Acolyte.NET" Version="3.0.0-alpha.51" />
     <PackageReference Update="AutoMapper" Version="11.0.1" />
     <PackageReference Update="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Update="coverlet.collector" Version="3.1.2" />
+    <PackageReference Update="coverlet.collector" Version="3.2.0" />
     <PackageReference Update="CsvHelper" Version="28.0.1" />
-    <PackageReference Update="FileHelpers" Version="3.5.1" />
+    <PackageReference Update="FileHelpers" Version="3.5.2" />
     <PackageReference Update="FSharp.Core" Version="6.0.5" />
     <PackageReference Update="FluentAssertions" Version="6.7.0" />
     <PackageReference Update="Google.Apis" Version="1.57.0" />
@@ -15,9 +15,9 @@
     <PackageReference Update="Google.Apis.Drive.v3" Version="1.57.0.2746" />
     <PackageReference Update="Gridsum.DataflowEx" Version="2.0.0" />
     <PackageReference Update="HttpToSocks5Proxy" Version="1.4.0" />
-    <PackageReference Update="JsonSubTypes" Version="1.9.0" />
-    <PackageReference Update="MaterialDesignColors" Version="2.0.6" />
-    <PackageReference Update="MaterialDesignThemes" Version="4.5.0" />
+    <PackageReference Update="JsonSubTypes" Version="2.0.1" />
+    <PackageReference Update="MaterialDesignColors" Version="2.0.9" />
+    <PackageReference Update="MaterialDesignThemes" Version="4.6.1" />
     <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.7" />
     <PackageReference Update="Microsoft.AspNetCore.Authorization" Version="6.0.7" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.7" />
@@ -39,24 +39,24 @@
     <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
     <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-    <PackageReference Update="Microsoft.IdentityModel.Tokens" Version="6.22.0" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.4.0" />
     <PackageReference Update="Moq" Version="4.18.2" />
     <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Update="NLog" Version="5.0.1" />
-    <PackageReference Update="NLog.Schema" Version="5.0.1" />
-    <PackageReference Update="NLog.Extensions.Logging" Version="5.0.1" />
-    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+    <PackageReference Update="NLog" Version="5.0.5" />
+    <PackageReference Update="NLog.Schema" Version="5.0.5" />
+    <PackageReference Update="NLog.Extensions.Logging" Version="5.1.0" />
+    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
     <PackageReference Update="OmdbApiNet" Version="1.3.0" />
     <PackageReference Update="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Update="Prism.Unity" Version="8.1.97" />
     <PackageReference Update="Prism.Wpf" Version="8.1.97" />
-    <PackageReference Update="RestSharp" Version="108.0.1" />
+    <PackageReference Update="RestSharp" Version="108.0.2" />
     <PackageReference Update="SteamWebApiLib" Version="1.1.0" />
-    <PackageReference Update="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Update="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Update="System.Net.Http" Version="4.3.4" />
     <PackageReference Update="System.Threading.Tasks.Dataflow" Version="6.0.0" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="6.22.0" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
     <PackageReference Update="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Update="Telegram.Bot" Version="18.0.0" />
     <PackageReference Update="TMDbLib" Version="1.9.2" />
