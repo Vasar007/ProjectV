@@ -94,10 +94,12 @@ namespace ProjectV.IO.Input.File
             }
             while (csv.Read())
             {
-                string status = csv[_statusHeader];
+                string? status = csv[_statusHeader];
                 if (!string.IsNullOrEmpty(status)) continue;
 
-                string thingName = csv[_thingNameHeader];
+                string? thingName = csv[_thingNameHeader];
+                if (string.IsNullOrEmpty(thingName)) continue;
+
                 if (result.Add(thingName))
                 {
                     yield return thingName;
