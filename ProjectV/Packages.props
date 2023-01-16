@@ -46,7 +46,7 @@
     <PackageReference Update="NLog" Version="5.1.1" />
     <PackageReference Update="NLog.Extensions.Logging" Version="5.2.0" />
     <PackageReference Update="NLog.Schema" Version="5.1.0" />
-    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
+    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
     <PackageReference Update="OmdbApiNet" Version="1.3.0" />
     <PackageReference Update="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Update="Prism.Unity" Version="8.1.97" />
