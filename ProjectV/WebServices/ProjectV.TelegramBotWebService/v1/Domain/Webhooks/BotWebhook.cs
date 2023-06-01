@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
@@ -8,7 +7,7 @@ using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using Telegram.Bot.Types.InputFiles;
+using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 {
@@ -46,7 +45,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
             {
                 _logger.Info($"Trying to upload certificate additionally: [{BotCertificatePath}].");
 
-                using var certificateFile = File.OpenRead(BotCertificatePath);
+                using var certificateFile = System.IO.File.OpenRead(BotCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
                 await SetWebhookInternalAsync(certificate, cancellationToken);
             }
