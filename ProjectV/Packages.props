@@ -20,7 +20,7 @@
     <PackageReference Update="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Update="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
     <PackageReference Update="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.20" />
-    <PackageReference Update="Microsoft.AspNetCore.Authorization" Version="7.0.9" />
+    <PackageReference Update="Microsoft.AspNetCore.Authorization" Version="7.0.10" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.20" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="7.0.10" />
