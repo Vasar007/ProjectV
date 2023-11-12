@@ -1,7 +1,7 @@
 ﻿using System;
 using Acolyte.Assertions;
+using Asp.Versioning.Conventions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -84,18 +84,23 @@ namespace ProjectV.CommonWebApi.Service.Extensions
         {
             services.ThrowIfNull(nameof(services));
 
-            services.AddApiVersioning(
-               options =>
-               {
-                   // Reporting api versions will return the headers "api-supported-versions" and 
-                   // "api-deprecated-versions".
-                   options.ReportApiVersions = true;
-
-                   // Automatically applies an api version based on the name of the defining 
-                   // controller's namespace.
-                   options.Conventions.Add(new VersionByNamespaceConvention());
-               }
-           );
+            services
+                .AddApiVersioning(
+                    options =>
+                    {
+                        // Reporting api versions will return the headers "api-supported-versions" and 
+                        // "api-deprecated-versions".
+                        options.ReportApiVersions = true;
+                    }
+                )
+                .AddMvc(
+                    options =>
+                    {
+                        // Automatically applies an api version based on the name of the defining 
+                        // controller's namespace.
+                        options.Conventions.Add(new VersionByNamespaceConvention());
+                    }
+                );
 
             return services;
         }
