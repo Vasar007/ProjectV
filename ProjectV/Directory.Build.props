@@ -4,15 +4,16 @@
   <PropertyGroup>
     <AppPlatforms>x64</AppPlatforms>
     <AppConfigurations>Debug;Release</AppConfigurations>
-    <AppTargetFramework>net6.0</AppTargetFramework>
-    <WindowsAppTargetFramework>net6.0-windows</WindowsAppTargetFramework>
-    <LibraryTargetFrameworks>net6.0</LibraryTargetFrameworks>
-    <TestTargetFrameworks>net6.0</TestTargetFrameworks>
+    <AppTargetFramework>net8.0</AppTargetFramework>
+    <WindowsAppTargetFramework>net8.0-windows</WindowsAppTargetFramework>
+    <LibraryTargetFrameworks>net8.0</LibraryTargetFrameworks>
+    <TestTargetFrameworks>net8.0</TestTargetFrameworks>
     <CSharpLangVersion>10.0</CSharpLangVersion>
     <FSharpLangVersion>5.0</FSharpLangVersion>
     <Nullable>enable</Nullable>
     <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
 </Project>
