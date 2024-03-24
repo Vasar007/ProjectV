@@ -27,6 +27,7 @@
                         Light
                     </TextBlock>
                     <ToggleButton Margin="8 0 16 0"
+                                  IsChecked="{Binding Path=IsDark, Mode=OneWay}"
                                   Command="{Binding Path=ToggleBaseCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsChecked}" />
                     <TextBlock VerticalAlignment="Center">

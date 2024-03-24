@@ -16,10 +16,18 @@ namespace ProjectV.DesktopApp.ViewModels
 
         public ICommand ToggleBaseCommand { get; }
 
+        public bool IsDark => GetIsDarkValue();
+
 
         public SettingsViewModel()
         {
             ToggleBaseCommand = new DelegateCommand<bool?>(ApplyBase);
+        }
+
+        public bool GetIsDarkValue()
+        {
+            var currentTheme = Theme.GetSystemTheme();
+            return currentTheme is BaseTheme.Dark;
         }
 
         private static void ApplyBase(bool? isDark)
@@ -29,30 +37,27 @@ namespace ProjectV.DesktopApp.ViewModels
                 throw new ArgumentException("Boolean flag should be specified.", nameof(isDark));
             }
 
-            IBaseTheme newTheme;
-            string newThemeName;
+            BaseTheme newTheme;
             if (isDark.Value)
             {
-                newTheme = Theme.Dark;
-                newThemeName = "Dark";
+                newTheme = BaseTheme.Dark;
             }
             else
             {
-                newTheme = Theme.Light;
-                newThemeName = "Light";
+                newTheme = BaseTheme.Light;
             }
 
-            _logger.Info($"Changing application theme. New theme: '{newThemeName}'.");
+            _logger.Info($"Changing application theme. New theme: '{newTheme}'.");
 
             ModifyTheme(theme => theme.SetBaseTheme(newTheme));
         }
 
-        private static void ModifyTheme(Action<ITheme>? modificationAction)
+        private static void ModifyTheme(Action<Theme>? modificationAction)
         {
             _logger.Info("Modifying application theme.");
 
             var paletteHelper = new PaletteHelper();
-            ITheme theme = paletteHelper.GetTheme();
+            Theme theme = paletteHelper.GetTheme();
 
             modificationAction?.Invoke(theme);
 

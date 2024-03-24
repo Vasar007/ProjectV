@@ -23,7 +23,7 @@ namespace ProjectV.DesktopApp.ViewModels
         public IReadOnlyList<string> AvailableBeautifiedServices { get; } =
             ConfigContract.AvailableBeautifiedServices;
 
-        private string _selectedService = default!; // Initializes throught property.
+        private string _selectedService = default!; // Initializes through property.
         public string SelectedService
         {
             get => _selectedService;
@@ -47,7 +47,7 @@ namespace ProjectV.DesktopApp.ViewModels
             string? filename = ExecutableDialogs.ExecuteOpenThingsFileDialog();
             if (string.IsNullOrWhiteSpace(filename))
             {
-                _logger.Info("Skipping openning things file because got an empty filename value.");
+                _logger.Info("Skipping opening things file because got an empty filename value.");
                 return;
             }
 

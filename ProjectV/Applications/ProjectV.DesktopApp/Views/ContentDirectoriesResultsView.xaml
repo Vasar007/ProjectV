@@ -13,7 +13,7 @@
     <ScrollViewer>
         <StackPanel>
             <Button Content="{materialDesign:PackIcon Floppy}"
-                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniSecondaryButton}"
                     ToolTip="Save contents to file"
                     Margin="16"
                     HorizontalAlignment="Center"
