@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageVersion Include="Acolyte.NET" Version="3.0.0-alpha.51" />
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.0.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="CsvHelper" Version="31.0.2" />
