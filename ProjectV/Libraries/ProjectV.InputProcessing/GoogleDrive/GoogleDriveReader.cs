@@ -41,11 +41,11 @@ namespace ProjectV.IO.Input.GoogleDrive
         /// Constructor which forwards drive service instance to base class.
         /// </summary>
         /// <param name="driveService">Google drive service instance.</param>
-        /// <param name="fileReaderAsenc">Implementation to read files.</param>
-        public GoogleDriveReader(DriveService driveService, IFileReader fileReaderAsenc)
+        /// <param name="fileReader">Implementation to read files.</param>
+        public GoogleDriveReader(DriveService driveService, IFileReader fileReader)
             : base(driveService)
         {
-            _localFileReader = new LocalFileReader(fileReaderAsenc);
+            _localFileReader = new LocalFileReader(fileReader);
         }
 
         #region IInputter Implementation
@@ -231,7 +231,7 @@ namespace ProjectV.IO.Input.GoogleDrive
                     Path.GetFileNameWithoutExtension(tempFilename)
                 );
 
-                if (HasExtenstionSafe(storageName))
+                if (HasExtensionSafe(storageName))
                 {
                     DownloadFile(fileId, tempFilepath);
                 }

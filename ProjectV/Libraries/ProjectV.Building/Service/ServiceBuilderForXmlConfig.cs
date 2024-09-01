@@ -110,7 +110,7 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _localFileParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    var fileReader = CreateFileReader(fileReaderName);
 
                     return new IO.Input.File.LocalFileReader(fileReader);
                 }
@@ -121,7 +121,7 @@ namespace ProjectV.Building.Service
                         inputterElement, _fileReaderParameterName + _googleDriveParameterName
                     );
 
-                    IO.Input.File.IFileReader fileReader = CreateFileReader(fileReaderName);
+                    var fileReader = CreateFileReader(fileReaderName);
 
                     return new IO.Input.GoogleDrive.GoogleDriveReader(DriveService, fileReader);
                 }
