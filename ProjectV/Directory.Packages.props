@@ -46,7 +46,7 @@
     <PackageVersion Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageVersion Include="Prism.Unity" Version="9.0.537" />
     <PackageVersion Include="Prism.Wpf" Version="9.0.537" />
-    <PackageVersion Include="RestSharp" Version="112.0.0" />
+    <PackageVersion Include="RestSharp" Version="112.1.0" />
     <PackageVersion Include="SteamWebApiLib" Version="1.1.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.3" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
