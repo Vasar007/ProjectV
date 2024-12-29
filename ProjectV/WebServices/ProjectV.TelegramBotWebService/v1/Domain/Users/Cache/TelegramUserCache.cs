@@ -31,7 +31,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Users.Cache
 
         public bool TryRemoveUser(long id)
         {
-            return _cache.TryRemove(id, out StartJobParamsRequest _);
+            return _cache.TryRemove(id, out _);
         }
 
         public bool TryRemoveUser(long id, [MaybeNullWhen(false)] out StartJobParamsRequest jobParams)

@@ -15,7 +15,7 @@
     <ScrollViewer>
         <StackPanel>
             <Button Content="{materialDesign:PackIcon Floppy}"
-                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniSecondaryButton}"
                     ToolTip="Save toplist to file"
                     Margin="16"
                     HorizontalAlignment="Center"
@@ -79,7 +79,7 @@
             </ItemsControl>
 
             <Button Content="{materialDesign:PackIcon Plus}"
-                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniSecondaryButton}"
                     ToolTip="Add new block"
                     Margin="16"
                     HorizontalAlignment="Center"

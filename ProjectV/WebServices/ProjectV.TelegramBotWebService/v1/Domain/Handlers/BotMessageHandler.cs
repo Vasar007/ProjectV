@@ -117,9 +117,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {StartCommand} command.");
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                Messages.HelloMessage,
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: Messages.HelloMessage,
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken
             );
@@ -130,9 +130,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {HelpCommand} command.");
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                Messages.HelpMessage,
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: Messages.HelpMessage,
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken
             );
@@ -143,9 +143,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info($"Processes {ServicesCommand} command.");
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                "Available services: " +
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: "Available services: " +
                 $"{string.Join(", ", ConfigContract.AvailableBeautifiedServices)}.",
                 cancellationToken: cancellationToken
             );
@@ -165,9 +165,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 new[] { CancelCommand }
             };
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                "Enter service name.",
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: "Enter service name.",
                 replyMarkup: replyKeyboard,
                 cancellationToken: cancellationToken
             );
@@ -187,9 +187,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             if (!ConfigContract.ContainsService(serviceName))
             {
-                await _botService.SendTextMessageAsync(
-                    chatId,
-                    "Invalid service name. Please, try again.",
+                await _botService.SendMessageAsync(
+                    chatId: chatId,
+                    text: "Invalid service name. Please, try again.",
                     replyMarkup: replyKeyboard,
                     cancellationToken: cancellationToken
                 );
@@ -206,9 +206,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 "thingName2"
             });
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                message,
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: message,
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken
             );
@@ -221,9 +221,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
 
             jobParams.ThingNames = data.ToList();
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                "Send request to process data. Return later to see results.",
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: "Send request to process data. Return later to see results.",
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken
             );
@@ -251,9 +251,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
                 message = "No request to cancel.";
             }
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                message,
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: message,
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken
             );
@@ -263,9 +263,9 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Handlers
         {
             _logger.Info("Processes invalid message.");
 
-            await _botService.SendTextMessageAsync(
-                chatId,
-                $"Invalid message. See usage at {HelpCommand} command.",
+            await _botService.SendMessageAsync(
+                chatId: chatId,
+                text: $"Invalid message. See usage at {HelpCommand} command.",
                 replyMarkup: new ReplyKeyboardRemove()
             );
         }

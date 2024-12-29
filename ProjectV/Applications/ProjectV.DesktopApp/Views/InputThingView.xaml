@@ -102,7 +102,7 @@
                     </TextBlock>
                 </materialDesign:ColorZone>
 
-                <Button Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniAccentButton}"
+                <Button Style="{StaticResource ResourceKey=MaterialDesignFloatingActionMiniSecondaryButton}"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Grid.Row="0"

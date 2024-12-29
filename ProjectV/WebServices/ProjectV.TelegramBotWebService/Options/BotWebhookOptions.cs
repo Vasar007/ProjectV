@@ -16,9 +16,9 @@ namespace ProjectV.TelegramBotWebService.Options
 
         public string? CertificatePath { get; init; } = null;
 
-        public bool? DropPendingUpdatesOnSet { get; init; } = null;
+        public bool DropPendingUpdatesOnSet { get; init; } = false;
 
-        public bool? DropPendingUpdatesOnDelete { get; init; } = null;
+        public bool DropPendingUpdatesOnDelete { get; init; } = false;
 
         public int? MaxConnections { get; init; } = null;
 

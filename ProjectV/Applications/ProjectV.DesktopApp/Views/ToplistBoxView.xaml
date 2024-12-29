@@ -24,7 +24,7 @@
         </TextBox>
 
         <Button Content="{materialDesign:PackIcon Floppy}"
-                Style="{StaticResource ResourceKey=MaterialDesignFlatAccentBgButton}"
+                Style="{StaticResource ResourceKey=MaterialDesignFlatSecondaryBgButton}"
                 ToolTip="Save changes"
                 Margin="0 0 8 0"
                 x:Name="SaveItemButton"

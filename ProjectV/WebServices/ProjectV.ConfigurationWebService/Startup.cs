@@ -44,7 +44,7 @@ namespace ProjectV.ConfigurationWebService
                 apiVersion: "v1"
             );
 
-            services.AddJtwAuthentication(jwtOptionsSecion.Get<JwtOptions>());
+            services.AddJtwAuthentication(jwtOptionsSecion.GetChecked<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

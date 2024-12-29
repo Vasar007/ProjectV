@@ -23,7 +23,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
 
         private readonly IBotPollingUpdateHandler _updateHandler;
 
-        private bool? DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
+        private bool DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
 
 
         public BotPolling(

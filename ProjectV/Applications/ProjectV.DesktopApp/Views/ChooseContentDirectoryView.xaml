@@ -52,7 +52,7 @@
                 </TextBox.Text>
             </TextBox>
             <Button Content="{materialDesign:PackIcon FolderOpen}"
-                    Style="{StaticResource ResourceKey=MaterialDesignFlatAccentBgButton}"
+                    Style="{StaticResource ResourceKey=MaterialDesignFlatSecondaryMidBgButton}"
                     ToolTip="Open content directory"
                     Margin="8"
                     x:Name="OpenContentDirectoryButton"

@@ -6,9 +6,6 @@
     <OutputType>Library</OutputType>
     <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <LangVersion>$(CSharpLangVersion)</LangVersion>
-    <Nullable>enable</Nullable>
-    <Deterministic>true</Deterministic>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>ProjectV</RootNamespace>
     <IncludeSymbols>false</IncludeSymbols>
     <IsPackable>false</IsPackable>
@@ -17,7 +14,6 @@
   <ItemGroup>
     <PackageReference Include="Acolyte.NET" />
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" />
   </ItemGroup>

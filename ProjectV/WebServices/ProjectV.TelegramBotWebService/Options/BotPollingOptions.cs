@@ -15,7 +15,7 @@ namespace ProjectV.TelegramBotWebService.Options
 
         public int? Limit { get; init; } = null;
 
-        public bool ThrowPendingUpdates { get; init; } = false;
+        public bool DropPendingUpdates { get; init; } = false;
 
 
         public BotPollingOptions()

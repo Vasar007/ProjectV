@@ -58,7 +58,7 @@ namespace ProjectV.TelegramBotWebService
 
             services.AddSingleton<IServiceSetupActionsFactory, TelegramBotWebServiceSetupActionsFactory>();
             services.AddSingleton<IServiceSetup, ServiceSetup>();
-            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
+            services.AddHttpClientWithOptions(serviceOptionsSection.GetChecked<ProjectVServiceOptions>().HttpClient);
             services.AddTransient<ICommunicationServiceClient, CommunicationServiceClient>();
 
             services.AddSingleton<IBotService, BotService>();
@@ -84,7 +84,7 @@ namespace ProjectV.TelegramBotWebService
                 .Configure<UserServiceOptions>(Configuration.GetSection(nameof(UserServiceOptions)));
 
             // Add hosted service as background activities depending on the set working mode.
-            var botWebServiceOptions = botWebServiceSecion.Get<TelegramBotWebServiceOptions>();
+            var botWebServiceOptions = botWebServiceSecion.GetChecked<TelegramBotWebServiceOptions>();
             services
                 .ApplyIf(
                     botWebServiceOptions.IsMode(TelegramBotWebServiceWorkingMode.WebhookViaHostedService),
@@ -108,7 +108,7 @@ namespace ProjectV.TelegramBotWebService
                apiVersion: "v1"
            );
 
-            services.AddJtwAuthentication(jwtOptionsSecion.Get<JwtOptions>());
+            services.AddJtwAuthentication(jwtOptionsSecion.GetChecked<JwtOptions>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request 

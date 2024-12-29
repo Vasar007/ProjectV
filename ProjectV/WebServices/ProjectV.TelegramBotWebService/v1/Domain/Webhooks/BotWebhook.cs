@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Common.Disposal;
@@ -8,7 +7,7 @@ using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using Telegram.Bot.Types.InputFiles;
+using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 {
@@ -22,8 +21,8 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
 
         private string FullWebhookUrl => _options.GetFullWebhookUrl();
         private string? BotCertificatePath => _options.Bot.Webhook.CertificatePath;
-        private bool? DropPendingUpdatesOnSet => _options.Bot.Webhook.DropPendingUpdatesOnSet;
-        private bool? DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
+        private bool DropPendingUpdatesOnSet => _options.Bot.Webhook.DropPendingUpdatesOnSet;
+        private bool DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
         private int? BotMaxConnections => _options.Bot.Webhook.MaxConnections;
 
 
@@ -46,7 +45,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Webhooks
             {
                 _logger.Info($"Trying to upload certificate additionally: [{BotCertificatePath}].");
 
-                using var certificateFile = File.OpenRead(BotCertificatePath);
+                using var certificateFile = System.IO.File.OpenRead(BotCertificatePath);
                 var certificate = new InputFileStream(certificateFile);
                 await SetWebhookInternalAsync(certificate, cancellationToken);
             }

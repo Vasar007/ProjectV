@@ -135,7 +135,7 @@ namespace ProjectV.IO
         /// </exception>
         protected static string GetMimeType(string filename)
         {
-            if (!HasExtenstionSafe(filename))
+            if (!HasExtensionSafe(filename))
             {
                 throw new ArgumentException($"Filename '{filename}' isn't contain extension.",
                                             nameof(filename));
@@ -194,7 +194,7 @@ namespace ProjectV.IO
         /// <c>true</c> if filename has extension, <c>false</c> otherwise (including case when
         /// <param name="filename">filename</param> is <c>null</c> or presents empty string).
         /// </returns>
-        protected static bool HasExtenstionSafe(string filename)
+        protected static bool HasExtensionSafe(string filename)
         {
             if (string.IsNullOrEmpty(filename)) return false;
 

@@ -7,6 +7,7 @@ using Acolyte.Assertions;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.v1.Domain.Handlers;
 using ProjectV.TelegramBotWebService.v1.Domain.Text;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -63,14 +64,21 @@ namespace ProjectV.TelegramBotWebService.v1.Domain
             }
             catch (Exception ex)
             {
-                await HandleErrorAsync(ex, cancellationToken);
+                await HandlePollingErrorAsync(ex, cancellationToken);
             }
         }
 
-        public Task HandleErrorAsync(Exception exception,
+        public Task HandlePollingErrorAsync(Exception exception,
             CancellationToken cancellationToken = default)
         {
-            _logger.Error(exception, $"Failed to process update request.");
+            _logger.Error(exception, $"Failed to process update request. A polling error.");
+            return Task.CompletedTask;
+        }
+
+        public Task HandleErrorAsync(Exception exception, HandleErrorSource source,
+           CancellationToken cancellationToken = default)
+        {
+            _logger.Error(exception, $"Failed to process update request. Error source: [{source}].");
             return Task.CompletedTask;
         }
 

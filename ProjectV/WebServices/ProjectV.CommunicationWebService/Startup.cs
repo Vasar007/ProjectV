@@ -36,9 +36,9 @@ namespace ProjectV.CommunicationWebService
         {
             var serviceOptionsSection = Configuration.GetSection(nameof(ProjectVServiceOptions));
             var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));
-            var jwtConfig = jwtOptionsSecion.Get<JwtOptions>();
+            var jwtConfig = jwtOptionsSecion.GetChecked<JwtOptions>();
 
-            services.AddHttpClientWithOptions(serviceOptionsSection.Get<ProjectVServiceOptions>().HttpClient);
+            services.AddHttpClientWithOptions(serviceOptionsSection.GetChecked<ProjectVServiceOptions>().HttpClient);
             services.AddSingleton<IConfigurationReceiver, ConfigurationReceiver>();
             services.AddSingleton<IProcessingResponseReceiver, ProcessingResponseReceiver>();
 
