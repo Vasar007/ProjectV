@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Acolyte.Assertions;
+using Acolyte.Common;
 using Acolyte.Linq;
 using ProjectV.Options;
 
@@ -24,6 +25,9 @@ namespace ProjectV
         /// </summary>
         private static EnvironmentVariableTarget DefaultVariableTarget { get; } =
             EnvironmentVariableTarget.User;
+
+        private static StringSplitOptions DefaultStringSplitOptions { get; } =
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
 
         /// <summary>
         /// Stores parsed values from environment variable.
@@ -130,7 +134,7 @@ namespace ProjectV
                 return new Dictionary<string, string>();
             }
 
-            IReadOnlyList<string> keyValuePairsRaw = environmentVariableValue.Split(';');
+            IReadOnlyList<string> keyValuePairsRaw = environmentVariableValue.Split(';', DefaultStringSplitOptions);
 
             return keyValuePairsRaw
                 .Select(kv => ProcessKeyValuePair(kv))
@@ -157,28 +161,26 @@ namespace ProjectV
         {
             rawKeyValuePair.ThrowIfNullOrEmpty(nameof(rawKeyValuePair));
 
-            IReadOnlyList<string> keyValuePair = rawKeyValuePair.Split('=');
-            if (keyValuePair.Count != 2)
+            var indexOfSeparator = rawKeyValuePair.IndexOf('=');
+            // If not found or it is the last character in the string.
+            if (indexOfSeparator == Constants.NotFoundIndex || rawKeyValuePair.Length - 1 == indexOfSeparator)
             {
-                throw new InvalidOperationException(
-                    $"Environment variable has invalid format: '{rawKeyValuePair}'."
-                );
+                throw new InvalidOperationException($"Environment variable has invalid format: '{rawKeyValuePair}'.");
             }
 
-            if (string.IsNullOrWhiteSpace(keyValuePair[0]))
+            var key = rawKeyValuePair[..indexOfSeparator];
+            var value = rawKeyValuePair[(indexOfSeparator + 1)..];
+
+            if (string.IsNullOrWhiteSpace(key))
             {
-                throw new InvalidOperationException(
-                    $"Environment variable has empty value among keys: '{keyValuePair[0]}'."
-                );
+                throw new InvalidOperationException($"Environment variable has empty value among keys: '{key}'.");
             }
-            if (string.IsNullOrWhiteSpace(keyValuePair[1]))
+            if (string.IsNullOrWhiteSpace(value))
             {
-                throw new InvalidOperationException(
-                    $"Environment variable has empty value among values: '{keyValuePair[1]}'."
-                );
+                throw new InvalidOperationException($"Environment variable has empty value among values: '{value}'.");
             }
 
-            return (key: keyValuePair[0], value: keyValuePair[1]);
+            return (key, value);
         }
     }
 }

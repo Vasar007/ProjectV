@@ -44,6 +44,7 @@ namespace ProjectV.Core.Net.Http
             handler.ThrowIfNull(nameof(handler));
 
             _logger.Warn("ATTENTION! Server certificates validation is disabled.");
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
             handler.ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
 

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Telegram.Bot;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
@@ -10,7 +11,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
     public sealed class BotPollingUpdateHandler : IBotPollingUpdateHandler
     {
         // Contract: "_updateService" contains the same "botClient" as we received through
-        // parameters in "HandleUpdateAsync" and "HandleErrorAsync" methods.
+        // parameters in all its methods.
 
         private readonly IUpdateService _updateService;
 
@@ -34,7 +35,14 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
         public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
             CancellationToken cancellationToken)
         {
-            await _updateService.HandleErrorAsync(exception, cancellationToken);
+            await _updateService.HandlePollingErrorAsync(exception, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
+            HandleErrorSource source, CancellationToken cancellationToken)
+        {
+            await _updateService.HandleErrorAsync(exception, source, cancellationToken);
         }
 
         #endregion

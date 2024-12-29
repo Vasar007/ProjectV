@@ -15,7 +15,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
         ITelegramBotClient BotClient { get; }
 
 
-        /// <inheritdoc cref="TelegramBotClientExtensions.GetUpdatesAsync" />
+        /// <inheritdoc cref="TelegramBotClientExtensions.GetUpdates" />
         Task<IReadOnlyList<Update>> GetUpdatesAsync(
             int? offset = default,
             int? limit = default,
@@ -24,39 +24,43 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default
         );
 
-        /// <inheritdoc cref="TelegramBotClientExtensions.SetWebhookAsync" />
+        /// <inheritdoc cref="TelegramBotClientExtensions.SetWebhook" />
         Task SetWebhookAsync(
             string url,
             InputFileStream? certificate = default,
             string? ipAddress = default,
             int? maxConnections = default,
             IEnumerable<UpdateType>? allowedUpdates = default,
-            bool? dropPendingUpdates = default,
+            bool dropPendingUpdates = default,
             CancellationToken cancellationToken = default
         );
 
-        /// <inheritdoc cref="TelegramBotClientExtensions.DeleteWebhookAsync" />
+        /// <inheritdoc cref="TelegramBotClientExtensions.DeleteWebhook" />
         Task DeleteWebhookAsync(
-            bool? dropPendingUpdates = default,
+            bool dropPendingUpdates = default,
             CancellationToken cancellationToken = default
         );
 
-        /// <inheritdoc cref="TelegramBotClientExtensions.GetWebhookInfoAsync" />
+        /// <inheritdoc cref="TelegramBotClientExtensions.GetWebhookInfo" />
         Task<WebhookInfo> GetWebhookInfoAsync(
             CancellationToken cancellationToken = default
         );
 
-        /// <inheritdoc cref="TelegramBotClientExtensions.SendTextMessageAsync" />
-        Task<Message> SendTextMessageAsync(
+        /// <inheritdoc cref="TelegramBotClientExtensions.SendMessage" />
+        Task<Message> SendMessageAsync(
             ChatId chatId,
             string text,
-            ParseMode? parseMode = default,
-            IEnumerable<MessageEntity>? entities = default,
-            bool? disableWebPagePreview = default,
-            bool? disableNotification = default,
-            int? replyToMessageId = default,
-            bool? allowSendingWithoutReply = default,
+            ParseMode parseMode = default,
+            ReplyParameters? replyParameters = default,
             IReplyMarkup? replyMarkup = default,
+            LinkPreviewOptions? linkPreviewOptions = default,
+            int? messageThreadId = default,
+            IEnumerable<MessageEntity>? entities = default,
+            bool disableNotification = default,
+            bool protectContent = default,
+            string? messageEffectId = default,
+            string? businessConnectionId = default,
+            bool allowPaidBroadcast = default,
             CancellationToken cancellationToken = default
         );
     }

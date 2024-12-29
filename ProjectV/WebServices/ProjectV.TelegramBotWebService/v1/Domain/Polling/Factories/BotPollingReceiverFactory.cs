@@ -57,7 +57,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
                 Offset = options.Offset,
                 AllowedUpdates = options.AllowedUpdates,
                 Limit = options.Limit,
-                ThrowPendingUpdates = options.ThrowPendingUpdates
+                DropPendingUpdates = options.DropPendingUpdates,
             };
         }
     }

@@ -23,7 +23,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
             return new BlockingUpdateReceiver(
                 botClient: _botClient,
                 receiverOptions: _receiverOptions,
-                pollingErrorHandler: (ex, token) => updateHandler.HandlePollingErrorAsync(_botClient, ex, token)
+                pollingErrorHandler: (ex, token) => updateHandler.HandleErrorAsync(_botClient, ex, HandleErrorSource.HandleUpdateError, token)
             );
         }
 

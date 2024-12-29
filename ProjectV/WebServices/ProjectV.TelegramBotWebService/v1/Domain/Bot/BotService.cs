@@ -86,7 +86,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                () => BotClient.GetUpdatesAsync(
+                () => BotClient.GetUpdates(
                     offset: offset,
                     limit: limit,
                     timeout: timeout,
@@ -103,11 +103,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             string? ipAddress = null,
             int? maxConnections = null,
             IEnumerable<UpdateType>? allowedUpdates = null,
-            bool? dropPendingUpdates = null,
+            bool dropPendingUpdates = false,
             CancellationToken cancellationToken = default)
         {
             await InternalCall(
-               () => BotClient.SetWebhookAsync(
+               () => BotClient.SetWebhook(
                     url: url,
                     certificate: certificate,
                     ipAddress: ipAddress,
@@ -121,11 +121,11 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
 
         /// <inheritdoc />
         public async Task DeleteWebhookAsync(
-            bool? dropPendingUpdates = null,
+            bool dropPendingUpdates = false,
             CancellationToken cancellationToken = default)
         {
             await InternalCall(
-                () => BotClient.DeleteWebhookAsync(
+                () => BotClient.DeleteWebhook(
                     dropPendingUpdates: dropPendingUpdates,
                     cancellationToken: cancellationToken
                 )
@@ -137,36 +137,44 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                 () => BotClient.GetWebhookInfoAsync(
+                 () => BotClient.GetWebhookInfo(
                      cancellationToken: cancellationToken
                  )
              ).ConfigureAwait(_continueOnCapturedContext);
         }
 
         /// <inheritdoc />
-        public async Task<Message> SendTextMessageAsync(
+        public async Task<Message> SendMessageAsync(
             ChatId chatId,
             string text,
-            ParseMode? parseMode = null,
-            IEnumerable<MessageEntity>? entities = null,
-            bool? disableWebPagePreview = null,
-            bool? disableNotification = null,
-            int? replyToMessageId = null,
-            bool? allowSendingWithoutReply = null,
+            ParseMode parseMode = ParseMode.None,
+            ReplyParameters? replyParameters = null,
             IReplyMarkup? replyMarkup = null,
+            LinkPreviewOptions? linkPreviewOptions = null,
+            int? messageThreadId = null,
+            IEnumerable<MessageEntity>? entities = null,
+            bool disableNotification = false,
+            bool protectContent = false,
+            string? messageEffectId = null,
+            string? businessConnectionId = null,
+            bool allowPaidBroadcast = false,
             CancellationToken cancellationToken = default)
         {
             return await InternalCall(
-                () => BotClient.SendTextMessageAsync(
+                () => BotClient.SendMessage(
                     chatId: chatId,
                     text: text,
                     parseMode: parseMode,
-                    entities: entities,
-                    disableWebPagePreview: disableWebPagePreview,
-                    disableNotification: disableNotification,
-                    replyToMessageId: replyToMessageId,
-                    allowSendingWithoutReply: allowSendingWithoutReply,
+                    replyParameters: replyParameters,
                     replyMarkup: replyMarkup,
+                    linkPreviewOptions: linkPreviewOptions,
+                    messageThreadId: messageThreadId,
+                    entities: entities,
+                    disableNotification: disableNotification,
+                    protectContent: protectContent,
+                    messageEffectId: messageEffectId,
+                    businessConnectionId: businessConnectionId,
+                    allowPaidBroadcast: allowPaidBroadcast,
                     cancellationToken: cancellationToken
                 )
             ).ConfigureAwait(_continueOnCapturedContext);

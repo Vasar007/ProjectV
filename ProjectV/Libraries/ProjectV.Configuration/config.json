@@ -15,6 +15,9 @@
 
       "ProcessingServiceBaseAddress": "https://localhost:44320/",
       "ProcessingServiceApiUrl": "api/v1/processing"
+    },
+    "HttpClient": {
+      "ValidateServerCertificates": "true"
     }
   },
 

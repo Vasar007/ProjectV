@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="Gridsum.DataflowEx" />
+    <PackageReference Include="System.Data.SqlClient" /> <!-- Have to explicitly use the latest version because "Gridsum.DataflowEx" has a vulnerable version of this package. -->
+    <PackageReference Include="System.Net.Http" /> <!-- Have to explicitly use the latest version because "Gridsum.DataflowEx" has a vulnerable version of this package. -->
   </ItemGroup>
 
   <ItemGroup>
