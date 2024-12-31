@@ -13,6 +13,12 @@
     <ApplicationIcon>..\..\Resources\ProjectV_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <!-- Skip build based on OS to avoid errors on non-Windows machines. -->
+  <Target Name="SkipBuild" BeforeTargets="Build" Condition="'$(OS)' != 'Windows_NT'">
+    <Message Text="Skipping build for this project on non-Windows." Importance="high" />
+    <Warning Condition="true" Text="Build skipped due to OS condition." />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="MaterialDesignColors" />
     <PackageReference Include="MaterialDesignThemes" />
