@@ -8,8 +8,8 @@
     <WindowsAppTargetFramework>net8.0-windows</WindowsAppTargetFramework>
     <LibraryTargetFrameworks>net8.0</LibraryTargetFrameworks>
     <TestTargetFrameworks>net8.0</TestTargetFrameworks>
-    <CSharpLangVersion>10.0</CSharpLangVersion>
-    <FSharpLangVersion>5.0</FSharpLangVersion>
+    <CSharpLangVersion>12.0</CSharpLangVersion>
+    <FSharpLangVersion>8.0</FSharpLangVersion>
     <Nullable>enable</Nullable>
     <Deterministic>true</Deterministic>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
