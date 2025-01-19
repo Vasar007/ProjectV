@@ -62,13 +62,14 @@ namespace ProjectV.Core.Authorization.Tokens.Caches
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(_cachedResponse.Value.Ok.AccessToken.Token))
+            var accessToken = _cachedResponse.Value.Ok.AccessToken;
+            if (string.IsNullOrWhiteSpace(accessToken.Token))
             {
                 return false;
             }
 
             // Now we check only access token.
-            return _cachedResponse.Value.Ok.AccessToken.ExpiryDateUtc > DateTime.UtcNow;
+            return accessToken.ExpiryDateUtc > DateTime.UtcNow;
         }
 
         private async Task<Result<TokenResponse, ErrorResponse>> RequestToken(LoginRequest login,

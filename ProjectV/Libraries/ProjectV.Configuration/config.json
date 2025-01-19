@@ -17,11 +17,12 @@
       "ProcessingServiceApiUrl": "api/v1/processing"
     },
     "HttpClient": {
-      "ValidateServerCertificates": "true"
+      "ValidateServerCertificates": "false"
     }
   },
 
   "UserServiceOptions": {
+    "AllowSignup": "false",
     "ShouldCreateSystemUser": "true",
     "CanUseSystemUserToAuthenticate": "true"
   }

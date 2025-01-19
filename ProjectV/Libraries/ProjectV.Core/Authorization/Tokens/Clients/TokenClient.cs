@@ -50,10 +50,10 @@ namespace ProjectV.Core.Authorization.Tokens.Clients
 
         public TokenClient(
             IHttpClientFactory httpClientFactory,
-            IOptions<ProjectVServiceOptions> serivceSettings)
+            IOptions<ProjectVServiceOptions> serviceSettings)
             : this(
                 httpClientFactory,
-                serivceSettings.GetCheckedValue()
+                serviceSettings.GetCheckedValue()
             )
         {
         }

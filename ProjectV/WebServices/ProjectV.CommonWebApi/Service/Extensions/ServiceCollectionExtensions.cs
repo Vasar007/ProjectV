@@ -40,7 +40,7 @@ namespace ProjectV.CommonWebApi.Service.Extensions
                         ValidIssuer = jwtOptions.Issuer,
                         ValidAudience = jwtOptions.Audience,
                         IssuerSigningKey = key,
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.Zero,
                     };
                 });
 
