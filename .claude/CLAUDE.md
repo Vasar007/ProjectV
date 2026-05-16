@@ -10,13 +10,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The solution lives **one level down** from the repo root: `ProjectV/ProjectV.sln`. All build/test/`dotnet` commands must be run from `ProjectV/` (or with explicit paths). Everything in the table below assumes you are at the repo root.
 
-| Path                       | What lives there                                              |
-|----------------------------|---------------------------------------------------------------|
-| `ProjectV/Applications/`   | `ProjectV.ConsoleApp`, `ProjectV.DesktopApp` (WPF)            |
-| `ProjectV/Libraries/`      | Core C# libs + F# libs (`*.fsproj`) + `ExternalServices/`     |
+| Path                       | What lives there                                                                            |
+|----------------------------|---------------------------------------------------------------------------------------------|
+| `ProjectV/Applications/`   | `ProjectV.ConsoleApp`, `ProjectV.DesktopApp` (WPF)                                          |
+| `ProjectV/Libraries/`      | Core C# libs + F# libs (`*.fsproj`) + `ExternalServices/`                                   |
 | `ProjectV/WebServices/`    | ASP.NET Core services (Communication, Configuration, Processing, TelegramBot, CommonWebApi) |
-| `ProjectV/Tests/`          | C# tests (xUnit) + F# tests (`ProjectV.ContentDirectories.Tests`) |
-| `ProjectV/Resources/`      | Static CSV/icon assets used by the apps                        |
+| `ProjectV/Tests/`          | C# tests (xUnit) + F# tests (`ProjectV.ContentDirectories.Tests`)                           |
+| `ProjectV/Resources/`      | Static CSV/icon assets used by the apps                                                     |
 
 ## Build & Test
 
@@ -71,3 +71,4 @@ This is a C# repo, so the personal-marketplace `dotnet-backend-dev` skills apply
 - Don't add `AnyCPU` to project/solution configurations.
 - Don't include `ProjectV.DesktopApp` in `Linux x64` builds.
 - Don't commit anything under `.planning/`, `.claude/settings.local.json`, `CLAUDE.local.md`, `settings.local.json`, `Notes/`, `binary-tools/`, or `tasks/` — they are gitignored on purpose.
+
