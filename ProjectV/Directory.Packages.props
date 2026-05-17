@@ -9,9 +9,9 @@
     <PackageVersion Include="FileHelpers" Version="3.5.2" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
     <PackageVersion Include="FluentAssertions" Version="6.7.0" />
-    <PackageVersion Include="Google.Apis" Version="1.68.0" />
+    <PackageVersion Include="Google.Apis" Version="1.74.0" />
     <PackageVersion Include="Google.Apis.Auth" Version="1.68.0" />
-    <PackageVersion Include="Google.Apis.Core" Version="1.68.0" />
+    <PackageVersion Include="Google.Apis.Core" Version="1.74.0" />
     <PackageVersion Include="Google.Apis.Drive.v3" Version="1.68.0.3627" />
     <PackageVersion Include="Gridsum.DataflowEx" Version="2.0.0" />
     <PackageVersion Include="HttpToSocks5Proxy" Version="1.4.0" />
