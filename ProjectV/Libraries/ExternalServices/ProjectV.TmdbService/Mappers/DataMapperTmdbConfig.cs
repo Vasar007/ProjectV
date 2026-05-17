@@ -13,11 +13,12 @@ namespace ProjectV.TmdbService.Mappers
 
         public TmdbServiceConfigurationInfo Transform(TMDbConfig dataObject)
         {
+            var images = dataObject.Images;
             return new TmdbServiceConfigurationInfo(
-                baseUrl: dataObject.Images.BaseUrl,
-                secureBaseUrl: dataObject.Images.SecureBaseUrl,
-                backdropSizes: dataObject.Images.BackdropSizes,
-                posterSizes: dataObject.Images.PosterSizes
+                baseUrl: images?.BaseUrl ?? string.Empty,
+                secureBaseUrl: images?.SecureBaseUrl ?? string.Empty,
+                backdropSizes: images?.BackdropSizes ?? [],
+                posterSizes: images?.PosterSizes ?? []
             );
         }
 

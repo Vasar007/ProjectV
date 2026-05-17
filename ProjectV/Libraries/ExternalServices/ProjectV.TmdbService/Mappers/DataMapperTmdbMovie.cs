@@ -16,15 +16,15 @@ namespace ProjectV.TmdbService.Mappers
         {
             return new TmdbMovieInfo(
                 thingId: dataObject.Id,
-                title: dataObject.Title,
+                title: dataObject.Title ?? string.Empty,
                 voteCount: dataObject.VoteCount,
                 voteAverage: dataObject.VoteAverage,
-                overview: dataObject.Overview,
+                overview: dataObject.Overview ?? string.Empty,
                 releaseDate: dataObject.ReleaseDate ?? new DateTime(),
                 popularity: dataObject.Popularity,
                 adult: dataObject.Adult,
-                genreIds: dataObject.GenreIds,
-                posterPath: dataObject.PosterPath
+                genreIds: dataObject.GenreIds ?? [],
+                posterPath: dataObject.PosterPath ?? string.Empty
             );
         }
 

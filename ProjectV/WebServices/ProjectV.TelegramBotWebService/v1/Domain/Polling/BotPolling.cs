@@ -6,8 +6,9 @@ using ProjectV.Configuration;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories;
 using ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers;
+using Telegram.Bot;
+using Telegram.Bot.Polling;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
 {
@@ -19,8 +20,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
 
         private readonly IBotService _botService;
 
-        private readonly IBotPollingReceiverFactory _processorFactory;
-
         private readonly IBotPollingUpdateHandler _updateHandler;
 
         private bool DropPendingUpdatesOnDelete => _options.Bot.Webhook.DropPendingUpdatesOnDelete;
@@ -29,12 +28,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
         public BotPolling(
             IOptions<TelegramBotWebServiceOptions> options,
             IBotService botService,
-            IBotPollingReceiverFactory processorFactory,
             IBotPollingUpdateHandler updateHandler)
         {
             _options = options.GetCheckedValue();
             _botService = botService.ThrowIfNull(nameof(botService));
-            _processorFactory = processorFactory.ThrowIfNull(nameof(processorFactory));
             _updateHandler = updateHandler.ThrowIfNull(nameof(updateHandler));
         }
 
@@ -48,8 +45,20 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling
 
             _logger.Info("Starting receiving updates from Telegram API via polling.");
 
-            var updateReceiver = _processorFactory.Create(_options.Bot.Polling);
-            await updateReceiver.ReceiveAsync(_updateHandler, cancellationToken);
+            var pollingOptions = _options.Bot.Polling;
+            var receiverOptions = new ReceiverOptions
+            {
+                Offset = pollingOptions.Offset,
+                AllowedUpdates = pollingOptions.AllowedUpdates,
+                Limit = pollingOptions.Limit,
+                DropPendingUpdates = pollingOptions.DropPendingUpdates,
+            };
+
+            await _botService.BotClient.ReceiveAsync(
+                updateHandler: _updateHandler,
+                receiverOptions: receiverOptions,
+                cancellationToken: cancellationToken
+            );
 
             _logger.Info("Receiving updates from Telegram API via polling has been finished.");
         }

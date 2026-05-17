@@ -52,7 +52,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             string text,
             ParseMode parseMode = default,
             ReplyParameters? replyParameters = default,
-            IReplyMarkup? replyMarkup = default,
+            ReplyMarkup? replyMarkup = default,
             LinkPreviewOptions? linkPreviewOptions = default,
             int? messageThreadId = default,
             IEnumerable<MessageEntity>? entities = default,
