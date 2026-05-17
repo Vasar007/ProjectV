@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="RestSharp" />
-    <PackageReference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

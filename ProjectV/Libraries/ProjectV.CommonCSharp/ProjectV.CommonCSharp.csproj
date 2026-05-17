@@ -15,7 +15,6 @@
     <PackageReference Include="Acolyte.NET" />
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.Threading.Tasks.Dataflow" />
   </ItemGroup>
 
 </Project>
