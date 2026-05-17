@@ -4,7 +4,7 @@
     <PackageVersion Include="Acolyte.NET" Version="3.0.0-alpha.51" />
     <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
     <PackageVersion Include="AutoMapper" Version="16.1.1" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.3" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
     <PackageVersion Include="CsvHelper" Version="33.0.1" />
     <PackageVersion Include="FileHelpers" Version="3.5.2" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
@@ -35,8 +35,8 @@
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="10.0.8" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.18.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageVersion Include="Moq" Version="4.20.70" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NLog" Version="5.3.4" />
     <PackageVersion Include="NLog.Extensions.Logging" Version="5.3.15" />
@@ -56,8 +56,8 @@
     <PackageVersion Include="Telegram.Bot" Version="22.2.0" />
     <PackageVersion Include="TMDbLib" Version="2.2.0" />
     <PackageVersion Include="Unquote" Version="7.0.1" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
 
 </Project>
