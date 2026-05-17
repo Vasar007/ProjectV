@@ -1,4 +1,4 @@
-# build.yml — Linux+Windows GitHub Actions build matrix. Per D-26. Linux owns tests; Windows tests live on AppVeyor (D-24).
+# build.yml — Linux+Windows GitHub Actions build matrix.
 # No NuGet caching: the repo has no packages.lock.json, so a cache key would be unstable.
 name: Build
 
@@ -49,4 +49,4 @@ jobs:
 
       - name: Test (F# ContentDirectories)
         if: matrix.os == 'ubuntu-latest'
-        run: dotnet test ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj --configuration Release
+        run: dotnet test ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj --configuration Release --no-build -p:Platform=x64
