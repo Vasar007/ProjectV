@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Services.Basic;
 using ProjectV.DataAccessLayer.Services.Jobs.Models;
@@ -12,12 +11,12 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
     {
         private readonly ProjectVDbContext _context;
 
-        private readonly IMapper _mapper;
+        private readonly DataAccessLayerMapper _mapper;
 
 
         public DatabaseJobInfoService(
             ProjectVDbContext context,
-            IMapper mapper)
+            DataAccessLayerMapper mapper)
         {
             _context = context.ThrowIfNull(nameof(context));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
@@ -36,7 +35,7 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
 
             async ValueTask<int> AddJobAsync(DbSet<JobDbInfo> dbSet)
             {
-                var jobDbModel = _mapper.Map<JobDbInfo>(jobInfo);
+                var jobDbModel = _mapper.MapToJobDbInfo(jobInfo);
 
                 await dbSet.AddAsync(jobDbModel);
                 return await _context.SaveChangesAsync();
@@ -50,7 +49,7 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
                 dbSet => dbSet.FindAsync(jobId.Value)
             );
 
-            return _mapper.Map<JobInfo>(jobDbModel);
+            return jobDbModel is null ? null : _mapper.MapToJobInfo(jobDbModel);
         }
 
         public async Task<int> UpdateAsync(JobInfo jobInfo)
@@ -64,7 +63,7 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
 
             async ValueTask<int> UpdateJobAsync(DbSet<JobDbInfo> dbSet)
             {
-                var jobDbModel = _mapper.Map<JobDbInfo>(jobInfo);
+                var jobDbModel = _mapper.MapToJobDbInfo(jobInfo);
 
                 dbSet.Update(jobDbModel);
                 return await _context.SaveChangesAsync();
@@ -81,7 +80,12 @@ namespace ProjectV.DataAccessLayer.Services.Jobs
             async ValueTask<int> DeleteJobAsync(DbSet<JobDbInfo> dbSet)
             {
                 JobInfo? jobInfo = await FindByIdAsync(jobId);
-                var jobDbModel = _mapper.Map<JobDbInfo>(jobInfo);
+                if (jobInfo is null)
+                {
+                    return 0;
+                }
+
+                var jobDbModel = _mapper.MapToJobDbInfo(jobInfo);
 
                 dbSet.Remove(jobDbModel);
                 return await _context.SaveChangesAsync();

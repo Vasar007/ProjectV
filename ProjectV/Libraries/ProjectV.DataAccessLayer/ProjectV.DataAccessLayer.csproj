@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="All" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Riok.Mapperly" PrivateAssets="all" />
     <PackageReference Include="System.Data.SqlClient" />
   </ItemGroup>
 

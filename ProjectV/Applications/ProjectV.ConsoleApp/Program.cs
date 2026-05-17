@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using ProjectV.Communication;
 using ProjectV.Configuration;
 using ProjectV.ContentDirectories;
@@ -86,7 +85,6 @@ namespace ProjectV.ConsoleApp
 
 #if DEBUG
                 TestDbOrmEf();
-                TestAutomapper();
                 await TestConentDirectories();
 #endif
 
@@ -140,53 +138,6 @@ namespace ProjectV.ConsoleApp
                     Console.WriteLine(message);
                 }
             }
-        }
-
-        private static void TestAutomapper()
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<JobDbInfo, JobInfo>();
-                cfg.CreateMap<JobInfo, JobDbInfo>();
-
-                cfg.CreateMap<Guid, JobId>()
-                   .ConvertUsing(guid => JobId.Wrap(guid));
-                cfg.CreateMap<JobId, Guid>()
-                   .ConvertUsing(jobId => jobId.Value);
-            }, Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance);
-            config.AssertConfigurationIsValid();
-
-            var mapper = config.CreateMapper();
-
-            var jobDbInfo = new JobDbInfo(
-                id: Guid.NewGuid(),
-                name: "JobName",
-                state: 1,
-                result: 2,
-                config: "TaskConfig"
-            );
-            string message =
-                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
-                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
-                $"{jobDbInfo.Config.ToString()}";
-
-            Console.WriteLine(message);
-
-            var jobInfo = mapper.Map<JobInfo>(jobDbInfo);
-            message =
-                $"Job info: {jobInfo.Id.ToString()}, {jobInfo.Name}, " +
-                $"{jobInfo.State.ToString()}, {jobInfo.Result.ToString()}, " +
-                $"{jobInfo.Config.ToString()}";
-
-            Console.WriteLine(message);
-
-            jobDbInfo = mapper.Map<JobDbInfo>(jobInfo);
-            message =
-                $"Job DB info: {jobDbInfo.WrappedId}, {jobDbInfo.Name}, " +
-                $"{jobDbInfo.State.ToString()}, {jobDbInfo.Result.ToString()}, " +
-                $"{jobDbInfo.Config.ToString()}";
-
-            Console.WriteLine(message);
         }
 
         private static async Task TestConentDirectories()

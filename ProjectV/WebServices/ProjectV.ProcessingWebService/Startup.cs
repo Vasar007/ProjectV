@@ -1,5 +1,4 @@
-﻿using System;
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +30,7 @@ namespace ProjectV.ProcessingWebService
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
             services.AddScoped<IJobInfoService, DatabaseJobInfoService>();
 
-            services.AddAutoMapper(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
+            services.AddSingleton<DataAccessLayerMapper>();
             services.AddDbContext<ProjectVDbContext>();
 
             var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));

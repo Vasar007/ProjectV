@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Acolyte.Exceptions;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Services.Basic;
 using ProjectV.DataAccessLayer.Services.Users.Models;
@@ -14,12 +13,12 @@ namespace ProjectV.DataAccessLayer.Services.Users
     {
         private readonly ProjectVDbContext _context;
 
-        private readonly IMapper _mapper;
+        private readonly DataAccessLayerMapper _mapper;
 
 
         public DatabaseUserInfoService(
             ProjectVDbContext context,
-            IMapper mapper)
+            DataAccessLayerMapper mapper)
         {
             _context = context.ThrowIfNull(nameof(context));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
@@ -38,7 +37,7 @@ namespace ProjectV.DataAccessLayer.Services.Users
 
             async ValueTask<int> AddUserAsync(DbSet<UserDbInfo> dbSet)
             {
-                var userDbModel = _mapper.Map<UserDbInfo>(userInfo);
+                var userDbModel = _mapper.MapToUserDbInfo(userInfo);
 
                 await dbSet.AddAsync(userDbModel);
                 return await _context.SaveChangesAsync();
@@ -52,7 +51,7 @@ namespace ProjectV.DataAccessLayer.Services.Users
                 dbSet => dbSet.FindAsync(userId.Value)
             );
 
-            return _mapper.Map<UserInfo>(userDbModel);
+            return userDbModel is null ? null : _mapper.MapToUserInfo(userDbModel);
         }
 
         public async Task<UserInfo?> FindByUserNameAsync(UserName userName)
@@ -62,7 +61,7 @@ namespace ProjectV.DataAccessLayer.Services.Users
                 dbSet => dbSet.SingleOrDefaultAsync(user => user.WrappedUserName == userName)
             );
 
-            return _mapper.Map<UserInfo>(userDbModel);
+            return userDbModel is null ? null : _mapper.MapToUserInfo(userDbModel);
         }
 
         public async Task<UserInfo> GetByUserNameAsync(UserName userName)
@@ -87,7 +86,7 @@ namespace ProjectV.DataAccessLayer.Services.Users
 
             async ValueTask<int> UpdateUserAsync(DbSet<UserDbInfo> dbSet)
             {
-                var userDbModel = _mapper.Map<UserDbInfo>(userInfo);
+                var userDbModel = _mapper.MapToUserDbInfo(userInfo);
 
                 dbSet.Update(userDbModel);
                 return await _context.SaveChangesAsync();
@@ -104,7 +103,12 @@ namespace ProjectV.DataAccessLayer.Services.Users
             async ValueTask<int> DeleteUserAsync(DbSet<UserDbInfo> dbSet)
             {
                 UserInfo? jobInfo = await FindByIdAsync(userId);
-                var jobDbModel = _mapper.Map<UserDbInfo>(jobInfo);
+                if (jobInfo is null)
+                {
+                    return 0;
+                }
+
+                var jobDbModel = _mapper.MapToUserDbInfo(jobInfo);
 
                 dbSet.Remove(jobDbModel);
                 return await _context.SaveChangesAsync();
