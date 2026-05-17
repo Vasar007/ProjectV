@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/Vasar007/ProjectV/blob/master/LICENSE)
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/Vasar007/ProjectV/master.svg)](https://ci.appveyor.com/project/Vasar007/ProjectV)
+[![Build](https://github.com/Vasar007/ProjectV/actions/workflows/build.yml/badge.svg)](https://github.com/Vasar007/ProjectV/actions/workflows/build.yml)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FVasar007%2FProjectV.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FVasar007%2FProjectV?ref=badge_shield)
 
 [![GitHub wiki](https://img.shields.io/badge/Docs-GitHub%20wiki-brightgreen)](https://github.com/Vasar007/ProjectV/wiki)
@@ -24,7 +25,7 @@ Evaluate your things (movies, games, books e.t.c.) automatically based on popula
 
 ## Dependencies
 
-Target .NET is 6.0 for all projects. Version of C# is 10.0, version of F# is 5.0.
+Target .NET is 10.0 for all projects. Version of C# is 12.0, version of F# is 8.0.
 
 You can install all dependencies using NuGet package manager.
 
