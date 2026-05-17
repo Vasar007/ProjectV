@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="Acolyte.NET" />
-    <PackageReference Include="AutoMapper" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 

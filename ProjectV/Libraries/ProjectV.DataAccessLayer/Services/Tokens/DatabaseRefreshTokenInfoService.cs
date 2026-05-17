@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Services.Basic;
 using ProjectV.DataAccessLayer.Services.Tokens.Models;
@@ -14,12 +13,12 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
     {
         private readonly ProjectVDbContext _context;
 
-        private readonly IMapper _mapper;
+        private readonly DataAccessLayerMapper _mapper;
 
 
         public DatabaseRefreshTokenInfoService(
             ProjectVDbContext context,
-            IMapper mapper)
+            DataAccessLayerMapper mapper)
         {
             _context = context.ThrowIfNull(nameof(context));
             _mapper = mapper.ThrowIfNull(nameof(mapper));
@@ -38,7 +37,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
             async ValueTask<int> AddTokenAsync(DbSet<RefreshTokenDbInfo> dbSet)
             {
-                var tokenDbModel = _mapper.Map<RefreshTokenDbInfo>(tokenInfo);
+                var tokenDbModel = _mapper.MapToRefreshTokenDbInfo(tokenInfo);
 
                 await dbSet.AddAsync(tokenDbModel);
                 return await _context.SaveChangesAsync();
@@ -52,7 +51,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
                 dbSet => dbSet.FindAsync(tokenId.Value)
             );
 
-            return _mapper.Map<RefreshTokenInfo>(tokenDbModel);
+            return tokenDbModel is null ? null : _mapper.MapToRefreshTokenInfo(tokenDbModel);
         }
 
         public async Task<RefreshTokenInfo?> FindByUserIdAsync(UserId userId)
@@ -62,7 +61,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
                 dbSet => dbSet.FirstOrDefaultAsync(token => token.WrappedUserId == userId)
             );
 
-            return _mapper.Map<RefreshTokenInfo>(tokenDbModel);
+            return tokenDbModel is null ? null : _mapper.MapToRefreshTokenInfo(tokenDbModel);
         }
 
         public async Task<int> UpdateAsync(RefreshTokenInfo tokenInfo)
@@ -76,7 +75,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
             async ValueTask<int> UpdateTokenAsync(DbSet<RefreshTokenDbInfo> dbSet)
             {
-                var tokenDbModel = _mapper.Map<RefreshTokenDbInfo>(tokenInfo);
+                var tokenDbModel = _mapper.MapToRefreshTokenDbInfo(tokenInfo);
 
                 dbSet.Update(tokenDbModel);
                 return await _context.SaveChangesAsync();
@@ -93,7 +92,12 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
             async ValueTask<int> DeleteTokenAsync(DbSet<RefreshTokenDbInfo> dbSet)
             {
                 RefreshTokenInfo? tokenInfo = await FindByIdAsync(tokenId);
-                var tokenDbModel = _mapper.Map<RefreshTokenDbInfo>(tokenInfo);
+                if (tokenInfo is null)
+                {
+                    return 0;
+                }
+
+                var tokenDbModel = _mapper.MapToRefreshTokenDbInfo(tokenInfo);
 
                 dbSet.Remove(tokenDbModel);
                 return await _context.SaveChangesAsync();
