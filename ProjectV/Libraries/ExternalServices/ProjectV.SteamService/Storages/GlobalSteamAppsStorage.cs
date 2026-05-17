@@ -16,10 +16,7 @@
                 {
                     lock (_syncRoot)
                     {
-                        if (_storage is null)
-                        {
-                            _storage = new SteamAppsStorage();
-                        }
+                        _storage ??= new SteamAppsStorage();
                     }
                 }
 

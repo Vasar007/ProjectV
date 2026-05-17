@@ -31,12 +31,12 @@ dotnet test    ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.Content
 ```
 
 - **Solution platforms**: `x64` and `Linux x64`. There is **no** `Any CPU` / `AnyCPU` configuration.
-- **Linux builds skip `ProjectV.DesktopApp`** — it targets `net8.0-windows` and uses WPF. The `Linux x64` solution configuration excludes it; do not "fix" missing project references on Linux by adding it back.
+- **Linux builds skip `ProjectV.DesktopApp`** — it targets `net10.0-windows` and uses WPF. The `Linux x64` solution configuration excludes it; do not "fix" missing project references on Linux by adding it back.
 - **Windows-only PR #283 / commit `ce4690d` background**: marking a project `Skip` on Linux is not enough because the SDK still imports the project; that's why DesktopApp is excluded at the solution-configuration level on `Linux x64`.
 
 ## Stack & Versions
 
-- **TFMs**: `net8.0` (libs/web/tests/console), `net8.0-windows` (desktop only). Defined in `ProjectV/Directory.Build.props`.
+- **TFMs**: `net10.0` (libs/web/tests/console), `net10.0-windows` (desktop only). Defined in `ProjectV/Directory.Build.props`.
 - **Languages**: C# `12.0`, F# `8.0`.
 - `Nullable` enabled, `TreatWarningsAsErrors=true`, `Deterministic=true`. Do **not** suppress warnings to make a build pass — fix the root cause.
 - **Central Package Management** (`Microsoft.Build.CentralPackageVersions`): add/bump NuGet versions in `ProjectV/Directory.Packages.props`. Individual `.csproj` files declare `<PackageReference Include="..." />` **without** a `Version` attribute.
@@ -45,21 +45,21 @@ dotnet test    ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.Content
 
 ## Test Stack
 
-- C# tests: **xUnit** + **FluentAssertions** + **Moq**.
+- C# tests: **xUnit** + **AwesomeAssertions** + **NSubstitute**.
 - F# tests: **xUnit** + **Unquote** in `.fsproj`.
-- The AppVeyor pipeline runs F# tests in a separate `dotnet test` step (`after_test:`); mirror that locally when validating F# code.
+- Run F# tests separately with `--no-build` after a full solution build (the `.fsproj` test discovery does not pick them up from the `.sln`).
 
 ## Branch & PR Model
 
-- `master` — release branch. PRs from this repo's contributors target it via `develop`.
-- `develop` — integration branch. Dependabot opens PRs against `develop` (see `.github/dependabot.yml`).
-- For new work, branch from `master` (or `develop` if continuing in-flight integration work) and follow the PR template at `.github/pull_request_template.md` — it requires linking an issue and a test plan.
+- `master` — the only long-lived branch. All PRs target `master` directly.
+- `develop` was retired with Phase 1 (`v0.9.7`).
+- For new work, branch from `master` and follow the PR template at `.github/pull_request_template.md` — it requires linking an issue and a test plan.
 
 ## CI
 
-- **AppVeyor** (`appveyor.yml`) — Visual Studio 2022 image, `x64` only, builds `Debug` and `Release`, runs xUnit `**/*.Tests.dll` plus the F# tests in `after_test`. Treats build warnings as errors via the project settings.
+- **GitHub Actions `build.yml`** — Linux + Windows matrix (`ubuntu-latest`, `windows-latest`). Each job: restore → build `ProjectV.sln` → format check (`dotnet format ProjectV/ProjectV.sln --severity warn --verify-no-changes`) → C# tests (ubuntu only) → F# tests (ubuntu only, `--no-build`). Windows job additionally builds `ProjectV.Desktop.sln`.
 - **GitHub CodeQL** (`.github/workflows/codeql-analysis.yml`) — C# analysis on pushes/PRs to `master` and weekly schedule. Runs on `windows-latest` because of WPF.
-- There is no Linux CI yet; verify Linux builds manually if you touch cross-platform code paths.
+- AppVeyor was retired in Phase 1 (`v0.9.7`) — `appveyor.yml` has been deleted.
 
 ## Skills That Apply Here
 

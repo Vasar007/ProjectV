@@ -19,7 +19,6 @@ The following rules are enforced on `master`:
 
 - **No direct pushes.** All changes must arrive via a Pull Request.
 - **Required status checks before merge:**
-  - AppVeyor (Windows build + test)
   - Build / ubuntu-latest (GitHub Actions `build.yml`)
   - Build / windows-latest (GitHub Actions `build.yml`)
   - CodeQL
@@ -49,7 +48,7 @@ dotnet test ProjectV/ProjectV.sln
 dotnet test ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj
 
 # Check code style (must produce no changes; mirrors the CI gate)
-dotnet format ProjectV --severity warn --verify-no-changes
+dotnet format ProjectV/ProjectV.sln --severity warn --verify-no-changes
 ```
 
 **SDK requirement:** .NET 10 SDK is required locally. The WPF DesktopApp (`ProjectV.Desktop.sln`) requires Windows.

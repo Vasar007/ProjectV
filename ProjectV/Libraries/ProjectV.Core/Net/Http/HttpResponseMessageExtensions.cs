@@ -49,16 +49,13 @@ namespace ProjectV.Core.Net.Http
             var error = await response.Content.ReadAsAsync<ErrorResponse>(cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext);
 
-            if (error is null)
+            // In case response does not have any content, create error from common properties.
+            error ??= new ErrorResponse
             {
-                // In case response does not have any content, create error from common properties.
-                error = new ErrorResponse
-                {
-                    Success = false,
-                    ErrorCode = statusCode,
-                    ErrorMessage = response.ReasonPhrase
-                };
-            }
+                Success = false,
+                ErrorCode = statusCode,
+                ErrorMessage = response.ReasonPhrase
+            };
 
             return Result.Error(error);
         }

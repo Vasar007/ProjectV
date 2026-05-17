@@ -24,10 +24,7 @@ namespace ProjectV.CommonWebApi.Service.Setup.Handlers
             IReadOnlyList<IServiceSetupAction> actions,
             IServiceSetupAction? onRunFailAction)
         {
-            if (onRunFailAction is null)
-            {
-                onRunFailAction = new FuncServiceSetupAction(() => Task.CompletedTask);
-            }
+            onRunFailAction ??= new FuncServiceSetupAction(() => Task.CompletedTask);
 
             return new ServicePreRunHandler(
                 actions: actions,

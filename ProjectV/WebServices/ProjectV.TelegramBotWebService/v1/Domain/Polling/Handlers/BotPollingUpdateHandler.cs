@@ -32,8 +32,10 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Handlers
         }
 
         /// <inheritdoc />
+#pragma warning disable IDE0060 // Interface-mandated parameter; botClient is accessed via _updateService.
         public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
             CancellationToken cancellationToken)
+#pragma warning restore IDE0060
         {
             await _updateService.HandlePollingErrorAsync(exception, cancellationToken);
         }

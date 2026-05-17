@@ -1,4 +1,4 @@
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
 using Telegram.Bot.Polling;
