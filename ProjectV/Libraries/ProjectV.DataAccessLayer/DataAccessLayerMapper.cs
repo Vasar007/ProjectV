@@ -1,5 +1,4 @@
-using System;
-using ProjectV.DataAccessLayer.Services.Jobs.Models;
+﻿using ProjectV.DataAccessLayer.Services.Jobs.Models;
 using ProjectV.DataAccessLayer.Services.Tokens.Models;
 using ProjectV.DataAccessLayer.Services.Users.Models;
 using ProjectV.Models.Authorization;

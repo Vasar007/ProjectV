@@ -32,7 +32,7 @@ namespace ProjectV.CommonWebApi.Controllers.Extensions
             if (controllerTypeName.EndsWith(ControllerSuffix, DefaultComparison))
             {
                 int startIndex = controllerTypeName.Length - ControllerSuffix.Length;
-                return controllerTypeName.Remove(startIndex);
+                return controllerTypeName[..startIndex];
             }
 
             return controllerTypeName;

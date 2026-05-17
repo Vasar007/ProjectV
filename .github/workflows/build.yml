@@ -41,7 +41,7 @@ jobs:
         run: dotnet build ProjectV/ProjectV.Desktop.sln --configuration Release --no-restore
 
       - name: Format check
-        run: dotnet format ProjectV --severity warn --verify-no-changes
+        run: dotnet format ProjectV/ProjectV.sln --severity warn --verify-no-changes
 
       - name: Test (C# projects)
         if: matrix.os == 'ubuntu-latest'
