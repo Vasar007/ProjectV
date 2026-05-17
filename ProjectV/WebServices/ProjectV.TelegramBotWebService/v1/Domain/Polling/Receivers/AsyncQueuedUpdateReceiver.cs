@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
 {
+    /// <summary>
+    /// Queued update receiver implementation.
+    /// </summary>
+    /// <remarks>
+    /// NOTE: As of Telegram.Bot 22.10, <c>QueuedUpdateReceiver</c> has been removed from the
+    /// library. This class is kept for source compatibility but is no longer wired into the polling
+    /// pipeline. Polling is performed via
+    /// <see cref="TelegramBotClientExtensions.ReceiveAsync" /> directly.
+    /// </remarks>
     public sealed class AsyncQueuedUpdateReceiver : AsyncUpdateReceiverBase
     {
         public AsyncQueuedUpdateReceiver(
@@ -16,14 +25,13 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
 
         #region UpdateReceiverBase Overridden Methods
 
-        protected override IAsyncEnumerable<Update> CreateAsyncEnumerator(
+        protected override async IAsyncEnumerable<Update> CreateAsyncEnumerator(
             IUpdateHandler updateHandler)
         {
-            return new QueuedUpdateReceiver(
-                botClient: _botClient,
-                receiverOptions: _receiverOptions,
-                pollingErrorHandler: (ex, token) => updateHandler.HandleErrorAsync(_botClient, ex, HandleErrorSource.HandleUpdateError, token)
-            );
+            // NOTE: QueuedUpdateReceiver was removed in Telegram.Bot 22.10.
+            // This method is no longer called from the polling pipeline.
+            await System.Threading.Tasks.Task.CompletedTask;
+            yield break;
         }
 
         #endregion

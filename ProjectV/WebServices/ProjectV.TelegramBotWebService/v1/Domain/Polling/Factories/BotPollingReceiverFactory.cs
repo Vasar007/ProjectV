@@ -1,9 +1,6 @@
-﻿using System;
 using Acolyte.Assertions;
 using ProjectV.Logging;
 using ProjectV.TelegramBotWebService.Options;
-using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers;
 using Telegram.Bot.Polling;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
@@ -13,45 +10,19 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
         private static readonly ILogger _logger =
             LoggerFactory.CreateLoggerFor<BotPollingReceiverFactory>();
 
-        private readonly IBotService _botService;
 
-
-        public BotPollingReceiverFactory(
-            IBotService botService)
+        public BotPollingReceiverFactory()
         {
-            _botService = botService.ThrowIfNull(nameof(botService));
         }
 
-        #region IBotPollingProcessorFactory Implementation
+        #region IBotPollingReceiverFactory Implementation
 
-        public IUpdateReceiver Create(BotPollingOptions options)
+        public ReceiverOptions Create(BotPollingOptions options)
         {
             options.ThrowIfNull(nameof(options));
 
-            _logger.Info($"Creating bot polling receiver for mode: {options.ProcessingMode}.");
+            _logger.Info($"Creating receiver options for polling mode: {options.ProcessingMode}.");
 
-            var receiverOptions = CreateReceiverOptions(options);
-
-            return options.ProcessingMode switch
-            {
-                _ when options.IsMode(BotPollingProcessingMode.LoopReceiving) => new DefaultUpdateReceiver(_botService.BotClient, receiverOptions),
-
-                _ when options.IsMode(BotPollingProcessingMode.AsyncQueuedReceiving) => new AsyncQueuedUpdateReceiver(_botService.BotClient, receiverOptions),
-
-                _ when options.IsMode(BotPollingProcessingMode.AsyncBlockingReceiving) => new AsyncBlockingUpdateReceiver(_botService.BotClient, receiverOptions),
-
-                _ => throw new ArgumentOutOfRangeException(
-                    nameof(options),
-                    options.ProcessingMode,
-                    $"Unexpected processing mode: '{options.ProcessingMode}'."
-                )
-            };
-        }
-
-        #endregion
-
-        private static ReceiverOptions CreateReceiverOptions(BotPollingOptions options)
-        {
             return new ReceiverOptions
             {
                 Offset = options.Offset,
@@ -60,5 +31,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Factories
                 DropPendingUpdates = options.DropPendingUpdates,
             };
         }
+
+        #endregion
     }
 }

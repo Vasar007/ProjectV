@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
@@ -8,7 +8,16 @@ using Telegram.Bot.Types;
 
 namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
 {
-    public abstract class AsyncUpdateReceiverBase : IUpdateReceiver
+    /// <summary>
+    /// Base class for async update receivers.
+    /// </summary>
+    /// <remarks>
+    /// NOTE: As of Telegram.Bot 22.10, <c>IUpdateReceiver</c> has been removed from the library.
+    /// This base class is kept for potential future extension but is no longer wired into the
+    /// polling pipeline directly. Polling is performed via
+    /// <see cref="TelegramBotClientExtensions.ReceiveAsync" /> on <see cref="ITelegramBotClient" />.
+    /// </remarks>
+    public abstract class AsyncUpdateReceiverBase
     {
         protected readonly ITelegramBotClient _botClient;
 
@@ -23,8 +32,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
             _receiverOptions = receiverOptions;
         }
 
-        #region IUpdateReceiver Implementation
-
         public async Task ReceiveAsync(IUpdateHandler updateHandler,
             CancellationToken cancellationToken = default)
         {
@@ -35,8 +42,6 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Polling.Receivers
                 await updateHandler.HandleUpdateAsync(_botClient, update, cancellationToken);
             }
         }
-
-        #endregion
 
         protected abstract IAsyncEnumerable<Update> CreateAsyncEnumerator(
             IUpdateHandler updateHandler);

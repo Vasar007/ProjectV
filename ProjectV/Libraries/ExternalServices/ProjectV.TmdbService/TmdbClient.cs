@@ -59,21 +59,21 @@ namespace ProjectV.TmdbService
         /// <inheritdoc />
         public string DefaultLanguage
         {
-            get => _tmdbClient.DefaultLanguage;
+            get => _tmdbClient.DefaultLanguage ?? string.Empty;
             set => _tmdbClient.DefaultLanguage = value.ThrowIfNull(nameof(value));
         }
 
         /// <inheritdoc />
         public string DefaultCountry
         {
-            get => _tmdbClient.DefaultCountry;
+            get => _tmdbClient.DefaultCountry ?? string.Empty;
             set => _tmdbClient.DefaultCountry = value.ThrowIfNull(nameof(value));
         }
 
         public TmdbServiceConfigurationInfo Config => _configMapper.Transform(_tmdbClient.Config);
 
         /// <inheritdoc />
-        public string ApiKey => _tmdbClient.ApiKey.ThrowIfNull(nameof(ApiKey));
+        public string ApiKey => _tmdbClient.ApiKey ?? string.Empty;
 
         /// <inheritdoc />
         public IWebProxy WebProxy => _tmdbClient.WebProxy.ThrowIfNull(nameof(WebProxy));
@@ -123,7 +123,7 @@ namespace ProjectV.TmdbService
 
             try
             {
-                SearchContainer<SearchMovie> response = await _tmdbClient.SearchMovieAsync(
+                SearchContainer<SearchMovie>? response = await _tmdbClient.SearchMovieAsync(
                     query: query,
                     page: page,
                     includeAdult: includeAdult,
@@ -132,6 +132,11 @@ namespace ProjectV.TmdbService
                     primaryReleaseYear: primaryReleaseYear,
                     cancellationToken: cancellationToken
                 );
+
+                if (response is null)
+                {
+                    return null;
+                }
 
                 return _dataMapper.Transform(response);
             }

@@ -149,7 +149,7 @@ namespace ProjectV.TelegramBotWebService.v1.Domain.Bot
             string text,
             ParseMode parseMode = ParseMode.None,
             ReplyParameters? replyParameters = null,
-            IReplyMarkup? replyMarkup = null,
+            ReplyMarkup? replyMarkup = null,
             LinkPreviewOptions? linkPreviewOptions = null,
             int? messageThreadId = null,
             IEnumerable<MessageEntity>? entities = null,

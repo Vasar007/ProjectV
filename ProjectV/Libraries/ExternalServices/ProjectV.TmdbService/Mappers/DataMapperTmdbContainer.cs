@@ -22,7 +22,7 @@ namespace ProjectV.TmdbService.Mappers
 
         public TmdbSearchContainer Transform(SearchContainer<SearchMovie> dataObject)
         {
-            var results = dataObject.Results
+            var results = (dataObject.Results ?? [])
                 .Select(tmdb => _mapperTmdbMovie.Transform(tmdb))
                 .ToList();
 
