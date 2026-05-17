@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ProjectV.CommonWebApi.Service.Setup;
 using ProjectV.Logging;
 
@@ -16,29 +16,26 @@ namespace ProjectV.TelegramBotWebService
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost
-                .CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-        }
-
         private static async Task Main(string[] args)
         {
             try
             {
                 _logger.PrintHeader("Telegram bot web service started.");
 
-                var host = CreateWebHostBuilder(args).Build();
+                var host = Host
+                    .CreateDefaultBuilder(args)
+                    .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+                    .Build();
+
                 var serviceSetup = host.Services.GetRequiredService<IServiceSetup>();
 
                 // Execute pre-run actions.
                 await using (var onRunFailAction = await serviceSetup.PreRunAsync())
                 {
-                    // Run the WebHost, and start accepting requests.
+                    // Run the host, and start accepting requests.
                     await host.RunAsync();
 
-                    // If WebHost finished work without issues, cancel fail callback.
+                    // If host finished work without issues, cancel fail callback.
                     onRunFailAction.Cancel();
                 }
 

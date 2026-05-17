@@ -31,7 +31,7 @@ namespace ProjectV.ProcessingWebService
             services.AddTransient<ITargetServiceCreator, TargetServiceCreator>();
             services.AddScoped<IJobInfoService, DatabaseJobInfoService>();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
             services.AddDbContext<ProjectVDbContext>();
 
             var jwtOptionsSecion = Configuration.GetSection(nameof(JwtOptions));

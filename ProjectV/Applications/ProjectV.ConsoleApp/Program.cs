@@ -153,7 +153,7 @@ namespace ProjectV.ConsoleApp
                    .ConvertUsing(guid => JobId.Wrap(guid));
                 cfg.CreateMap<JobId, Guid>()
                    .ConvertUsing(jobId => jobId.Value);
-            });
+            }, Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance);
             config.AssertConfigurationIsValid();
 
             var mapper = config.CreateMapper();

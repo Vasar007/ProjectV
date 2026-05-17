@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ProjectV.DataAccessLayer;
 using ProjectV.Logging;
 
@@ -16,18 +16,11 @@ namespace ProjectV.ProcessingWebService
         private static readonly ILogger _logger = LoggerFactory.CreateLoggerFor(typeof(Program));
 
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost
-                .CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-        }
-
-        private static async Task CreateDbIfNotExistsAsync(IWebHost webHost)
+        private static async Task CreateDbIfNotExistsAsync(IHost host)
         {
             _logger.Info("Ensuring DB is existing.");
 
-            using var scope = webHost.Services.CreateScope();
+            using var scope = host.Services.CreateScope();
             IServiceProvider services = scope.ServiceProvider;
 
             try
@@ -59,11 +52,14 @@ namespace ProjectV.ProcessingWebService
             {
                 _logger.PrintHeader("Processing web service started.");
 
-                var host = CreateWebHostBuilder(args).Build();
+                var host = Host
+                    .CreateDefaultBuilder(args)
+                    .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+                    .Build();
 
                 await CreateDbIfNotExistsAsync(host);
 
-                // Run the WebHost, and start accepting requests.
+                // Run the host, and start accepting requests.
                 // There's an async overload, so we may as well use it.
                 await host.RunAsync();
             }
