@@ -21,11 +21,12 @@ matrix:
   fast_finish: true
 
 before_build:
-  - ps: dotnet restore ProjectV
+  - ps: dotnet restore ProjectV/ProjectV.sln
+  - ps: dotnet restore ProjectV/ProjectV.Desktop.sln
 
-build:
-  project: ProjectV
-  verbosity: minimal
+build_script:
+  - ps: dotnet build ProjectV/ProjectV.sln --configuration $env:configuration
+  - ps: dotnet build ProjectV/ProjectV.Desktop.sln --configuration $env:configuration
 
 test:
   assemblies:
