@@ -19,5 +19,5 @@ updates:
     reviewers:
       - "Vasar007"
     # Raise pull requests for version updates
-    # to NuGet against the "develop" branch.
-    target-branch: "develop"
+    # to NuGet against the "master" branch.
+    target-branch: "master"
