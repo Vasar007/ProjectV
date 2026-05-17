@@ -1,0 +1,52 @@
+# build.yml — Linux+Windows GitHub Actions build matrix. Per D-26. Linux owns tests; Windows tests live on AppVeyor (D-24).
+# No NuGet caching: the repo has no packages.lock.json, so a cache key would be unstable.
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0'
+
+      - name: Restore
+        run: dotnet restore ProjectV/ProjectV.sln
+
+      - name: Restore (Desktop solution, Windows only)
+        if: matrix.os == 'windows-latest'
+        run: dotnet restore ProjectV/ProjectV.Desktop.sln
+
+      - name: Build (cross-platform solution)
+        run: dotnet build ProjectV/ProjectV.sln --configuration Release --no-restore
+
+      - name: Build (Desktop solution, Windows only)
+        if: matrix.os == 'windows-latest'
+        run: dotnet build ProjectV/ProjectV.Desktop.sln --configuration Release --no-restore
+
+      - name: Format check
+        run: dotnet format ProjectV --severity warn --verify-no-changes
+
+      - name: Test (C# projects)
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet test ProjectV/ProjectV.sln --configuration Release --no-build
+
+      - name: Test (F# ContentDirectories)
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet test ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj --configuration Release
