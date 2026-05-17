@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using ProjectV.CommonWebApi.Models.Options;
 using ProjectV.CommonWebApi.Service.Hosted;
 
