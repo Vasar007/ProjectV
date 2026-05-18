@@ -4,9 +4,15 @@ name: Build
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - 'phase-**'
+      - 'feature/**'
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - 'phase-**'
+      - 'feature/**'
 
 jobs:
   build:
