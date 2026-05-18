@@ -1,0 +1,48 @@
+<Project>
+
+  <!--
+    Shared test-stack injection for every C# project under Sources/Tests/.
+
+    Decision D-03 (02-CONTEXT.md): the core test stack (xUnit + AwesomeAssertions +
+    NSubstitute + coverlet) plus the opt-in test stack (WireMock.Net + Testcontainers
+    + ASP.NET Core MVC Testing + TimeProvider.Testing) are referenced here so individual
+    test csprojs do NOT need per-project PackageReference lines for these packages.
+
+    CPM enforcement (D-03 + Sources/Directory.Build.props ManagePackageVersionsCentrally):
+    NONE of these PackageReference entries carries a Version attribute — versions live
+    in Sources/Directory.Packages.props only.
+
+    Import the parent Sources/Directory.Build.props because MSBuild only walks up until
+    it finds the nearest Directory.Build.props — without this Import, parent properties
+    (AppPlatforms, TestTargetFrameworks, CSharpLangVersion, ManagePackageVersionsCentrally,
+    …) would be lost for every project under Sources/Tests/.
+
+    Conditional on $(MSBuildProjectExtension) == '.csproj' — F# test projects
+    (ProjectV.ContentDirectories.Tests.fsproj) keep their own self-contained stack
+    on Unquote per Decision D-04 + Specifics §4 (F# tests untouched).
+  -->
+  <Import Project="..\Directory.Build.props" />
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <!-- Core test stack — required by every C# test project. -->
+    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="AwesomeAssertions" />
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <!--
+      Opt-in test stack — included unconditionally for C# tests so individual
+      test projects can pick from these without per-csproj boilerplate. Unused
+      packages add ~0 compile time (per 02-RESEARCH.md).
+    -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="WireMock.Net" />
+  </ItemGroup>
+
+</Project>

@@ -81,6 +81,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ProjectV.Activities", "Libr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.CommonWebApi", "WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj", "{27D2BA49-E628-435D-A35E-FD93F4380B4A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Tests.Shared", "Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj", "{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -207,6 +209,10 @@ Global
 		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Debug|x64.Build.0 = Debug|x64
 		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.ActiveCfg = Release|x64
 		{27D2BA49-E628-435D-A35E-FD93F4380B4A}.Release|x64.Build.0 = Release|x64
+		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD}.Debug|x64.ActiveCfg = Debug|x64
+		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD}.Debug|x64.Build.0 = Debug|x64
+		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD}.Release|x64.ActiveCfg = Release|x64
+		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -243,6 +249,7 @@ Global
 		{6464A2B5-DBE6-4257-A4B0-425A1B714133} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{CC3827A5-480B-4777-BBDD-371517BA67D6} = {A3BD6BDE-F139-4D02-93C8-F006CF96016D}
 		{27D2BA49-E628-435D-A35E-FD93F4380B4A} = {178A5A26-091E-4A8D-A385-171C3644A7D4}
+		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

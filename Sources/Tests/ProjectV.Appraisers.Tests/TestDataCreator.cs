@@ -9,7 +9,11 @@ namespace ProjectV.Appraisers.Tests
 {
     internal static class TestDataCreator
     {
-        private static Random RandomInstance { get; } = new Random();
+        // Seeded with 42 for run-to-run determinism (Specifics §5).
+        // Note: the planned `new Random(seed: 42)` lowercase parameter name
+        // does not compile under .NET 10 (CS1739) — the constructor parameter
+        // is `Seed` (capital S). The seed value (42) is preserved per plan intent.
+        private static Random RandomInstance { get; } = new Random(Seed: 42);
 
 
         internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
