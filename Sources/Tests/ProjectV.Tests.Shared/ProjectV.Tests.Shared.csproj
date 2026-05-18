@@ -31,7 +31,11 @@
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Appraisers\ProjectV.Appraisers.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Crawlers\ProjectV.Crawlers.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.InputProcessing\ProjectV.InputProcessing.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.OutputProcessing\ProjectV.OutputProcessing.csproj" />
   </ItemGroup>
 
 </Project>

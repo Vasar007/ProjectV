@@ -77,18 +77,18 @@ the explicit `fsproj` invocation per D-23.
 
 ## Application Layer
 
-| Path | Component | Planned Test Project | Test Type | Status |
-|------|-----------|----------------------|-----------|--------|
-| `Shell.Run` — success path, error path (`ServiceStatus.Error`), output-error path | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (mocked managers) | planned (tested around — `Shell` references concrete plugin assemblies, see `ARCHITECTURE.md` § "Anti-Patterns") |
-| `ShellBuilderFromXDocument` — builds Shell from minimal valid XDocument | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit | planned |
-| `ShellBuilderDirector` — director invokes all 4 builder steps in order | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit | planned |
-| `DataflowPipeline.Execute` — stages connected, data flows end-to-end | `ProjectV.DataPipeline` | `ProjectV.DataPipeline.Tests` | Integration (real dataflow, mocked `ICrawler`/`IAppraiser`) | planned |
-| `InputtersFlow` — deduplication of repeated input items | `ProjectV.DataPipeline` | `ProjectV.DataPipeline.Tests` | Unit | planned |
-| `CrawlersManager.TryGetResponse` — logs + rethrows on exception | `ProjectV.Crawlers` | `ProjectV.Crawlers.Tests` | Unit | planned |
-| `InputManager`, `OutputManager` — `CreateFlow()` returns non-null | `ProjectV.InputProcessing`, `ProjectV.OutputProcessing` | `ProjectV.InputProcessing.Tests`, `ProjectV.OutputProcessing.Tests` | Unit | planned |
-| `SimpleExecutor.ExecuteAsync()` — parameterless overload throws `NotImplementedException` | `ProjectV.Executors` | `ProjectV.Executors.Tests` | Unit | planned (tested around — current behaviour is a `NotImplementedException` stub, see `ARCHITECTURE.md` § "Anti-Patterns") |
-| `CommunicationServiceClient.LoginAsync` + `StartJobAsync` — happy path + auth failure | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (WireMock HTTP or NSubstitute factory) | planned |
-| `AddHttpClientWithOptions` + Polly retry policy wiring — retry fires on transient HTTP error | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (WireMock transient-error fixture) | planned |
+| Path | Component | Planned Test Project | Test Type | Status | Test Files |
+|------|-----------|----------------------|-----------|--------|------------|
+| `Shell.Run` — success path, error path (`ServiceStatus.Error`), output-error path | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (mocked managers) | tested around — see 02-05-SUMMARY § "Deviations" for the Gridsum.DataflowEx empty-pipeline blocker. Shell's constructor null-guards (5 args), property surface, `Dispose` idempotency, and the `CreateBuilderDirector` static factory ARE covered at Unit; full `Run` branch coverage is deferred to a future integration plan (Phase 3 E2E or 02-10 JWT integration). | `Sources/Tests/ProjectV.Core.Tests/ShellTests.cs` |
+| `ShellBuilderFromXDocument` — builds Shell from minimal valid XDocument | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit | covered (ctor null-guard, missing-root guard, minimal-config happy path, GetResult-before-build guard, Reset, BuildMessageHandler missing-element error path) | `Sources/Tests/ProjectV.Core.Tests/ShellBuilders/ShellBuilderFromXDocumentTests.cs` |
+| `ShellBuilderDirector` — director invokes all 4 builder steps in order | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit | covered (ctor null-guard, ctor happy path, ChangeShellBuilder null-guard, MakeShell invokes all 7 steps, MakeShell invokes them in declared order, MakeShell dispatches to replaced builder) | `Sources/Tests/ProjectV.Core.Tests/ShellBuilders/ShellBuilderDirectorTests.cs` |
+| `DataflowPipeline.Execute` — stages connected, data flows end-to-end | `ProjectV.DataPipeline` | `ProjectV.DataPipeline.Tests` | Integration (real dataflow, mocked `ICrawler`/`IAppraiser`) | planned | — |
+| `InputtersFlow` — deduplication of repeated input items | `ProjectV.DataPipeline` | `ProjectV.DataPipeline.Tests` | Unit | planned | — |
+| `CrawlersManager.TryGetResponse` — logs + rethrows on exception | `ProjectV.Crawlers` | `ProjectV.Crawlers.Tests` | Unit | planned | — |
+| `InputManager`, `OutputManager` — `CreateFlow()` returns non-null | `ProjectV.InputProcessing`, `ProjectV.OutputProcessing` | `ProjectV.InputProcessing.Tests`, `ProjectV.OutputProcessing.Tests` | Unit | planned | — |
+| `SimpleExecutor.ExecuteAsync()` — parameterless overload throws `NotImplementedException` | `ProjectV.Executors` | `ProjectV.Executors.Tests` | Unit | planned (tested around — current behaviour is a `NotImplementedException` stub, see `ARCHITECTURE.md` § "Anti-Patterns") | — |
+| `CommunicationServiceClient.LoginAsync` — happy path + 401 auth failure | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (NSubstitute IHttpClientFactory + FakeHttpMessageHandler) | covered (200 → `Result.Ok<TokenResponse>`; 401 → `Result.Error<ErrorResponse>`; null-arg guard). `StartJobAsync` happy path deferred to integration — see `02-05-SUMMARY.md` Deviations §3 (the token-cache pre-flight + refresh-on-unauthorized policy chain requires real composition to exercise meaningfully). | `Sources/Tests/ProjectV.Core.Tests/Net/CommunicationServiceClientTests.cs` |
+| `AddHttpClientWithOptions` + Polly retry policy wiring — retry fires on transient HTTP error | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (FakeHttpMessageHandler DelegatingHandler) | covered (503 → 503 → 503 → 200 with `RetryCountOnFailed=3` → 4 invocations; always-503 → 1 + N retries; first-call-200 → 1 invocation) | `Sources/Tests/ProjectV.Core.Tests/Net/HttpClientPollyPolicyTests.cs` |
 
 ## Infrastructure Layer
 

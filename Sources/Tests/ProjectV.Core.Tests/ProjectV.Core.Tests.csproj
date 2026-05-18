@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>$(TestTargetFrameworks)</TargetFrameworks>
+    <LangVersion>$(CSharpLangVersion)</LangVersion>
+    <RootNamespace>ProjectV.Core.Tests</RootNamespace>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!--
+    Core test stack (coverlet.collector, Microsoft.NET.Test.Sdk, xunit,
+    xunit.runner.visualstudio, AwesomeAssertions, NSubstitute, …) is supplied
+    by Sources/Tests/Directory.Build.props per Decision D-03 (no per-csproj
+    PackageReference entries for the shared stack).
+  -->
+
+  <ItemGroup>
+    <!-- Newtonsoft.Json is referenced explicitly because the HTTP-layer tests
+         serialize TokenResponse / ProcessingResponse bodies for the
+         FakeHttpMessageHandler — the production code on this path uses
+         Newtonsoft.Json (System.Text.Json migration is deferred per Phase 2
+         02-CONTEXT.md). -->
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="$(SolutionDir)Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
