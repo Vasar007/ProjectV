@@ -70,3 +70,71 @@ Use the Issue templates in `.github/ISSUE_TEMPLATE/`:
 - **Custom** — for anything that doesn't fit the above.
 
 Link every Issue to the active GitHub Milestone before starting work.
+
+## Workflow & Field Conventions
+
+ProjectV uses a structured issue→branch→work→pr→review→merge workflow with GitHub field discipline for traceability.
+
+### Standard workflow
+
+1. **Issue first.** Every meaningful change starts as a GitHub Issue. Use the templates under `.github/ISSUE_TEMPLATE/`:
+   - `bug_report.md` for defects.
+   - `feature_request.md` for new functionality.
+   - `custom.md` for governance/process/tooling work.
+2. **Branch from `master`.** Feature branch naming: `<type>/<short-description>` (e.g., `fix/ci-format-path`, `refactor/rename-sources`, `phase-N/NN-short-name` for multi-plan phase work).
+3. **Work in commits.** Atomic commits per logical change. Conventional-commit prefixes preferred (`fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `ci:`, `phase(NN-MM):` for phase plans).
+4. **Open the PR.** PR body must include `closes #<issue-number>` (or `refs #<n>` for related-but-not-closing). Fill in the PR template's test plan.
+5. **Apply the field convention** (see below) on every PR and Issue.
+6. **Review.** External contributors require a review. Owner/maintainer (Vasar007) may bypass review for low-risk batches (e.g., dependency-only updates inside a planned phase) using `--admin`, but should request review by default and prefer the long-lived feature-branch model below for multi-plan phases.
+7. **Squash-merge.** Default: `gh pr merge <PR#> --squash --delete-branch=false` (preserves remote branches for post-mortem). Use `--admin` only when explicitly bypassing a pre-existing CI hiccup unrelated to the PR's own gate.
+
+### GitHub field convention
+
+Every Issue and PR should have the following fields set:
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| **Assignee** | Owner of the work. | `Vasar007` (default). |
+| **Labels** | Categorization. Always include one `type:` and one `area:` label minimum. Add `status:` labels as work progresses. | `type: Code Maintenance` + `area: Dependencies` + `area: Tests`. |
+| **Milestone** | Release scope. Use the next open milestone (e.g., `v0.9.8`) for in-flight work; closed milestones for already-released work (assigned via API where `gh` CLI refuses closed milestones). | `v0.9.8`. |
+| **Project** | Long-running project board for cross-milestone tracking. | `ProjectV v1.0.0` (number 2). |
+| **Development** | GitHub auto-links via `closes #<n>` / `fixes #<n>` keywords in PR body. No manual action needed when keywords are used correctly. | Implicit via `closes #330` in PR body. |
+| **Relationships (optional)** | Use parent/sub-issue links when an issue is decomposed into multiple sub-issues. | Sub-issue under a phase tracking issue. |
+
+`gh` commands to apply the convention:
+
+```shell
+# PR
+gh pr edit <PR#> \
+  --add-assignee Vasar007 \
+  --milestone <vX.Y.Z> \
+  --add-label "type: Code Maintenance" \
+  --add-label "area: <area>"
+gh project item-add 2 --owner Vasar007 --url <pr-url>
+
+# Issue
+gh issue edit <#> \
+  --add-assignee Vasar007 \
+  --milestone <vX.Y.Z> \
+  --add-label "type: <type>" \
+  --add-label "area: <area>"
+gh project item-add 2 --owner Vasar007 --url <issue-url>
+```
+
+For closed milestones, `gh` CLI refuses — fall back to direct API:
+
+```shell
+gh api -X PATCH repos/Vasar007/ProjectV/issues/<#> -F milestone=<numeric-milestone-id>
+```
+
+### Long-lived feature branch for multi-plan phases (Phase 1+ model)
+
+For large multi-plan phases (e.g., Phase 1 dependency upgrades), the workflow uses a single long-lived feature branch per phase with commits per plan/task:
+
+1. Phase opens with a tracking Issue and a `.planning/phases/NN-<name>/` directory holding `PLAN.md` files per task.
+2. A single feature branch `phase-N/<name>` is cut from `master`.
+3. Each plan's work commits to that branch (typically per-plan PRs squash-merged into the long branch, OR commits applied directly on the branch — owner's choice).
+4. At end of phase, owner reviews the cumulative diff and merges to `master`.
+5. Release tag + GitHub Release marks phase closure.
+
+This model lets the maintainer review the whole phase in one pass instead of one micro-PR at a time. Per-plan PRs targeting `master` directly (the model Phase 1 actually used) is also acceptable when each plan is independently verifiable.
