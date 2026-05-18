@@ -1,4 +1,4 @@
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using ProjectV.IO.Input;
 
 namespace ProjectV.Tests.Shared.Helpers.Mocks.Managers

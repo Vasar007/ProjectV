@@ -85,6 +85,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Tests.Shared", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Models.Tests", "Tests\ProjectV.Models.Tests\ProjectV.Models.Tests.csproj", "{1413CB57-2D4D-47EC-9185-EDF8462BCF71}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.Core.Tests", "Tests\ProjectV.Core.Tests\ProjectV.Core.Tests.csproj", "{C086E345-44FF-42BD-8F3C-CADE14590DC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -219,6 +221,10 @@ Global
 		{1413CB57-2D4D-47EC-9185-EDF8462BCF71}.Debug|x64.Build.0 = Debug|x64
 		{1413CB57-2D4D-47EC-9185-EDF8462BCF71}.Release|x64.ActiveCfg = Release|x64
 		{1413CB57-2D4D-47EC-9185-EDF8462BCF71}.Release|x64.Build.0 = Release|x64
+		{C086E345-44FF-42BD-8F3C-CADE14590DC7}.Debug|x64.ActiveCfg = Debug|x64
+		{C086E345-44FF-42BD-8F3C-CADE14590DC7}.Debug|x64.Build.0 = Debug|x64
+		{C086E345-44FF-42BD-8F3C-CADE14590DC7}.Release|x64.ActiveCfg = Release|x64
+		{C086E345-44FF-42BD-8F3C-CADE14590DC7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -257,6 +263,7 @@ Global
 		{27D2BA49-E628-435D-A35E-FD93F4380B4A} = {178A5A26-091E-4A8D-A385-171C3644A7D4}
 		{AA0F171F-41B5-425C-A3FE-B9C5E5519CBD} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{1413CB57-2D4D-47EC-9185-EDF8462BCF71} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{C086E345-44FF-42BD-8F3C-CADE14590DC7} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

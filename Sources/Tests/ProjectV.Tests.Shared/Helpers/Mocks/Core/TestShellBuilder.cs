@@ -1,4 +1,4 @@
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using ProjectV.Appraisers;
 using ProjectV.Core;
 using ProjectV.Crawlers;
