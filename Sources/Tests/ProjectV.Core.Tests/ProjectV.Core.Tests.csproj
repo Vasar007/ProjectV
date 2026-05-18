@@ -19,6 +19,15 @@
   -->
 
   <ItemGroup>
+    <!-- Newtonsoft.Json is referenced explicitly because the HTTP-layer tests
+         serialize TokenResponse / ProcessingResponse bodies for the
+         FakeHttpMessageHandler — the production code on this path uses
+         Newtonsoft.Json (System.Text.Json migration is deferred per Phase 2
+         02-CONTEXT.md). -->
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
     <ProjectReference Include="$(SolutionDir)Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj" />
   </ItemGroup>

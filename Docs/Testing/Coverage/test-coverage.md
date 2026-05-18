@@ -87,8 +87,8 @@ the explicit `fsproj` invocation per D-23.
 | `CrawlersManager.TryGetResponse` — logs + rethrows on exception | `ProjectV.Crawlers` | `ProjectV.Crawlers.Tests` | Unit | planned | — |
 | `InputManager`, `OutputManager` — `CreateFlow()` returns non-null | `ProjectV.InputProcessing`, `ProjectV.OutputProcessing` | `ProjectV.InputProcessing.Tests`, `ProjectV.OutputProcessing.Tests` | Unit | planned | — |
 | `SimpleExecutor.ExecuteAsync()` — parameterless overload throws `NotImplementedException` | `ProjectV.Executors` | `ProjectV.Executors.Tests` | Unit | planned (tested around — current behaviour is a `NotImplementedException` stub, see `ARCHITECTURE.md` § "Anti-Patterns") | — |
-| `CommunicationServiceClient.LoginAsync` + `StartJobAsync` — happy path + auth failure | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (WireMock HTTP or NSubstitute factory) | planned | — |
-| `AddHttpClientWithOptions` + Polly retry policy wiring — retry fires on transient HTTP error | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (WireMock transient-error fixture) | planned | — |
+| `CommunicationServiceClient.LoginAsync` — happy path + 401 auth failure | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (NSubstitute IHttpClientFactory + FakeHttpMessageHandler) | covered (200 → `Result.Ok<TokenResponse>`; 401 → `Result.Error<ErrorResponse>`; null-arg guard). `StartJobAsync` happy path deferred to integration — see `02-05-SUMMARY.md` Deviations §3 (the token-cache pre-flight + refresh-on-unauthorized policy chain requires real composition to exercise meaningfully). | `Sources/Tests/ProjectV.Core.Tests/Net/CommunicationServiceClientTests.cs` |
+| `AddHttpClientWithOptions` + Polly retry policy wiring — retry fires on transient HTTP error | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (FakeHttpMessageHandler DelegatingHandler) | covered (503 → 503 → 503 → 200 with `RetryCountOnFailed=3` → 4 invocations; always-503 → 1 + N retries; first-call-200 → 1 invocation) | `Sources/Tests/ProjectV.Core.Tests/Net/HttpClientPollyPolicyTests.cs` |
 
 ## Infrastructure Layer
 
