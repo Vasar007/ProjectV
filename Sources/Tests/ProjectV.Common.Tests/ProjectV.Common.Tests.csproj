@@ -19,8 +19,13 @@
   -->
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj" />
   </ItemGroup>
 
 </Project>

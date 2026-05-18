@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Appraisers\ProjectV.Appraisers.csproj" />
+    <ProjectReference Include="$(SolutionDir)Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj" />
   </ItemGroup>
 
 </Project>
