@@ -49,10 +49,51 @@ jobs:
       - name: Format check
         run: dotnet format Sources/ProjectV.sln --severity warn --verify-no-changes
 
-      - name: Test (C# projects)
+      # Linux: four sequential named test stages (D-20, D-21, D-23) with Coverlet
+      # collection on the C# stages (D-24, D-26, D-27 via coverlet.runsettings).
+      - name: Test (Unit)
         if: matrix.os == 'ubuntu-latest'
-        run: dotnet test Sources/ProjectV.sln --configuration Release --no-build
+        run: dotnet test Sources/ProjectV.sln --configuration Release --no-build --filter "Category=Unit" --collect:"XPlat Code Coverage" --settings Sources/Tests/coverlet.runsettings
 
-      - name: Test (F# ContentDirectories)
+      - name: Test (Integration)
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet test Sources/ProjectV.sln --configuration Release --no-build --filter "Category=Integration" --collect:"XPlat Code Coverage" --settings Sources/Tests/coverlet.runsettings
+
+      - name: Test (Contract)
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet test Sources/ProjectV.sln --configuration Release --no-build --filter "Category=Contract" --collect:"XPlat Code Coverage" --settings Sources/Tests/coverlet.runsettings
+
+      # F# stage: explicit fsproj invocation, no Category filter, no coverage collection
+      # (F# coverage non-essential and the project is tiny — D-23, D-26).
+      - name: Test (F#)
         if: matrix.os == 'ubuntu-latest'
         run: dotnet test Sources/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj --configuration Release --no-build -p:Platform=x64
+
+      # Coverage publication (D-24, D-26): merge per-stage Cobertura outputs into
+      # one HTML artifact + a Markdown step-summary panel.
+      - name: Merge coverage reports
+        if: matrix.os == 'ubuntu-latest'
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: '**/TestResults/**/coverage.cobertura.xml'
+          targetdir: 'coverage-report'
+          reporttypes: 'HtmlInline;MarkdownSummaryGithub'
+          verbosity: 'Warning'
+
+      - name: Upload coverage report artifact
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-report/
+
+      - name: Write coverage summary to Step Summary
+        if: matrix.os == 'ubuntu-latest'
+        run: cat coverage-report/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+
+      # Windows: non-Docker tests (D-22). Single-quoted filter so PowerShell does not
+      # interpret `!=` and YAML keeps the string verbatim (Pitfall 4). Docker-dependent
+      # Testcontainers tests stay Linux-only via the [Trait("RequiresDocker","true")] tag.
+      - name: Test (Non-Docker)
+        if: matrix.os == 'windows-latest'
+        run: dotnet test Sources/ProjectV.sln --configuration Release --no-build --filter 'RequiresDocker!=true'

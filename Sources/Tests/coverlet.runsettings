@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sources/Tests/coverlet.runsettings — Coverlet exclusions for Phase 2 coverage publication (D-27). -->
+<!-- Consumed by every Linux C# test stage in .github/workflows/build.yml via the `settings` argument. -->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>[ProjectV.DesktopApp]*,[ProjectV.*.Tests]*</Exclude>
+          <ExcludeByFile>**/Migrations/**/*.cs,**/*.Designer.cs</ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
