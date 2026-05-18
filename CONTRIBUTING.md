@@ -33,31 +33,31 @@ All commands are run from the **repo root** (the directory containing this file)
 
 ```shell
 # Restore NuGet packages
-dotnet restore ProjectV
+dotnet restore Sources
 
 # Build the cross-platform solution (Linux + Windows)
-dotnet build ProjectV/ProjectV.sln
+dotnet build Sources/ProjectV.sln
 
 # Build the Windows-only solution (includes WPF DesktopApp; Windows only)
-dotnet build ProjectV/ProjectV.Desktop.sln
+dotnet build Sources/ProjectV.Desktop.sln
 
 # Run all C# tests
-dotnet test ProjectV/ProjectV.sln
+dotnet test Sources/ProjectV.sln
 
 # Run F# tests (separate step — not picked up by solution-level test discovery)
-dotnet test ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj
+dotnet test Sources/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj
 
 # Check code style (must produce no changes; mirrors the CI gate)
-dotnet format ProjectV/ProjectV.sln --severity warn --verify-no-changes
+dotnet format Sources/ProjectV.sln --severity warn --verify-no-changes
 ```
 
 **SDK requirement:** .NET 10 SDK is required locally. The WPF DesktopApp (`ProjectV.Desktop.sln`) requires Windows.
 
 ## Code Style
 
-- **EditorConfig:** `.editorconfig` at `ProjectV/.editorconfig` is authoritative. Key rules: UTF-8 with BOM, 4-space indent, `System.*` usings first, block-scoped namespaces.
+- **EditorConfig:** `.editorconfig` at `Sources/.editorconfig` is authoritative. Key rules: UTF-8 with BOM, 4-space indent, `System.*` usings first, block-scoped namespaces.
 - **Warnings as errors:** `TreatWarningsAsErrors=true` is global. Do not suppress warnings to make a build pass — fix the root cause.
-- **Central Package Management (CPM):** New NuGet packages add a `<PackageVersion>` entry in `ProjectV/Directory.Packages.props`. Individual `.csproj` files declare `<PackageReference Include="..." />` **without** a `Version` attribute.
+- **Central Package Management (CPM):** New NuGet packages add a `<PackageVersion>` entry in `Sources/Directory.Packages.props`. Individual `.csproj` files declare `<PackageReference Include="..." />` **without** a `Version` attribute.
 - **Platforms:** `x64` only. Never add `AnyCPU` configurations.
 - **Run `dotnet format`** before pushing to ensure the style gate passes in CI.
 

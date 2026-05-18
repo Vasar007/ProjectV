@@ -6,28 +6,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **ProjectV** — auto-evaluates "things" (movies, games, books) by aggregating ratings from popular databases (OMDb, TMDb, Steam). Surfaces include a WPF desktop app, console app, ASP.NET Core web services, and a Telegram bot.
 
-## Repo Layout Quirk
+## Repo Layout
 
-The solution lives **one level down** from the repo root: `ProjectV/ProjectV.sln`. All build/test/`dotnet` commands must be run from `ProjectV/` (or with explicit paths). Everything in the table below assumes you are at the repo root.
+The solution lives under `Sources/` at the repo root: `Sources/ProjectV.sln`. All build/test/`dotnet` commands reference this path. Everything in the table below assumes you are at the repo root.
 
 | Path                       | What lives there                                                                            |
 |----------------------------|---------------------------------------------------------------------------------------------|
-| `ProjectV/Applications/`   | `ProjectV.ConsoleApp`, `ProjectV.DesktopApp` (WPF)                                          |
-| `ProjectV/Libraries/`      | Core C# libs + F# libs (`*.fsproj`) + `ExternalServices/`                                   |
-| `ProjectV/WebServices/`    | ASP.NET Core services (Communication, Configuration, Processing, TelegramBot, CommonWebApi) |
-| `ProjectV/Tests/`          | C# tests (xUnit) + F# tests (`ProjectV.ContentDirectories.Tests`)                           |
-| `ProjectV/Resources/`      | Static CSV/icon assets used by the apps                                                     |
+| `Sources/Applications/`    | `ProjectV.ConsoleApp`, `ProjectV.DesktopApp` (WPF)                                          |
+| `Sources/Libraries/`       | Core C# libs + F# libs (`*.fsproj`) + `ExternalServices/`                                   |
+| `Sources/WebServices/`     | ASP.NET Core services (Communication, Configuration, Processing, TelegramBot, CommonWebApi) |
+| `Sources/Tests/`           | C# tests (xUnit) + F# tests (`ProjectV.ContentDirectories.Tests`)                           |
+| `Sources/Resources/`       | Static CSV/icon assets used by the apps                                                     |
 
 ## Build & Test
 
 ```shell
-dotnet restore ProjectV
-dotnet build   ProjectV/ProjectV.sln                                    # full solution
-dotnet build   ProjectV/Libraries/ProjectV.Core/ProjectV.Core.csproj    # single project
-dotnet test    ProjectV/ProjectV.sln                                    # all .NET tests
-dotnet test    ProjectV/ProjectV.sln --filter "FullyQualifiedName~MyTestMethod"
+dotnet restore Sources
+dotnet build   Sources/ProjectV.sln                                    # full solution
+dotnet build   Sources/Libraries/ProjectV.Core/ProjectV.Core.csproj    # single project
+dotnet test    Sources/ProjectV.sln                                    # all .NET tests
+dotnet test    Sources/ProjectV.sln --filter "FullyQualifiedName~MyTestMethod"
 # F# tests run separately (the .fsproj test discovery does not pick them up from the .sln):
-dotnet test    ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj
+dotnet test    Sources/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentDirectories.Tests.fsproj
 ```
 
 - **Solution platforms**: `x64` and `Linux x64`. There is **no** `Any CPU` / `AnyCPU` configuration.
@@ -36,12 +36,12 @@ dotnet test    ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.Content
 
 ## Stack & Versions
 
-- **TFMs**: `net10.0` (libs/web/tests/console), `net10.0-windows` (desktop only). Defined in `ProjectV/Directory.Build.props`.
+- **TFMs**: `net10.0` (libs/web/tests/console), `net10.0-windows` (desktop only). Defined in `Sources/Directory.Build.props`.
 - **Languages**: C# `12.0`, F# `8.0`.
 - `Nullable` enabled, `TreatWarningsAsErrors=true`, `Deterministic=true`. Do **not** suppress warnings to make a build pass — fix the root cause.
-- **Central Package Management** (`Microsoft.Build.CentralPackageVersions`): add/bump NuGet versions in `ProjectV/Directory.Packages.props`. Individual `.csproj` files declare `<PackageReference Include="..." />` **without** a `Version` attribute.
-- **NuGet feed**: `nuget.org` only (`ProjectV/NuGet.Config`). No private feeds.
-- **Code style**: `ProjectV/.editorconfig` is authoritative. UTF-8 with BOM, 4-space indent, system usings first.
+- **Central Package Management** (`Microsoft.Build.CentralPackageVersions`): add/bump NuGet versions in `Sources/Directory.Packages.props`. Individual `.csproj` files declare `<PackageReference Include="..." />` **without** a `Version` attribute.
+- **NuGet feed**: `nuget.org` only (`Sources/NuGet.Config`). No private feeds.
+- **Code style**: `Sources/.editorconfig` is authoritative. UTF-8 with BOM, 4-space indent, system usings first.
 
 ## Test Stack
 
@@ -57,7 +57,7 @@ dotnet test    ProjectV/Tests/ProjectV.ContentDirectories.Tests/ProjectV.Content
 
 ## CI
 
-- **GitHub Actions `build.yml`** — Linux + Windows matrix (`ubuntu-latest`, `windows-latest`). Each job: restore → build `ProjectV.sln` → format check (`dotnet format ProjectV/ProjectV.sln --severity warn --verify-no-changes`) → C# tests (ubuntu only) → F# tests (ubuntu only, `--no-build`). Windows job additionally builds `ProjectV.Desktop.sln`.
+- **GitHub Actions `build.yml`** — Linux + Windows matrix (`ubuntu-latest`, `windows-latest`). Each job: restore → build `ProjectV.sln` → format check (`dotnet format Sources/ProjectV.sln --severity warn --verify-no-changes`) → C# tests (ubuntu only) → F# tests (ubuntu only, `--no-build`). Windows job additionally builds `ProjectV.Desktop.sln`.
 - **GitHub CodeQL** (`.github/workflows/codeql-analysis.yml`) — C# analysis on pushes/PRs to `master` and weekly schedule. Runs on `windows-latest` because of WPF.
 - AppVeyor was retired in Phase 1 (`v0.9.7`) — `appveyor.yml` has been deleted.
 
