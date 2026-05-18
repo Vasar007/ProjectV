@@ -10,7 +10,11 @@ ProjectV follows a **GitHub-Milestone-driven** development process:
 - **Task tracking:** Each task is one GitHub Issue linked to the active milestone. The implementing developer/agent posts notes on the Issue summarising decisions, nuances, and progress as work proceeds.
 - **Pull requests:** Every PR must link at least one Issue using `closes #XXXX` (or `Part of #XXXX` for partial work) in the PR body. Opening a PR without a corresponding Issue is not allowed — create or find the Issue first.
 - **Target branch:** From Phase 2 onward, all plan work targets a long-lived feature branch per phase (see below). The feature branch is merged to `master` at phase end via `/gsd-ship`. Phase 1 used per-plan PRs directly to `master` — that exception is closed.
-- **Branch naming:** Feature branches: `phase-NN/<short-name>`. Short-lived per-plan worktree branches: `phase-NN/<short-name>/<plan-short>`. Delete worktree branches after they merge back to the phase branch.
+- **Branch naming (public contract — CI depends on these prefixes):** Use exactly these patterns:
+  - `phase-NN/<short-name>` — for GSD phase work (e.g., `phase-02/refactor-pipeline`). Short-lived per-plan worktree branches extend this: `phase-NN/<short-name>/<plan-short>`. Delete worktree branches after they merge back to the phase branch.
+  - `feature/<short-name>` — for standalone feature work outside a numbered phase (e.g., `feature/admin-portal`, `feature/oauth-flow`).
+  - `master` — the only long-lived non-feature branch.
+  - Branches that do not match `phase-**` or `feature/**` (e.g., `wip/something`, `tmp/scratch`) will **not** trigger CI. That is intentional.
 - **Note:** The `develop` branch was retired with Phase 1 (`v0.9.7`). `master` is the only long-lived branch on the remote.
 
 ## Branch Protection
@@ -26,6 +30,22 @@ The following rules are enforced on `master`:
 - **Linear history:** Squash merge or rebase merge only. Merge commits are not permitted.
 - **Force-push blocked.**
 - **Self-approval allowed:** As a solo maintainer, the author may merge their own PR after all required status checks pass. A required reviewer count is not enforced.
+
+## CI Scope
+
+CI runs automatically when the branch name matches the contract defined above:
+
+| Event | Branches covered |
+|-------|-----------------|
+| `push` | `master`, `phase-**`, `feature/**` |
+| `pull_request` (base branch) | `master`, `phase-**`, `feature/**` |
+| CodeQL weekly cron | `master` (scheduled, Sundays 03:00 UTC) |
+
+**Workflows triggered:**
+- **`build.yml`** — Linux + Windows build matrix (restore, build, format check, tests).
+- **`codeql-analysis.yml`** — C# static analysis on Windows (plus the cron schedule).
+
+Branches that do not match the above patterns (e.g., `wip/something`, `tmp/scratch`) will **not** trigger CI. Name branches per the contract to get CI coverage.
 
 ## Build and Test Commands
 
