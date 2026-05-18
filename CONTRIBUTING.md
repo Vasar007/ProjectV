@@ -6,11 +6,11 @@ Thank you for your interest in contributing to ProjectV!
 
 ProjectV follows a **GitHub-Milestone-driven** development process:
 
-- **Phases and milestones:** Each development phase corresponds to one GitHub Milestone (e.g., `v0.9.7`). Milestones have no fixed deadlines — they ship when ready.
+- **Phases and milestones:** Each development phase corresponds to one GitHub Milestone (e.g., `v0.9.8`). Milestones have no fixed deadlines — they ship when ready.
 - **Task tracking:** Each task is one GitHub Issue linked to the active milestone. The implementing developer/agent posts notes on the Issue summarising decisions, nuances, and progress as work proceeds.
 - **Pull requests:** Every PR must link at least one Issue using `closes #XXXX` (or `Part of #XXXX` for partial work) in the PR body. Opening a PR without a corresponding Issue is not allowed — create or find the Issue first.
-- **Target branch:** All PRs target `master` directly. There are no long-lived feature or integration branches.
-- **Branch naming:** Use descriptive short-lived branches (e.g., `phase-1/13-docs-and-cherry-pick`). Delete the branch after the PR merges.
+- **Target branch:** From Phase 2 onward, all plan work targets a long-lived feature branch per phase (see below). The feature branch is merged to `master` at phase end via `/gsd-ship`. Phase 1 used per-plan PRs directly to `master` — that exception is closed.
+- **Branch naming:** Feature branches: `phase-NN/<short-name>`. Short-lived per-plan worktree branches: `phase-NN/<short-name>/<plan-short>`. Delete worktree branches after they merge back to the phase branch.
 - **Note:** The `develop` branch was retired with Phase 1 (`v0.9.7`). `master` is the only long-lived branch on the remote.
 
 ## Branch Protection
@@ -81,23 +81,24 @@ ProjectV uses a structured issue→branch→work→pr→review→merge workflow 
    - `bug_report.md` for defects.
    - `feature_request.md` for new functionality.
    - `custom.md` for governance/process/tooling work.
-2. **Branch from `master`.** Feature branch naming: `<type>/<short-description>` (e.g., `fix/ci-format-path`, `refactor/rename-sources`, `phase-N/NN-short-name` for multi-plan phase work).
+2. **Branch from `master` (phase start).** At the start of each phase, cut a long-lived feature branch: `git checkout -b phase-NN/<short-name>`. All plan work for that phase commits to this branch.
 3. **Work in commits.** Atomic commits per logical change. Conventional-commit prefixes preferred (`fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `ci:`, `phase(NN-MM):` for phase plans).
-4. **Open the PR.** PR body must include `closes #<issue-number>` (or `refs #<n>` for related-but-not-closing). Fill in the PR template's test plan.
+4. **Open the PR (at phase end).** PR body must include `closes #<issue-number>` (or `refs #<n>` for related-but-not-closing). Fill in the PR template's test plan. The user runs `/gsd-ship` to create the PR from the feature branch to `master`.
 5. **Apply the field convention** (see below) on every PR and Issue.
-6. **Review.** External contributors require a review. Owner/maintainer (Vasar007) may bypass review for low-risk batches (e.g., dependency-only updates inside a planned phase) using `--admin`, but should request review by default and prefer the long-lived feature-branch model below for multi-plan phases.
-7. **Squash-merge.** Default: `gh pr merge <PR#> --squash --delete-branch=false` (preserves remote branches for post-mortem). Use `--admin` only when explicitly bypassing a pre-existing CI hiccup unrelated to the PR's own gate.
+6. **Review.** The reviewer on a feature-branch-to-master PR must be `Vasar007` — this is required (see field convention below). Per-plan commits into the feature branch are not PRs, so no reviewer is needed there.
+7. **Squash-merge.** Default: `gh pr merge <PR#> --squash --delete-branch=false` (preserves remote branches for post-mortem).
 
 ### GitHub field convention
 
-Every Issue and PR should have the following fields set:
+Every Issue and PR **must** have the following fields set (mandatory, not recommended):
 
 | Field | Purpose | Example |
 |-------|---------|---------|
-| **Assignee** | Owner of the work. | `Vasar007` (default). |
+| **Assignee** | Owner of the work. | `Vasar007` (default and required). |
 | **Labels** | Categorization. Always include one `type:` and one `area:` label minimum. Add `status:` labels as work progresses. | `type: Code Maintenance` + `area: Dependencies` + `area: Tests`. |
 | **Milestone** | Release scope. Use the next open milestone (e.g., `v0.9.8`) for in-flight work; closed milestones for already-released work (assigned via API where `gh` CLI refuses closed milestones). | `v0.9.8`. |
 | **Project** | Long-running project board for cross-milestone tracking. | `ProjectV v1.0.0` (number 2). |
+| **Reviewers** | Required on every feature-branch-to-master PR (i.e., the `/gsd-ship` PR at phase end). | `Vasar007`. Not needed for per-plan commits into the feature branch (those are not PRs). |
 | **Development** | GitHub auto-links via `closes #<n>` / `fixes #<n>` keywords in PR body. No manual action needed when keywords are used correctly. | Implicit via `closes #330` in PR body. |
 | **Relationships (optional)** | Use parent/sub-issue links when an issue is decomposed into multiple sub-issues. | Sub-issue under a phase tracking issue. |
 
@@ -109,7 +110,8 @@ gh pr edit <PR#> \
   --add-assignee Vasar007 \
   --milestone <vX.Y.Z> \
   --add-label "type: Code Maintenance" \
-  --add-label "area: <area>"
+  --add-label "area: <area>" \
+  --add-reviewer Vasar007
 gh project item-add 2 --owner Vasar007 --url <pr-url>
 
 # Issue
@@ -127,14 +129,27 @@ For closed milestones, `gh` CLI refuses — fall back to direct API:
 gh api -X PATCH repos/Vasar007/ProjectV/issues/<#> -F milestone=<numeric-milestone-id>
 ```
 
-### Long-lived feature branch for multi-plan phases (Phase 1+ model)
+### Long-lived feature branch per phase (default from Phase 2 onward)
 
-For large multi-plan phases (e.g., Phase 1 dependency upgrades), the workflow uses a single long-lived feature branch per phase with commits per plan/task:
+Starting with Phase 2, one long-lived feature branch per phase is the **default model**. Per-plan PRs directly to `master` are reserved for exceptional cases explicitly approved by the repository owner (Phase 1 used that exception because .NET 10 SDK availability was uncertain and each upgrade needed independent validation before continuing — that risk is now resolved).
 
-1. Phase opens with a tracking Issue and a `.planning/phases/NN-<name>/` directory holding `PLAN.md` files per task.
-2. A single feature branch `phase-N/<name>` is cut from `master`.
-3. Each plan's work commits to that branch (typically per-plan PRs squash-merged into the long branch, OR commits applied directly on the branch — owner's choice).
-4. At end of phase, owner reviews the cumulative diff and merges to `master`.
-5. Release tag + GitHub Release marks phase closure.
+**Mechanics:**
 
-This model lets the maintainer review the whole phase in one pass instead of one micro-PR at a time. Per-plan PRs targeting `master` directly (the model Phase 1 actually used) is also acceptable when each plan is independently verifiable.
+1. At phase start, branch from `master`: `git checkout -b phase-NN/<short-name>`.
+2. All plan work commits to that branch. Per-plan can be one commit or several; the executor decides.
+3. If a plan needs an isolated worktree (e.g., a sweeping rename), the worktree branch is created from the **phase feature branch**, not from `master`. After the plan's commits land back on the phase branch (merge or rebase), the worktree branch is deleted; the phase branch continues.
+4. When the phase is complete — all plans done, builds green, SUMMARY.md files written — the **user** calls `/gsd-ship`. This creates the PR from the feature branch to `master`. The user reviews the full cumulative diff and merges or requests changes.
+5. Do **not** open per-plan PRs into `master` mid-phase. Do **not** squash-merge per-plan worktree branches into `master` before the phase is complete.
+6. Review bypass (`gh pr merge --admin`) is **off by default**. Use only for genuine pre-existing CI hiccups that the user has explicitly acknowledged.
+
+### Issue Comment Lifecycle
+
+Every Issue created for a GSD plan gets three categories of comments. This mirrors the two-comment protocol in `dev-essentials:feature-pipeline` (Task Comment #1 + Task Comment #2) and adds a closing summary so the issue tracker stands on its own as a record (independent of `.planning/`, which is gitignored).
+
+1. **Initial plan comment** — posted _when work begins on the issue_ (immediately before the executor starts writing code). Contents: one-line restatement of the objective, 2–4 bullets on the planned approach, key constraints/risks, PR or branch name where the work will land, "implementation starts now", footer `(comment posted by Claude Code at <UTC timestamp>)`.
+
+2. **Follow-up comment(s)** — posted _only when the plan changes mid-execution_ (scope expansion, new sub-tasks discovered, blocker, approach pivot). Contents: what changed, why, new approach, updated PR/branch info, footer.
+
+3. **Closing summary** — posted _when the issue closes_ (whether by `closes #N` PR keyword or `gh issue close`). Contents: what was actually done (1–3 sentences), PR number(s) + merge SHA(s), the path of the corresponding `.planning/phases/NN-*/MM-SUMMARY.md` if relevant, any deferred work, footer `(closing summary by Claude Code at <UTC timestamp>)` or `(retroactive summary ...)` for backfills.
+
+Post via `gh issue comment <n> --repo Vasar007/ProjectV --body-file <path>` (use `--body-file` for multi-line markdown bodies — they don't survive shell-quoting reliably).
