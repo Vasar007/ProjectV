@@ -61,16 +61,19 @@ the explicit `fsproj` invocation per D-23.
 
 ## Domain Layer
 
-| Path | Component | Planned Test Project | Test Type | Status |
-|------|-----------|----------------------|-----------|--------|
-| `Appraiser<BasicInfo>.GetRatings` — property defaults, null-arg, 1/3/N items | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | partially covered (retrofit + extend) |
-| `MovieCommonAppraiser`, `MovieNormalizedAppraiser`, `GameCommonAppraiser`, `GameNormalizedAppraiser` — rating computation accuracy | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | planned |
-| `AppraisersManager` — add/remove appraisers, `CreateFlow()` shape | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | planned |
-| `BasicInfo`, `MovieInfo`, `GameInfo` model invariants + JSON round-trip | `ProjectV.Models` | `ProjectV.Common.Tests` | Unit | partially covered (skip resolved in 02-01) |
-| Custom exception types (`CannotGetTmdbConfigException`, etc.) — 3-ctor convention | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | planned |
-| `UserId`, `JobId` value-object behavior — `Create`, `Parse`, `None` | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | planned |
-| `ProjectV.Activities.PolicyModels` — retry policy construction | `ProjectV.Activities` | `ProjectV.Activities.Tests` (F# or C# wrapper) | Unit | planned |
-| `ProjectV.ContentDirectories.ContentFinder` — guard clauses on bad paths | `ProjectV.ContentDirectories` | `ProjectV.ContentDirectories.Tests` | Unit (F#) | covered |
+| Path | Component | Planned Test Project | Test Type | Status | Test Files |
+|------|-----------|----------------------|-----------|--------|------------|
+| `Appraiser<BasicInfo>.GetRatings` — property defaults, null-arg, 1/3/N items | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | covered | `Sources/Tests/ProjectV.Appraisers.Tests/AppraiserTests.cs` |
+| `Appraiser<TmdbMovieInfo>` + `TmdbCommonAppraisal` — movie-common rating computation accuracy (planner's `MovieCommonAppraiser` row) | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | covered | `Sources/Tests/ProjectV.Appraisers.Tests/AppraisersExtensions/MovieCommonAppraiserTests.cs` |
+| `Appraiser<BasicInfo>` + `BasicAppraisalNormalized` — movie-normalized rating computation accuracy (planner's `MovieNormalizedAppraiser` row) | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | covered | `Sources/Tests/ProjectV.Appraisers.Tests/AppraisersExtensions/MovieNormalizedAppraiserTests.cs` |
+| `Appraiser<SteamGameInfo>` + Steam/`Omdb` appraisals — game-common / game-normalized rating computation accuracy | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | planned | — |
+| `AppraisersManager` — add/remove appraisers, `CreateFlow()` shape | `ProjectV.Appraisers` | `ProjectV.Appraisers.Tests` | Unit | covered | `Sources/Tests/ProjectV.Appraisers.Tests/AppraisersExtensions/AppraisersManagerTests.cs` |
+| `BasicInfo` model invariants + Newtonsoft.Json round-trip | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | covered | `Sources/Tests/ProjectV.Models.Tests/Data/BasicInfoInvariantsTests.cs`, `Sources/Tests/ProjectV.Common.Tests/ModelSerializationTests.cs` |
+| `MovieInfo`, `GameInfo` model invariants + JSON round-trip | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | planned | — |
+| Custom exception types (`CannotGetTmdbConfigException`, etc.) — 3-ctor convention | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | covered | `Sources/Tests/ProjectV.Models.Tests/Exceptions/CannotGetTmdbConfigExceptionTests.cs`, `Sources/Tests/ProjectV.Models.Tests/Exceptions/CommonExceptionsTestSuite.cs` |
+| `UserId`, `JobId` value-object behavior — `Create`, `Parse`, `None`, `Wrap`, `TryParse`, `IsSpecified` | `ProjectV.Models` | `ProjectV.Models.Tests` | Unit | covered | `Sources/Tests/ProjectV.Models.Tests/ValueObjects/UserIdTests.cs`, `Sources/Tests/ProjectV.Models.Tests/ValueObjects/JobIdTests.cs` |
+| `ProjectV.Activities.PolicyModels` — retry policy construction | `ProjectV.Activities` | `ProjectV.Activities.Tests` (F# or C# wrapper) | Unit | planned | — |
+| `ProjectV.ContentDirectories.ContentFinder` — guard clauses on bad paths | `ProjectV.ContentDirectories` | `ProjectV.ContentDirectories.Tests` | Unit (F#) | covered | `Sources/Tests/ProjectV.ContentDirectories.Tests/ContentFinderTests.fs` |
 
 ## Application Layer
 
