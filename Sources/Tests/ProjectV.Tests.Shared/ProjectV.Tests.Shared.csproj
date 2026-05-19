@@ -26,6 +26,7 @@
     <PackageReference Include="Acolyte.NET" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Telegram.Bot" />
   </ItemGroup>
 
   <ItemGroup>
