@@ -34,7 +34,8 @@ namespace ProjectV.Crawlers.Tests
     /// static seam is not substitutable from a unit test without invasive
     /// reflection on <c>LoggerFactory</c> internals; we therefore verify the
     /// observable half of the contract (the exception propagates) and rely
-    /// on the surrounding <see cref="CrawlersTestsModuleInitializer" /> +
+    /// on the hoisted
+    /// <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c> +
     /// production code review to cover the <c>_logger.Error(...)</c> call.
     /// The 02-06 PLAN's <c>logger.Received(1).Error(...)</c> wording is an
     /// aspirational target that this unit suite intentionally does not chase
