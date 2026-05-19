@@ -103,6 +103,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.OmdbService.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.SteamService.Tests", "Tests\ProjectV.SteamService.Tests\ProjectV.SteamService.Tests.csproj", "{EEE89D49-ADCA-42BD-B328-AD1788C42E5F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DataAccessLayer.Tests", "Tests\ProjectV.DataAccessLayer.Tests\ProjectV.DataAccessLayer.Tests.csproj", "{966566FC-1739-4A1D-86DC-BE49F2167A44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -273,6 +275,10 @@ Global
 		{EEE89D49-ADCA-42BD-B328-AD1788C42E5F}.Debug|x64.Build.0 = Debug|x64
 		{EEE89D49-ADCA-42BD-B328-AD1788C42E5F}.Release|x64.ActiveCfg = Release|x64
 		{EEE89D49-ADCA-42BD-B328-AD1788C42E5F}.Release|x64.Build.0 = Release|x64
+		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Debug|x64.ActiveCfg = Debug|x64
+		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Debug|x64.Build.0 = Debug|x64
+		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Release|x64.ActiveCfg = Release|x64
+		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -320,6 +326,7 @@ Global
 		{9ABBE418-8E8D-4A92-A8BC-C24220FD02EC} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{704F79CD-D1F7-436D-B12F-EBF228EAC80D} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{EEE89D49-ADCA-42BD-B328-AD1788C42E5F} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{966566FC-1739-4A1D-86DC-BE49F2167A44} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}
