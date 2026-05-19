@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using Newtonsoft.Json;
@@ -12,6 +11,7 @@ using ProjectV.Core.Services.Clients;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
+using ProjectV.Tests.Shared.Helpers.Http;
 using Xunit;
 
 namespace ProjectV.Core.Tests.Net
@@ -178,35 +178,5 @@ namespace ProjectV.Core.Tests.Net
             };
         }
 
-        /// <summary>
-        /// Inline test-only <see cref="DelegatingHandler" /> that returns a
-        /// deterministic <see cref="HttpResponseMessage" /> for every call.
-        /// Tracks the call count so tests can assert on invocation shape.
-        /// </summary>
-        /// <remarks>
-        /// Declared inline because its surface is plan-specific; 02-08
-        /// contract tests will refine the shape before this is hoisted into
-        /// <c>ProjectV.Tests.Shared</c>.
-        /// </remarks>
-        private sealed class FakeHttpMessageHandler : DelegatingHandler
-        {
-            private readonly Func<HttpRequestMessage, HttpResponseMessage> _responder;
-
-            public int CallCount { get; private set; }
-
-            public FakeHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> responder)
-            {
-                _responder = responder ?? throw new ArgumentNullException(nameof(responder));
-            }
-
-            protected override Task<HttpResponseMessage> SendAsync(
-                HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                CallCount++;
-                HttpResponseMessage response = _responder(request);
-                response.RequestMessage = request;
-                return Task.FromResult(response);
-            }
-        }
     }
 }
