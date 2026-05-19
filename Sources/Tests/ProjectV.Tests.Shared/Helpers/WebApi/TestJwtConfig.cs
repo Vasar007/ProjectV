@@ -1,6 +1,4 @@
-using System;
-
-namespace ProjectV.Tests.Shared.Helpers.WebApi
+﻿namespace ProjectV.Tests.Shared.Helpers.WebApi
 {
     /// <summary>
     /// Bundle of test-side JWT configuration values that

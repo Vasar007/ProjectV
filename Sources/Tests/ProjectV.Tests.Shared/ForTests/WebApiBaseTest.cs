@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectV.Tests.Shared.Helpers.WebApi;
 
@@ -41,7 +38,6 @@ namespace ProjectV.Tests.Shared.ForTests
     public abstract class WebApiBaseTest<TStartup> : BaseTest, IAsyncLifetime
         where TStartup : class
     {
-        private readonly TestJwtConfig _jwtConfig;
         private readonly IReadOnlyDictionary<string, string?> _extraConfiguration;
         private readonly Action<IServiceCollection> _configureTestServices;
 
@@ -72,7 +68,7 @@ namespace ProjectV.Tests.Shared.ForTests
         /// so a derived test can mint a token by hand if it needs claim
         /// customisation beyond <see cref="CreateAuthenticatedClient" />.
         /// </summary>
-        protected TestJwtConfig JwtConfig => _jwtConfig;
+        protected TestJwtConfig JwtConfig { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="WebApiBaseTest{TStartup}" />.
@@ -96,7 +92,7 @@ namespace ProjectV.Tests.Shared.ForTests
             IReadOnlyDictionary<string, string?>? extraConfiguration = null,
             Action<IServiceCollection>? configureTestServices = null)
         {
-            _jwtConfig = jwtConfig ?? new TestJwtConfig();
+            JwtConfig = jwtConfig ?? new TestJwtConfig();
             _extraConfiguration = extraConfiguration ?? new Dictionary<string, string?>();
             _configureTestServices = configureTestServices ?? (_ => { });
         }
@@ -110,7 +106,7 @@ namespace ProjectV.Tests.Shared.ForTests
         {
             _factory = new TestWebApplicationFactory<TStartup>
             {
-                JwtConfig = _jwtConfig,
+                JwtConfig = JwtConfig,
                 ExtraConfigurationValues = _extraConfiguration,
                 ConfigureTestServices = _configureTestServices
             };
@@ -164,7 +160,7 @@ namespace ProjectV.Tests.Shared.ForTests
             TimeSpan? expiry = null)
         {
             var token = TestJwtHelper.GenerateTestBearerToken(
-                config: _jwtConfig,
+                config: JwtConfig,
                 userId: userId,
                 userName: userName,
                 expiry: expiry

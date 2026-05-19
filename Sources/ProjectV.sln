@@ -105,6 +105,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.SteamService.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.DataAccessLayer.Tests", "Tests\ProjectV.DataAccessLayer.Tests\ProjectV.DataAccessLayer.Tests.csproj", "{966566FC-1739-4A1D-86DC-BE49F2167A44}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectV.CommunicationWebService.Tests", "Tests\ProjectV.CommunicationWebService.Tests\ProjectV.CommunicationWebService.Tests.csproj", "{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -279,6 +281,10 @@ Global
 		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Debug|x64.Build.0 = Debug|x64
 		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Release|x64.ActiveCfg = Release|x64
 		{966566FC-1739-4A1D-86DC-BE49F2167A44}.Release|x64.Build.0 = Release|x64
+		{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023}.Debug|x64.ActiveCfg = Debug|x64
+		{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023}.Debug|x64.Build.0 = Debug|x64
+		{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023}.Release|x64.ActiveCfg = Release|x64
+		{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -327,6 +333,7 @@ Global
 		{704F79CD-D1F7-436D-B12F-EBF228EAC80D} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{EEE89D49-ADCA-42BD-B328-AD1788C42E5F} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 		{966566FC-1739-4A1D-86DC-BE49F2167A44} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
+		{4E63F54E-0C07-4A6A-89E8-B1ADE34EF023} = {D27F98B1-E100-42F1-A514-69C92FFA9609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53974B8E-8C6D-4149-9607-75A81B754F9D}

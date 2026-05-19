@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Acolyte.Assertions;
 using Microsoft.IdentityModel.Tokens;
