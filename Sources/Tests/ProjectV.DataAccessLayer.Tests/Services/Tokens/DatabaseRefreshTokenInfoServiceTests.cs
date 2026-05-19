@@ -136,6 +136,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             actualValue.Should().NotBeNull();
             actualValue!.Id.Should().Be(expected.Id);
             actualValue.UserId.Should().Be(expected.UserId);
+            actualValue.TokenHash.Should().Be(expected.TokenHash);
             actualValue.TokenSalt.Should().Be(expected.TokenSalt);
             // Postgres `timestamp with time zone` round-trips as Utc.
             actualValue.ExpiryDateUtc.Should().BeCloseTo(
