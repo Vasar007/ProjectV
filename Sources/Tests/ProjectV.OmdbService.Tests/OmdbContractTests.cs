@@ -66,31 +66,36 @@ namespace ProjectV.OmdbService.Tests
 
         public Task InitializeAsync()
         {
-            // Mutate the process-global HttpClient.DefaultProxy inside the
-            // IAsyncLifetime initialise step so the save/restore pair is
-            // strictly paired across the xUnit class lifecycle (the ctor saved
-            // the prior value; DisposeAsync restores it). Doing this in the
-            // ctor would place the global mutation outside the lifecycle
-            // boundary that xUnit guarantees.
+            // Load fixtures + configure stubs FIRST, mutate the process-global
+            // HttpClient.DefaultProxy LAST. xUnit v2 does NOT call
+            // DisposeAsync when InitializeAsync throws; if the fixture file
+            // were missing, mutating the proxy before the load would leak the
+            // mutation for the rest of the test-runner's lifetime (and leak
+            // the WireMock port). Doing the throwing work first means any
+            // failure happens before the global is touched.
             //
-            // WireMockServer.Url is non-null after Start() returns; declared
-            // string? for the lifecycle-pre-start state.
-            string wireMockUrl = _server.Url!;
-            HttpClient.DefaultProxy = new WebProxy(new Uri(wireMockUrl));
-
-            // OMDb requests land at WireMock with the original absolute URL
-            // (host = www.omdbapi.com, path = "/"). Stub by path "/" — that is
-            // what the proxy-forwarded request resolves to.
             // Pitfall 3: raw-string body (NOT WithBodyAsJson + JObject.Parse)
             // — avoids WireMock.Net serializer / Newtonsoft.Json casing
             // conflict.
             string successBody = FixtureLoader.LoadJsonFixture(MovieByTitleSuccessFixturePath);
+
+            // OMDb requests land at WireMock with the original absolute URL
+            // (host = www.omdbapi.com, path = "/"). Stub by path "/" — that is
+            // what the proxy-forwarded request resolves to.
             _server
                 .Given(Request.Create().WithPath("/").UsingGet())
                 .RespondWith(Response.Create()
                     .WithStatusCode(200)
                     .WithHeader("Content-Type", "application/json; charset=utf-8")
                     .WithBody(successBody));
+
+            // WireMockServer.Url is non-null after Start() returns; declared
+            // string? for the lifecycle-pre-start state. This mutation is the
+            // last operation in InitializeAsync so a failure earlier in this
+            // method (e.g. fixture load) cannot leave the global state in a
+            // half-applied state where the save/restore pair would not run.
+            string wireMockUrl = _server.Url!;
+            HttpClient.DefaultProxy = new WebProxy(new Uri(wireMockUrl));
 
             return Task.CompletedTask;
         }
