@@ -53,17 +53,22 @@ namespace ProjectV.DataAccessLayer.Services.Tokens.Models
         // materializing a row from the `tokens` table). A row with
         // `Id = Guid.Empty`, `UserId = Guid.Empty`, or null/whitespace
         // `TokenHash`/`TokenSalt` will throw at query-execution time rather
-        // than being returned as a domain object — this ctor is the sole
-        // enforcement of those invariants (no DB-level CHECK constraint, no
-        // independent guard in the `RefreshTokenInfo` domain model). `Ts`
-        // and `ExpiryDate` carry no ctor-level guard; temporal invariants
-        // (e.g. `ExpiryDate < Ts`) are not checked here.
+        // than being returned as a domain object — this ctor is the
+        // EF-materialization-path enforcement of those invariants (no
+        // DB-level CHECK constraint exists; the parallel
+        // `RefreshTokenInfo` domain model carries its own value-object and
+        // null guards on the write path). `Ts` and `ExpiryDate` carry no
+        // ctor-level guard; temporal invariants (e.g. `ExpiryDate < Ts`)
+        // are not checked here.
         //
-        // Operationally: service-layer reads, updates, and deletes all route
-        // through `FindByIdAsync` (the latter via `DeleteAsync`), so a
-        // corrupt row cannot be read, updated, or deleted through the
-        // service. Data-repair scenarios that need to touch such rows must
-        // fix them in SQL first.
+        // Operationally: service-layer reads and deletes route through
+        // `FindByIdAsync` (the latter via `DeleteAsync`), so a corrupt row
+        // in the DB cannot be read or deleted through the service. Updates
+        // are protected by the domain-layer input `UpdateAsync` receives
+        // (not by a fetch), so a corrupt-in-DB row likewise cannot be
+        // overwritten by a service call without first being read.
+        // Data-repair scenarios that need to touch such rows must fix
+        // them in SQL first.
         public RefreshTokenDbInfo(
             Guid id,
             Guid userId,
