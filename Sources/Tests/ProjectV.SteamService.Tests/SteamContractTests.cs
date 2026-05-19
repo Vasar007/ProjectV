@@ -172,6 +172,17 @@ namespace ProjectV.SteamService.Tests
         /// </summary>
         private void ReplaceInternalSdkClient(SteamApiConfig overriddenConfig)
         {
+            // FRAGILE: private-field reflection seam. If SteamWebApiLib renames
+            // _steamApiClient, converts it to a property, or changes the
+            // SdkSteamApiClient ctor surface, the assertion below fires at
+            // runtime (not compile time) and this contract suite breaks. The
+            // documented Rule-3 deviation in 02-08-SUMMARY.md accepts this
+            // fragility because ProjectVSteamApiClient's single-arg ctor builds
+            // its own SdkSteamApiClient internally — there is no public seam to
+            // inject a SteamApiConfig pointing at WireMock. The non-fragile fix
+            // is a ctor overload on ProjectVSteamApiClient that accepts a
+            // pre-built SteamApiConfig; until then, watch for SDK upgrade
+            // breakage on this line.
             FieldInfo? sdkFieldInfo = typeof(ProjectVSteamApiClient).GetField(
                 "_steamApiClient",
                 BindingFlags.NonPublic | BindingFlags.Instance

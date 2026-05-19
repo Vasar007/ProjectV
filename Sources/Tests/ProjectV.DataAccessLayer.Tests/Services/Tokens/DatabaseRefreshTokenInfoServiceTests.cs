@@ -101,5 +101,30 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             actualValue.ExpiryDateUtc.Should().BeCloseTo(
                 expiry, precision: TimeSpan.FromMilliseconds(1));
         }
+
+        /// <summary>
+        /// Exercises the Plan 02-09 Rule-1 raw-Guid comparison fix: the
+        /// service must look up tokens by user id through the EF-translatable
+        /// scalar column path (not via the WrappedUserId computed property,
+        /// which EF cannot lift into SQL). Without this test the 02-09 fix
+        /// has zero integration coverage; a regression that reintroduces
+        /// `token.WrappedUserId == userId` in the predicate would crash at
+        /// runtime instead of being caught here.
+        /// </summary>
+        [Fact]
+        public async Task FindByUserIdAsyncAfterAddReturnsTokenWithExpectedUserId()
+        {
+            // Arrange.
+            RefreshTokenInfo expected = _generator.GenerateRefreshTokenInfo();
+            await _sut.AddAsync(expected);
+
+            // Act.
+            RefreshTokenInfo? actualValue = await _sut.FindByUserIdAsync(expected.UserId);
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue!.Id.Should().Be(expected.Id);
+            actualValue.UserId.Should().Be(expected.UserId);
+        }
     }
 }

@@ -57,10 +57,6 @@ namespace ProjectV.OmdbService.Tests
         {
             _server = WireMockServer.Start();
             _originalDefaultProxy = HttpClient.DefaultProxy;
-            // WireMockServer.Url is non-null after Start() returns; declared
-            // string? for the lifecycle-pre-start state.
-            string wireMockUrl = _server.Url!;
-            HttpClient.DefaultProxy = new WebProxy(new Uri(wireMockUrl));
 
             // The api-key value is irrelevant — WireMock matches by path only
             // and the SDK echoes the key into the query string, not into auth
@@ -70,6 +66,18 @@ namespace ProjectV.OmdbService.Tests
 
         public Task InitializeAsync()
         {
+            // Mutate the process-global HttpClient.DefaultProxy inside the
+            // IAsyncLifetime initialise step so the save/restore pair is
+            // strictly paired across the xUnit class lifecycle (the ctor saved
+            // the prior value; DisposeAsync restores it). Doing this in the
+            // ctor would place the global mutation outside the lifecycle
+            // boundary that xUnit guarantees.
+            //
+            // WireMockServer.Url is non-null after Start() returns; declared
+            // string? for the lifecycle-pre-start state.
+            string wireMockUrl = _server.Url!;
+            HttpClient.DefaultProxy = new WebProxy(new Uri(wireMockUrl));
+
             // OMDb requests land at WireMock with the original absolute URL
             // (host = www.omdbapi.com, path = "/"). Stub by path "/" — that is
             // what the proxy-forwarded request resolves to.
