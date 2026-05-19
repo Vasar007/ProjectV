@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
-using Acolyte.Assertions;
-using Microsoft.EntityFrameworkCore;
-using ProjectV.DataAccessLayer;
+﻿using Acolyte.Assertions;
+using Npgsql;
 
 namespace ProjectV.Tests.Shared.ForTests
 {
@@ -13,45 +11,57 @@ namespace ProjectV.Tests.Shared.ForTests
     /// of each integration test class so every test starts on a clean slate.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Table names <c>"public"."jobs" / "users" / "tokens"</c> match the
     /// <c>[Table(...)]</c> attributes on
     /// <c>ProjectV.DataAccessLayer.Services.{Jobs,Users,Tokens}.Models.*DbInfo</c>
     /// and the <c>HasDefaultSchema("public")</c> declaration in
-    /// <see cref="ProjectVDbContext.OnModelCreating" />. Double-quoted
-    /// identifiers preserve PostgreSQL case sensitivity.
+    /// <c>ProjectVDbContext.OnModelCreating</c>. Double-quoted identifiers
+    /// preserve PostgreSQL case sensitivity.
+    /// </para>
+    /// <para>
+    /// Takes a raw connection string rather than a <c>ProjectVDbContext</c>
+    /// because the production context's <c>OnModelCreating</c> raises a
+    /// <see cref="System.InvalidOperationException" /> on the
+    /// <c>UserDbInfo.RefreshToken</c> property whenever the dependency cache
+    /// is first realised — even for a TRUNCATE that never touches the model.
+    /// See <c>DbCollectionFixture</c> remarks + Plan 02-09 <c>[BLOCKING]</c>
+    /// migration note. Using <see cref="NpgsqlConnection" /> directly keeps
+    /// the helper independent of EF Core's model validator.
+    /// </para>
     /// </remarks>
     public sealed class TestDbHelper
     {
-        private readonly ProjectVDbContext _context;
+        private readonly string _connectionString;
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestDbHelper" /> class.
         /// </summary>
-        /// <param name="context">
-        /// A <see cref="ProjectVDbContext" /> configured to point at the
-        /// Testcontainers PostgreSQL instance with
-        /// <c>DatabaseOptions.CanUseDatabase = true</c>.
+        /// <param name="connectionString">
+        /// PostgreSQL connection string of the test container. Must point at
+        /// the same database the SUT's <c>ProjectVDbContext</c> consumes.
         /// </param>
-        public TestDbHelper(ProjectVDbContext context)
+        public TestDbHelper(string connectionString)
         {
-            _context = context.ThrowIfNull(nameof(context));
+            _connectionString = connectionString.ThrowIfNullOrWhiteSpace(
+                nameof(connectionString));
         }
 
         /// <summary>
         /// Resets all DAL test tables (<c>jobs</c>, <c>users</c>, <c>tokens</c>)
         /// to empty state, preserving schema and resetting any identity
-        /// sequences. Detaches every tracked entity first so a subsequent
-        /// <see cref="DbContext.SaveChangesAsync(System.Threading.CancellationToken)" />
-        /// does not raise <c>DbUpdateConcurrencyException</c> on a stale
-        /// reference (reference D-32 in 02-CONTEXT.md).
+        /// sequences. Use from <see cref="Xunit.IAsyncLifetime.InitializeAsync" />
+        /// before constructing the system under test.
         /// </summary>
         public async Task TruncateAllTablesAsync()
         {
-            _context.ChangeTracker.Clear();
-            await _context.Database.ExecuteSqlRawAsync(
-                "TRUNCATE TABLE \"public\".\"jobs\", \"public\".\"users\", \"public\".\"tokens\" RESTART IDENTITY CASCADE;"
-            );
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
+            await using var command = new NpgsqlCommand(
+                "TRUNCATE TABLE \"public\".\"jobs\", \"public\".\"users\", \"public\".\"tokens\" RESTART IDENTITY CASCADE;",
+                connection);
+            await command.ExecuteNonQueryAsync();
         }
     }
 }

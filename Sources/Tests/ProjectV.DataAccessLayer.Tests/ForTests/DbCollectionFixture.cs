@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DotNet.Testcontainers.Builders;
 using Microsoft.EntityFrameworkCore;
-using ProjectV.DataAccessLayer;
+using Npgsql;
 using Testcontainers.PostgreSql;
 using Xunit;
 
@@ -117,13 +117,19 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
 
         private async Task ApplySchemaAsync()
         {
-            await using var context = CreateDbContext();
-
             // Raw SQL schema bootstrap — see <remarks> on the class. Column
             // shapes mirror the [Column("…")] attributes on
             // ProjectV.DataAccessLayer.Services.{Jobs,Users,Tokens}.Models.*DbInfo;
             // tables sit in the default "public" schema declared in
             // ProjectVDbContext.OnModelCreating.
+            //
+            // Uses Npgsql directly rather than ProjectVDbContext.Database.
+            // ExecuteSqlRawAsync because ProjectVDbContext's OnModelCreating
+            // raises ModelValidator errors on the UserDbInfo.RefreshToken
+            // navigation — the SUT services route their SQL through the same
+            // context but only after we've materialised the schema. Bypassing
+            // EF here keeps the bootstrap independent of the broken model
+            // (Plan 02-09 [BLOCKING] fallback).
             const string createSchemaSql = @"
                 CREATE TABLE IF NOT EXISTS ""public"".""jobs"" (
                     ""id""     uuid          NOT NULL PRIMARY KEY,
@@ -152,7 +158,10 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
                 );
             ";
 
-            await context.Database.ExecuteSqlRawAsync(createSchemaSql);
+            await using var connection = new NpgsqlConnection(ConnectionString);
+            await connection.OpenAsync();
+            await using var command = new NpgsqlCommand(createSchemaSql, connection);
+            await command.ExecuteNonQueryAsync();
         }
     }
 }

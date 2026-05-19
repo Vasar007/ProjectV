@@ -38,6 +38,19 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
         [Column("active")]
         public bool Active { get; }
 
+        /// <summary>
+        /// Out-of-band navigation surface for <see cref="DataAccessLayerMapper" />.
+        /// Marked <see cref="NotMappedAttribute" /> because the live refresh
+        /// token row lives in the separate <c>tokens</c> table (configured by
+        /// <see cref="RefreshTokenDbInfoConfiguration" /> via
+        /// <c>RefreshTokenDbInfo.UserId</c>); EF Core cannot map a navigation
+        /// type through this immutable property and the previous
+        /// <c>builder.Property(e =&gt; e.RefreshToken)</c> mapping blocked
+        /// model validation. The mapper hydrates this property out-of-band
+        /// when needed. See Plan 02-09 Task 1 (Rule 1 fix unblocking
+        /// RESEARCH.md Critical Finding #1).
+        /// </summary>
+        [NotMapped]
         public RefreshTokenDbInfo? RefreshToken { get; }
 
         //public ICollection<Task>? Tasks { get; }
@@ -51,6 +64,23 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
             DateTime ts,
             bool active,
             RefreshTokenDbInfo? refreshToken)
+            : this(id, userName, password, passwordSalt, ts, active)
+        {
+            RefreshToken = refreshToken;
+        }
+
+        // EF Core constructor (no navigation parameter). EF picks the ctor
+        // whose every argument binds to a mapped scalar; the 7-arg ctor above
+        // cannot be bound because [NotMapped] excludes RefreshToken from the
+        // model. This 6-arg overload is the EF-friendly path; production
+        // callers continue to use the 7-arg ctor via DataAccessLayerMapper.
+        internal UserDbInfo(
+            Guid id,
+            string userName,
+            string password,
+            string passwordSalt,
+            DateTime ts,
+            bool active)
         {
             Id = id.ThrowIfEmpty(nameof(id));
             UserName = userName.ThrowIfNullOrWhiteSpace(nameof(userName));
@@ -58,7 +88,6 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
             PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(userName));
             Ts = ts;
             Active = active;
-            RefreshToken = refreshToken;
         }
     }
 
@@ -79,7 +108,9 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
             builder.Property(e => e.PasswordSalt);
             builder.Property(e => e.Ts);
             builder.Property(e => e.Active);
-            builder.Property(e => e.RefreshToken);
+            // RefreshToken is [NotMapped] on the entity — see the property
+            // remark on UserDbInfo. The live refresh token row lives in the
+            // separate `tokens` table.
         }
 
         #endregion

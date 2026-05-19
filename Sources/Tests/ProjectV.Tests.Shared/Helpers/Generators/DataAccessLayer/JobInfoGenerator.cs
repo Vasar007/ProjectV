@@ -1,4 +1,4 @@
-using Acolyte.Assertions;
+﻿using Acolyte.Assertions;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Tests.Shared.Helpers.Generators.Models;
 
