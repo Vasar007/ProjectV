@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using ProjectV.Core.Services.Clients;
+using Telegram.Bot;
 
 namespace ProjectV.Tests.Shared.Helpers.WebApi
 {
@@ -29,7 +32,9 @@ namespace ProjectV.Tests.Shared.Helpers.WebApi
     ///     <description>
     ///     Per-test <see cref="ExtraConfigurationValues" /> may layer
     ///     additional in-memory configuration on top (for example a system
-    ///     user name/password for the JWT login round-trip scenario).
+    ///     user name/password for the JWT login round-trip scenario, or a
+    ///     dummy <c>BotToken</c> so the Telegram bot host can start without
+    ///     a real Telegram API token).
     ///   </description>
     ///   </item>
     ///   <item>
@@ -37,8 +42,32 @@ namespace ProjectV.Tests.Shared.Helpers.WebApi
     ///     <see cref="ConfigureTestServices" /> is the post-<c>Startup</c>
     ///     seam — it runs AFTER <c>Startup.ConfigureServices</c>, so DI
     ///     overrides (e.g. an empty <c>IUserInfoService</c> substitute for
-    ///     scenarios that should NOT include a system user) replace the
+    ///     scenarios that should NOT include a system user, or an
+    ///     <c>IBotService</c> stub for Telegram tests) replace the
     ///     production registration. The default delegate is a no-op.
+    ///   </description>
+    ///   </item>
+    ///   <item>
+    ///     <description>
+    ///     <see cref="TelegramBotClientStub" /> is exposed for downstream
+    ///     scenario base classes that need to read the stub back (e.g. to
+    ///     assert outgoing bot calls through <c>Received()</c>). The
+    ///     factory itself does NOT register this stub into the DI
+    ///     container — that lives in the per-family base class because
+    ///     <c>IBotService</c> is defined in the Telegram bot host assembly
+    ///     and we deliberately avoid taking that project reference here.
+    ///     Defaults to <c>null</c>.
+    ///   </description>
+    ///   </item>
+    ///   <item>
+    ///     <description>
+    ///     <see cref="CommunicationServiceClientStub" /> swaps the
+    ///     production <see cref="ICommunicationServiceClient" /> singleton
+    ///     so bot handlers that schedule downstream work do not contact the
+    ///     real <c>CommunicationWebService</c>. Webhook tests (02-11) leave
+    ///     this <c>null</c> because the webhook path does not touch the
+    ///     comm-client; polling tests (02-12) supply one built via
+    ///     <c>TestCommunicationServiceClientBuilder</c>.
     ///   </description>
     ///   </item>
     ///   <item>
@@ -90,6 +119,30 @@ namespace ProjectV.Tests.Shared.Helpers.WebApi
             _ => { };
 
         /// <summary>
+        /// Gets or sets an optional <see cref="ITelegramBotClient" />
+        /// substitute (typically built via <c>TestTelegramBotClientBuilder</c>).
+        /// The factory itself does not register this stub into DI — that
+        /// is the responsibility of the per-family base class that knows
+        /// about <c>IBotService</c> (which lives in the Telegram bot
+        /// host assembly and is intentionally NOT referenced from
+        /// <c>ProjectV.Tests.Shared</c>). Defaults to <c>null</c>.
+        /// </summary>
+        public ITelegramBotClient? TelegramBotClientStub { get; init; }
+
+        /// <summary>
+        /// Gets or sets an optional <see cref="ICommunicationServiceClient" />
+        /// substitute (typically built via
+        /// <c>TestCommunicationServiceClientBuilder</c>) that replaces the
+        /// production registration inside the test host. When
+        /// non-<c>null</c>, the production <see cref="ICommunicationServiceClient" />
+        /// transient is removed and re-registered with this stub instance.
+        /// Defaults to <c>null</c> (production wiring stands — useful when
+        /// the host does not reach the comm-client on the path under test,
+        /// e.g. the Telegram webhook path).
+        /// </summary>
+        public ICommunicationServiceClient? CommunicationServiceClientStub { get; init; }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="TestWebApplicationFactory{TStartup}" />.
         /// </summary>
         public TestWebApplicationFactory()
@@ -129,6 +182,12 @@ namespace ProjectV.Tests.Shared.Helpers.WebApi
 
             builder.ConfigureTestServices(services =>
             {
+                if (CommunicationServiceClientStub is not null)
+                {
+                    services.RemoveAll<ICommunicationServiceClient>();
+                    services.AddSingleton(CommunicationServiceClientStub);
+                }
+
                 ConfigureTestServices(services);
             });
         }
