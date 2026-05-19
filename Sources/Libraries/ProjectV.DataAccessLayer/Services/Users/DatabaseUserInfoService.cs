@@ -56,9 +56,16 @@ namespace ProjectV.DataAccessLayer.Services.Users
 
         public async Task<UserInfo?> FindByUserNameAsync(UserName userName)
         {
+            // EF Core cannot translate `user.WrappedUserName == userName` —
+            // WrappedUserName is a computed property (UserName.Wrap(UserName))
+            // and the underlying scalar `UserName` field is internal. Compare
+            // against the raw string column directly; the SUT input is the
+            // domain `UserName` so we read its .Value (Plan 02-09 Task 1
+            // Rule 1 fix).
+            string rawUserName = userName.Value;
             UserDbInfo? userDbModel = await _context.ExecuteIfCanUseDb(
                 () => _context.GetUserDbSet(),
-                dbSet => dbSet.SingleOrDefaultAsync(user => user.WrappedUserName == userName)
+                dbSet => dbSet.SingleOrDefaultAsync(user => user.UserName == rawUserName)
             );
 
             return userDbModel is null ? null : _mapper.MapToUserInfo(userDbModel);
