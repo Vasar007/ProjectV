@@ -20,7 +20,13 @@ namespace ProjectV.DataAccessLayer.Services.Tokens.Models
         [Required]
         [Column("user_name")]
         internal Guid UserId { get; }
-        public UserId WrappedUserId { get; }
+
+        // The Guid property `UserId` above shadows the `UserId` value-object
+        // type for name lookup inside this class. Use the fully qualified
+        // namespace because the unqualified `Users` token resolves to the
+        // sibling DAL namespace `ProjectV.DataAccessLayer.Services.Users`
+        // here, not to `ProjectV.Models.Users`.
+        public UserId WrappedUserId => ProjectV.Models.Users.UserId.Wrap(UserId);
 
         [Required]
         [Column("token_hash")]

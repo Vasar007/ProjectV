@@ -84,8 +84,8 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
         {
             Id = id.ThrowIfEmpty(nameof(id));
             UserName = userName.ThrowIfNullOrWhiteSpace(nameof(userName));
-            Password = password.ThrowIfNullOrWhiteSpace(nameof(userName));
-            PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(userName));
+            Password = password.ThrowIfNullOrWhiteSpace(nameof(password));
+            PasswordSalt = passwordSalt.ThrowIfNullOrWhiteSpace(nameof(passwordSalt));
             Ts = ts;
             Active = active;
         }

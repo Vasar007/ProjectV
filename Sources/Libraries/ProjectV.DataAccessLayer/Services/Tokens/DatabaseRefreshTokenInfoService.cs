@@ -57,11 +57,11 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
         public async Task<RefreshTokenInfo?> FindByUserIdAsync(UserId userId)
         {
-            // EF Core cannot translate `token.WrappedUserId == userId` —
-            // WrappedUserId is a parameterless-ctor property that is never
-            // assigned and a record-struct comparison EF cannot lift. Compare
-            // against the raw Guid scalar column directly (Plan 02-09 Task 1
-            // Rule 1 fix).
+            // EF Core cannot translate `token.WrappedUserId == userId` — even
+            // though WrappedUserId is now a computed property, EF cannot lift
+            // a static-method call (`Users.UserId.Wrap`) or a record-struct
+            // comparison into SQL. Compare against the raw Guid scalar column
+            // directly (Plan 02-09 Task 1 Rule 1 fix).
             Guid rawUserId = userId.Value;
             RefreshTokenDbInfo? tokenDbModel = await _context.ExecuteIfCanUseDb(
                 () => _context.GetTokenDbSet(),
