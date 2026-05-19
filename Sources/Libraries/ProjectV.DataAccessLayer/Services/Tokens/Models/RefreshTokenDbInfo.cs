@@ -54,7 +54,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens.Models
             DateTime expiryDate)
         {
             Id = id.ThrowIfEmpty(nameof(id));
-            UserId = userId;
+            UserId = userId.ThrowIfEmpty(nameof(userId));
             TokenHash = tokenHash.ThrowIfNullOrWhiteSpace(nameof(tokenHash));
             TokenSalt = tokenSalt.ThrowIfNullOrWhiteSpace(nameof(tokenSalt));
             Ts = ts;

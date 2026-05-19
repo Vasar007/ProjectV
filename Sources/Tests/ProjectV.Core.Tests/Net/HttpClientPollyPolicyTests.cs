@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.DependencyInjection;
+using ProjectV.Tests.Shared.Helpers.Http;
 using Xunit;
 
 namespace ProjectV.Core.Tests.Net
@@ -157,39 +157,5 @@ namespace ProjectV.Core.Tests.Net
             return client;
         }
 
-        /// <summary>
-        /// Inline test-only <see cref="DelegatingHandler" /> that responds via
-        /// a caller-supplied delegate and tracks the invocation count.
-        /// Used as the primary handler (no inner handler set) — this is
-        /// legal because the override does not call <c>base.SendAsync</c>.
-        /// </summary>
-        /// <remarks>
-        /// Declared inline because its surface is plan-specific; 02-08
-        /// contract tests will refine the shape before this is hoisted into
-        /// <c>ProjectV.Tests.Shared</c>. Plan calls out
-        /// "do NOT mock HttpMessageHandler with NSubstitute" because
-        /// NSubstitute cannot intercept the protected <see cref="SendAsync" />
-        /// method (02-RESEARCH.md "Pitfall 6").
-        /// </remarks>
-        private sealed class FakeHttpMessageHandler : DelegatingHandler
-        {
-            private readonly Func<HttpRequestMessage, HttpResponseMessage> _responder;
-
-            public int CallCount { get; private set; }
-
-            public FakeHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> responder)
-            {
-                _responder = responder ?? throw new ArgumentNullException(nameof(responder));
-            }
-
-            protected override Task<HttpResponseMessage> SendAsync(
-                HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                CallCount++;
-                HttpResponseMessage response = _responder(request);
-                response.RequestMessage = request;
-                return Task.FromResult(response);
-            }
-        }
     }
 }

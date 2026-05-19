@@ -170,5 +170,49 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
                 "FindByUserIdAsync must return null when no token row " +
                 "exists for the supplied user id");
         }
+
+        /// <summary>
+        /// Multi-row filter integration test for <c>FindByUserIdAsync</c>.
+        /// Inserts two tokens for two distinct users and asserts that
+        /// <c>FindByUserIdAsync(userA.Id)</c> returns tokenA (not tokenB).
+        /// </summary>
+        /// <remarks>
+        /// The pre-existing happy-path test
+        /// (<see cref="FindByUserIdAsyncAfterAddReturnsTokenWithExpectedFields" />)
+        /// operates on a single-row table — it would still pass even if the
+        /// EF-translated WHERE clause were a no-op (or the predicate were
+        /// inverted, or the comparison column were swapped) because there is
+        /// only one row that could be returned. This multi-row variant
+        /// exercises the actual filter: with two candidate rows in the
+        /// table, only the row whose <c>user_name</c> column matches the
+        /// supplied user id is allowed to surface. A regression that broke
+        /// the predicate would return the wrong token row here.
+        /// </remarks>
+        [Fact]
+        public async Task FindByUserIdAsyncWithMultipleUsersReturnsOnlyMatchingRow()
+        {
+            // Arrange — insert two tokens for two distinct users. The
+            // RefreshTokenInfoGenerator emits a fresh Guid.NewGuid()-backed
+            // UserId on each call, so tokenA.UserId != tokenB.UserId with
+            // overwhelming probability.
+            RefreshTokenInfo tokenA = _generator.GenerateRefreshTokenInfo();
+            RefreshTokenInfo tokenB = _generator.GenerateRefreshTokenInfo();
+            tokenA.UserId.Should().NotBe(tokenB.UserId,
+                "the multi-row test requires two distinct user ids to be " +
+                "meaningful — generator-level guarantee, asserted defensively");
+            await _sut.AddAsync(tokenA);
+            await _sut.AddAsync(tokenB);
+
+            // Act.
+            RefreshTokenInfo? actualValue = await _sut.FindByUserIdAsync(tokenA.UserId);
+
+            // Assert — must surface tokenA, must NOT surface tokenB.
+            actualValue.Should().NotBeNull();
+            actualValue!.Id.Should().Be(tokenA.Id);
+            actualValue.UserId.Should().Be(tokenA.UserId);
+            actualValue.Id.Should().NotBe(tokenB.Id,
+                "the predicate must filter — returning tokenB here would " +
+                "indicate a broken WHERE clause");
+        }
     }
 }

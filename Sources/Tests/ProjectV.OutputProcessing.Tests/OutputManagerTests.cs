@@ -21,9 +21,9 @@ namespace ProjectV.OutputProcessing.Tests
     /// concrete type. The static <c>_logger</c> field on
     /// <see cref="OutputManager" /> is initialised through
     /// <c>LoggerFactory.CreateLoggerFor&lt;OutputManager&gt;()</c> — the
-    /// <see cref="OutputProcessingTestsModuleInitializer" /> sidesteps the
-    /// NLog auto-load on test startup so the type initialiser does not
-    /// throw.
+    /// hoisted <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c>
+    /// installs an empty NLog config on assembly load so the type
+    /// initialiser does not write log files during the test run.
     /// </remarks>
     [Trait("Category", "Unit")]
     public sealed class OutputManagerTests
