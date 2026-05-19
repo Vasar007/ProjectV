@@ -93,21 +93,21 @@ the explicit `fsproj` invocation per D-23.
 
 ## Infrastructure Layer
 
-| Path | Component | Planned Test Project | Test Type | Status |
-|------|-----------|----------------------|-----------|--------|
-| `DatabaseJobInfoService.AddJobAsync` / `GetJobAsync` / `UpdateJobAsync` — round-trip | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned |
-| `DatabaseUserInfoService.AddUserAsync` / `GetUserAsync` | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned |
-| `DatabaseRefreshTokenInfoService.AddTokenAsync` / expiry behavior | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned |
-| `ProjectVDbContext` schema — tables exist, constraints enforced | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned |
-| `TmdbClient.GetMovieAsync` — success response, not-found, config-fetch | `ProjectV.TmdbService` | `ProjectV.TmdbService.Tests` | Contract (WireMock) | planned |
-| `OmdbClient.TryGetItemByTitleAsync` — success response, false-response swallowed | `ProjectV.OmdbService` | `ProjectV.OmdbService.Tests` | Contract (WireMock) | planned |
-| `SteamApiClient.GetAppListAsync` / `TryGetSteamAppAsync` | `ProjectV.SteamService` | `ProjectV.SteamService.Tests` | Contract (WireMock) | planned |
-| CommunicationWebService — `POST /api/v1/Requests` with valid JWT → 200 | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned |
-| CommunicationWebService — `POST /api/v1/Requests` without JWT → 401 | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned |
-| CommunicationWebService — `POST /api/v1/Users/Login` — valid credentials → JWT issued | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned |
-| TelegramBotWebService webhook — `POST /api/v1/Update` with valid Update payload → 200 | `ProjectV.TelegramBotWebService` | `ProjectV.TelegramBotWebService.Tests` | Integration (WebApplicationFactory) | planned |
-| TelegramBotWebService polling — `PoolingProcessor` processes a fixed Update sequence | `ProjectV.TelegramBotWebService` | `ProjectV.TelegramBotWebService.Tests` | Integration (WebApplicationFactory) | planned |
-| ProcessingWebService — `POST /api/v1/Processing` smoke test (config + pipeline construction) | `ProjectV.ProcessingWebService` | `ProjectV.ProcessingWebService.Tests` | Integration (WebApplicationFactory, WireMock) | planned |
+| Path | Component | Planned Test Project | Test Type | Status | Test Files |
+|------|-----------|----------------------|-----------|--------|------------|
+| `DatabaseJobInfoService.AddJobAsync` / `GetJobAsync` / `UpdateJobAsync` — round-trip | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned | — |
+| `DatabaseUserInfoService.AddUserAsync` / `GetUserAsync` | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned | — |
+| `DatabaseRefreshTokenInfoService.AddTokenAsync` / expiry behavior | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned | — |
+| `ProjectVDbContext` schema — tables exist, constraints enforced | `ProjectV.DataAccessLayer` | `ProjectV.DataAccessLayer.Tests` | Integration (Testcontainers) | planned | — |
+| `TmdbClient.TrySearchMovieAsync` / `GetConfigAsync` — search success, empty-result envelope, configuration fetch (`GetMovieAsync` does NOT exist in the production wrapper — Rule 1 deviation from the 02-08 plan wording, recorded in `02-08-SUMMARY.md` § "Deviations §1") | `ProjectV.TmdbService` | `ProjectV.TmdbService.Tests` | Contract (WireMock) | covered (3 tests exercise the real `TMDbLib` HTTP pipeline against WireMock-served recorded JSON; redirection seam: `new TmdbClient(apiKey, useSsl: false, baseUrl: WireMockHostPort)` via `InternalsVisibleTo` per `02-08-SUMMARY.md` § "Deviations §2") | `Sources/Tests/ProjectV.TmdbService.Tests/TmdbContractTests.cs` |
+| `OmdbClient.TryGetItemByTitleAsync` — success response, false-response swallowed | `ProjectV.OmdbService` | `ProjectV.OmdbService.Tests` | Contract (WireMock) | covered (2 tests exercise the real `OMDbApiNet` HTTP pipeline against WireMock-served recorded JSON; redirection seam: `HttpClient.DefaultProxy = new WebProxy(WireMock.Url)` because OMDbApiNet 1.3.0 hardcodes `BaseUrl` as a `const` field — see `02-08-SUMMARY.md` § "Deviations §3") | `Sources/Tests/ProjectV.OmdbService.Tests/OmdbContractTests.cs` |
+| `SteamApiClient.GetAppListAsync` / `TryGetSteamAppAsync` | `ProjectV.SteamService` | `ProjectV.SteamService.Tests` | Contract (WireMock) | covered (2 tests exercise the real `SteamWebApiLib` HTTP pipeline against WireMock-served recorded JSON; redirection seam: reflection-replace the wrapper's `_steamApiClient` with an SDK instance built from a `SteamApiConfig` whose `SteamPoweredBaseUrl` + `SteamStoreBaseUrl` point at WireMock — see `02-08-SUMMARY.md` § "Deviations §4") | `Sources/Tests/ProjectV.SteamService.Tests/SteamContractTests.cs` |
+| CommunicationWebService — `POST /api/v1/Requests` with valid JWT → 200 | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned | — |
+| CommunicationWebService — `POST /api/v1/Requests` without JWT → 401 | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned | — |
+| CommunicationWebService — `POST /api/v1/Users/Login` — valid credentials → JWT issued | `ProjectV.CommunicationWebService` | `ProjectV.CommunicationWebService.Tests` | Integration (WebApplicationFactory) | planned | — |
+| TelegramBotWebService webhook — `POST /api/v1/Update` with valid Update payload → 200 | `ProjectV.TelegramBotWebService` | `ProjectV.TelegramBotWebService.Tests` | Integration (WebApplicationFactory) | planned | — |
+| TelegramBotWebService polling — `PoolingProcessor` processes a fixed Update sequence | `ProjectV.TelegramBotWebService` | `ProjectV.TelegramBotWebService.Tests` | Integration (WebApplicationFactory) | planned | — |
+| ProcessingWebService — `POST /api/v1/Processing` smoke test (config + pipeline construction) | `ProjectV.ProcessingWebService` | `ProjectV.ProcessingWebService.Tests` | Integration (WebApplicationFactory, WireMock) | planned | — |
 
 ## Maintenance
 

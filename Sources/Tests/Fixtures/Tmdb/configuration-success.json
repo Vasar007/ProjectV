@@ -1,0 +1,17 @@
+{
+  "images": {
+    "base_url": "http://image.example.test/t/p/",
+    "secure_base_url": "https://image.example.test/t/p/",
+    "backdrop_sizes": ["w300", "w780", "original"],
+    "logo_sizes": ["w45", "w92", "w154"],
+    "poster_sizes": ["w92", "w154", "w185", "w342", "original"],
+    "profile_sizes": ["w45", "h632", "original"],
+    "still_sizes": ["w92", "w185", "original"]
+  },
+  "change_keys": [
+    "adult",
+    "title",
+    "overview",
+    "release_date"
+  ]
+}
