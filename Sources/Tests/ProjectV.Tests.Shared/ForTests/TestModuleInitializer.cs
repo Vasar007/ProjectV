@@ -26,11 +26,25 @@ namespace ProjectV.Tests.Shared.ForTests
     /// should not litter the host's production log directory with stray
     /// entries. Tests.Shared is referenced (and globally-used) by every C#
     /// test assembly, so its module initializer fires when downstream test
-    /// code first touches a Tests.Shared symbol. Even when a production type
-    /// with a static NLog logger is touched before Tests.Shared loads, the
-    /// fallout is at most a handful of early log lines before the empty
-    /// config takes over — acceptable, because the root-cause auto-load
-    /// failure is already gone.
+    /// code first touches a Tests.Shared symbol. Because the
+    /// <c>global using</c> directive in <c>Usings/SharedUsings.cs</c> is
+    /// compile-time only (the C# compiler resolves it without forcing the
+    /// referenced assembly to load), there is a race window between process
+    /// start and the first Tests.Shared symbol use. During that window any
+    /// production type with a static <c>NLog.Logger</c> field
+    /// (<c>CrawlersManager</c>, <c>OutputManager</c>, etc.) can write a
+    /// handful of early log lines into <c>${CommonApplicationData}/ProjectV/logs/</c>
+    /// before the empty <see cref="LoggingConfiguration" /> takes over.
+    /// </para>
+    /// <para>
+    /// This trade-off is accepted intentionally: with the
+    /// <c>concurrentWrites="true"</c> attribute removed from <c>NLog.config</c>
+    /// the auto-load no longer throws, so the worst-case outcome is a few
+    /// stray log lines per test process rather than a load-bearing test
+    /// correctness risk. If a future requirement makes stray production log
+    /// writes during tests unacceptable (e.g. CI sandbox isolation), reinstate
+    /// per-assembly <c>[ModuleInitializer]</c>s or force-load Tests.Shared
+    /// from a startup hook before any production type initialises.
     /// </para>
     /// </remarks>
     internal static class TestModuleInitializer

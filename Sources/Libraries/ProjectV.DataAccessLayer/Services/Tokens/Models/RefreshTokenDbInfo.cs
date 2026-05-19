@@ -45,6 +45,17 @@ namespace ProjectV.DataAccessLayer.Services.Tokens.Models
         public DateTime ExpiryDate { get; }
 
 
+        // EF Core 10 uses this constructor for entity materialization via
+        // parameter-name matching against mapped scalar columns. The
+        // `ThrowIfEmpty` and `ThrowIfNullOrWhiteSpace` guards therefore fire
+        // BOTH on writes (domain code constructing a new token) AND on reads
+        // (EF materializing a row from the `tokens` table). A row with
+        // `id = Guid.Empty`, `user_name = Guid.Empty`, or null/whitespace
+        // hash/salt will throw at query-execution time rather than being
+        // returned as a domain object — intentional defense-in-depth that
+        // matches the production token-issuance invariants (every token has a
+        // real owner). Data-repair scenarios that need to read corrupt rows
+        // must fix the SQL first; service-layer queries cannot bypass.
         public RefreshTokenDbInfo(
             Guid id,
             Guid userId,
