@@ -39,12 +39,25 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <para>
     /// This trade-off is accepted intentionally: with the
     /// <c>concurrentWrites="true"</c> attribute removed from <c>NLog.config</c>
-    /// the auto-load no longer throws, so the worst-case outcome is a few
-    /// stray log lines per test process rather than a load-bearing test
-    /// correctness risk. If a future requirement makes stray production log
-    /// writes during tests unacceptable (e.g. CI sandbox isolation), reinstate
-    /// per-assembly <c>[ModuleInitializer]</c>s or force-load Tests.Shared
-    /// from a startup hook before any production type initialises.
+    /// the NLog 6 auto-load no longer throws on that specific cause, so the
+    /// worst-case outcome is a few stray log lines per test process rather
+    /// than a load-bearing test correctness risk. Other NLog auto-load
+    /// failure modes still exist (<c>throwConfigExceptions="true"</c>
+    /// combined with the <c>&lt;extensions&gt;</c> directive will throw if
+    /// <c>ProjectV.Logging.dll</c> is absent from the output directory, or
+    /// if <c>NLog.config</c> is malformed) — this initializer only guards
+    /// against log-file write side effects, not those other failures.
+    /// </para>
+    /// <para>
+    /// Do NOT re-add <c>concurrentWrites="true"</c> to
+    /// <c>Sources/Libraries/ProjectV.Logging/NLog.config</c>: NLog 6 dropped
+    /// that attribute and any future "I/O optimisation" pass that puts it
+    /// back will invalidate the rationale above and reintroduce the
+    /// per-assembly auto-load throw the consolidation was built to remove.
+    /// If stray production log writes during tests ever become unacceptable
+    /// (e.g. CI sandbox isolation), reinstate per-assembly
+    /// <c>[ModuleInitializer]</c>s in each test assembly so the empty config
+    /// is installed before any production static logger initializes.
     /// </para>
     /// </remarks>
     internal static class TestModuleInitializer

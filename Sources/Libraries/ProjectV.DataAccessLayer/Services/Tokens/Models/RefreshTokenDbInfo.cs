@@ -45,17 +45,25 @@ namespace ProjectV.DataAccessLayer.Services.Tokens.Models
         public DateTime ExpiryDate { get; }
 
 
-        // EF Core 10 uses this constructor for entity materialization via
-        // parameter-name matching against mapped scalar columns. The
-        // `ThrowIfEmpty` and `ThrowIfNullOrWhiteSpace` guards therefore fire
-        // BOTH on writes (domain code constructing a new token) AND on reads
-        // (EF materializing a row from the `tokens` table). A row with
-        // `id = Guid.Empty`, `user_name = Guid.Empty`, or null/whitespace
-        // hash/salt will throw at query-execution time rather than being
-        // returned as a domain object — intentional defense-in-depth that
-        // matches the production token-issuance invariants (every token has a
-        // real owner). Data-repair scenarios that need to read corrupt rows
-        // must fix the SQL first; service-layer queries cannot bypass.
+        // EF Core uses this constructor for entity materialization via
+        // parameter-name matching against mapped property names (case-
+        // insensitive) — not column names. The `ThrowIfEmpty` and
+        // `ThrowIfNullOrWhiteSpace` guards therefore fire both on writes
+        // (domain code constructing a new token) and on reads (EF
+        // materializing a row from the `tokens` table). A row with
+        // `Id = Guid.Empty`, `UserId = Guid.Empty`, or null/whitespace
+        // `TokenHash`/`TokenSalt` will throw at query-execution time rather
+        // than being returned as a domain object — this ctor is the sole
+        // enforcement of those invariants (no DB-level CHECK constraint, no
+        // independent guard in the `RefreshTokenInfo` domain model). `Ts`
+        // and `ExpiryDate` carry no ctor-level guard; temporal invariants
+        // (e.g. `ExpiryDate < Ts`) are not checked here.
+        //
+        // Operationally: service-layer reads, updates, and deletes all route
+        // through `FindByIdAsync` (the latter via `DeleteAsync`), so a
+        // corrupt row cannot be read, updated, or deleted through the
+        // service. Data-repair scenarios that need to touch such rows must
+        // fix them in SQL first.
         public RefreshTokenDbInfo(
             Guid id,
             Guid userId,
