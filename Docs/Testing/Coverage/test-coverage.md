@@ -123,8 +123,4 @@ When a row's covering test file lands, update this document:
   matching layer section — keep the table header stable so the diff stays
   reviewable.
 
-## Cross-references
-
-- [`Docs/Testing/Scenarios/projectv-scenario-tests-overview.md`](../Scenarios/projectv-scenario-tests-overview.md) — scenario-test architecture, mermaid diagram, and conventions for the `Scenarios/` subdirectory rows above.
-- `ARCHITECTURE.md` — Component Responsibilities, Data Flow, and Anti-Patterns that the `tested around` rows reference.
-- `INTEGRATIONS.md` — TMDb / OMDb / Steam / Telegram wiring that the Contract / Integration rows verify.
+See also [`Docs/Testing/Scenarios/projectv-scenario-tests-overview.md`](../Scenarios/projectv-scenario-tests-overview.md) for scenario-test architecture, mermaid diagram, and conventions for the `Scenarios/` subdirectory rows above.
