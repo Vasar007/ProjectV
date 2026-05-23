@@ -35,7 +35,7 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <typeparam name="TStartup">
     /// The production <c>Startup</c> class type that the test host wraps.
     /// </typeparam>
-    public abstract class WebApiBaseTest<TStartup> : BaseTest, IAsyncLifetime
+    public abstract class WebApiBaseTest<TStartup> : BaseMockTest, IAsyncLifetime
         where TStartup : class
     {
         private readonly IReadOnlyDictionary<string, string?> _extraConfiguration;

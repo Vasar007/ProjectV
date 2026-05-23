@@ -1,8 +1,10 @@
 ﻿using System;
+using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.DataPipeline;
 using ProjectV.IO.Input;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.InputProcessing.Tests
@@ -26,7 +28,7 @@ namespace ProjectV.InputProcessing.Tests
     /// initialiser does not write log files during the test run.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class InputManagerTests
+    public sealed class InputManagerTests : BaseMockTest
     {
         private const string DefaultStorageName = "default-storage.csv";
 
@@ -38,8 +40,8 @@ namespace ProjectV.InputProcessing.Tests
         public void CreateFlow_ReturnsNonNullFlow()
         {
             // Arrange.
-            var sut = new InputManager(DefaultStorageName);
-            IInputter inputter = Substitute.For<IInputter>();
+            var sut = BuildSut();
+            IInputter inputter = Fixture.Create<IInputter>();
             sut.Add(inputter);
 
             // Act.
@@ -56,7 +58,7 @@ namespace ProjectV.InputProcessing.Tests
         public void CreateFlow_WithNoInputters_ReturnsNonNullFlow()
         {
             // Arrange.
-            var sut = new InputManager(DefaultStorageName);
+            var sut = BuildSut();
 
             // Act.
             InputtersFlow actual = sut.CreateFlow("storage.csv");
@@ -114,7 +116,7 @@ namespace ProjectV.InputProcessing.Tests
         public void Add_WithNullInputter_ThrowsArgumentNullException()
         {
             // Arrange.
-            var sut = new InputManager(DefaultStorageName);
+            var sut = BuildSut();
 
             // Act.
             var act = () => sut.Add(
@@ -131,8 +133,8 @@ namespace ProjectV.InputProcessing.Tests
         public void Remove_WithRegisteredInputter_ReturnsTrue()
         {
             // Arrange.
-            var sut = new InputManager(DefaultStorageName);
-            IInputter inputter = Substitute.For<IInputter>();
+            var sut = BuildSut();
+            IInputter inputter = Fixture.Create<IInputter>();
             sut.Add(inputter);
 
             // Act.
@@ -142,6 +144,15 @@ namespace ProjectV.InputProcessing.Tests
             removed.Should().BeTrue(
                 "Remove must report success when the manager holds the supplied inputter"
             );
+        }
+
+        /// <summary>
+        /// Builds a default-storage <see cref="InputManager" /> SUT.
+        /// Per-class helper to keep test bodies focused on Arrange/Act/Assert.
+        /// </summary>
+        private static InputManager BuildSut()
+        {
+            return new InputManager(DefaultStorageName);
         }
     }
 }

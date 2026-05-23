@@ -1,9 +1,11 @@
 ﻿using System;
+using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.DataPipeline;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
 using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
 using Xunit;
@@ -18,15 +20,15 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     /// and <see cref="TestAppraiserBuilder" /> for substitute children.
     /// </summary>
     [Trait("Category", "Unit")]
-    public sealed class AppraisersManagerTests
+    public sealed class AppraisersManagerTests : BaseMockTest
     {
         public AppraisersManagerTests()
         {
         }
 
-        private static IAppraiser CreateAppraiserMock(Type typeId, string tag = "tag")
+        private IAppraiser CreateAppraiserMock(Type typeId, string tag = "tag")
         {
-            var sub = Substitute.For<IAppraiser>();
+            var sub = Fixture.Create<IAppraiser>();
             sub.TypeId.Returns(typeId);
             sub.Tag.Returns(tag);
             return sub;

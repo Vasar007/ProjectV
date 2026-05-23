@@ -5,6 +5,7 @@ using Acolyte.Assertions;
 using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Tests.ForTests;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.DataAccessLayer.Tests
@@ -20,7 +21,7 @@ namespace ProjectV.DataAccessLayer.Tests
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]
     [Collection(DbCollection.Name)]
-    public sealed class ProjectVDbContextSchemaTests : IAsyncLifetime
+    public sealed class ProjectVDbContextSchemaTests : BaseMockTest, IAsyncLifetime
     {
         private readonly DbCollectionFixture _db;
 

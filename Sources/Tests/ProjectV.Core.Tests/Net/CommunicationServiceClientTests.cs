@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFixture;
 using AwesomeAssertions;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -11,6 +12,7 @@ using ProjectV.Core.Services.Clients;
 using ProjectV.Models.Authorization.Tokens;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Http;
 using Xunit;
 
@@ -38,7 +40,7 @@ namespace ProjectV.Core.Tests.Net
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class CommunicationServiceClientTests
+    public sealed class CommunicationServiceClientTests : BaseMockTest
     {
         private const string TestBaseAddress = "http://localhost:8000/";
         private const string TestLoginApiUrl = "/api/v1/Users/Login";
@@ -129,9 +131,9 @@ namespace ProjectV.Core.Tests.Net
         /// <see cref="HttpClient" /> backed by the supplied
         /// <see cref="FakeHttpMessageHandler" />.
         /// </summary>
-        private static CommunicationServiceClient CreateSut(FakeHttpMessageHandler handler)
+        private CommunicationServiceClient CreateSut(FakeHttpMessageHandler handler)
         {
-            var httpClientFactory = Substitute.For<IHttpClientFactory>();
+            var httpClientFactory = Fixture.Create<IHttpClientFactory>();
             // CreateClientWithOptions appends Configure* calls to a fresh HttpClient
             // returned by CreateClient — the handler must be passed at HttpClient
             // construction time (not via the factory).

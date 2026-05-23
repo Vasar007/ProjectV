@@ -22,7 +22,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]
     [Collection(DbCollection.Name)]
-    public sealed class DatabaseRefreshTokenInfoServiceTests : IAsyncLifetime
+    public sealed class DatabaseRefreshTokenInfoServiceTests : BaseMockTest, IAsyncLifetime
     {
         private readonly DbCollectionFixture _db;
         private readonly RefreshTokenInfoGenerator _generator;

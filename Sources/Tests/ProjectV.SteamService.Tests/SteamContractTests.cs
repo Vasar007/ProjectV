@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AwesomeAssertions;
 using ProjectV.Models.Data;
 using ProjectV.SteamService.Models;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Fixtures;
 using SteamWebApiLib;
 using WireMock.RequestBuilders;
@@ -39,7 +40,7 @@ namespace ProjectV.SteamService.Tests
     /// assertion can rely on exactly-once semantics on the success path.
     /// </remarks>
     [Trait("Category", "Contract")]
-    public sealed class SteamContractTests : IAsyncLifetime
+    public sealed class SteamContractTests : BaseMockTest, IAsyncLifetime
     {
         private const int ExpectedAppId = 730;
         private const string AppListFixturePath = "Steam/app-list-success.json";

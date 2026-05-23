@@ -4,6 +4,7 @@ using AwesomeAssertions;
 using ProjectV.Appraisers.Appraisals;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests.AppraisersExtensions
@@ -28,7 +29,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     /// <see cref="InvalidOperationException" />.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class MovieNormalizedAppraiserTests
+    public sealed class MovieNormalizedAppraiserTests : BaseMockTest
     {
         public MovieNormalizedAppraiserTests()
         {

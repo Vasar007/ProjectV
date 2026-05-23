@@ -1,6 +1,7 @@
 ﻿using System;
 using AwesomeAssertions;
 using ProjectV.Models.Internal.Jobs;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.Executors.Tests
@@ -33,7 +34,7 @@ namespace ProjectV.Executors.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class SimpleExecutorTests
+    public sealed class SimpleExecutorTests : BaseMockTest
     {
         public SimpleExecutorTests()
         {

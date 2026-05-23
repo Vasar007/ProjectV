@@ -1,8 +1,10 @@
 ﻿using System;
+using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.DataPipeline;
 using ProjectV.IO.Output;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.OutputProcessing.Tests
@@ -26,7 +28,7 @@ namespace ProjectV.OutputProcessing.Tests
     /// initialiser does not write log files during the test run.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class OutputManagerTests
+    public sealed class OutputManagerTests : BaseMockTest
     {
         private const string DefaultStorageName = "default-storage.csv";
 
@@ -38,8 +40,8 @@ namespace ProjectV.OutputProcessing.Tests
         public void CreateFlow_ReturnsNonNullFlow()
         {
             // Arrange.
-            var sut = new OutputManager(DefaultStorageName);
-            IOutputter outputter = Substitute.For<IOutputter>();
+            var sut = BuildSut();
+            IOutputter outputter = Fixture.Create<IOutputter>();
             sut.Add(outputter);
 
             // Act.
@@ -56,7 +58,7 @@ namespace ProjectV.OutputProcessing.Tests
         public void CreateFlow_WithNoOutputters_ReturnsNonNullFlow()
         {
             // Arrange.
-            var sut = new OutputManager(DefaultStorageName);
+            var sut = BuildSut();
 
             // Act.
             OutputtersFlow actual = sut.CreateFlow("storage.csv");
@@ -74,8 +76,8 @@ namespace ProjectV.OutputProcessing.Tests
         public void CreateFlow_WithEmptyStorageName_FallsBackToDefaultAndReturnsNonNullFlow()
         {
             // Arrange.
-            var sut = new OutputManager(DefaultStorageName);
-            sut.Add(Substitute.For<IOutputter>());
+            var sut = BuildSut();
+            sut.Add(Fixture.Create<IOutputter>());
 
             // Act.
             OutputtersFlow actual = sut.CreateFlow(string.Empty);
@@ -117,7 +119,7 @@ namespace ProjectV.OutputProcessing.Tests
         public void Add_WithNullOutputter_ThrowsArgumentNullException()
         {
             // Arrange.
-            var sut = new OutputManager(DefaultStorageName);
+            var sut = BuildSut();
 
             // Act.
             var act = () => sut.Add(
@@ -134,8 +136,8 @@ namespace ProjectV.OutputProcessing.Tests
         public void Remove_WithRegisteredOutputter_ReturnsTrue()
         {
             // Arrange.
-            var sut = new OutputManager(DefaultStorageName);
-            IOutputter outputter = Substitute.For<IOutputter>();
+            var sut = BuildSut();
+            IOutputter outputter = Fixture.Create<IOutputter>();
             sut.Add(outputter);
 
             // Act.
@@ -145,6 +147,15 @@ namespace ProjectV.OutputProcessing.Tests
             removed.Should().BeTrue(
                 "Remove must report success when the manager holds the supplied outputter"
             );
+        }
+
+        /// <summary>
+        /// Builds a default-storage <see cref="OutputManager" /> SUT.
+        /// Per-class helper to keep test bodies focused on Arrange/Act/Assert.
+        /// </summary>
+        private static OutputManager BuildSut()
+        {
+            return new OutputManager(DefaultStorageName);
         }
     }
 }

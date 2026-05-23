@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AwesomeAssertions;
 using ProjectV.Models.Exceptions;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.Models.Tests.Exceptions
@@ -31,7 +32,7 @@ namespace ProjectV.Models.Tests.Exceptions
     /// exception silently drops one of the three.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class CommonExceptionsTestSuite
+    public sealed class CommonExceptionsTestSuite : BaseMockTest
     {
         public CommonExceptionsTestSuite()
         {

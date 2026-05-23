@@ -7,6 +7,7 @@ using AwesomeAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.DependencyInjection;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Http;
 using Xunit;
 
@@ -32,7 +33,7 @@ namespace ProjectV.Core.Tests.Net
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class HttpClientPollyPolicyTests
+    public sealed class HttpClientPollyPolicyTests : BaseMockTest
     {
         private const string TestClientName = "test-polly-client";
 

@@ -11,7 +11,7 @@
     /// specific <typeparamref name="TException" /> type (Decision D-32).
     /// </summary>
     /// <typeparam name="TException">Exception type under test.</typeparam>
-    public abstract class BaseExceptionTests<TException> : BaseTest
+    public abstract class BaseExceptionTests<TException> : BaseMockTest
         where TException : Exception
     {
         /// <summary>

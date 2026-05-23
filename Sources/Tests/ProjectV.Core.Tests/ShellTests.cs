@@ -6,6 +6,7 @@ using ProjectV.Core.ShellBuilders;
 using ProjectV.Crawlers;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
 using ProjectV.Tests.Shared.Helpers.Stubs.Core;
 using ProjectV.Tests.Shared.Helpers.Stubs.Managers;
@@ -41,7 +42,7 @@ namespace ProjectV.Core.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class ShellTests
+    public sealed class ShellTests : BaseMockTest
     {
         public ShellTests()
         {

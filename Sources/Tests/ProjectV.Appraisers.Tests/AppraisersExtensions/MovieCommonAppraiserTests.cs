@@ -2,6 +2,7 @@
 using AwesomeAssertions;
 using ProjectV.Appraisers.Appraisals.Movie.Tmdb;
 using ProjectV.Models.Data;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests.AppraisersExtensions
@@ -21,7 +22,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     /// is the source of the rating value.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class MovieCommonAppraiserTests
+    public sealed class MovieCommonAppraiserTests : BaseMockTest
     {
         public MovieCommonAppraiserTests()
         {

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using AwesomeAssertions;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.DataPipeline.Tests
@@ -55,7 +56,7 @@ namespace ProjectV.DataPipeline.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Integration")]
-    public sealed class InputtersFlowTests
+    public sealed class InputtersFlowTests : BaseMockTest
     {
         public InputtersFlowTests()
         {

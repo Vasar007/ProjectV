@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AwesomeAssertions;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Fixtures;
 using ProjectV.TmdbService.Models;
 using TMDbLib.Client;
@@ -33,7 +34,7 @@ namespace ProjectV.TmdbService.Tests
     /// surface is verified against the actual public API).
     /// </remarks>
     [Trait("Category", "Contract")]
-    public sealed class TmdbContractTests : IAsyncLifetime
+    public sealed class TmdbContractTests : BaseMockTest, IAsyncLifetime
     {
         private const string SearchMovieFixturePath = "Tmdb/search-movie-success.json";
         private const string SearchMovieEmptyFixturePath = "Tmdb/search-movie-empty.json";

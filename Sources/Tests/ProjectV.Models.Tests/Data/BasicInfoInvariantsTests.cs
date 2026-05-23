@@ -1,6 +1,7 @@
 ﻿using AwesomeAssertions;
 using Newtonsoft.Json;
 using ProjectV.Models.Data;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
@@ -22,7 +23,7 @@ namespace ProjectV.Models.Tests.Data
     /// "accepts null/empty" to "rejects null/empty".
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class BasicInfoInvariantsTests
+    public sealed class BasicInfoInvariantsTests : BaseMockTest
     {
         private readonly BasicInfoGenerator _generator;
 

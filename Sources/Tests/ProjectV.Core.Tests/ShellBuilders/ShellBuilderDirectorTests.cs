@@ -1,7 +1,9 @@
 ﻿using System;
+using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.Core.ShellBuilders;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Stubs.Core;
 using Xunit;
 
@@ -18,7 +20,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
     /// contract via an NSubstitute substitute of <see cref="IShellBuilder" />.
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class ShellBuilderDirectorTests
+    public sealed class ShellBuilderDirectorTests : BaseMockTest
     {
         public ShellBuilderDirectorTests()
         {
@@ -38,7 +40,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithValidShellBuilder_DoesNotThrow()
         {
             // Arrange.
-            var shellBuilder = Substitute.For<IShellBuilder>();
+            var shellBuilder = Fixture.Create<IShellBuilder>();
 
             // Act.
             var act = () => new ShellBuilderDirector(shellBuilder);
@@ -51,8 +53,8 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void ChangeShellBuilder_WithNull_ThrowsArgumentNullException()
         {
             // Arrange.
-            var shellBuilder = Substitute.For<IShellBuilder>();
-            var director = new ShellBuilderDirector(shellBuilder);
+            var shellBuilder = Fixture.Create<IShellBuilder>();
+            var director = BuildSut(shellBuilder);
 
             // Act. / Assert.
             var act = () => director.ChangeShellBuilder(newBuilder: null!);
@@ -65,10 +67,10 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_InvokesEveryBuilderStep()
         {
             // Arrange.
-            var shellBuilder = Substitute.For<IShellBuilder>();
+            var shellBuilder = Fixture.Create<IShellBuilder>();
             var expectedShell = CreateRealEmptyShell();
             shellBuilder.GetResult().Returns(expectedShell);
-            var director = new ShellBuilderDirector(shellBuilder);
+            var director = BuildSut(shellBuilder);
 
             // Act.
             Shell actualValue = director.MakeShell();
@@ -91,10 +93,10 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_InvokesBuilderStepsInDeclaredOrder()
         {
             // Arrange.
-            var shellBuilder = Substitute.For<IShellBuilder>();
+            var shellBuilder = Fixture.Create<IShellBuilder>();
             var expectedShell = CreateRealEmptyShell();
             shellBuilder.GetResult().Returns(expectedShell);
-            var director = new ShellBuilderDirector(shellBuilder);
+            var director = BuildSut(shellBuilder);
 
             // Act.
             director.MakeShell();
@@ -118,12 +120,12 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_AfterChangeShellBuilder_DispatchesToReplacedBuilder()
         {
             // Arrange.
-            var originalBuilder = Substitute.For<IShellBuilder>();
-            var replacementBuilder = Substitute.For<IShellBuilder>();
+            var originalBuilder = Fixture.Create<IShellBuilder>();
+            var replacementBuilder = Fixture.Create<IShellBuilder>();
             var expectedShell = CreateRealEmptyShell();
             replacementBuilder.GetResult().Returns(expectedShell);
 
-            var director = new ShellBuilderDirector(originalBuilder);
+            var director = BuildSut(originalBuilder);
 
             // Act.
             director.ChangeShellBuilder(replacementBuilder);
@@ -136,6 +138,16 @@ namespace ProjectV.Core.Tests.ShellBuilders
             replacementBuilder.Received(1).GetResult();
 
             expectedShell.Dispose();
+        }
+
+        /// <summary>
+        /// Builds the <see cref="ShellBuilderDirector" /> SUT from the
+        /// supplied <see cref="IShellBuilder" /> collaborator. Per-test
+        /// builder helper that mirrors the production constructor.
+        /// </summary>
+        private static ShellBuilderDirector BuildSut(IShellBuilder shellBuilder)
+        {
+            return new ShellBuilderDirector(shellBuilder);
         }
 
         /// <summary>

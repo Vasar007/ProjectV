@@ -1,6 +1,7 @@
 ﻿using System;
 using AwesomeAssertions;
 using ProjectV.Models.Users;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace ProjectV.Models.Tests.ValueObjects
     /// inputs.
     /// </summary>
     [Trait("Category", "Unit")]
-    public sealed class UserIdTests
+    public sealed class UserIdTests : BaseMockTest
     {
         private readonly UserIdGenerator _generator;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using AwesomeAssertions;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Crawlers;
 using Xunit;
 
@@ -43,7 +44,7 @@ namespace ProjectV.Crawlers.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
-    public sealed class CrawlersManagerTests
+    public sealed class CrawlersManagerTests : BaseMockTest
     {
         public CrawlersManagerTests()
         {

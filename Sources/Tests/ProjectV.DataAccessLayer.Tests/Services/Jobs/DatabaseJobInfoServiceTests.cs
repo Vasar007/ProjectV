@@ -19,7 +19,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]
     [Collection(DbCollection.Name)]
-    public sealed class DatabaseJobInfoServiceTests : IAsyncLifetime
+    public sealed class DatabaseJobInfoServiceTests : BaseMockTest, IAsyncLifetime
     {
         private readonly DbCollectionFixture _db;
         private readonly JobInfoGenerator _generator;

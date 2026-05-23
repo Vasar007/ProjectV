@@ -18,7 +18,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]
     [Collection(DbCollection.Name)]
-    public sealed class DatabaseUserInfoServiceTests : IAsyncLifetime
+    public sealed class DatabaseUserInfoServiceTests : BaseMockTest, IAsyncLifetime
     {
         private readonly DbCollectionFixture _db;
         private readonly UserInfoGenerator _generator;

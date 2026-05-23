@@ -3,12 +3,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.Appraisers;
 using ProjectV.Crawlers;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Crawlers;
 using Xunit;
 
@@ -48,7 +50,7 @@ namespace ProjectV.DataPipeline.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Integration")]
-    public sealed class DataflowPipelineTests
+    public sealed class DataflowPipelineTests : BaseMockTest
     {
         public DataflowPipelineTests()
         {
@@ -98,7 +100,7 @@ namespace ProjectV.DataPipeline.Tests
                 ratingValue: 9.1,
                 ratingId: Guid.NewGuid()
             );
-            var appraiserSubstitute = Substitute.For<IAppraiser>();
+            var appraiserSubstitute = Fixture.Create<IAppraiser>();
             appraiserSubstitute.GetRatings(
                 Arg.Any<BasicInfo>(), Arg.Any<bool>()
             ).Returns(expectedRating);

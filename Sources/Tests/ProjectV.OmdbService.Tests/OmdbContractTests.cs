@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using ProjectV.Models.Data;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Fixtures;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -44,7 +45,7 @@ namespace ProjectV.OmdbService.Tests
     /// </para>
     /// </remarks>
     [Trait("Category", "Contract")]
-    public sealed class OmdbContractTests : IAsyncLifetime
+    public sealed class OmdbContractTests : BaseMockTest, IAsyncLifetime
     {
         private const string MovieByTitleSuccessFixturePath = "Omdb/movie-by-title-success.json";
         private const string MovieByTitleNotFoundFixturePath = "Omdb/movie-by-title-not-found.json";

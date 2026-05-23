@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using AwesomeAssertions;
 using ProjectV.Core.ShellBuilders;
+using ProjectV.Tests.Shared.ForTests;
 using Xunit;
 
 namespace ProjectV.Core.Tests.ShellBuilders
@@ -16,7 +17,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
     /// integration path).
     /// </summary>
     [Trait("Category", "Unit")]
-    public sealed class ShellBuilderFromXDocumentTests
+    public sealed class ShellBuilderFromXDocumentTests : BaseMockTest
     {
         public ShellBuilderFromXDocumentTests()
         {
