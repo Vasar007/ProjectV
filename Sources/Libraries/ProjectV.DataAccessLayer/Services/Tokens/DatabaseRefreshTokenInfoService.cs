@@ -61,7 +61,7 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
             // though WrappedUserId is now a computed property, EF cannot lift
             // a static-method call (`Users.UserId.Wrap`) or a record-struct
             // comparison into SQL. Compare against the raw Guid scalar column
-            // directly (Plan 02-09 Task 1 Rule 1 fix).
+            // directly.
             Guid rawUserId = userId.Value;
             RefreshTokenDbInfo? tokenDbModel = await _context.ExecuteIfCanUseDb(
                 () => _context.GetTokenDbSet(),
