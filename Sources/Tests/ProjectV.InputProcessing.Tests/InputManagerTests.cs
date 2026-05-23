@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoFixture;
 using AwesomeAssertions;
-using NSubstitute;
 using ProjectV.DataPipeline;
 using ProjectV.IO.Input;
 using ProjectV.Tests.Shared.ForTests;
