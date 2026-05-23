@@ -28,12 +28,18 @@ namespace ProjectV.DataAccessLayer
         {
             string connectionString =
                 Environment.GetEnvironmentVariable("DatabaseOptions__ConnectionString")
-                ?? "Host=localhost;Port=5432;Database=ProjectV_DesignTime;Username=postgres;Password=postgres";
+                ?? throw new InvalidOperationException(
+                    "Cannot resolve the PostgreSQL connection string required by the EF Core " +
+                    "design-time factory. Set the DatabaseOptions__ConnectionString environment " +
+                    "variable to a valid Npgsql connection string before running " +
+                    "`dotnet ef migrations add` (or any other EF Core CLI command). " +
+                    "Example: " +
+                    "DatabaseOptions__ConnectionString=" +
+                    "'Host=localhost;Port=5432;Database=ProjectV;Username=postgres;Password=postgres'");
 
             // CanUseDatabase MUST be true for the design-time factory; otherwise
             // ProjectVDbContext.OnConfiguring + OnModelCreating short-circuit and
-            // the generated migration would be empty (RESEARCH.md Critical
-            // Finding #2 + ProjectVDbContext lines 130–156).
+            // the generated migration would be empty.
             var options = new DatabaseOptions(
                 dbConnectionString: connectionString,
                 canUseDatabase: true
