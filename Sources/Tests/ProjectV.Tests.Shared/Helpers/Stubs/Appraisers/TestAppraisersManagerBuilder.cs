@@ -5,8 +5,7 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Appraisers
 {
     /// <summary>
     /// Builder for real <see cref="AppraisersManager" /> instances populated
-    /// with <see cref="NSubstitute" /> child <see cref="IAppraiser" /> doubles
-    /// (Decision D-33).
+    /// with <see cref="NSubstitute" /> child <see cref="IAppraiser" /> doubles.
     /// </summary>
     /// <remarks>
     /// <para>

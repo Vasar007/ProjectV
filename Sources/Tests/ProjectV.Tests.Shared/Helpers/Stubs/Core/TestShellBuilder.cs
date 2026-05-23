@@ -14,14 +14,13 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
     /// production manager types (<see cref="InputManager" />,
     /// <see cref="CrawlersManager" />, <see cref="AppraisersManager" />,
     /// <see cref="OutputManager" />) populated with
-    /// <see cref="NSubstitute" /> child doubles (Decision D-33 fallback).
+    /// <see cref="NSubstitute" /> child doubles.
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="Shell" /> takes concrete-typed managers, not interfaces
-    /// (an architectural anti-pattern documented in
-    /// <c>.planning/codebase/ARCHITECTURE.md</c>); this builder works
-    /// around the coupling by composing real managers populated with
+    /// (a known architectural anti-pattern in this codebase); this builder
+    /// works around the coupling by composing real managers populated with
     /// substituted children via the sibling
     /// <see cref="TestInputManagerBuilder" />,
     /// <see cref="TestCrawlersManagerBuilder" />,

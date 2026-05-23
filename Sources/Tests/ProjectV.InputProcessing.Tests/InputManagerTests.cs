@@ -18,9 +18,9 @@ namespace ProjectV.InputProcessing.Tests
     /// <c>Add</c> / <c>Remove</c> registration round-trip.
     /// </summary>
     /// <remarks>
-    /// Per Decision D-05, collaborator <see cref="IInputter" /> instances are
-    /// supplied through NSubstitute; the manager itself is the real concrete
-    /// type. The static <c>_logger</c> field on
+    /// Collaborator <see cref="IInputter" /> instances are supplied through
+    /// NSubstitute; the manager itself is the real concrete type. The
+    /// static <c>_logger</c> field on
     /// <see cref="InputManager" /> is initialised through
     /// <c>LoggerFactory.CreateLoggerFor&lt;InputManager&gt;()</c> — the
     /// hoisted <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c>
@@ -83,8 +83,8 @@ namespace ProjectV.InputProcessing.Tests
         // CreateFlow-non-null contract. The non-empty-storage path is the
         // contract Shell exercises in production; we test that path only here.
         // The empty-storage-name code path is exercised through the higher-
-        // level Shell.Run integration coverage (currently "tested around" per
-        // 02-05-SUMMARY § Deviations §1).
+        // level Shell.Run integration coverage (currently "tested around"
+        // because of the Gridsum.DataflowEx empty-pipeline deadlock).
 
         [Fact]
         public void Constructor_WithNullDefaultStorageName_ThrowsArgumentNullException()

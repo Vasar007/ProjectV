@@ -23,8 +23,9 @@ namespace ProjectV.SteamService.Tests
     /// Contract-stage tests for <see cref="ProjectVSteamApiClient" />.
     /// Drives the real SteamWebApiLib HTTP pipeline against an in-process
     /// <see cref="WireMockServer" /> that serves recorded JSON fixtures from
-    /// <c>Sources/Tests/Fixtures/Steam/</c>. No live API calls per Decision
-    /// D-17; per-adapter failure isolation per Decision D-19.
+    /// <c>Sources/Tests/Fixtures/Steam/</c>. No live API calls; per-adapter
+    /// failure isolation keeps a misbehaving fixture from cascading into
+    /// other provider suites.
     /// </summary>
     /// <remarks>
     /// <see cref="SteamApiConfig" /> exposes writable
@@ -176,14 +177,13 @@ namespace ProjectV.SteamService.Tests
             // FRAGILE: private-field reflection seam. If SteamWebApiLib renames
             // _steamApiClient, converts it to a property, or changes the
             // SdkSteamApiClient ctor surface, the assertion below fires at
-            // runtime (not compile time) and this contract suite breaks. The
-            // documented Rule-3 deviation in 02-08-SUMMARY.md accepts this
-            // fragility because ProjectVSteamApiClient's single-arg ctor builds
-            // its own SdkSteamApiClient internally — there is no public seam to
-            // inject a SteamApiConfig pointing at WireMock. The non-fragile fix
-            // is a ctor overload on ProjectVSteamApiClient that accepts a
-            // pre-built SteamApiConfig; until then, watch for SDK upgrade
-            // breakage on this line.
+            // runtime (not compile time) and this contract suite breaks. This
+            // fragility is accepted because ProjectVSteamApiClient's
+            // single-arg ctor builds its own SdkSteamApiClient internally —
+            // there is no public seam to inject a SteamApiConfig pointing at
+            // WireMock. The non-fragile fix is a ctor overload on
+            // ProjectVSteamApiClient that accepts a pre-built SteamApiConfig;
+            // until then, watch for SDK upgrade breakage on this line.
             FieldInfo? sdkFieldInfo = typeof(ProjectVSteamApiClient).GetField(
                 "_steamApiClient",
                 BindingFlags.NonPublic | BindingFlags.Instance

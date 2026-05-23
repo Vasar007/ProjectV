@@ -12,19 +12,16 @@ namespace ProjectV.Tests.Shared.Helpers.Http
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Hoisted to <c>ProjectV.Tests.Shared</c> in Plan 02-13 (Task 2 / IN-03).
-    /// Previously duplicated as private nested types inside
-    /// <c>ProjectV.Core.Tests.Net.CommunicationServiceClientTests</c> and
-    /// <c>ProjectV.Core.Tests.Net.HttpClientPollyPolicyTests</c>; the
-    /// duplicates carried identical bodies and the duplication was flagged
-    /// by the Phase 2 code review (IN-03).
+    /// Hoisted to <c>ProjectV.Tests.Shared</c> to eliminate duplication:
+    /// two private nested types with identical bodies previously existed
+    /// inside <c>ProjectV.Core.Tests.Net.CommunicationServiceClientTests</c>
+    /// and <c>ProjectV.Core.Tests.Net.HttpClientPollyPolicyTests</c>.
     /// </para>
     /// <para>
     /// We do NOT mock <see cref="HttpMessageHandler" /> via NSubstitute
-    /// because NSubstitute cannot intercept protected <c>SendAsync</c>
-    /// (02-RESEARCH.md "Pitfall 6: NSubstitute cannot mock protected
-    /// SendAsync"). A real <see cref="DelegatingHandler" /> subclass that
-    /// returns canned responses is the supported pattern.
+    /// because NSubstitute cannot intercept protected <c>SendAsync</c>.
+    /// A real <see cref="DelegatingHandler" /> subclass that returns
+    /// canned responses is the supported pattern.
     /// </para>
     /// <para>
     /// The handler does NOT call <c>base.SendAsync</c>; it answers from the

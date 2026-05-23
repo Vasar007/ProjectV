@@ -1,6 +1,6 @@
 Reserved for EF Core migrations.
 
-Plan 02-09 Task 1 attempted to generate the initial migration via:
+The initial migration generation was attempted via:
 
   Platform=x64 \
   DatabaseOptions__CanUseDatabase=true \
@@ -14,15 +14,15 @@ Plan 02-09 Task 1 attempted to generate the initial migration via:
       --no-build \
       --configuration Debug
 
-The attempt FAILED at design-time model discovery — see 02-09-SUMMARY.md
-"[BLOCKING] Migration generation deferred". UserDbInfo's constructor binds a
-navigation parameter (`RefreshTokenDbInfo? refreshToken`) that EF Core cannot
-resolve to a mapped scalar; auto-discovery rejects every ctor as unbindable.
-Repairing this requires architectural changes (a parameterless ctor on
-UserDbInfo, an explicit HasOne/WithOne relationship on the navigation, or a
-mapper-only nav property without ctor binding) — out of scope for 02-09.
+The attempt FAILED at design-time model discovery. UserDbInfo's constructor
+binds a navigation parameter (`RefreshTokenDbInfo? refreshToken`) that EF
+Core cannot resolve to a mapped scalar; auto-discovery rejects every ctor
+as unbindable. Repairing this requires architectural changes (a parameterless
+ctor on UserDbInfo, an explicit HasOne/WithOne relationship on the
+navigation, or a mapper-only nav property without ctor binding) — out of
+scope at the time of writing.
 
-Plan 02-09 takes the documented fallback: ProjectV.DataAccessLayer.Tests'
-DbCollectionFixture seeds the Postgres test container via raw SQL CREATE
-TABLE statements derived from the [Table]/[Column] attributes on JobDbInfo,
-UserDbInfo, RefreshTokenDbInfo. EF Core schema bootstrap is deferred.
+The documented fallback: ProjectV.DataAccessLayer.Tests' DbCollectionFixture
+seeds the Postgres test container via raw SQL CREATE TABLE statements derived
+from the [Table]/[Column] attributes on JobDbInfo, UserDbInfo,
+RefreshTokenDbInfo. EF Core schema bootstrap is deferred.

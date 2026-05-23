@@ -14,16 +14,15 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
     /// (<see cref="InitializeAsync" />) and stops at suite end
     /// (<see cref="DisposeAsync" />); per-test data isolation is delegated to
     /// <c>TestDbHelper.TruncateAllTablesAsync</c> in each test class's
-    /// <see cref="IAsyncLifetime.InitializeAsync" /> — Decision D-11 in
-    /// 02-CONTEXT.md.
+    /// <see cref="IAsyncLifetime.InitializeAsync" />.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Schema bootstrap path. Plan 02-09 Task 1 attempted to generate an
-    /// initial EF Core migration so this fixture could call
-    /// <see cref="DatabaseFacade.MigrateAsync" />. The attempt failed at
-    /// EF design-time model discovery — see <c>Migrations/.gitkeep</c> and
-    /// 02-09-SUMMARY.md "[BLOCKING] Migration generation deferred". Both
+    /// Schema bootstrap path. An initial EF Core migration generation was
+    /// attempted so this fixture could call
+    /// <see cref="DatabaseFacade.MigrateAsync" />, but the attempt failed at
+    /// EF design-time model discovery (see <c>Migrations/.gitkeep</c> for the
+    /// blocking error). Both
     /// <see cref="RelationalDatabaseFacadeExtensions.MigrateAsync" /> and
     /// <see cref="DatabaseFacade.EnsureCreatedAsync" /> walk the same broken
     /// model, so this fixture takes the documented fallback: raw SQL
@@ -35,8 +34,8 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
     /// </para>
     /// <para>
     /// <c>CanUseDatabase = true</c> is set explicitly on every constructed
-    /// <see cref="DatabaseOptions" /> — Critical Finding #2 / Pitfall 2 in
-    /// 02-RESEARCH.md.
+    /// <see cref="DatabaseOptions" /> — otherwise the service no-ops on
+    /// every call.
     /// </para>
     /// </remarks>
     public sealed class DbCollectionFixture : IAsyncLifetime
@@ -71,7 +70,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
                 // server is ready to accept connections (Pitfall 1).
                 // UntilInternalTcpPortIsAvailable(5432) waits for the container
                 // process itself to bind 5432; equivalent to the legacy
-                // UntilPortIsAvailable referenced in 02-PATTERNS.md.
+                // UntilPortIsAvailable strategy.
                 .WithWaitStrategy(
                     Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(5432)
                 )

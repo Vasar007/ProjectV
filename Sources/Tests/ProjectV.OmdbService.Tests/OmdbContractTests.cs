@@ -17,15 +17,16 @@ namespace ProjectV.OmdbService.Tests
     /// Contract-stage tests for <see cref="OmdbClient" />.
     /// Drives the real OMDbApiNet HTTP pipeline against an in-process
     /// <see cref="WireMockServer" /> that serves recorded JSON fixtures from
-    /// <c>Sources/Tests/Fixtures/Omdb/</c>. No live API calls per Decision
-    /// D-17; per-adapter failure isolation per Decision D-19.
+    /// <c>Sources/Tests/Fixtures/Omdb/</c>. No live API calls; per-adapter
+    /// failure isolation keeps a misbehaving fixture from cascading into
+    /// other provider suites.
     /// </summary>
     /// <remarks>
     /// <para>
     /// OMDbApiNet 1.3.0's <c>AsyncOmdbClient</c> hard-codes <c>BaseUrl =
     /// "http://www.omdbapi.com/?"</c> as a <c>const</c> field (verified via
-    /// reflection during 02-08 research — reflection cannot patch <c>const</c>
-    /// fields because the value is inlined at compile time). The SDK also
+    /// reflection — reflection cannot patch <c>const</c> fields because the
+    /// value is inlined at compile time). The SDK also
     /// instantiates a fresh <see cref="HttpClient" /> per call, so there is no
     /// per-instance handler seam to inject either. The remaining viable
     /// redirection seam is <see cref="HttpClient.DefaultProxy" />: setting it

@@ -21,9 +21,9 @@ namespace ProjectV.Core.Tests
     /// <para>
     /// <see cref="Shell" /> takes concrete-typed (sealed) managers
     /// (<see cref="InputManager" />, <see cref="CrawlersManager" />,
-    /// <see cref="AppraisersManager" />, <see cref="OutputManager" />) — see
-    /// <c>.planning/codebase/ARCHITECTURE.md</c> § "Anti-Patterns". Tests
-    /// work AROUND that coupling via real manager instances populated with
+    /// <see cref="AppraisersManager" />, <see cref="OutputManager" />) —
+    /// a known architectural anti-pattern in this codebase. Tests work
+    /// AROUND that coupling via real manager instances populated with
     /// NSubstitute children (<see cref="TestShellBuilder" /> + the manager
     /// builders); they do NOT refactor <see cref="Shell" />.
     /// </para>
@@ -36,9 +36,7 @@ namespace ProjectV.Core.Tests
     /// pipeline that <c>Run</c> drives requires a fully-composed pipeline
     /// (at least one inputter, crawler, and appraiser per stage) to
     /// terminate deterministically — that scenario belongs in an
-    /// integration test plan (Phase 3 E2E or the JWT integration plan
-    /// 02-10). See <c>02-05-SUMMARY.md</c> Deviations §1 for the full
-    /// rationale.
+    /// integration test plan (Phase 3 E2E or the JWT integration plan).
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

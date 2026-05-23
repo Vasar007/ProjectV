@@ -27,16 +27,15 @@ namespace ProjectV.Core.Tests.Net
     /// returns a real <see cref="HttpClient" /> backed by an in-test
     /// <see cref="FakeHttpMessageHandler" /> (DelegatingHandler subclass) — the
     /// anti-pattern of substituting <see cref="HttpMessageHandler" /> with
-    /// NSubstitute is avoided per 02-RESEARCH.md "Pitfall 6: NSubstitute cannot
-    /// mock protected SendAsync".
+    /// NSubstitute is avoided because NSubstitute cannot mock the protected
+    /// <c>SendAsync</c> method.
     /// </para>
     /// <para>
-    /// The plan called for a "throws AuthFailureException on 401" test; the
-    /// production code returns <c>Result.Error&lt;ErrorResponse&gt;</c> on
-    /// non-success status codes via
-    /// <see cref="ProjectV.Core.Net.Http.HttpResponseMessageExtensions" />
-    /// — it does NOT throw. Test was adjusted to match observed behaviour
-    /// (recorded as deviation in <c>02-05-SUMMARY.md</c> Deviations §2).
+    /// The original intent was a "throws AuthFailureException on 401" test;
+    /// the production code instead returns
+    /// <c>Result.Error&lt;ErrorResponse&gt;</c> on non-success status codes
+    /// via <see cref="ProjectV.Core.Net.Http.HttpResponseMessageExtensions" />
+    /// — it does NOT throw. The test was adjusted to match observed behaviour.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

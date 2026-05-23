@@ -5,9 +5,9 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Managers
 {
     /// <summary>
     /// Builder for real <see cref="InputManager" /> instances populated with
-    /// <see cref="NSubstitute" /> child <see cref="IInputter" /> doubles
-    /// (Decision D-33 fallback). <see cref="InputManager" /> is <c>sealed</c>
-    /// without a substitution-friendly interface seam, so this builder
+    /// <see cref="NSubstitute" /> child <see cref="IInputter" /> doubles.
+    /// <see cref="InputManager" /> is <c>sealed</c> without a
+    /// substitution-friendly interface seam, so this builder
     /// returns a real manager populated through its public
     /// <see cref="InputManager.Add(IInputter)" /> API.
     /// </summary>

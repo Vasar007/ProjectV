@@ -6,7 +6,7 @@ and [`../Coverage/test-coverage.md`](../Coverage/test-coverage.md).
 This document is the per-family scenario doc for the JWT-authentication
 slice of `ProjectV.CommunicationWebService`. Scenarios live under
 `Sources/Tests/ProjectV.CommunicationWebService.Tests/Scenarios/Jwt/` and
-inherit the conventions described in the overview doc (D-36).
+inherit the conventions described in the overview doc.
 
 ## Purpose
 
@@ -28,7 +28,7 @@ The JWT path uses the in-memory user store
 (`InMemoryUserInfoService`) — these tests do NOT require Testcontainers,
 so they carry only `[Trait("Category", "Integration")]` (no
 `[Trait("RequiresDocker", "true")]`) and run on both the Linux Integration
-stage and the Windows Non-Docker stage of CI (decisions D-21 / D-22).
+stage and the Windows Non-Docker stage of CI.
 
 ## Audience
 
@@ -112,7 +112,7 @@ without exception. Two family-specific points:
 
 - **No `[Trait("RequiresDocker", "true")]`** — JWT scenarios use only the
   in-memory user store. They run on the Windows Non-Docker stage of CI in
-  addition to the Linux Integration stage (D-22).
+  addition to the Linux Integration stage.
 - **No `[Collection]` attribute** — JWT scenarios do NOT share a fixture
   with the Testcontainers Postgres path used by the DAL integration suite.
   Each scenario class spins up its own in-process host via the factory in
@@ -130,5 +130,3 @@ without exception. Two family-specific points:
   bearer-token issuance helper.
 - [`Sources/Tests/ProjectV.Tests.Shared/ForTests/WebApiBaseTest.cs`](../../../Sources/Tests/ProjectV.Tests.Shared/ForTests/WebApiBaseTest.cs) —
   `IAsyncLifetime` base + `CreateAuthenticatedClient`.
-- `.planning/phases/02-test-coverage/02-10-jwt-integration-tests-PLAN.md` —
-  decisions D-13 / D-14 / D-36 / D-37 with their full rationale.

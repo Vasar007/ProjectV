@@ -69,17 +69,15 @@ namespace ProjectV.Appraisers.Tests
             var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            var actWithoutOutput = () => appraiser.GetRatings(entityInfo: null, outputResults: false);
+            var actWithoutOutput = () => appraiser.GetRatings(entityInfo: null!, outputResults: false);
             actWithoutOutput.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("entityInfo");
 
-            var actWithOutput = () => appraiser.GetRatings(entityInfo: null, outputResults: true);
+            var actWithOutput = () => appraiser.GetRatings(entityInfo: null!, outputResults: true);
             actWithOutput.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("entityInfo");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]

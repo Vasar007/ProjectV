@@ -3,12 +3,12 @@
   <!--
     Shared test-stack injection for every C# project under Sources/Tests/.
 
-    Decision D-03 (02-CONTEXT.md): the core test stack (xUnit + AwesomeAssertions +
-    NSubstitute + coverlet) plus the opt-in test stack (WireMock.Net + Testcontainers
-    + ASP.NET Core MVC Testing + TimeProvider.Testing) are referenced here so individual
-    test csprojs do NOT need per-project PackageReference lines for these packages.
+    The core test stack (xUnit + AwesomeAssertions + NSubstitute + coverlet) plus
+    the opt-in test stack (WireMock.Net + Testcontainers + ASP.NET Core MVC Testing
+    + TimeProvider.Testing) are referenced here so individual test csprojs do NOT
+    need per-project PackageReference lines for these packages.
 
-    CPM enforcement (D-03 + Sources/Directory.Build.props ManagePackageVersionsCentrally):
+    CPM enforcement (Sources/Directory.Build.props ManagePackageVersionsCentrally):
     NONE of these PackageReference entries carries a Version attribute — versions live
     in Sources/Directory.Packages.props only.
 
@@ -19,7 +19,7 @@
 
     Conditional on $(MSBuildProjectExtension) == '.csproj' — F# test projects
     (ProjectV.ContentDirectories.Tests.fsproj) keep their own self-contained stack
-    on Unquote per Decision D-04 + Specifics §4 (F# tests untouched).
+    on Unquote (F# tests untouched).
   -->
   <Import Project="..\Directory.Build.props" />
 
@@ -39,7 +39,7 @@
     <!--
       Opt-in test stack — included unconditionally for C# tests so individual
       test projects can pick from these without per-csproj boilerplate. Unused
-      packages add ~0 compile time (per 02-RESEARCH.md).
+      packages add ~0 compile time.
     -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />

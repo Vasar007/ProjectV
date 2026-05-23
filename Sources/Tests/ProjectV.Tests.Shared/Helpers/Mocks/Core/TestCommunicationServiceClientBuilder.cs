@@ -9,7 +9,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
 {
     /// <summary>
     /// Builder for <see cref="ICommunicationServiceClient" /> test doubles
-    /// backed by <see cref="NSubstitute" /> (Decision D-33).
+    /// backed by <see cref="NSubstitute" />.
     /// </summary>
     /// <remarks>
     /// <para>

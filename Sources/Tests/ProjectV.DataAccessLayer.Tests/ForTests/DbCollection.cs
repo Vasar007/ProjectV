@@ -7,7 +7,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
     /// to a single shared <see cref="DbCollectionFixture" /> — a single
     /// Testcontainers PostgreSQL container is started once per assembly run,
     /// and every test class decorated with
-    /// <c>[Collection(DbCollection.Name)]</c> joins it (Decision D-11).
+    /// <c>[Collection(DbCollection.Name)]</c> joins it.
     /// </summary>
     [CollectionDefinition(Name)]
     public sealed class DbCollection : ICollectionFixture<DbCollectionFixture>

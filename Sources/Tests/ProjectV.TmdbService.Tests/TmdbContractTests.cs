@@ -16,8 +16,9 @@ namespace ProjectV.TmdbService.Tests
     /// Contract-stage tests for <see cref="TmdbClient" />.
     /// Drives the real TMDbLib HTTP pipeline against an in-process
     /// <see cref="WireMockServer" /> that serves recorded JSON fixtures from
-    /// <c>Sources/Tests/Fixtures/Tmdb/</c>. No live API calls per Decision
-    /// D-17; per-adapter failure isolation per Decision D-19.
+    /// <c>Sources/Tests/Fixtures/Tmdb/</c>. No live API calls; per-adapter
+    /// failure isolation keeps a misbehaving fixture from cascading into
+    /// other provider suites.
     /// </summary>
     /// <remarks>
     /// The TMDbLib <see cref="TMDbClient" /> ctor accepts a <c>baseUrl</c>

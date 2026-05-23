@@ -6,8 +6,8 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <summary>
     /// Utility for Testcontainers-based DB reset between test cases. Issues a
     /// <c>TRUNCATE … RESTART IDENTITY CASCADE</c> against the three production
-    /// DAL tables to wipe row state without dropping the schema (Decision D-11
-    /// in 02-CONTEXT.md). Call from <see cref="IAsyncLifetime.InitializeAsync" />
+    /// DAL tables to wipe row state without dropping the schema.
+    /// Call from <see cref="IAsyncLifetime.InitializeAsync" />
     /// of each integration test class so every test starts on a clean slate.
     /// </summary>
     /// <remarks>

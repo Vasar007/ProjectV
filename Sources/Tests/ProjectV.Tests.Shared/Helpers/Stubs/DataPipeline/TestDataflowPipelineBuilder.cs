@@ -6,10 +6,10 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.DataPipeline
     /// <summary>
     /// Builder for real <see cref="DataflowPipeline" /> instances populated
     /// with caller-supplied <see cref="DataPipeline.InputtersFlow" /> +
-    /// <see cref="DataPipeline.OutputtersFlow" /> stages (Decision D-33
-    /// fallback). <see cref="DataflowPipeline" /> is a <c>sealed</c> class
-    /// with no substitution-friendly interface seam — its constructor takes
-    /// real flow instances and exposes them as read-only properties, so this
+    /// <see cref="DataPipeline.OutputtersFlow" /> stages.
+    /// <see cref="DataflowPipeline" /> is a <c>sealed</c> class with no
+    /// substitution-friendly interface seam — its constructor takes real
+    /// flow instances and exposes them as read-only properties, so this
     /// builder returns a real pipeline.
     /// </summary>
     /// <remarks>
@@ -18,8 +18,8 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.DataPipeline
     /// supported for shape/property tests, but exercising
     /// <see cref="DataflowPipeline.Execute(string)" /> end-to-end requires
     /// fully-composed flows because Gridsum.DataflowEx blocks complete only
-    /// when every upstream dependency has signalled completion (see
-    /// <c>02-05-SUMMARY.md</c> § "Deviations" — the empty-pipeline hang).
+    /// when every upstream dependency has signalled completion (an
+    /// empty-pipeline hang).
     /// </para>
     /// <para>
     /// Crawlers / Appraisers flows are intentionally NOT carried as

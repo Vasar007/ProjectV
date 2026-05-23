@@ -16,7 +16,7 @@
     xunit.runner.visualstudio, AwesomeAssertions, NSubstitute) plus
     Microsoft.AspNetCore.Mvc.Testing / WireMock.Net / Testcontainers.PostgreSql
     / TimeProvider.Testing are supplied by Sources/Tests/Directory.Build.props
-    per Decision D-03 — no per-csproj PackageReference for the shared stack.
+    — no per-csproj PackageReference for the shared stack.
 
     Newtonsoft.Json is required for the webhook payload tests — the production
     TelegramBotWebService MVC pipeline is wired with AddNewtonsoftJson() and

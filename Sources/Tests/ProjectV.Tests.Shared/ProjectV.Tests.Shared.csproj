@@ -14,8 +14,8 @@
   <!--
     Core test stack (xunit, AwesomeAssertions, NSubstitute, …) and opt-in
     stack (WireMock.Net, Testcontainers, AspNetCore.Mvc.Testing,
-    TimeProvider.Testing) come from Sources/Tests/Directory.Build.props per
-    Decision D-03 — no per-csproj PackageReference for the shared stack.
+    TimeProvider.Testing) come from Sources/Tests/Directory.Build.props —
+    no per-csproj PackageReference for the shared stack.
 
     Microsoft.Extensions.DependencyInjection / Hosting are needed by
     BaseDependencyInjectionTests; their versions live in

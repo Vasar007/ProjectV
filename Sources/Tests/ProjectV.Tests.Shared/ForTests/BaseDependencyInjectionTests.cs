@@ -8,7 +8,7 @@ namespace ProjectV.Tests.Shared.ForTests
     /// registration (e.g. <c>AddProjectVCore()</c>-style extension methods).
     /// Provides factory helpers for an empty service collection and a host
     /// application builder, plus AwesomeAssertions-based assertions for
-    /// service presence and implementation type (Decision D-32).
+    /// service presence and implementation type.
     /// </summary>
     public abstract class BaseDependencyInjectionTests : BaseMockTest
     {

@@ -8,7 +8,7 @@
     /// Concrete test classes implement the <see cref="Create()" /> /
     /// <see cref="Create(string)" /> /
     /// <see cref="Create(string, Exception)" /> factory hooks for their
-    /// specific <typeparamref name="TException" /> type (Decision D-32).
+    /// specific <typeparamref name="TException" /> type.
     /// </summary>
     /// <typeparam name="TException">Exception type under test.</typeparam>
     public abstract class BaseExceptionTests<TException> : BaseMockTest

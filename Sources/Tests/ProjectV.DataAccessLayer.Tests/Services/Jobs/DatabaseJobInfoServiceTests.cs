@@ -14,7 +14,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
     /// Integration tests for <see cref="DatabaseJobInfoService" /> against a
     /// real Testcontainers PostgreSQL instance via
     /// <see cref="DbCollectionFixture" /> — exercises Add/Find/Update on the
-    /// production Npgsql pipeline (Decision D-06, Plan 02-09).
+    /// production Npgsql pipeline.
     /// </summary>
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]

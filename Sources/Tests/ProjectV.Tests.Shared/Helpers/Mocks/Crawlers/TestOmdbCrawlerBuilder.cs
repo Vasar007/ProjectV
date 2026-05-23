@@ -6,7 +6,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
 {
     /// <summary>
     /// Builder for <see cref="ICrawler" /> test doubles representing an OMDb
-    /// crawler (Decision D-33). Shape matches
+    /// crawler. Shape matches
     /// <see cref="TestTmdbCrawlerBuilder" /> verbatim; only the
     /// <see cref="DefaultTag" /> differs so downstream tests can distinguish
     /// substitutes by tag in <c>CrawlersManager</c> error messages.

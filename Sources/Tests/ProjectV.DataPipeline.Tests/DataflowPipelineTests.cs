@@ -29,12 +29,12 @@ namespace ProjectV.DataPipeline.Tests
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Tagged <c>Integration</c> (not <c>Unit</c>) per Decision D-06
-    /// carve-out + D-21: the test exercises real TPL Dataflow blocks and
-    /// the real <c>Gridsum.DataflowEx</c> dataflow host. Mocks are confined
-    /// to the leaf <see cref="ICrawler" /> + <see cref="IAppraiser" />
-    /// substitutes (D-05 NSubstitute) — every block, every link, every
-    /// completion-propagation rule between stages is real.
+    /// Tagged <c>Integration</c> (not <c>Unit</c>) because the test
+    /// exercises real TPL Dataflow blocks and the real
+    /// <c>Gridsum.DataflowEx</c> dataflow host. Mocks are confined to the
+    /// leaf <see cref="ICrawler" /> + <see cref="IAppraiser" /> NSubstitute
+    /// substitutes — every block, every link, every completion-propagation
+    /// rule between stages is real.
     /// </para>
     /// <para>
     /// The pipeline composition mirrors the production
@@ -139,8 +139,8 @@ namespace ProjectV.DataPipeline.Tests
             // finite test input that single-arg overload never signals
             // upstream completion, so `OutputtersFlow.CompletionTask` would
             // block forever — the same Gridsum.DataflowEx empty/terminal
-            // pipeline deadlock that 02-05-SUMMARY § "Deviations §1"
-            // documented for Shell.Run.
+            // pipeline deadlock that prevents Shell.Run from being covered
+            // by a unit test against a finite input.
             //
             // To exercise the SAME end-to-end wiring without hanging, this
             // test reproduces Execute's logical contract via the two-arg

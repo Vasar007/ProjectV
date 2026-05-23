@@ -7,7 +7,7 @@ namespace ProjectV.Tests.Shared.Helpers.Fixtures
     /// Loads recorded JSON fixture files from
     /// <c>Sources/Tests/Fixtures/</c>. Used by contract tests
     /// (TMDb/OMDb/Steam) and any other suite that prefers static fixtures
-    /// over in-memory mocks (Decision D-18).
+    /// over in-memory mocks.
     /// </summary>
     /// <remarks>
     /// Fixture files are copied to the test output directory at build time.

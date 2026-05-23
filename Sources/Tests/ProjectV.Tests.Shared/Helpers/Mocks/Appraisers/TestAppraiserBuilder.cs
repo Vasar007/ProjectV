@@ -7,7 +7,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
 {
     /// <summary>
     /// Builder for <see cref="IAppraiser" /> test doubles backed by
-    /// <see cref="NSubstitute" /> (Decision D-33). One file per interface;
+    /// <see cref="NSubstitute" />. One file per interface;
     /// downstream test plans add sibling builders following the same shape.
     /// </summary>
     public sealed class TestAppraiserBuilder

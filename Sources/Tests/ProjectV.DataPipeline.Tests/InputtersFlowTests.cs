@@ -20,11 +20,10 @@ namespace ProjectV.DataPipeline.Tests
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Tagged <c>Integration</c> (not <c>Unit</c>) per Decision D-21 +
-    /// 02-06-PLAN <c>must_haves</c>: the test exercises a real TPL
-    /// Dataflow + Gridsum.DataflowEx block. The flow is constructed in
-    /// the same shape the production <c>InputManager.CreateFlow(...)</c>
-    /// produces.
+    /// Tagged <c>Integration</c> (not <c>Unit</c>) because the test
+    /// exercises a real TPL Dataflow + Gridsum.DataflowEx block. The flow
+    /// is constructed in the same shape the production
+    /// <c>InputManager.CreateFlow(...)</c> produces.
     /// </para>
     /// <para>
     /// Observation strategy — why direct end-to-end driving is avoided:
@@ -40,9 +39,10 @@ namespace ProjectV.DataPipeline.Tests
     /// <c>InputtersFlow.CompletionTask</c> /
     /// <c>ProcessAsync(..., completeFlowOnFinish: true)</c> therefore
     /// deadlocks the test as soon as any item is filtered, which is
-    /// exactly the case the test wants to exercise. See
-    /// <c>02-06-SUMMARY.md</c> § "Deviations" for the full root-cause
-    /// analysis and the corresponding production "tested around" note.
+    /// exactly the case the test wants to exercise. The production code
+    /// is "tested around" this deadlock by interrogating the predicate
+    /// directly rather than driving the flow end-to-end (see the next
+    /// paragraph).
     /// </para>
     /// <para>
     /// To exercise the dedup / filter contract without hitting that

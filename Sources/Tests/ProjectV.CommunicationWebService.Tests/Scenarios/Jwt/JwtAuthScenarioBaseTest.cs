@@ -11,7 +11,7 @@ namespace ProjectV.CommunicationWebService.Tests.Scenarios.Jwt
     /// <c>ProjectV.CommunicationWebService</c>. Bundles the
     /// <see cref="TestWebApplicationFactory{TStartup}" /> wiring + any
     /// JWT-specific configuration overrides that every scenario in the
-    /// family inherits (D-36).
+    /// family inherits.
     /// </summary>
     /// <remarks>
     /// The default <see cref="TestJwtConfig" /> is shared across the suite,

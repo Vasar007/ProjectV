@@ -8,7 +8,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
 {
     /// <summary>
     /// Builder for <see cref="ITelegramBotClient" /> test doubles backed by
-    /// <see cref="NSubstitute" /> (Decision D-33). Lets a test inject a
+    /// <see cref="NSubstitute" />. Lets a test inject a
     /// deterministic bot-client into the
     /// <see cref="ProjectV.TelegramBotWebService" /> host without contacting
     /// the live Telegram API.
@@ -23,8 +23,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
     /// status, not on outgoing bot calls.
     /// </para>
     /// <para>
-    /// The polling scenario tests in <c>02-12-telegram-polling-tests</c> use
-    /// <see cref="WithUpdateSequence" /> — Telegram.Bot 22.x routes the
+    /// The polling scenario tests use <see cref="WithUpdateSequence" /> —
+    /// Telegram.Bot 22.x routes the
     /// <c>ReceiveAsync</c> extension method through
     /// <see cref="ITelegramBotClient.SendRequest{TResponse}" /> with a
     /// <c>GetUpdatesRequest</c> / response type

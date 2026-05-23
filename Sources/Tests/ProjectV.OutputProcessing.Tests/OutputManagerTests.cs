@@ -18,9 +18,9 @@ namespace ProjectV.OutputProcessing.Tests
     /// <c>Add</c> / <c>Remove</c> registration round-trip.
     /// </summary>
     /// <remarks>
-    /// Per Decision D-05, collaborator <see cref="IOutputter" /> instances
-    /// are supplied through NSubstitute; the manager itself is the real
-    /// concrete type. The static <c>_logger</c> field on
+    /// Collaborator <see cref="IOutputter" /> instances are supplied through
+    /// NSubstitute; the manager itself is the real concrete type. The
+    /// static <c>_logger</c> field on
     /// <see cref="OutputManager" /> is initialised through
     /// <c>LoggerFactory.CreateLoggerFor&lt;OutputManager&gt;()</c> — the
     /// hoisted <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c>

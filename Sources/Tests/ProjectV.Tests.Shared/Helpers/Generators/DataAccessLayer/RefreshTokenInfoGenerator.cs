@@ -8,7 +8,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
 {
     /// <summary>
     /// Generator for <see cref="RefreshTokenInfo" /> test data. Follows the
-    /// <c>Create(...)</c> / <c>Generate(...)</c> twin pattern (Decision D-34):
+    /// <c>Create(...)</c> / <c>Generate(...)</c> twin pattern:
     /// <list type="bullet">
     ///     <item>
     ///         <description><c>Create*</c> — every argument is explicit.</description>

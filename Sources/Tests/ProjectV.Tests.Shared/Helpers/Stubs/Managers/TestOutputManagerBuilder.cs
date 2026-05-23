@@ -5,9 +5,9 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Managers
 {
     /// <summary>
     /// Builder for real <see cref="OutputManager" /> instances populated with
-    /// <see cref="NSubstitute" /> child <see cref="IOutputter" /> doubles
-    /// (Decision D-33 fallback). <see cref="OutputManager" /> is
-    /// <c>sealed</c> without a substitution-friendly interface seam, so this
+    /// <see cref="NSubstitute" /> child <see cref="IOutputter" /> doubles.
+    /// <see cref="OutputManager" /> is <c>sealed</c> without a
+    /// substitution-friendly interface seam, so this
     /// builder returns a real manager populated through its public
     /// <see cref="OutputManager.Add(IOutputter)" /> API.
     /// </summary>

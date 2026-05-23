@@ -17,7 +17,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     /// <summary>
     /// Per-family base class for Telegram polling scenario tests against
     /// <c>ProjectV.TelegramBotWebService</c>. Sibling to
-    /// <see cref="TelegramWebhookScenarioBaseTest" /> (D-36).
+    /// <see cref="TelegramWebhookScenarioBaseTest" />.
     /// </summary>
     /// <remarks>
     /// <para>

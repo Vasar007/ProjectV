@@ -22,8 +22,8 @@ business scenario:
   `TelegramWebhookScenarioBaseTest`, `TmdbPipelineScenarioBaseTest` — which
   bundles the `WebApplicationFactory` wiring + scenario-family-wide config knobs.
 - Test method bodies use **explicit `// Arrange.` / `// Act.` / `// Assert.`
-  comment markers** (per D-36 / `02-CONTEXT.md`). The retrofit in 02-01
-  introduced this convention; new scenario tests follow it without exception.
+  comment markers**. The retrofit at the start of Phase 2 introduced this
+  convention; new scenario tests follow it without exception.
 - Assertions cover production behavior AND stub-side call counts where
   relevant — for example, `wireMock.LogEntries.Should().HaveCount(1)` to
   verify that the SDK called the external API exactly once after a Polly
@@ -59,9 +59,8 @@ one directory per scenario family, one file per scenario inside it.
 ## Architecture
 
 The diagram below shows how a scenario test process drives the system under
-test. It is a direct mermaid translation of the ASCII diagram in
-`02-RESEARCH.md` § "System Architecture Diagram", plus the
-`WebApplicationFactory` integration branch from D-13 / D-14 / D-15.
+test, including the `WebApplicationFactory` integration branch used by the
+JWT and Telegram scenario suites.
 
 Key invariants in the diagram:
 
@@ -74,9 +73,9 @@ Key invariants in the diagram:
   in-process mocks for the Application or Domain layers in scenario tests
   (that is the Unit-test layer's job).
 - The **Testcontainers Postgres** node is the single per-test-run
-  container started by `ICollectionFixture<DbCollectionFixture>` (D-11);
-  the same container is reused across scenario test classes that share
-  the `DbCollection` `CollectionDefinition`.
+  container started by `ICollectionFixture<DbCollectionFixture>`; the same
+  container is reused across scenario test classes that share the
+  `DbCollection` `CollectionDefinition`.
 
 ```mermaid
 flowchart TD
@@ -119,7 +118,7 @@ Testcontainers Postgres.
 ## Scenario Family Documents
 
 Per-family docs are added by the plan that lands the family's scenario suite,
-not up-front. Per D-37 of `02-CONTEXT.md`:
+not up-front:
 
 > Out of Phase 2 minimum: only scenario-family docs that correspond to
 > scenario suites actually delivered in Phase 2 are created — the overview
@@ -147,8 +146,7 @@ and a table that enumerates each scenario file with a one-line description.
   present."` Good: `"Scenario JWT-1: Anonymous request to /api/v1/Requests
   returns 401."`
 - **Class shape** — `public sealed class <ScenarioShortName>Tests` with an
-  explicit empty constructor (matches the rest of the ProjectV test stack
-  per `02-PATTERNS.md`).
+  explicit empty constructor (matches the rest of the ProjectV test stack).
 - **Base class** — inherits from a per-family base class (e.g.
   `JwtAuthScenarioBaseTest`) that holds the `WebApplicationFactory`
   instance + scenario-family-wide config knobs. The base class is what
@@ -169,15 +167,10 @@ and a table that enumerates each scenario file with a one-line description.
   rewrite in plan 02-03 filters on these traits).
 - **xUnit collection** — scenario tests that share the Testcontainers
   Postgres declare `[Collection(DbCollection.Name)]` so they run serially
-  inside the single container session per `02-RESEARCH.md` Pattern 1.
+  inside the single container session.
 
 ## Cross-references
 
 - [`Docs/Testing/Coverage/test-coverage.md`](../Coverage/test-coverage.md) —
-  TEST-01 critical-path inventory; the scenarios documented here cover the
+  critical-path coverage inventory; the scenarios documented here cover the
   `WebApplicationFactory` rows in the Infrastructure Layer table.
-- [`.planning/codebase/ARCHITECTURE.md`](../../../.planning/codebase/ARCHITECTURE.md) —
-  Data Flow + Component Responsibilities that the diagram nodes correspond to.
-- [`.planning/phases/02-test-coverage/02-RESEARCH.md`](../../../.planning/phases/02-test-coverage/02-RESEARCH.md) —
-  patterns referenced above (Pattern 1 Testcontainers DB collection, Pattern 3
-  `WebApplicationFactory` DI replacement, Pattern 9 scenario test shape).

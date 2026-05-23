@@ -15,7 +15,7 @@ This document is the per-family scenario doc for the Telegram-bot slice of
   `ITelegramBotClient` that yields a fixed sequence of `Update`s. Live in
   `Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Polling/`.
 
-Both halves share the conventions described in the overview doc (D-36).
+Both halves share the conventions described in the overview doc.
 
 ## Purpose
 
@@ -45,8 +45,7 @@ property returns a `TestTelegramBotClientBuilder`-produced
 `ITelegramBotClient` stub. The webhook scenarios carry only
 `[Trait("Category", "Integration")]` (no `[Trait("RequiresDocker", "true")]`)
 because the webhook path does not touch the database; they run on both the
-Linux Integration stage and the Windows Non-Docker stage of CI (decisions
-D-21 / D-22).
+Linux Integration stage and the Windows Non-Docker stage of CI.
 
 ## Audience
 
@@ -201,7 +200,7 @@ without exception. Three family-specific points:
 - **No `[Trait("RequiresDocker", "true")]`** — webhook AND polling
   scenarios run entirely in-process; no Testcontainers Postgres is
   started. They run on the Windows Non-Docker stage of CI in addition to
-  the Linux Integration stage (D-22). Polling does not need the DB any
+  the Linux Integration stage. Polling does not need the DB any
   more than webhook does — the production polling loop runs against the
   substituted bot client, which never reaches the real
   `CommunicationServiceClient`'s downstream-job persistence path on
@@ -219,9 +218,9 @@ without exception. Three family-specific points:
   `SendMessageAsync` call-count back deterministically.
 - **Bounded polling loop** — every polling scenario uses a
   `CancellationTokenSource(TimeSpan.FromSeconds(15))` (or shorter) when
-  waiting on the substituted bot client. Critical Finding #6 in
-  `02-RESEARCH.md`: a hosted polling service must never hang the suite,
-  even when the substitute is misconfigured. Disposing the
+  waiting on the substituted bot client. A hosted polling service must
+  never hang the suite, even when the substitute is misconfigured.
+  Disposing the
   `TestWebApplicationFactory` (handled by `WebApiBaseTest.DisposeAsync`)
   signals the host's stopping token and tears the loop down cleanly.
 
@@ -238,8 +237,3 @@ without exception. Three family-specific points:
 - [`Sources/Tests/ProjectV.Tests.Shared/Helpers/WebApi/TestWebApplicationFactory.cs`](../../../Sources/Tests/ProjectV.Tests.Shared/Helpers/WebApi/TestWebApplicationFactory.cs) —
   generic test host wrapper with optional `TelegramBotClientStub` /
   `CommunicationServiceClientStub` init properties.
-- `.planning/phases/02-test-coverage/02-11-telegram-webhook-tests-PLAN.md` —
-  decisions D-15 / D-36 / D-37 with their full rationale.
-- `.planning/phases/02-test-coverage/02-12-telegram-polling-tests-PLAN.md` —
-  delivered the polling scenarios `TG-POLL-*` and closed the polling half
-  of D-15.

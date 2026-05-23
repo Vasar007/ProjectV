@@ -18,8 +18,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     /// Per-family base class for Telegram webhook scenario tests against
     /// <c>ProjectV.TelegramBotWebService</c>. Bundles the
     /// <see cref="TestWebApplicationFactory{TStartup}" /> wiring + the
-    /// <see cref="IBotService" /> swap that every webhook scenario relies on
-    /// (D-36).
+    /// <see cref="IBotService" /> swap that every webhook scenario relies on.
     /// </summary>
     /// <remarks>
     /// <para>

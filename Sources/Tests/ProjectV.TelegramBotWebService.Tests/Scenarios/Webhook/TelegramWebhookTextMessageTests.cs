@@ -26,7 +26,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     /// pipeline without contacting the live Telegram API. The scenario
     /// asserts only that the controller responds 200 — that single status
     /// proves the entire model-binding + auth + middleware + handler chain
-    /// is healthy on the webhook path (D-15 webhook half).
+    /// is healthy on the webhook path.
     /// </remarks>
     [Trait("Category", "Integration")]
     public sealed class TelegramWebhookTextMessageTests : TelegramWebhookScenarioBaseTest

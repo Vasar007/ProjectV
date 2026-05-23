@@ -6,7 +6,7 @@ namespace ProjectV.Tests.Shared.ForTests
     /// Thin wrapper around <see cref="FakeTimeProvider" /> for tests that
     /// need to control "now" and advance a virtual clock. Bridges the
     /// project's preferred <see cref="TimeProvider" /> abstraction with the
-    /// xUnit test harness (Decision D-32 + Specifics §5 deterministic time).
+    /// xUnit test harness, giving tests deterministic control over time.
     /// </summary>
     public static class TestTimeHelper
     {

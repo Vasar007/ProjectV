@@ -17,4 +17,4 @@ global using Xunit;
 // NSubstitute.ExceptionExtensions, NSubstitute.ReceivedExtensions,
 // ProjectV.Tests.Shared.ForTests) are listed because downstream test
 // projects rely on them being globally available without their own
-// per-csproj using directives. Decision D-32; see 02-PATTERNS.md.
+// per-csproj using directives.

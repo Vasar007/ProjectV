@@ -6,7 +6,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
 {
     /// <summary>
     /// Builder for <see cref="ICrawler" /> test doubles representing a TMDb
-    /// crawler (Decision D-33). Wraps an
+    /// crawler. Wraps an
     /// <see cref="NSubstitute.Substitute" /> for <see cref="ICrawler" /> with
     /// canned <see cref="BasicInfo" /> responses produced via an async
     /// enumerable to match the production
