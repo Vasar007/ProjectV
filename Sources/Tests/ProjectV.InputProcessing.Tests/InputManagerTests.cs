@@ -89,9 +89,7 @@ namespace ProjectV.InputProcessing.Tests
         {
             // Arrange. / Act.
             var act = () => new InputManager(
-#pragma warning disable CS8625
-                defaultStorageName: null
-#pragma warning restore CS8625
+                defaultStorageName: null!
             );
 
             // Assert.
@@ -120,9 +118,7 @@ namespace ProjectV.InputProcessing.Tests
 
             // Act.
             var act = () => sut.Add(
-#pragma warning disable CS8625
-                item: null
-#pragma warning restore CS8625
+                item: null!
             );
 
             // Assert.

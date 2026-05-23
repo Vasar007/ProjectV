@@ -108,9 +108,7 @@ namespace ProjectV.Crawlers.Tests
 
             // Act.
             var act = () => sut.Add(
-#pragma warning disable CS8625
-                item: null
-#pragma warning restore CS8625
+                item: null!
             );
 
             // Assert.

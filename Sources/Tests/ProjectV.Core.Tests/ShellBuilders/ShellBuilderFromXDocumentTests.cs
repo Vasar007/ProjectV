@@ -26,12 +26,10 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithNullConfiguration_ThrowsArgumentNullException()
         {
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            var act = () => new ShellBuilderFromXDocument(configuration: null);
+            var act = () => new ShellBuilderFromXDocument(configuration: null!);
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("configuration");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]

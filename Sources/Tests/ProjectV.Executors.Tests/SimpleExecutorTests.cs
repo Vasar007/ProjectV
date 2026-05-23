@@ -70,9 +70,7 @@ namespace ProjectV.Executors.Tests
         {
             // Arrange. / Act.
             var act = () => new SimpleExecutor(
-#pragma warning disable CS8625
-                jobInfo: null,
-#pragma warning restore CS8625
+                jobInfo: null!,
                 executionsNumber: 1,
                 delayTime: TimeSpan.Zero
             );

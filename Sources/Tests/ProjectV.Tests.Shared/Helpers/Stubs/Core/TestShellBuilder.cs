@@ -4,10 +4,10 @@ using ProjectV.Core;
 using ProjectV.Crawlers;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
-using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
-using ProjectV.Tests.Shared.Helpers.Mocks.Managers;
+using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
+using ProjectV.Tests.Shared.Helpers.Stubs.Managers;
 
-namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
+namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
 {
     /// <summary>
     /// Builder for real <see cref="Shell" /> instances composed from the four

@@ -1,7 +1,7 @@
 ﻿using Acolyte.Assertions;
 using ProjectV.Appraisers;
 
-namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
+namespace ProjectV.Tests.Shared.Helpers.Stubs.Appraisers
 {
     /// <summary>
     /// Builder for real <see cref="AppraisersManager" /> instances populated

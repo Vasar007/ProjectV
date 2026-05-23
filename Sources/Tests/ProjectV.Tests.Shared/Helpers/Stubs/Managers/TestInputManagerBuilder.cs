@@ -1,7 +1,7 @@
 ﻿using Acolyte.Assertions;
 using ProjectV.IO.Input;
 
-namespace ProjectV.Tests.Shared.Helpers.Mocks.Managers
+namespace ProjectV.Tests.Shared.Helpers.Stubs.Managers
 {
     /// <summary>
     /// Builder for real <see cref="InputManager" /> instances populated with
@@ -12,7 +12,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Managers
     /// <see cref="InputManager.Add(IInputter)" /> API.
     /// </summary>
     /// <remarks>
-    /// Mirrors <see cref="Appraisers.TestAppraisersManagerBuilder" /> — one
+    /// Mirrors <see cref="Stubs.Appraisers.TestAppraisersManagerBuilder" /> — one
     /// file per public manager type that needs a test double. The default
     /// storage name is a non-empty placeholder because the production
     /// constructor calls <c>ThrowIfNullOrWhiteSpace</c> on it.

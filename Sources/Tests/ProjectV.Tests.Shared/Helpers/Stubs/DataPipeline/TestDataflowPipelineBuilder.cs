@@ -1,7 +1,7 @@
 ﻿using Acolyte.Assertions;
 using ProjectV.DataPipeline;
 
-namespace ProjectV.Tests.Shared.Helpers.Mocks.DataPipeline
+namespace ProjectV.Tests.Shared.Helpers.Stubs.DataPipeline
 {
     /// <summary>
     /// Builder for real <see cref="DataflowPipeline" /> instances populated

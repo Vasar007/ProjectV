@@ -31,6 +31,8 @@
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
     <PackageReference Include="AwesomeAssertions" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="AutoFixture" />
+    <PackageReference Include="AutoFixture.AutoNSubstitute" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">

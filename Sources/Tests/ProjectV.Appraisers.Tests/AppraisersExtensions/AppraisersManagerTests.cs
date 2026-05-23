@@ -5,6 +5,7 @@ using ProjectV.DataPipeline;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
+using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests.AppraisersExtensions
@@ -53,9 +54,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                sut.Add(item: null);
-#pragma warning restore CS8625
+                sut.Add(item: null!);
             };
 
             // Assert.
@@ -72,9 +71,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                sut.Remove(item: null);
-#pragma warning restore CS8625
+                sut.Remove(item: null!);
             };
 
             // Assert.

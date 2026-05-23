@@ -136,9 +136,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act. / Assert.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                sut.GetRatings(entityInfo: null, outputResults: false);
-#pragma warning restore CS8625
+                sut.GetRatings(entityInfo: null!, outputResults: false);
             };
             act.Should().Throw<ArgumentNullException>()
                .WithParameterName("entityInfo");
@@ -165,9 +163,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Arrange. / Act. / Assert.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                _ = new Appraiser<TmdbMovieInfo>(appraisal: null);
-#pragma warning restore CS8625
+                _ = new Appraiser<TmdbMovieInfo>(appraisal: null!);
             };
             act.Should().Throw<ArgumentNullException>()
                .WithParameterName("appraisal");

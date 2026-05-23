@@ -6,9 +6,9 @@ using ProjectV.Core.ShellBuilders;
 using ProjectV.Crawlers;
 using ProjectV.IO.Input;
 using ProjectV.IO.Output;
-using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
-using ProjectV.Tests.Shared.Helpers.Mocks.Core;
-using ProjectV.Tests.Shared.Helpers.Mocks.Managers;
+using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
+using ProjectV.Tests.Shared.Helpers.Stubs.Core;
+using ProjectV.Tests.Shared.Helpers.Stubs.Managers;
 using Xunit;
 
 namespace ProjectV.Core.Tests
@@ -78,16 +78,14 @@ namespace ProjectV.Core.Tests
             var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             var act = () => new Shell(
-                inputManager: null,
+                inputManager: null!,
                 crawlersManager, appraisersManager, outputManager,
                 boundedCapacity: 10
             );
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("inputManager");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]
@@ -99,17 +97,15 @@ namespace ProjectV.Core.Tests
             var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             var act = () => new Shell(
                 inputManager,
-                crawlersManager: null,
+                crawlersManager: null!,
                 appraisersManager, outputManager,
                 boundedCapacity: 10
             );
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("crawlersManager");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]
@@ -121,17 +117,15 @@ namespace ProjectV.Core.Tests
             var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             var act = () => new Shell(
                 inputManager, crawlersManager,
-                appraisersManager: null,
+                appraisersManager: null!,
                 outputManager,
                 boundedCapacity: 10
             );
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("appraisersManager");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]
@@ -143,16 +137,14 @@ namespace ProjectV.Core.Tests
             var appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             var act = () => new Shell(
                 inputManager, crawlersManager, appraisersManager,
-                outputManager: null,
+                outputManager: null!,
                 boundedCapacity: 10
             );
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("outputManager");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]

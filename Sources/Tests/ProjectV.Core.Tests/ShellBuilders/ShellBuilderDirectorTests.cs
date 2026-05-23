@@ -2,7 +2,7 @@
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.Core.ShellBuilders;
-using ProjectV.Tests.Shared.Helpers.Mocks.Core;
+using ProjectV.Tests.Shared.Helpers.Stubs.Core;
 using Xunit;
 
 namespace ProjectV.Core.Tests.ShellBuilders
@@ -28,12 +28,10 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithNullShellBuilder_ThrowsArgumentNullException()
         {
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            var act = () => new ShellBuilderDirector(shellBuilder: null);
+            var act = () => new ShellBuilderDirector(shellBuilder: null!);
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("shellBuilder");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]
@@ -57,12 +55,10 @@ namespace ProjectV.Core.Tests.ShellBuilders
             var director = new ShellBuilderDirector(shellBuilder);
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            var act = () => director.ChangeShellBuilder(newBuilder: null);
+            var act = () => director.ChangeShellBuilder(newBuilder: null!);
             act.Should()
                 .Throw<ArgumentNullException>()
                 .WithParameterName("newBuilder");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [Fact]

@@ -92,9 +92,7 @@ namespace ProjectV.OutputProcessing.Tests
         {
             // Arrange. / Act.
             var act = () => new OutputManager(
-#pragma warning disable CS8625
-                defaultStorageName: null
-#pragma warning restore CS8625
+                defaultStorageName: null!
             );
 
             // Assert.
@@ -123,9 +121,7 @@ namespace ProjectV.OutputProcessing.Tests
 
             // Act.
             var act = () => sut.Add(
-#pragma warning disable CS8625
-                item: null
-#pragma warning restore CS8625
+                item: null!
             );
 
             // Assert.

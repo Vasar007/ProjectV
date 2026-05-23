@@ -157,9 +157,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                sut.GetRatings(entityInfo: null, outputResults: false);
-#pragma warning restore CS8625
+                sut.GetRatings(entityInfo: null!, outputResults: false);
             };
 
             // Assert.
@@ -176,9 +174,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                appraisal.PrepareCalculation(rawDataContainer: null);
-#pragma warning restore CS8625
+                appraisal.PrepareCalculation(rawDataContainer: null!);
             };
 
             // Assert.

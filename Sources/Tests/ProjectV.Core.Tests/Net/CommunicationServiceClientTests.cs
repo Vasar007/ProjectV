@@ -117,12 +117,10 @@ namespace ProjectV.Core.Tests.Net
             using var sut = CreateSut(handler);
 
             // Act. / Assert.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            var act = async () => await sut.LoginAsync(login: null);
+            var act = async () => await sut.LoginAsync(login: null!);
             await act.Should()
                 .ThrowAsync<ArgumentNullException>()
                 .WithParameterName("login");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         /// <summary>

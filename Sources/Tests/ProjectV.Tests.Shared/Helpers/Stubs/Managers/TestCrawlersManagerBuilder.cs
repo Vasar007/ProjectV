@@ -1,7 +1,7 @@
 ﻿using Acolyte.Assertions;
 using ProjectV.Crawlers;
 
-namespace ProjectV.Tests.Shared.Helpers.Mocks.Managers
+namespace ProjectV.Tests.Shared.Helpers.Stubs.Managers
 {
     /// <summary>
     /// Builder for real <see cref="CrawlersManager" /> instances populated

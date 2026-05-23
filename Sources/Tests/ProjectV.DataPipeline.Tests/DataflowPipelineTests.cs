@@ -201,9 +201,7 @@ namespace ProjectV.DataPipeline.Tests
 
             // Act.
             var act = () => new DataflowPipeline(
-#pragma warning disable CS8625
-                inputtersFlow: null,
-#pragma warning restore CS8625
+                inputtersFlow: null!,
                 outputtersFlow: outputtersFlow
             );
 
@@ -224,9 +222,7 @@ namespace ProjectV.DataPipeline.Tests
             // Act.
             var act = () => new DataflowPipeline(
                 inputtersFlow: inputtersFlow,
-#pragma warning disable CS8625
-                outputtersFlow: null
-#pragma warning restore CS8625
+                outputtersFlow: null!
             );
 
             // Assert.

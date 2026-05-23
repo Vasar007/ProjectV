@@ -126,9 +126,7 @@ namespace ProjectV.Models.Tests.ValueObjects
             // Arrange.
             var act = () =>
             {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                _ = UserId.Parse(null);
-#pragma warning restore CS8625
+                _ = UserId.Parse(null!);
             };
 
             // Act. / Assert.
