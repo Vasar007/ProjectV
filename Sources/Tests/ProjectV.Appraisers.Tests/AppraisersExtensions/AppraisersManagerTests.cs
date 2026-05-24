@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.DataPipeline;
@@ -24,14 +23,6 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     {
         public AppraisersManagerTests()
         {
-        }
-
-        private IAppraiser CreateAppraiserMock(Type typeId, string tag = "tag")
-        {
-            var sub = Fixture.Create<IAppraiser>();
-            sub.TypeId.Returns(typeId);
-            sub.Tag.Returns(tag);
-            return sub;
         }
 
         [Fact]
@@ -85,7 +76,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void AddOnceRegistersAppraiserUnderItsTypeId()
         {
             // Arrange.
-            var appraiser = CreateAppraiserMock(typeof(BasicInfo));
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(appraiser)
                 .Build();
@@ -102,7 +93,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void AddSameInstanceTwiceIsIdempotentWithinSameTypeId()
         {
             // Arrange.
-            var appraiser = CreateAppraiserMock(typeof(BasicInfo));
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
             var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
 
             // Act.
@@ -121,8 +112,8 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void AddTwoDifferentInstancesOfSameTypeIdBuildsCombinedFlow()
         {
             // Arrange.
-            var first = CreateAppraiserMock(typeof(BasicInfo), tag: "first");
-            var second = CreateAppraiserMock(typeof(BasicInfo), tag: "second");
+            var first = CreateAppraiser(typeof(BasicInfo), "first");
+            var second = CreateAppraiser(typeof(BasicInfo), "second");
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(first)
                 .WithAppraiser(second)
@@ -140,7 +131,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void RemoveExistingReturnsTrue()
         {
             // Arrange.
-            var appraiser = CreateAppraiserMock(typeof(BasicInfo));
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(appraiser)
                 .Build();
@@ -157,7 +148,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
-            var appraiser = CreateAppraiserMock(typeof(BasicInfo));
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
 
             // Act.
             var removed = sut.Remove(appraiser);
@@ -176,10 +167,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
                 ratingValue: 7.5,
                 ratingId: Guid.Empty);
 
-            var basicAppraiser = new TestAppraiserBuilder(Fixture)
-                .WithRating(expectedRating)
-                .WithTypeId(typeof(BasicInfo))
-                .Build();
+            var basicAppraiser = CreateAppraiserWithRating(typeof(BasicInfo), "tag", expectedRating);
 
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(basicAppraiser)
@@ -199,7 +187,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void CreateFlowReturnsDistinctInstancesAcrossCalls()
         {
             // Arrange.
-            var appraiser = CreateAppraiserMock(typeof(BasicInfo));
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(appraiser)
                 .Build();
@@ -211,5 +199,26 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Assert.
             firstFlow.Should().NotBeSameAs(secondFlow);
         }
+
+        #region Helper Methods
+
+        private IAppraiser CreateAppraiser(Type typeId, string tag)
+        {
+            return new TestAppraiserBuilder(Fixture)
+                .WithTypeId(typeId)
+                .WithTag(tag)
+                .Build();
+        }
+
+        private IAppraiser CreateAppraiserWithRating(Type typeId, string tag, RatingDataContainer rating)
+        {
+            return new TestAppraiserBuilder(Fixture)
+                .WithTypeId(typeId)
+                .WithTag(tag)
+                .WithRating(rating)
+                .Build();
+        }
+
+        #endregion
     }
 }

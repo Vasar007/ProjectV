@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.Appraisers;
@@ -11,6 +10,7 @@ using ProjectV.Crawlers;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
 using ProjectV.Tests.Shared.Helpers.Mocks.Crawlers;
 using Xunit;
 
@@ -100,10 +100,7 @@ namespace ProjectV.DataPipeline.Tests
                 ratingValue: 9.1,
                 ratingId: Guid.NewGuid()
             );
-            var appraiserSubstitute = Fixture.Create<IAppraiser>();
-            appraiserSubstitute.GetRatings(
-                Arg.Any<BasicInfo>(), Arg.Any<bool>()
-            ).Returns(expectedRating);
+            var appraiserSubstitute = CreateAppraiser(expectedRating);
 
             var appraisersFuncs = new[]
             {
@@ -232,5 +229,16 @@ namespace ProjectV.DataPipeline.Tests
                .Throw<ArgumentNullException>()
                .WithParameterName("outputtersFlow");
         }
+
+        #region Helper Methods
+
+        private IAppraiser CreateAppraiser(RatingDataContainer rating)
+        {
+            return new TestAppraiserBuilder(Fixture)
+                .WithRating(rating)
+                .Build();
+        }
+
+        #endregion
     }
 }
