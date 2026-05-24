@@ -1,13 +1,13 @@
 # ProjectV Scenario Tests — Overview
 
-**Phase 2 deliverable** — companion to
+Companion to
 [`Docs/Testing/Coverage/test-coverage.md`](../Coverage/test-coverage.md).
 This document is the architecture-diagram baseline for the
-`WebApplicationFactory`-based scenario suites that downstream Phase 2 plans
-deliver (02-10 JWT, 02-11 Telegram webhook, 02-12 Telegram polling). Per-family
-scenario docs (e.g. `projectv-jwt-scenarios.md`, `projectv-telegram-scenarios.md`,
-`projectv-tmdb-pipeline-scenarios.md`, …) are added by downstream plans as
-their scenario suites land.
+`WebApplicationFactory`-based scenario suites covering JWT authentication,
+Telegram webhook, and Telegram polling. Per-family scenario docs
+(e.g. `projectv-jwt-scenarios.md`, `projectv-telegram-scenarios.md`,
+`projectv-tmdb-pipeline-scenarios.md`, …) are added alongside their
+respective scenario suites as they land.
 
 ## Purpose
 
@@ -22,8 +22,8 @@ business scenario:
   `TelegramWebhookScenarioBaseTest`, `TmdbPipelineScenarioBaseTest` — which
   bundles the `WebApplicationFactory` wiring + scenario-family-wide config knobs.
 - Test method bodies use **explicit `// Arrange.` / `// Act.` / `// Assert.`
-  comment markers**. The retrofit at the start of Phase 2 introduced this
-  convention; new scenario tests follow it without exception.
+  comment markers**. This convention was introduced during the test-coverage
+  work tracked in PR #342; new scenario tests follow it without exception.
 - Assertions cover production behavior AND stub-side call counts where
   relevant — for example, `wireMock.LogEntries.Should().HaveCount(1)` to
   verify that the SDK called the external API exactly once after a Polly
@@ -36,9 +36,14 @@ without opening any test method.
 
 ## Audience
 
-- **Phase 2 test authors** — primarily the engineer (and Claude executor)
-  implementing one of the WebApplicationFactory-based plans (02-10 JWT,
-  02-11 Telegram webhook, 02-12 Telegram polling). They use this overview
+- **Scenario test authors** — engineers implementing `WebApplicationFactory`-based
+  integration tests for the JWT authentication
+  (`Sources/Tests/ProjectV.CommunicationWebService.Tests/Scenarios/Jwt/`),
+  Telegram webhook
+  (`Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Webhook/`),
+  or Telegram polling
+  (`Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Polling/`)
+  suites. They use this overview
   to know which base class to inherit from, which Helpers wires up which
   external surface, and what shape an Arrange / Act / Assert block should
   take inside the scenario file.
@@ -120,20 +125,20 @@ Testcontainers Postgres.
 Per-family docs are added by the plan that lands the family's scenario suite,
 not up-front:
 
-> Out of Phase 2 minimum: only scenario-family docs that correspond to
-> scenario suites actually delivered in Phase 2 are created — the overview
-> is mandatory, family docs are added as their scenario suites land.
+> Only scenario-family docs that correspond to scenario suites actually
+> committed to the repository are created — the overview is mandatory,
+> family docs are added as their scenario suites land.
 
-Expected per-family doc filenames (added by downstream plans):
+Expected per-family doc filenames:
 
-- `projectv-jwt-scenarios.md` — added alongside the JWT scenario suite in
-  plan 02-10 (`ProjectV.CommunicationWebService.Tests/Scenarios/Jwt/`).
+- `projectv-jwt-scenarios.md` — added alongside the JWT scenario suite
+  (`Sources/Tests/ProjectV.CommunicationWebService.Tests/Scenarios/Jwt/`).
 - `projectv-telegram-scenarios.md` — added alongside the Telegram webhook +
-  polling scenario suites in plans 02-11 and 02-12
-  (`ProjectV.TelegramBotWebService.Tests/Scenarios/Webhook/` and `/Polling/`).
+  polling scenario suites
+  (`Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Webhook/` and `/Polling/`).
 - `projectv-tmdb-pipeline-scenarios.md` — added if/when a TMDb-end-to-end
-  scenario suite lands; Phase 2's TMDb coverage is at the contract-test
-  layer first (plan 02-08).
+  scenario suite lands; current TMDb coverage is at the contract-test
+  layer (`Sources/Tests/ProjectV.TmdbService.Tests/TmdbContractTests.cs`).
 
 Family docs follow the same shape as this overview — Purpose, Audience,
 Architecture (with a scenario-family-specific mermaid view), Conventions,
@@ -163,8 +168,8 @@ and a table that enumerates each scenario file with a one-line description.
   failure")`.
 - **Category trait** — every scenario test class is
   `[Trait("Category","Integration")]`. Scenarios that hit Testcontainers
-  Postgres also add `[Trait("RequiresDocker","true")]` (the four-stage CI
-  rewrite in plan 02-03 filters on these traits).
+  Postgres also add `[Trait("RequiresDocker","true")]`. CI filters on these
+  traits to separate Docker-dependent tests from non-Docker integration tests.
 - **xUnit collection** — scenario tests that share the Testcontainers
   Postgres declare `[Collection(DbCollection.Name)]` so they run serially
   inside the single container session.

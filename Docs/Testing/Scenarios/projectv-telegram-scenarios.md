@@ -1,16 +1,16 @@
 # ProjectV Telegram Scenario Tests
 
-**Phase 2 deliverable** — companion to
+Companion to
 [`projectv-scenario-tests-overview.md`](./projectv-scenario-tests-overview.md)
 and [`../Coverage/test-coverage.md`](../Coverage/test-coverage.md).
 This document is the per-family scenario doc for the Telegram-bot slice of
-`ProjectV.TelegramBotWebService`. The Phase 2 plan suite delivers both halves:
+`ProjectV.TelegramBotWebService`. It covers both halves of the scenario suite:
 
-- **Webhook scenarios** (Plan 02-11) — synthetic Telegram
+- **Webhook scenarios** (Telegram webhook scenarios — `Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Webhook/`) — synthetic Telegram
   `Update` JSON payloads POSTed at the production webhook endpoint via
   `WebApplicationFactory<Startup>`. Live in
   `Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Webhook/`.
-- **Polling scenarios** (Plan 02-12) — the production
+- **Polling scenarios** (Telegram polling scenarios — `Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Polling/`) — the production
   `PoolingProcessor` hosted service exercised end-to-end with a substituted
   `ITelegramBotClient` that yields a fixed sequence of `Update`s. Live in
   `Sources/Tests/ProjectV.TelegramBotWebService.Tests/Scenarios/Polling/`.
@@ -117,7 +117,7 @@ the bot handler's `SendMessageAsync` call hits the substituted `IBotService`
 status proves the entire model-binding + auth + middleware + handler chain
 is healthy on the webhook path. The scenario does NOT assert on outgoing
 bot calls; that level of verification belongs to the bot-message-handler
-unit-test layer that 02-04 / 02-05 cover.
+unit-test layer covering `BotMessageHandler` and its collaborators.
 
 ### Scenario TG-WEB-2: Malformed JSON rejected
 
@@ -128,7 +128,7 @@ The scenario asserts the status code is in the 4xx range — the exact value
 comes from the production
 `AddNewtonsoftJson` configuration, not from any code in this plan, so the
 test asserts the production behavior as-is rather than dictating a specific
-400 versus 415 outcome (Phase 2 tests around existing semantics, does not
+400 versus 415 outcome (the scenario tests existing semantics, does not
 change them).
 
 ## Polling Scenarios
@@ -184,8 +184,7 @@ an empty array. The host's `PoolingProcessor` starts the receive loop on
 `BotPollingUpdateHandler` → `UpdateService.HandleUpdateAsync` →
 `BotMessageHandler.ProcessAsync` → `IBotService.SendMessageAsync`. The
 scenario waits on the substituted `IBotService` with a bounded 15-second
-timeout (Critical Finding #6 in `02-RESEARCH.md` — a polling loop must
-never hang the suite) and asserts the `SendMessageAsync` call-count is at
+timeout (a polling loop must never hang the suite) and asserts the `SendMessageAsync` call-count is at
 least 3. The single-method assertion proves the entire polling chain is
 healthy end-to-end without relying on internal details of the Telegram
 receiver implementation.

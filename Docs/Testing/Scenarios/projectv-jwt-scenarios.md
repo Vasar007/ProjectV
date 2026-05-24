@@ -1,6 +1,6 @@
 # ProjectV JWT Scenario Tests
 
-**Phase 2 deliverable** — companion to
+Companion to
 [`projectv-scenario-tests-overview.md`](./projectv-scenario-tests-overview.md)
 and [`../Coverage/test-coverage.md`](../Coverage/test-coverage.md).
 This document is the per-family scenario doc for the JWT-authentication
