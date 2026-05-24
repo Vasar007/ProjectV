@@ -60,8 +60,8 @@ namespace ProjectV.DataAccessLayer.Services.Users
             // WrappedUserName is a computed property (UserName.Wrap(UserName))
             // and the underlying scalar `UserName` field is internal. Compare
             // against the raw string column directly; the SUT input is the
-            // domain `UserName` so we read its .Value (Plan 02-09 Task 1
-            // Rule 1 fix).
+            // domain `UserName` so we read its .Value to get the raw string
+            // that EF Core can translate into SQL.
             string rawUserName = userName.Value;
             UserDbInfo? userDbModel = await _context.ExecuteIfCanUseDb(
                 () => _context.GetUserDbSet(),

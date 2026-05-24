@@ -128,7 +128,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
             // navigation — the SUT services route their SQL through the same
             // context but only after we've materialised the schema. Bypassing
             // EF here keeps the bootstrap independent of the broken model
-            // (Plan 02-09 [BLOCKING] fallback).
+            // See DbCollectionFixture XML-doc remarks for the full rationale.
             const string createSchemaSql = @"
                 CREATE TABLE IF NOT EXISTS ""public"".""jobs"" (
                     ""id""     uuid          NOT NULL PRIMARY KEY,

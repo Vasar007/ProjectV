@@ -38,9 +38,9 @@ namespace ProjectV.Crawlers.Tests
     /// on the hoisted
     /// <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c> +
     /// production code review to cover the <c>_logger.Error(...)</c> call.
-    /// The 02-06 PLAN's <c>logger.Received(1).Error(...)</c> wording is an
+    /// The <c>logger.Received(1).Error(...)</c> assertion pattern is an
     /// aspirational target that this unit suite intentionally does not chase
-    /// — Rule 1 / Rule 3 deviation, recorded in the plan SUMMARY.
+    /// — the deviation is recorded in the PR that introduced this test class.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

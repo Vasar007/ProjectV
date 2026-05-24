@@ -36,7 +36,7 @@ namespace ProjectV.Core.Tests
     /// pipeline that <c>Run</c> drives requires a fully-composed pipeline
     /// (at least one inputter, crawler, and appraiser per stage) to
     /// terminate deterministically — that scenario belongs in an
-    /// integration test plan (Phase 3 E2E or the JWT integration plan).
+    /// a future end-to-end or JWT integration test plan.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

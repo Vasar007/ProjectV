@@ -13,10 +13,10 @@ namespace ProjectV.DataAccessLayer.Tests
     /// <summary>
     /// Integration test asserting that the schema applied by
     /// <see cref="DbCollectionFixture" /> exposes the three expected DAL
-    /// tables in the <c>public</c> schema. Per 02-09 Task 1's [BLOCKING]
-    /// fallback, the schema is bootstrapped via raw SQL (see
-    /// <c>DbCollectionFixture.ApplySchemaAsync</c>) rather than EF Core
-    /// migrations — this test verifies the bootstrap is wired correctly.
+    /// tables in the <c>public</c> schema. The schema is bootstrapped via
+    /// raw SQL (see <c>DbCollectionFixture.ApplySchemaAsync</c>) rather than
+    /// EF Core migrations because the EF model-validator blocks context
+    /// initialisation — this test verifies the bootstrap is wired correctly.
     /// </summary>
     [Trait("Category", "Integration")]
     [Trait("RequiresDocker", "true")]

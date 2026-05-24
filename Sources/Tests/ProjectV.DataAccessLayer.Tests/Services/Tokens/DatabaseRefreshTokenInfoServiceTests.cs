@@ -104,11 +104,11 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
         }
 
         /// <summary>
-        /// Exercises the Plan 02-09 Rule-1 raw-Guid comparison fix: the
-        /// service must look up tokens by user id through the EF-translatable
-        /// scalar column path (not via the WrappedUserId computed property,
-        /// which EF cannot lift into SQL). Without this test the 02-09 fix
-        /// has zero integration coverage; a regression that reintroduces
+        /// Exercises the raw-Guid comparison fix: the service must look up
+        /// tokens by user id through the EF-translatable scalar column path
+        /// (not via the WrappedUserId computed property, which EF cannot lift
+        /// into SQL). Without this test the fix has zero integration coverage;
+        /// a regression that reintroduces
         /// `token.WrappedUserId == userId` in the predicate would crash at
         /// runtime instead of being caught here. Assertions extend beyond
         /// id round-trip to cover the credential fields (TokenHash /

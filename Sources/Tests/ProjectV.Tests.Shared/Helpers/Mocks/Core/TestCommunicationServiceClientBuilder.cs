@@ -18,8 +18,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
     /// in its constructor, which makes it expensive to wire up for a plain
     /// unit test. The interface seam
     /// <see cref="ICommunicationServiceClient" /> is the natural test
-    /// substitution target — downstream orchestration tests (Phase 2 plan
-    /// 02-06+ web-service orchestration tests) consume the same shape.
+    /// substitution target — downstream web-service orchestration tests
+    /// consume the same shape.
     /// </para>
     /// <para>
     /// Tests that need to exercise the production concrete (e.g. HTTP

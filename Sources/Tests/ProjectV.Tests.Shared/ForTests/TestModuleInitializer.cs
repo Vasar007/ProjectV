@@ -17,9 +17,9 @@ namespace ProjectV.Tests.Shared.ForTests
     /// duplication was a workaround for the NLog 6 auto-load failure caused
     /// by <c>concurrentWrites="true"</c> in
     /// <c>Sources/Libraries/ProjectV.Logging/NLog.config</c>, combined with
-    /// <c>throwConfigExceptions="true"</c>. Plan 02-13 removed that
-    /// attribute, so the auto-load no longer throws and the workaround
-    /// stopped being load-bearing for build/test correctness.
+    /// <c>throwConfigExceptions="true"</c>. Removing that attribute stopped
+    /// the auto-load from throwing and made the workaround no longer
+    /// load-bearing for build/test correctness.
     /// </para>
     /// <para>
     /// This single hoisted initializer remains for a softer reason: tests

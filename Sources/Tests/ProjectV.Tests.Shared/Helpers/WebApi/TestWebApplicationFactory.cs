@@ -64,9 +64,9 @@ namespace ProjectV.Tests.Shared.Helpers.WebApi
     ///     <see cref="CommunicationServiceClientStub" /> swaps the
     ///     production <see cref="ICommunicationServiceClient" /> singleton
     ///     so bot handlers that schedule downstream work do not contact the
-    ///     real <c>CommunicationWebService</c>. Webhook tests (02-11) leave
-    ///     this <c>null</c> because the webhook path does not touch the
-    ///     comm-client; polling tests (02-12) supply one built via
+    ///     real <c>CommunicationWebService</c>. Webhook tests leave this
+    ///     <c>null</c> because the webhook path does not touch the comm-client;
+    ///     polling tests supply one built via
     ///     <c>TestCommunicationServiceClientBuilder</c>.
     ///   </description>
     ///   </item>

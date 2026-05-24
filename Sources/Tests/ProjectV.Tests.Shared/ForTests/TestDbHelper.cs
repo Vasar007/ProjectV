@@ -25,9 +25,9 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <see cref="System.InvalidOperationException" /> on the
     /// <c>UserDbInfo.RefreshToken</c> property whenever the dependency cache
     /// is first realised — even for a TRUNCATE that never touches the model.
-    /// See <c>DbCollectionFixture</c> remarks + Plan 02-09 <c>[BLOCKING]</c>
-    /// migration note. Using <see cref="NpgsqlConnection" /> directly keeps
-    /// the helper independent of EF Core's model validator.
+    /// See <c>DbCollectionFixture</c> remarks for the full rationale.
+    /// Using <see cref="NpgsqlConnection" /> directly keeps the helper
+    /// independent of EF Core's model validator.
     /// </para>
     /// </remarks>
     public sealed class TestDbHelper

@@ -147,7 +147,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             // webhook integration test. Replace it with a no-setup
             // NSubstitute stub so any handler that resolves the client
             // does not blow up. Webhook scenarios do not assert on the
-            // outgoing comm-client calls; 02-12 polling scenarios will
+            // outgoing comm-client calls; polling scenarios will
             // pass a configured stub via the same factory knob.
             services.RemoveAll<ICommunicationServiceClient>();
             services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup());

@@ -47,8 +47,8 @@ namespace ProjectV.DataAccessLayer.Services.Users.Models
         /// type through this immutable property and the previous
         /// <c>builder.Property(e =&gt; e.RefreshToken)</c> mapping blocked
         /// model validation. The mapper hydrates this property out-of-band
-        /// when needed. See Plan 02-09 Task 1 (Rule 1 fix unblocking
-        /// RESEARCH.md Critical Finding #1).
+        /// when needed. See <c>DatabaseUserInfoService.FindByUserNameAsync</c>
+        /// for the EF-translatable lookup that avoids this property.
         /// </summary>
         [NotMapped]
         public RefreshTokenDbInfo? RefreshToken { get; }
