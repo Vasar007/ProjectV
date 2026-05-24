@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sources/Tests/coverlet.runsettings — Coverlet exclusions for Phase 2 coverage publication. -->
+<!-- Sources/Tests/coverlet.runsettings — Coverlet exclusions for test-coverage publication on Linux CI runs. -->
 <!-- Consumed by every Linux C# test stage in .github/workflows/build.yml via the `settings` argument. -->
 <RunSettings>
   <DataCollectionRunSettings>
