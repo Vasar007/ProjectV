@@ -1,4 +1,5 @@
 ﻿using Acolyte.Assertions;
+using AutoFixture;
 using ProjectV.Crawlers;
 using ProjectV.Models.Data;
 
@@ -6,9 +7,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
 {
     /// <summary>
     /// Builder for <see cref="ICrawler" /> test doubles representing a TMDb
-    /// crawler. Wraps an
-    /// <see cref="NSubstitute.Substitute" /> for <see cref="ICrawler" /> with
-    /// canned <see cref="BasicInfo" /> responses produced via an async
+    /// crawler. Wraps an AutoFixture-created substitute for <see cref="ICrawler" />
+    /// with canned <see cref="BasicInfo" /> responses produced via an async
     /// enumerable to match the production
     /// <see cref="ICrawler.GetResponse(string, bool)" /> shape (it returns
     /// <see cref="IAsyncEnumerable{T}" />, not <see cref="Task{T}" />).
@@ -28,6 +28,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// </summary>
         public const string DefaultTag = "TmdbCrawler";
 
+        private readonly IFixture _fixture;
+
         private readonly List<BasicInfo> _responses = new List<BasicInfo>();
         private string _tag = DefaultTag;
         private Type _typeId = typeof(BasicInfo);
@@ -39,8 +41,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// configured until <see cref="WithResponse" /> /
         /// <see cref="WithResponses" /> is called.
         /// </summary>
-        public TestTmdbCrawlerBuilder()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public TestTmdbCrawlerBuilder(IFixture fixture)
         {
+            _fixture = fixture.ThrowIfNull(nameof(fixture));
         }
 
         /// <summary>
@@ -48,9 +52,11 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// substitute with the <see cref="DefaultTag" />, the default
         /// <c>typeof(BasicInfo)</c> type id, and an empty response stream.
         /// </summary>
-        public static ICrawler CreateWithoutSetup()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public static ICrawler CreateWithoutSetup(IFixture fixture)
         {
-            return new TestTmdbCrawlerBuilder().Build();
+            fixture.ThrowIfNull(nameof(fixture));
+            return new TestTmdbCrawlerBuilder(fixture).Build();
         }
 
         /// <summary>
@@ -140,7 +146,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// </summary>
         public ICrawler Build()
         {
-            var substitute = Substitute.For<ICrawler>();
+            var substitute = _fixture.Create<ICrawler>();
 
             substitute.Tag.Returns(_tag);
             substitute.TypeId.Returns(_typeId);

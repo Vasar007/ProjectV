@@ -57,7 +57,7 @@ namespace ProjectV.Crawlers.Tests
             var expectedException = new InvalidOperationException(
                 "Simulated TMDb crawler failure for test."
             );
-            ICrawler throwingCrawler = new TestTmdbCrawlerBuilder()
+            ICrawler throwingCrawler = new TestTmdbCrawlerBuilder(Fixture)
                 .WithThrowOnGetResponse(expectedException)
                 .Build();
 
@@ -122,7 +122,7 @@ namespace ProjectV.Crawlers.Tests
         public void Remove_WithRegisteredCrawler_ReturnsTrueAndDropsTheCrawler()
         {
             // Arrange.
-            ICrawler crawler = TestOmdbCrawlerBuilder.CreateWithoutSetup();
+            ICrawler crawler = TestOmdbCrawlerBuilder.CreateWithoutSetup(Fixture);
             using var sut = new CrawlersManager(outputResults: false);
             sut.Add(crawler);
 

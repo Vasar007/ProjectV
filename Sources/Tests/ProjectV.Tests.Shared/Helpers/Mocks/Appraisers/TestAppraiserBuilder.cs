@@ -1,4 +1,5 @@
 ﻿using Acolyte.Assertions;
+using AutoFixture;
 using ProjectV.Appraisers;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
@@ -7,11 +8,15 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
 {
     /// <summary>
     /// Builder for <see cref="IAppraiser" /> test doubles backed by
-    /// <see cref="NSubstitute" />. One file per interface;
+    /// AutoFixture + NSubstitute. One file per interface;
     /// downstream test plans add sibling builders following the same shape.
     /// </summary>
     public sealed class TestAppraiserBuilder
     {
+        private readonly IFixture _fixture;
+
+        private Type? _typeId;
+        private string? _tag;
         private Func<BasicInfo, RatingDataContainer>? _getRatingsHandler;
 
         /// <summary>
@@ -19,17 +24,49 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
         /// class. No behavior is configured until one of the <c>With*</c>
         /// methods is called.
         /// </summary>
-        public TestAppraiserBuilder()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public TestAppraiserBuilder(IFixture fixture)
         {
+            _fixture = fixture.ThrowIfNull(nameof(fixture));
         }
 
         /// <summary>
         /// Convenience factory that returns a bare-bones
         /// <see cref="IAppraiser" /> substitute with no configured behavior.
         /// </summary>
-        public static IAppraiser CreateWithoutSetup()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public static IAppraiser CreateWithoutSetup(IFixture fixture)
         {
-            return new TestAppraiserBuilder().Build();
+            fixture.ThrowIfNull(nameof(fixture));
+            return new TestAppraiserBuilder(fixture).Build();
+        }
+
+        /// <summary>
+        /// Overrides the <see cref="IAppraiser.TypeId" /> value returned by the
+        /// substitute.
+        /// </summary>
+        /// <param name="typeId">Type id. Must not be <c>null</c>.</param>
+        /// <returns>This builder, for fluent chaining.</returns>
+        public TestAppraiserBuilder WithTypeId(Type typeId)
+        {
+            typeId.ThrowIfNull(nameof(typeId));
+
+            _typeId = typeId;
+            return this;
+        }
+
+        /// <summary>
+        /// Overrides the <see cref="IAppraiser.Tag" /> value returned by the
+        /// substitute.
+        /// </summary>
+        /// <param name="tag">Tag value. Must not be <c>null</c>/whitespace.</param>
+        /// <returns>This builder, for fluent chaining.</returns>
+        public TestAppraiserBuilder WithTag(string tag)
+        {
+            tag.ThrowIfNullOrWhiteSpace(nameof(tag));
+
+            _tag = tag;
+            return this;
         }
 
         /// <summary>
@@ -66,12 +103,21 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
         /// <summary>
         /// Builds the <see cref="IAppraiser" /> substitute. If no
         /// <c>With*</c> method has been called, the substitute returns
-        /// whatever <see cref="NSubstitute" /> would by default
-        /// (<c>null</c> for reference types).
+        /// whatever AutoFixture / NSubstitute would by default.
         /// </summary>
         public IAppraiser Build()
         {
-            var substitute = Substitute.For<IAppraiser>();
+            var substitute = _fixture.Create<IAppraiser>();
+
+            if (_typeId is not null)
+            {
+                substitute.TypeId.Returns(_typeId);
+            }
+
+            if (_tag is not null)
+            {
+                substitute.Tag.Returns(_tag);
+            }
 
             if (_getRatingsHandler is not null)
             {

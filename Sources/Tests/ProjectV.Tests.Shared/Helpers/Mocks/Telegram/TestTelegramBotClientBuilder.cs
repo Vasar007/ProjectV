@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Acolyte.Assertions;
+using AutoFixture;
 using Telegram.Bot;
 using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types;
@@ -8,7 +9,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
 {
     /// <summary>
     /// Builder for <see cref="ITelegramBotClient" /> test doubles backed by
-    /// <see cref="NSubstitute" />. Lets a test inject a
+    /// AutoFixture + NSubstitute. Lets a test inject a
     /// deterministic bot-client into the
     /// <see cref="ProjectV.TelegramBotWebService" /> host without contacting
     /// the live Telegram API.
@@ -37,6 +38,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
     /// </remarks>
     public sealed class TestTelegramBotClientBuilder
     {
+        private readonly IFixture _fixture;
+
         private readonly List<Update> _updateSequence = new List<Update>();
 
         /// <summary>
@@ -45,8 +48,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
         /// configured until <see cref="WithUpdateSequence" /> is called or
         /// <see cref="Build" /> is invoked.
         /// </summary>
-        public TestTelegramBotClientBuilder()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public TestTelegramBotClientBuilder(IFixture fixture)
         {
+            _fixture = fixture.ThrowIfNull(nameof(fixture));
         }
 
         /// <summary>
@@ -58,9 +63,11 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
         /// where the test asserts on the controller response, not on the
         /// outgoing bot calls.
         /// </summary>
-        public static ITelegramBotClient CreateWithoutSetup()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public static ITelegramBotClient CreateWithoutSetup(IFixture fixture)
         {
-            return new TestTelegramBotClientBuilder().Build();
+            fixture.ThrowIfNull(nameof(fixture));
+            return new TestTelegramBotClientBuilder(fixture).Build();
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Telegram
         /// </summary>
         public ITelegramBotClient Build()
         {
-            var substitute = Substitute.For<ITelegramBotClient>();
+            var substitute = _fixture.Create<ITelegramBotClient>();
 
             if (_updateSequence.Count > 0)
             {

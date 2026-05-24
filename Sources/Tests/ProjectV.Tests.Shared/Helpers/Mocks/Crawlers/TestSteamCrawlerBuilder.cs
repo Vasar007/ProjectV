@@ -1,4 +1,5 @@
 ﻿using Acolyte.Assertions;
+using AutoFixture;
 using ProjectV.Crawlers;
 using ProjectV.Models.Data;
 
@@ -19,6 +20,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// </summary>
         public const string DefaultTag = "SteamCrawler";
 
+        private readonly IFixture _fixture;
+
         private readonly List<BasicInfo> _responses = new List<BasicInfo>();
         private string _tag = DefaultTag;
         private Type _typeId = typeof(BasicInfo);
@@ -30,8 +33,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// configured until <see cref="WithResponse" /> /
         /// <see cref="WithResponses" /> is called.
         /// </summary>
-        public TestSteamCrawlerBuilder()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public TestSteamCrawlerBuilder(IFixture fixture)
         {
+            _fixture = fixture.ThrowIfNull(nameof(fixture));
         }
 
         /// <summary>
@@ -39,9 +44,11 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// substitute with the <see cref="DefaultTag" /> and an empty
         /// response stream.
         /// </summary>
-        public static ICrawler CreateWithoutSetup()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public static ICrawler CreateWithoutSetup(IFixture fixture)
         {
-            return new TestSteamCrawlerBuilder().Build();
+            fixture.ThrowIfNull(nameof(fixture));
+            return new TestSteamCrawlerBuilder(fixture).Build();
         }
 
         /// <summary>
@@ -128,7 +135,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// </summary>
         public ICrawler Build()
         {
-            var substitute = Substitute.For<ICrawler>();
+            var substitute = _fixture.Create<ICrawler>();
 
             substitute.Tag.Returns(_tag);
             substitute.TypeId.Returns(_typeId);

@@ -125,7 +125,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             IReadOnlyDictionary<string, string?>? extraConfiguration = null)
             : this(
                 resolvedBotClientStub: new ResolvedBotStubs(
-                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup()),
+                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture())),
                 extraConfiguration: extraConfiguration)
         {
         }
@@ -232,7 +232,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             // BotMessageHandler resolves it eagerly when the singleton
             // graph is built.
             services.RemoveAll<ICommunicationServiceClient>();
-            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup());
+            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture()));
         }
 
         private static IReadOnlyDictionary<string, string?> BuildConfiguration(

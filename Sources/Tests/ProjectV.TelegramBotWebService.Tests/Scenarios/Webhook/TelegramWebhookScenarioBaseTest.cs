@@ -97,7 +97,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             IReadOnlyDictionary<string, string?>? extraConfiguration)
             : this(
                 resolvedBotClientStub: new ResolvedStub(
-                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup()),
+                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture())),
                 extraConfiguration: extraConfiguration)
         {
         }
@@ -150,7 +150,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             // outgoing comm-client calls; polling scenarios will
             // pass a configured stub via the same factory knob.
             services.RemoveAll<ICommunicationServiceClient>();
-            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup());
+            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture()));
         }
 
         private static IReadOnlyDictionary<string, string?> BuildConfiguration(

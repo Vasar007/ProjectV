@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Acolyte.Assertions;
 using Acolyte.Common;
+using AutoFixture;
 using ProjectV.Core.Services.Clients;
 using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
@@ -9,7 +10,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
 {
     /// <summary>
     /// Builder for <see cref="ICommunicationServiceClient" /> test doubles
-    /// backed by <see cref="NSubstitute" />.
+    /// backed by AutoFixture + NSubstitute.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -30,6 +31,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
     /// </remarks>
     public sealed class TestCommunicationServiceClientBuilder
     {
+        private readonly IFixture _fixture;
+
         private Result<TokenResponse, ErrorResponse>? _loginResponse;
         private Result<ProcessingResponse, ErrorResponse>? _startJobResponse;
 
@@ -39,8 +42,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
         /// behavior is configured until one of the <c>With*</c> methods is
         /// called.
         /// </summary>
-        public TestCommunicationServiceClientBuilder()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public TestCommunicationServiceClientBuilder(IFixture fixture)
         {
+            _fixture = fixture.ThrowIfNull(nameof(fixture));
         }
 
         /// <summary>
@@ -48,9 +53,11 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
         /// <see cref="ICommunicationServiceClient" /> substitute with no
         /// configured behavior.
         /// </summary>
-        public static ICommunicationServiceClient CreateWithoutSetup()
+        /// <param name="fixture">AutoFixture instance to create the substitute.</param>
+        public static ICommunicationServiceClient CreateWithoutSetup(IFixture fixture)
         {
-            return new TestCommunicationServiceClientBuilder().Build();
+            fixture.ThrowIfNull(nameof(fixture));
+            return new TestCommunicationServiceClientBuilder(fixture).Build();
         }
 
         /// <summary>
@@ -119,11 +126,11 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Core
         /// <summary>
         /// Builds the <see cref="ICommunicationServiceClient" /> substitute.
         /// If no <c>With*</c> method has been called, the substitute returns
-        /// whatever <see cref="NSubstitute" /> would by default.
+        /// whatever AutoFixture / NSubstitute would by default.
         /// </summary>
         public ICommunicationServiceClient Build()
         {
-            var substitute = Substitute.For<ICommunicationServiceClient>();
+            var substitute = _fixture.Create<ICommunicationServiceClient>();
 
             if (_loginResponse is { } loginResponse)
             {

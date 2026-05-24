@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using NSubstitute;
+using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Telegram;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -47,7 +48,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         /// </summary>
         public TelegramPollingProcessesUpdateSequenceTests()
             : base(
-                botClientStub: new TestTelegramBotClientBuilder()
+                botClientStub: new TestTelegramBotClientBuilder(BaseMockTest.CreateFixture())
                     .WithUpdateSequence(BuildUpdateSequence())
                     .Build())
         {

@@ -79,7 +79,7 @@ namespace ProjectV.DataPipeline.Tests
                 voteCount: 10_000,
                 voteAverage: 8.7
             );
-            ICrawler crawlerSubstitute = new TestTmdbCrawlerBuilder()
+            ICrawler crawlerSubstitute = new TestTmdbCrawlerBuilder(Fixture)
                 .WithResponse(expectedBasicInfo)
                 .Build();
 

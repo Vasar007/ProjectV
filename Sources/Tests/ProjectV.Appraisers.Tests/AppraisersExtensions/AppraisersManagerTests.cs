@@ -176,10 +176,10 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
                 ratingValue: 7.5,
                 ratingId: Guid.Empty);
 
-            var basicAppraiser = new TestAppraiserBuilder()
+            var basicAppraiser = new TestAppraiserBuilder(Fixture)
                 .WithRating(expectedRating)
+                .WithTypeId(typeof(BasicInfo))
                 .Build();
-            basicAppraiser.TypeId.Returns(typeof(BasicInfo));
 
             var sut = new TestAppraisersManagerBuilder()
                 .WithAppraiser(basicAppraiser)
