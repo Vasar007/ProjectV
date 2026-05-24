@@ -122,7 +122,7 @@ namespace ProjectV.Crawlers.Tests
         public void Remove_WithRegisteredCrawler_ReturnsTrueAndDropsTheCrawler()
         {
             // Arrange.
-            ICrawler crawler = CreateOmdbCrawler();
+            ICrawler crawler = CreateTmdbCrawler();
             using var sut = new CrawlersManager(outputResults: false);
             sut.Add(crawler);
 
@@ -142,11 +142,6 @@ namespace ProjectV.Crawlers.Tests
             return new TestTmdbCrawlerBuilder(Fixture)
                 .ApplyIf(throwOnGetResponse is not null, x => x.WithThrowOnGetResponse(throwOnGetResponse!))
                 .Build();
-        }
-
-        private ICrawler CreateOmdbCrawler()
-        {
-            return TestOmdbCrawlerBuilder.CreateWithoutSetup(Fixture);
         }
 
         #endregion

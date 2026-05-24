@@ -40,7 +40,7 @@ namespace ProjectV.OutputProcessing.Tests
         {
             // Arrange.
             var sut = BuildSut();
-            IOutputter outputter = Fixture.Create<IOutputter>();
+            IOutputter outputter = CreateOutputter();
             sut.Add(outputter);
 
             // Act.
@@ -76,7 +76,7 @@ namespace ProjectV.OutputProcessing.Tests
         {
             // Arrange.
             var sut = BuildSut();
-            sut.Add(Fixture.Create<IOutputter>());
+            sut.Add(CreateOutputter());
 
             // Act.
             OutputtersFlow actual = sut.CreateFlow(string.Empty);
@@ -136,7 +136,7 @@ namespace ProjectV.OutputProcessing.Tests
         {
             // Arrange.
             var sut = BuildSut();
-            IOutputter outputter = Fixture.Create<IOutputter>();
+            IOutputter outputter = CreateOutputter();
             sut.Add(outputter);
 
             // Act.
@@ -146,6 +146,16 @@ namespace ProjectV.OutputProcessing.Tests
             removed.Should().BeTrue(
                 "Remove must report success when the manager holds the supplied outputter"
             );
+        }
+
+        /// <summary>
+        /// Creates a bare <see cref="IOutputter" /> substitute via the shared
+        /// <see cref="BaseMockTest.Fixture" />. Centralises substitute creation
+        /// so test bodies do not call <c>Fixture.Create</c> directly.
+        /// </summary>
+        private IOutputter CreateOutputter()
+        {
+            return Fixture.Create<IOutputter>();
         }
 
         /// <summary>

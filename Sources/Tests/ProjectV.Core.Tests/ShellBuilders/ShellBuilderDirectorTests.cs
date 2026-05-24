@@ -40,7 +40,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithValidShellBuilder_DoesNotThrow()
         {
             // Arrange.
-            var shellBuilder = Fixture.Create<IShellBuilder>();
+            var shellBuilder = CreateShellBuilder();
 
             // Act.
             var act = () => new ShellBuilderDirector(shellBuilder);
@@ -53,7 +53,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void ChangeShellBuilder_WithNull_ThrowsArgumentNullException()
         {
             // Arrange.
-            var shellBuilder = Fixture.Create<IShellBuilder>();
+            var shellBuilder = CreateShellBuilder();
             var director = BuildSut(shellBuilder);
 
             // Act. / Assert.
@@ -67,9 +67,8 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_InvokesEveryBuilderStep()
         {
             // Arrange.
-            var shellBuilder = Fixture.Create<IShellBuilder>();
             var expectedShell = CreateRealEmptyShell();
-            shellBuilder.GetResult().Returns(expectedShell);
+            var shellBuilder = CreateShellBuilder(expectedShell);
             var director = BuildSut(shellBuilder);
 
             // Act.
@@ -93,9 +92,8 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_InvokesBuilderStepsInDeclaredOrder()
         {
             // Arrange.
-            var shellBuilder = Fixture.Create<IShellBuilder>();
             var expectedShell = CreateRealEmptyShell();
-            shellBuilder.GetResult().Returns(expectedShell);
+            var shellBuilder = CreateShellBuilder(expectedShell);
             var director = BuildSut(shellBuilder);
 
             // Act.
@@ -120,10 +118,9 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void MakeShell_AfterChangeShellBuilder_DispatchesToReplacedBuilder()
         {
             // Arrange.
-            var originalBuilder = Fixture.Create<IShellBuilder>();
-            var replacementBuilder = Fixture.Create<IShellBuilder>();
+            var originalBuilder = CreateShellBuilder();
             var expectedShell = CreateRealEmptyShell();
-            replacementBuilder.GetResult().Returns(expectedShell);
+            var replacementBuilder = CreateShellBuilder(expectedShell);
 
             var director = BuildSut(originalBuilder);
 
@@ -138,6 +135,23 @@ namespace ProjectV.Core.Tests.ShellBuilders
             replacementBuilder.Received(1).GetResult();
 
             expectedShell.Dispose();
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IShellBuilder" /> substitute via the shared
+        /// <see cref="BaseMockTest.Fixture" />. When <paramref name="expectedResult" />
+        /// is provided, <see cref="IShellBuilder.GetResult" /> is stubbed to
+        /// return it; otherwise the substitute is returned bare.
+        /// </summary>
+        private IShellBuilder CreateShellBuilder(Shell? expectedResult = null)
+        {
+            var builder = Fixture.Create<IShellBuilder>();
+            if (expectedResult is not null)
+            {
+                builder.GetResult().Returns(expectedResult);
+            }
+
+            return builder;
         }
 
         /// <summary>

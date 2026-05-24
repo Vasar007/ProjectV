@@ -40,7 +40,7 @@ namespace ProjectV.InputProcessing.Tests
         {
             // Arrange.
             var sut = BuildSut();
-            IInputter inputter = Fixture.Create<IInputter>();
+            IInputter inputter = CreateInputter();
             sut.Add(inputter);
 
             // Act.
@@ -133,7 +133,7 @@ namespace ProjectV.InputProcessing.Tests
         {
             // Arrange.
             var sut = BuildSut();
-            IInputter inputter = Fixture.Create<IInputter>();
+            IInputter inputter = CreateInputter();
             sut.Add(inputter);
 
             // Act.
@@ -143,6 +143,16 @@ namespace ProjectV.InputProcessing.Tests
             removed.Should().BeTrue(
                 "Remove must report success when the manager holds the supplied inputter"
             );
+        }
+
+        /// <summary>
+        /// Creates a bare <see cref="IInputter" /> substitute via the shared
+        /// <see cref="BaseMockTest.Fixture" />. Centralises substitute creation
+        /// so test bodies do not call <c>Fixture.Create</c> directly.
+        /// </summary>
+        private IInputter CreateInputter()
+        {
+            return Fixture.Create<IInputter>();
         }
 
         /// <summary>
