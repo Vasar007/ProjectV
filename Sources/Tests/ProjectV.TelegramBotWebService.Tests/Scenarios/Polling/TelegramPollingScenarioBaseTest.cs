@@ -155,15 +155,15 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             IBotService Service)
         {
             public ResolvedBotStubs(ITelegramBotClient client)
-                : this(client, BuildBotServiceSubstitute(client))
+                : this(client, BuildBotServiceStub(client))
             {
             }
 
-            private static IBotService BuildBotServiceSubstitute(
+            private static IBotService BuildBotServiceStub(
                 ITelegramBotClient client)
             {
-                var substitute = Substitute.For<IBotService>();
-                substitute.BotClient.Returns(client);
+                var stub = Substitute.For<IBotService>();
+                stub.BotClient.Returns(client);
 
                 // BotPolling.StartReceivingUpdatesAsync calls
                 // _botService.DeleteWebhookAsync(...) before entering the
@@ -171,7 +171,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 // methods is Task.CompletedTask, but explicit configuration
                 // makes the intent obvious and removes any ambiguity if
                 // NSubstitute changes its default behaviour.
-                substitute
+                stub
                     .DeleteWebhookAsync(
                         Arg.Any<bool>(),
                         Arg.Any<System.Threading.CancellationToken>())
@@ -184,7 +184,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 // production code awaits the result and proceeds without
                 // dereferencing it, so the default is fine. Stub explicitly
                 // for clarity.
-                substitute
+                stub
                     .SendMessageAsync(
                         Arg.Any<global::Telegram.Bot.Types.ChatId>(),
                         Arg.Any<string>(),
@@ -205,7 +205,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                         Id = 0
                     }));
 
-                return substitute;
+                return stub;
             }
         }
 

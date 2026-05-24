@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NSubstitute;
 using ProjectV.Core.Services.Clients;
 using ProjectV.TelegramBotWebService.Options;
+using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Core;
@@ -136,10 +136,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             ITelegramBotClient botClientStub)
         {
             services.RemoveAll<IBotService>();
-
-            var botServiceSubstitute = Substitute.For<IBotService>();
-            botServiceSubstitute.BotClient.Returns(botClientStub);
-            services.AddSingleton(botServiceSubstitute);
+            services.AddSingleton<IBotService>(new StubBotService(botClientStub));
 
             // The production CommunicationServiceClient's ctor instantiates
             // an HttpClient and validates RestApi/UserService options chain

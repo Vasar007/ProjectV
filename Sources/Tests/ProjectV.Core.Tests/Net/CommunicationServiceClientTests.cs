@@ -3,10 +3,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AutoFixture;
 using AwesomeAssertions;
 using Newtonsoft.Json;
-using NSubstitute;
 using ProjectV.Configuration.Options;
 using ProjectV.Core.Services.Clients;
 using ProjectV.Models.Authorization.Tokens;
@@ -14,6 +12,7 @@ using ProjectV.Models.WebServices.Requests;
 using ProjectV.Models.WebServices.Responses;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Http;
+using ProjectV.Tests.Shared.Helpers.Mocks.Net;
 using Xunit;
 
 namespace ProjectV.Core.Tests.Net
@@ -132,12 +131,13 @@ namespace ProjectV.Core.Tests.Net
         /// </summary>
         private CommunicationServiceClient CreateSut(FakeHttpMessageHandler handler)
         {
-            var httpClientFactory = Fixture.Create<IHttpClientFactory>();
             // CreateClientWithOptions appends Configure* calls to a fresh HttpClient
             // returned by CreateClient — the handler must be passed at HttpClient
             // construction time (not via the factory).
             var client = new HttpClient(handler, disposeHandler: false);
-            httpClientFactory.CreateClient(Arg.Any<string>()).Returns(client);
+            var httpClientFactory = new TestHttpClientFactoryBuilder(Fixture)
+                .WithHttpClient(client)
+                .Build();
 
             var serviceOptions = new ProjectVServiceOptions
             {
