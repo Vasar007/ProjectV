@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Platforms>$(AppPlatforms)</Platforms>
+    <Configurations>$(AppConfigurations)</Configurations>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>$(TestTargetFrameworks)</TargetFrameworks>
+    <LangVersion>$(CSharpLangVersion)</LangVersion>
+    <RootNamespace>ProjectV.Tests.Shared</RootNamespace>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!--
+    Core test stack (xunit, AwesomeAssertions, NSubstitute, …) and opt-in
+    stack (WireMock.Net, Testcontainers, AspNetCore.Mvc.Testing,
+    TimeProvider.Testing) come from Sources/Tests/Directory.Build.props —
+    no per-csproj PackageReference for the shared stack.
+
+    Microsoft.Extensions.DependencyInjection / Hosting are needed by
+    BaseDependencyInjectionTests; their versions live in
+    Sources/Directory.Packages.props (CPM).
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Acolyte.NET" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Telegram.Bot" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Appraisers\ProjectV.Appraisers.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Core\ProjectV.Core.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Crawlers\ProjectV.Crawlers.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.DataPipeline\ProjectV.DataPipeline.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.InputProcessing\ProjectV.InputProcessing.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.OutputProcessing\ProjectV.OutputProcessing.csproj" />
+  </ItemGroup>
+
+</Project>

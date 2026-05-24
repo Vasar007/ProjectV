@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# ProjectV.Desktop.sln - Windows-only mirror of ProjectV.sln plus ProjectV.DesktopApp (WPF). Per D-01.
+# ProjectV.Desktop.sln - Windows-only mirror of ProjectV.sln that includes ProjectV.DesktopApp (WPF).
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1

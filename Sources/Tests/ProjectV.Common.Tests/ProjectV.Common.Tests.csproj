@@ -11,16 +11,21 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <!--
+    Core test stack (coverlet.collector, Microsoft.NET.Test.Sdk, xunit,
+    xunit.runner.visualstudio, AwesomeAssertions, NSubstitute, …) is supplied
+    by Sources/Tests/Directory.Build.props (no per-csproj PackageReference
+    entries for the shared stack).
+  -->
+
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.CommonCSharp\ProjectV.CommonCSharp.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ProjectV.Models\ProjectV.Models.csproj" />
+    <ProjectReference Include="$(SolutionDir)Tests\ProjectV.Tests.Shared\ProjectV.Tests.Shared.csproj" />
   </ItemGroup>
 
 </Project>
