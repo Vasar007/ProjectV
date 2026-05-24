@@ -80,7 +80,8 @@ namespace ProjectV.DataAccessLayer.Tests
             // Assert.
             actualValue.Should().BeTrue(
                 "every DbContext produced by DbCollectionFixture must carry " +
-                "CanUseDatabase=true — Pitfall 2 in 02-RESEARCH.md.");
+                "CanUseDatabase=true — otherwise OnConfiguring / OnModelCreating " +
+                "short-circuits and the context is unusable.");
 
             // Sanity check: round-trip a trivial query to confirm the Npgsql
             // connection actually opens against the container.

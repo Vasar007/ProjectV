@@ -86,8 +86,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
 
             // Act.
             // Wait for the polling loop to drain the scripted updates with
-            // a bounded timeout (Critical Finding #6 mitigation: prevents
-            // the test from hanging if the receive loop is misconfigured).
+            // a bounded timeout — prevents the test from hanging if the
+            // receive loop is misconfigured.
             using var timeoutSource = new CancellationTokenSource(
                 TimeSpan.FromSeconds(15));
             await WaitForExpectedSendMessageCountAsync(

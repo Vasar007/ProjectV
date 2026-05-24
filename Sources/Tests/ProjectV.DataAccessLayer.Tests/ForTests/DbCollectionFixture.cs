@@ -59,7 +59,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
         /// </summary>
         public DbCollectionFixture()
         {
-            // Pin the image via the new (required) builder ctor (Pitfall 1) —
+            // Pin the image via the new (required) builder ctor —
             // avoids first-pull surprises on CI. The legacy parameterless
             // builder + WithImage(...) chain is obsolete in Testcontainers 4.11.
             _container = new PostgreSqlBuilder("postgres:16.4")
@@ -67,7 +67,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
                 .WithUsername("test_user")
                 .WithPassword("test_pass")
                 // Avoid the first-pull race where the port is bound before the
-                // server is ready to accept connections (Pitfall 1).
+                // server is ready to accept connections.
                 // UntilInternalTcpPortIsAvailable(5432) waits for the container
                 // process itself to bind 5432; equivalent to the legacy
                 // UntilPortIsAvailable strategy.
@@ -106,7 +106,7 @@ namespace ProjectV.DataAccessLayer.Tests.ForTests
         {
             // CRITICAL: CanUseDatabase MUST be true — the production
             // ProjectVDbContext.OnConfiguring / OnModelCreating short-circuit
-            // when it is false (RESEARCH.md Critical Finding #2 / Pitfall 2).
+            // when it is false.
             var options = new DatabaseOptions(
                 dbConnectionString: ConnectionString,
                 canUseDatabase: true

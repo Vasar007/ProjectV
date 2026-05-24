@@ -76,7 +76,7 @@ namespace ProjectV.SteamService.Tests
         public Task InitializeAsync()
         {
             // Stub /ISteamApps/GetAppList/v0002/ GET → recorded app list.
-            // Pitfall 3: raw-string body (NOT WithBodyAsJson + JObject.Parse)
+            // Use raw-string body (NOT WithBodyAsJson + JObject.Parse)
             // — avoids WireMock.Net serializer / Newtonsoft.Json casing
             // conflict.
             string appList = FixtureLoader.LoadJsonFixture(AppListFixturePath);

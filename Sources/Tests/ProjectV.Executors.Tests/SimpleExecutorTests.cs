@@ -19,10 +19,9 @@ namespace ProjectV.Executors.Tests
     /// <c>Docs/Testing/Coverage/test-coverage.md</c> per
     /// <c>ARCHITECTURE.md</c> § "Anti-Patterns": the test asserts the CURRENT
     /// (anti-pattern) behaviour — the eventual fix that wires the executor to
-    /// the persisted job config is deferred to a future phase per
-    /// <c>02-CONTEXT.md</c> § "Deferred Ideas". When that fix lands, this
-    /// test should be replaced with one that exercises the real persisted
-    /// execution path.
+    /// the persisted job config is deferred to a future phase. When that fix
+    /// lands, this test should be replaced with one that exercises the real
+    /// persisted execution path.
     /// </para>
     /// <para>
     /// The throw is synchronous (the production method is not <c>async</c>;
@@ -61,8 +60,8 @@ namespace ProjectV.Executors.Tests
             await act.Should()
                      .ThrowAsync<NotImplementedException>(
                          "the parameterless overload is documented as an anti-pattern stub " +
-                         "in ARCHITECTURE.md and 02-CONTEXT.md § Deferred Ideas — its current " +
-                         "behaviour is a synchronous throw with the in-code TODO message"
+                         "in ARCHITECTURE.md — its current behaviour is a synchronous throw " +
+                         "with the in-code TODO message"
                      );
         }
 

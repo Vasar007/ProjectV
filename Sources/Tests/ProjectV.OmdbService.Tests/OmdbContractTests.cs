@@ -76,7 +76,7 @@ namespace ProjectV.OmdbService.Tests
             // the WireMock port). Doing the throwing work first means any
             // failure happens before the global is touched.
             //
-            // Pitfall 3: raw-string body (NOT WithBodyAsJson + JObject.Parse)
+            // Use raw-string body (NOT WithBodyAsJson + JObject.Parse)
             // — avoids WireMock.Net serializer / Newtonsoft.Json casing
             // conflict.
             string successBody = FixtureLoader.LoadJsonFixture(MovieByTitleSuccessFixturePath);

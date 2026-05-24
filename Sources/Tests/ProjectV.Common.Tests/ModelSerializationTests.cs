@@ -20,8 +20,7 @@ namespace ProjectV.Common.Tests
             // (see Sources/Libraries/ProjectV.Models/Data/BasicInfo.cs), so
             // Newtonsoft.Json round-trips correctly even without a parameterless
             // ctor. This replaces the System.Text.Json approach that required a
-            // parameterless ctor and was the reason the original test was Skip'd
-            // (Pitfall 7 — Plan §Task 3).
+            // parameterless ctor and was the reason the original test was Skip'd.
             var expectedModel = new BasicInfo(42, "Title", 100, 9.9);
 
             // Act.

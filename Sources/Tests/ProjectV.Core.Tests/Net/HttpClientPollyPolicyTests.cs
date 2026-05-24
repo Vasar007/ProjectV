@@ -23,8 +23,8 @@ namespace ProjectV.Core.Tests.Net
     /// Uses an in-test <see cref="FakeHttpMessageHandler" /> (DelegatingHandler
     /// subclass) to simulate transient HTTP errors — the
     /// <c>Substitute.For&lt;HttpMessageHandler&gt;</c> anti-pattern is avoided
-    /// because NSubstitute cannot mock protected methods (02-RESEARCH.md
-    /// "Pitfall 6"). Production code under test:
+    /// because NSubstitute cannot mock protected methods. Production code
+    /// under test:
     /// <c>services.AddHttpClient(name).AddHttpOptions(options)</c> →
     /// <c>AddTransientHttpErrorPolicy(...)</c> →
     /// <c>WaitAndRetryWithOptionsAsync(retryCount = RetryCountOnFailed,

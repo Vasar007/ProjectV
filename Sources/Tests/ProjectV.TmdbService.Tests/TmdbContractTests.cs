@@ -66,7 +66,7 @@ namespace ProjectV.TmdbService.Tests
         public Task InitializeAsync()
         {
             // Stub /3/search/movie GET → recorded success container.
-            // Pitfall 3: raw-string body via FixtureLoader (NOT WithBodyAsJson +
+            // Use raw-string body via FixtureLoader (NOT WithBodyAsJson +
             // JObject.Parse) — avoids WireMock.Net serializer / Newtonsoft.Json
             // casing conflict that mangles property names.
             string searchSuccess = FixtureLoader.LoadJsonFixture(SearchMovieFixturePath);

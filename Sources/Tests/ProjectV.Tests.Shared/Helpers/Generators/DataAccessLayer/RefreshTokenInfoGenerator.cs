@@ -16,7 +16,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     ///     <item>
     ///         <description><c>Generate*</c> — every argument is optional;
     ///         unspecified values come from deterministic helpers (seeded
-    ///         <see cref="Random" /> seed 42 per Specifics §5 + GUIDs).</description>
+    ///         <see cref="Random" /> seed 42 for deterministic runs + GUIDs).</description>
     ///     </item>
     /// </list>
     /// </summary>
