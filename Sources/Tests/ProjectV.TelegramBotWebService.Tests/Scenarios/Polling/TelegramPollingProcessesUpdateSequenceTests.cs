@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
-using NSubstitute;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Telegram;
+using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Xunit;
@@ -95,7 +96,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 ExpectedUpdateCount, timeoutSource.Token);
 
             // Assert.
-            BotServiceStub.ReceivedCalls()
+            BotServiceStub.CalledMethodNames
                 .Should()
                 .NotBeEmpty(
                     "the polling loop must have forwarded at least one " +
@@ -180,21 +181,12 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
 
         private int CountSendMessageCalls()
         {
-            // BotServiceStub.ReceivedCalls() iterates every NSubstitute call
-            // (including the DeleteWebhookAsync call). Filter to the
-            // SendMessageAsync method so the count reflects only the
+            // BotServiceStub.CalledMethodNames includes every IBotService call
+            // (including the DeleteWebhookAsync call at the start of the polling
+            // loop). Filter to SendMessageAsync so the count reflects only the
             // handler-chain end-state.
-            int count = 0;
-            foreach (var call in BotServiceStub.ReceivedCalls())
-            {
-                if (call.GetMethodInfo().Name ==
-                    nameof(BotServiceStub.SendMessageAsync))
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return BotServiceStub.CalledMethodNames
+                .Count(name => name == nameof(IBotService.SendMessageAsync));
         }
     }
 }

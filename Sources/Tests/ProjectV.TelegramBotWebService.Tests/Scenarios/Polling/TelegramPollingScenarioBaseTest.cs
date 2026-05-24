@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NSubstitute;
 using ProjectV.Core.Services.Clients;
 using ProjectV.TelegramBotWebService.Options;
+using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.Tests.Shared.ForTests;
@@ -28,23 +28,25 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     /// The processor calls <c>IBotPolling.StartReceivingUpdatesAsync</c>, which
     /// in turn calls <c>IBotService.DeleteWebhookAsync</c> and then
     /// <c>IBotService.BotClient.ReceiveAsync(...)</c> — the production polling
-    /// loop. Second, the test asserts on the in-process call-count of the
-    /// substituted <c>IBotService.SendMessageAsync</c> (one call per update
-    /// the production handler chain drains) rather than on an HTTP response,
-    /// because the polling path has no outbound HTTP response surface.
+    /// loop. Second, the test asserts on the in-process call-count recorded by
+    /// the <see cref="StubBotService" /> (one <c>SendMessageAsync</c> call per
+    /// update the production handler chain drains) rather than on an HTTP
+    /// response, because the polling path has no outbound HTTP response
+    /// surface.
     /// </para>
     /// <para>
     /// Like the webhook base, this base class:
     /// </para>
     /// <list type="bullet">
     ///   <item><description>Removes the production
-    ///   <see cref="IBotService" /> singleton and re-registers an
-    ///   NSubstitute substitute whose <c>BotClient</c> property returns the
-    ///   supplied <see cref="ITelegramBotClient" /> stub. The substitute also
-    ///   stubs <c>DeleteWebhookAsync</c> and <c>SendMessageAsync</c> so the
-    ///   polling loop's first call (<c>DeleteWebhookAsync</c>) does not
-    ///   NPE and so the handler-chain assertion can read
-    ///   <c>Received(N).SendMessageAsync(...)</c> deterministically.</description></item>
+    ///   <see cref="IBotService" /> singleton and re-registers a
+    ///   <see cref="StubBotService" /> whose <c>BotClient</c> property returns
+    ///   the supplied <see cref="ITelegramBotClient" /> stub. The stub handles
+    ///   <c>DeleteWebhookAsync</c> (no-op) and records every
+    ///   <c>SendMessageAsync</c> invocation in
+    ///   <see cref="StubBotService.CalledMethodNames" /> so the handler-chain
+    ///   assertion can read the call count deterministically without
+    ///   NSubstitute.</description></item>
     ///   <item><description>Removes the production
     ///   <see cref="ICommunicationServiceClient" /> transient and re-registers a
     ///   no-setup
@@ -62,8 +64,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     ///   is built. The <c>PoolingProcessor</c> factory
     ///   (<c>PoolingProcessor.Create</c>) resolves <c>IBotPolling</c> from the
     ///   container at host start; <c>BotPolling</c>'s ctor pulls
-    ///   <c>IBotService</c>, which by then is the test-side substitute (the
-    ///   test override registered in <c>ConfigureTestServices</c> runs AFTER
+    ///   <c>IBotService</c>, which by then is the test-side stub (the test
+    ///   override registered in <c>ConfigureTestServices</c> runs AFTER
     ///   <c>Startup.ConfigureServices</c> but BEFORE the host starts its
     ///   <c>IHostedService</c> instances, so the substitution wins).</description></item>
     ///   <item><description>Supplies a non-empty dummy <c>Bot:Token</c> so
@@ -72,35 +74,36 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     ///   dummy token is never used because <c>IBotService</c> is replaced.</description></item>
     /// </list>
     /// <para>
-    /// The bot-client substitute is exposed as <see cref="BotClientStub" /> so
+    /// The bot-client stub is exposed as <see cref="BotClientStub" /> so
     /// derived scenarios can build it via
     /// <see cref="TestTelegramBotClientBuilder.WithUpdateSequence(System.Collections.Generic.IEnumerable{global::Telegram.Bot.Types.Update})" />
     /// and assert on outgoing <c>SendRequest</c> calls if needed. The
-    /// <c>IBotService</c> substitute is exposed as <see cref="BotServiceStub" />
+    /// <see cref="StubBotService" /> is exposed as <see cref="BotServiceStub" />
     /// so scenarios can assert on the production handler chain's downstream
-    /// calls (e.g. <c>BotServiceStub.Received(N).SendMessageAsync(...)</c>).
+    /// calls via <c>BotServiceStub.CalledMethodNames</c>.
     /// </para>
     /// </remarks>
     public abstract class TelegramPollingScenarioBaseTest : WebApiBaseTest<Startup>
     {
         /// <summary>
-        /// Gets the <see cref="ITelegramBotClient" /> NSubstitute substitute
-        /// the host's <see cref="IBotService" /> exposes via its
-        /// <c>BotClient</c> property. Typically built via
+        /// Gets the <see cref="ITelegramBotClient" /> stub the host's
+        /// <see cref="IBotService" /> exposes via its <c>BotClient</c>
+        /// property. Typically built via
         /// <see cref="TestTelegramBotClientBuilder.WithUpdateSequence(System.Collections.Generic.IEnumerable{global::Telegram.Bot.Types.Update})" />
         /// in the derived ctor.
         /// </summary>
         protected ITelegramBotClient BotClientStub { get; }
 
         /// <summary>
-        /// Gets the <see cref="IBotService" /> NSubstitute substitute the
-        /// host resolves in place of the production singleton. Derived
-        /// scenarios can assert on
-        /// <c>BotServiceStub.Received(N).SendMessageAsync(...)</c> to
-        /// verify the production handler chain drained the expected number
-        /// of updates.
+        /// Gets the <see cref="StubBotService" /> the host resolves in place
+        /// of the production singleton. Derived scenarios can assert on
+        /// <c>BotServiceStub.CalledMethodNames</c> to verify which
+        /// <see cref="IBotService" /> methods the production handler chain
+        /// invoked and how many times (e.g., count entries equal to
+        /// <c>nameof(IBotService.SendMessageAsync)</c> to confirm the
+        /// expected number of updates were drained).
         /// </summary>
-        protected IBotService BotServiceStub { get; }
+        protected StubBotService BotServiceStub { get; }
 
         /// <summary>
         /// Initializes a new instance of the
@@ -152,60 +155,17 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         // configureTestServices delegate and the protected properties.
         private readonly record struct ResolvedBotStubs(
             ITelegramBotClient Client,
-            IBotService Service)
+            StubBotService Service)
         {
             public ResolvedBotStubs(ITelegramBotClient client)
                 : this(client, BuildBotServiceStub(client))
             {
             }
 
-            private static IBotService BuildBotServiceStub(
+            private static StubBotService BuildBotServiceStub(
                 ITelegramBotClient client)
             {
-                var stub = Substitute.For<IBotService>();
-                stub.BotClient.Returns(client);
-
-                // BotPolling.StartReceivingUpdatesAsync calls
-                // _botService.DeleteWebhookAsync(...) before entering the
-                // receive loop. NSubstitute's default for Task-returning
-                // methods is Task.CompletedTask, but explicit configuration
-                // makes the intent obvious and removes any ambiguity if
-                // NSubstitute changes its default behaviour.
-                stub
-                    .DeleteWebhookAsync(
-                        Arg.Any<bool>(),
-                        Arg.Any<System.Threading.CancellationToken>())
-                    .Returns(Task.CompletedTask);
-
-                // BotMessageHandler.ProcessAsync routes every recognised
-                // command to _botService.SendMessageAsync(...). Without a
-                // configured return, NSubstitute would still hand back a
-                // completed Task<Message> with a null result — but the
-                // production code awaits the result and proceeds without
-                // dereferencing it, so the default is fine. Stub explicitly
-                // for clarity.
-                stub
-                    .SendMessageAsync(
-                        Arg.Any<global::Telegram.Bot.Types.ChatId>(),
-                        Arg.Any<string>(),
-                        Arg.Any<global::Telegram.Bot.Types.Enums.ParseMode>(),
-                        Arg.Any<global::Telegram.Bot.Types.ReplyParameters?>(),
-                        Arg.Any<global::Telegram.Bot.Types.ReplyMarkups.ReplyMarkup?>(),
-                        Arg.Any<global::Telegram.Bot.Types.LinkPreviewOptions?>(),
-                        Arg.Any<int?>(),
-                        Arg.Any<System.Collections.Generic.IEnumerable<global::Telegram.Bot.Types.MessageEntity>?>(),
-                        Arg.Any<bool>(),
-                        Arg.Any<bool>(),
-                        Arg.Any<string?>(),
-                        Arg.Any<string?>(),
-                        Arg.Any<bool>(),
-                        Arg.Any<System.Threading.CancellationToken>())
-                    .Returns(Task.FromResult(new global::Telegram.Bot.Types.Message
-                    {
-                        Id = 0
-                    }));
-
-                return stub;
+                return new StubBotService(client);
             }
         }
 
@@ -222,7 +182,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             ResolvedBotStubs resolved)
         {
             services.RemoveAll<IBotService>();
-            services.AddSingleton(resolved.Service);
+            services.AddSingleton<IBotService>(resolved.Service);
 
             // Same rationale as the webhook base class: the production
             // CommunicationServiceClient validates a strict options chain

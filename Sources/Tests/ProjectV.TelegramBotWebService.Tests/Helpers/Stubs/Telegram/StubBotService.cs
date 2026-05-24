@@ -13,21 +13,48 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
     /// <summary>
     /// Scenario-test stub for <see cref="IBotService" />. Owns a real (or
     /// fake) <see cref="ITelegramBotClient" /> and returns deterministic
-    /// no-op completions for the API surface exercised by webhook scenario
-    /// tests. Per the <c>create-tests</c> scenario rules, scenario tests
-    /// must use stubs (named <c>Stub{DependencyName}</c>) rather than
-    /// NSubstitute mocks for types they own.
+    /// no-op completions for the API surface exercised by scenario tests.
+    /// Per the <c>create-tests</c> scenario rules, scenario tests must use
+    /// stubs (named <c>Stub{DependencyName}</c>) rather than NSubstitute
+    /// mocks for types they own.
     /// </summary>
     /// <remarks>
-    /// This stub is intentionally stateless with respect to resource ownership —
-    /// the underlying <see cref="ITelegramBotClient" /> is provided by the
-    /// test composition root and is not disposed here. The methods return
-    /// deterministic no-op values that satisfy the contracts exercised by
-    /// the webhook path; the polling path relies on a separate mechanism for
-    /// call-tracking assertions.
+    /// This stub records the name of every <see cref="IBotService" /> method
+    /// that the production code invokes, in invocation order. Scenario tests
+    /// use <see cref="CalledMethodNames" /> to assert on the production
+    /// handler chain's interaction shape without relying on NSubstitute's
+    /// call-tracking API. The underlying <see cref="ITelegramBotClient" /> is
+    /// provided by the test composition root and is not disposed here. Because
+    /// the polling path can drive <c>SendMessageAsync</c> from concurrent
+    /// handler invocations, the call list is protected by a lock so that
+    /// invocation order is deterministic and no records are lost.
     /// </remarks>
     public sealed class StubBotService : IBotService
     {
+        private readonly object _callsLock = new();
+
+        private readonly List<string> _calledMethodNames = new();
+
+        /// <summary>
+        /// Gets a snapshot of the <see cref="IBotService" /> method names
+        /// that the production code has invoked on this stub, in invocation
+        /// order. Scenario tests read this property to assert on the
+        /// interaction shape of the production handler chain (e.g., that
+        /// <c>SendMessageAsync</c> was called the expected number of times).
+        /// The returned list is a point-in-time copy; it does not update after
+        /// capture.
+        /// </summary>
+        public IReadOnlyList<string> CalledMethodNames
+        {
+            get
+            {
+                lock (_callsLock)
+                {
+                    return _calledMethodNames.AsReadOnly();
+                }
+            }
+        }
+
         /// <inheritdoc />
         public ITelegramBotClient BotClient { get; }
 
@@ -57,6 +84,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             IEnumerable<UpdateType>? allowedUpdates = default,
             CancellationToken cancellationToken = default)
         {
+            lock (_callsLock)
+            {
+                _calledMethodNames.Add(nameof(GetUpdatesAsync));
+            }
+
             return Task.FromResult<IReadOnlyList<Update>>(System.Array.Empty<Update>());
         }
 
@@ -70,6 +102,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             bool dropPendingUpdates = default,
             CancellationToken cancellationToken = default)
         {
+            lock (_callsLock)
+            {
+                _calledMethodNames.Add(nameof(SetWebhookAsync));
+            }
+
             return Task.CompletedTask;
         }
 
@@ -78,6 +115,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             bool dropPendingUpdates = default,
             CancellationToken cancellationToken = default)
         {
+            lock (_callsLock)
+            {
+                _calledMethodNames.Add(nameof(DeleteWebhookAsync));
+            }
+
             return Task.CompletedTask;
         }
 
@@ -85,6 +127,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
         public Task<WebhookInfo> GetWebhookInfoAsync(
             CancellationToken cancellationToken = default)
         {
+            lock (_callsLock)
+            {
+                _calledMethodNames.Add(nameof(GetWebhookInfoAsync));
+            }
+
             return Task.FromResult(new WebhookInfo());
         }
 
@@ -105,6 +152,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             bool allowPaidBroadcast = default,
             CancellationToken cancellationToken = default)
         {
+            lock (_callsLock)
+            {
+                _calledMethodNames.Add(nameof(SendMessageAsync));
+            }
+
             return Task.FromResult(new Message());
         }
 
