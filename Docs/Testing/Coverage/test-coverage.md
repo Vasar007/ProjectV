@@ -21,12 +21,12 @@ When a row's covering test file lands, update it by:
    committed test file(s) that cover the row (e.g.
    `Sources/Tests/ProjectV.Appraisers.Tests/AppraiserTests.cs`).
 3. Never deleting rows. Paths can be promoted to `tested around` if an
-   architectural decision (`ARCHITECTURE.md` § "Anti-Patterns") pushes them
-   out of direct test scope; the row stays as the audit trail.
+   architectural anti-pattern decision pushes them out of direct test scope;
+   the row stays as the audit trail.
 
 Cross-references: this document is the source of truth that
 [`projectv-scenario-tests-overview.md`](../Scenarios/projectv-scenario-tests-overview.md)
-and `ARCHITECTURE.md` point back to.
+points back to.
 
 ## Legend
 
@@ -36,7 +36,7 @@ and `ARCHITECTURE.md` point back to.
 | `Component`          | The production library or web service that owns the path.                                                                                                                                                                                                                                                   |
 | `Planned Test Project` | The canonical `ProjectV.<Library>.Tests` project that will hold the test(s). Convention: one test project per production library; `ProjectV.Tests.Shared` holds shared test infrastructure.                                                                                                               |
 | `Test Type`          | `Unit` (NSubstitute-mocked collaborators, AwesomeAssertions on return) / `Integration` (real composition, real Testcontainers Postgres, real EF Core) / `Contract` (WireMock.Net HTTP stubs fed from recorded JSON fixtures) / `Unit (F#)` (Unquote quoted-expression assertions, F# stack stays as-is). |
-| `Status`             | `planned` (no covering test yet) / `partially covered` (some coverage exists, more needed) / `covered` (verified by a committed test, see Test Files) / `tested around` (path is verified through a higher-level path; ARCHITECTURE.md anti-pattern means we test what's there, not what we wish were there). |
+| `Status`             | `planned` (no covering test yet) / `partially covered` (some coverage exists, more needed) / `covered` (verified by a committed test, see Test Files) / `tested around` (path is verified through a higher-level path; an architectural anti-pattern means we test what's there, not what we wish were there). |
 
 ### Status vocabulary
 
@@ -44,7 +44,7 @@ and `ARCHITECTURE.md` point back to.
 - `partially covered` — at least one test exists; the remaining shape is named in the row notes.
 - `partially covered (skip resolved)` — the historical `[Fact(Skip = "…")]` blocker on the `BasicInfo` JSON round-trip in `ProjectV.Common.Tests` was removed as part of the test-bootstrap retrofit (PR #342). Row stays `partially covered` because the broader model-invariants surface ports to `ProjectV.Models.Tests` per row.
 - `covered` — a committed test file under `Sources/Tests/ProjectV.<Library>.Tests/` exercises the path; the test-file path is listed in the `Test Files` column.
-- `tested around` — the path is exercised indirectly through a higher-level integration test because an architectural anti-pattern blocks direct unit testing (see ARCHITECTURE.md § "Anti-Patterns" — `Shell` references concrete plugin assemblies; `SimpleExecutor.ExecuteAsync()` is a `NotImplementedException` stub; `ServiceRequestProcessor.CreateExecutorAsync` rebuilds the pipeline per request).
+- `tested around` — the path is exercised indirectly through a higher-level integration test because an architectural anti-pattern blocks direct unit testing (`Shell` references concrete plugin assemblies; `SimpleExecutor.ExecuteAsync()` is a `NotImplementedException` stub; `ServiceRequestProcessor.CreateExecutorAsync` rebuilds the pipeline per request).
 
 ## Trait conventions
 
@@ -86,7 +86,7 @@ the explicit `fsproj` invocation (`Test (F#)` stage in CI).
 | `CrawlersManager.TryGetResponse` — rethrows original exception on child-crawler failure | `ProjectV.Crawlers` | `ProjectV.Crawlers.Tests` | Unit | covered (rethrow assertion via reflection on the private method with a throwing `ICrawler` substitute). The `_logger.Error(...)` side-effect is NOT directly substituted in this Unit suite because the logger is a `private static readonly` field initialised via `LoggerFactory.CreateLoggerFor<CrawlersManager>()`. Also covers constructor + `Add` null-guard + `Remove` happy path. | `Sources/Tests/ProjectV.Crawlers.Tests/CrawlersManagerTests.cs` |
 | `InputManager.CreateFlow` — returns non-null `InputtersFlow` for empty + populated registrations and empty storage-name fallback | `ProjectV.InputProcessing` | `ProjectV.InputProcessing.Tests` | Unit | covered (CreateFlow non-null with/without registered inputters; empty storage-name → default fallback; ctor null/whitespace guard; Add null-guard; Remove round-trip) | `Sources/Tests/ProjectV.InputProcessing.Tests/InputManagerTests.cs` |
 | `OutputManager.CreateFlow` — returns non-null `OutputtersFlow` for empty + populated registrations and empty storage-name fallback | `ProjectV.OutputProcessing` | `ProjectV.OutputProcessing.Tests` | Unit | covered (CreateFlow non-null with/without registered outputters; empty storage-name → default fallback; ctor null/whitespace guard; Add null-guard; Remove round-trip) | `Sources/Tests/ProjectV.OutputProcessing.Tests/OutputManagerTests.cs` |
-| `SimpleExecutor.ExecuteAsync()` — parameterless overload throws `NotImplementedException` | `ProjectV.Executors` | `ProjectV.Executors.Tests` | Unit | covered (tested around — anti-pattern documented in `ARCHITECTURE.md` § "Anti-Patterns"; the test asserts the current throw behaviour. Also covers ctor null-guard on `jobInfo`, `ArgumentOutOfRangeException` on non-positive `executionsNumber`, and happy-path property exposure.) | `Sources/Tests/ProjectV.Executors.Tests/SimpleExecutorTests.cs` |
+| `SimpleExecutor.ExecuteAsync()` — parameterless overload throws `NotImplementedException` | `ProjectV.Executors` | `ProjectV.Executors.Tests` | Unit | covered (tested around — the parameterless overload is an unfinished stub that throws rather than executing real job logic; the test asserts the current throw behaviour. Also covers ctor null-guard on `jobInfo`, `ArgumentOutOfRangeException` on non-positive `executionsNumber`, and happy-path property exposure.) | `Sources/Tests/ProjectV.Executors.Tests/SimpleExecutorTests.cs` |
 | `CommunicationServiceClient.LoginAsync` — happy path + 401 auth failure | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (NSubstitute IHttpClientFactory + FakeHttpMessageHandler) | covered (200 → `Result.Ok<TokenResponse>`; 401 → `Result.Error<ErrorResponse>`; null-arg guard). `StartJobAsync` happy path deferred to integration — the token-cache pre-flight + refresh-on-unauthorized policy chain requires real composition to exercise meaningfully. | `Sources/Tests/ProjectV.Core.Tests/Net/CommunicationServiceClientTests.cs` |
 | `AddHttpClientWithOptions` + Polly retry policy wiring — retry fires on transient HTTP error | `ProjectV.Core` | `ProjectV.Core.Tests` | Unit (FakeHttpMessageHandler DelegatingHandler) | covered (503 → 503 → 503 → 200 with `RetryCountOnFailed=3` → 4 invocations; always-503 → 1 + N retries; first-call-200 → 1 invocation) | `Sources/Tests/ProjectV.Core.Tests/Net/HttpClientPollyPolicyTests.cs` |
 
@@ -117,8 +117,8 @@ When a row's covering test file lands, update this document:
   repo-relative path(s) to the test file(s) that exercise the row.
 - Never delete rows. If an architectural change pushes a path out of direct
   test scope, promote it to `tested around` and add a one-sentence note
-  pointing at the higher-level test that now exercises it (or at the
-  `ARCHITECTURE.md` § "Anti-Patterns" entry that explains the indirection).
+  pointing at the higher-level test that now exercises it (or explaining the
+  anti-pattern that drove the indirection).
 - New critical paths discovered later are added as new rows under the
   matching layer section — keep the table header stable so the diff stays
   reviewable.
