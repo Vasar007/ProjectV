@@ -79,9 +79,7 @@ namespace ProjectV.DataPipeline.Tests
                 voteCount: 10_000,
                 voteAverage: 8.7
             );
-            ICrawler crawlerSubstitute = new TestTmdbCrawlerBuilder(Fixture)
-                .WithResponse(expectedBasicInfo)
-                .Build();
+            ICrawler crawlerSubstitute = CreateCrawler(expectedBasicInfo);
 
             var crawlerFuncs = new[]
             {
@@ -231,6 +229,13 @@ namespace ProjectV.DataPipeline.Tests
         }
 
         #region Helper Methods
+
+        private ICrawler CreateCrawler(BasicInfo response)
+        {
+            return new TestTmdbCrawlerBuilder(Fixture)
+                .WithResponse(response)
+                .Build();
+        }
 
         private IAppraiser CreateAppraiser(RatingDataContainer rating)
         {
