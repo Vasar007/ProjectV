@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
+using Acolyte.Common.Monads;
 using AwesomeAssertions;
+using ProjectV.Crawlers;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Mocks.Crawlers;
 using Xunit;
@@ -57,9 +59,7 @@ namespace ProjectV.Crawlers.Tests
             var expectedException = new InvalidOperationException(
                 "Simulated TMDb crawler failure for test."
             );
-            ICrawler throwingCrawler = new TestTmdbCrawlerBuilder(Fixture)
-                .WithThrowOnGetResponse(expectedException)
-                .Build();
+            ICrawler throwingCrawler = CreateTmdbCrawler(throwOnGetResponse: expectedException);
 
             using var sut = new CrawlersManager(outputResults: false);
             sut.Add(throwingCrawler);
@@ -122,7 +122,7 @@ namespace ProjectV.Crawlers.Tests
         public void Remove_WithRegisteredCrawler_ReturnsTrueAndDropsTheCrawler()
         {
             // Arrange.
-            ICrawler crawler = TestOmdbCrawlerBuilder.CreateWithoutSetup(Fixture);
+            ICrawler crawler = CreateOmdbCrawler();
             using var sut = new CrawlersManager(outputResults: false);
             sut.Add(crawler);
 
@@ -134,5 +134,21 @@ namespace ProjectV.Crawlers.Tests
                 "Remove must report success when the manager holds the supplied crawler"
             );
         }
+
+        #region Helper Methods
+
+        private ICrawler CreateTmdbCrawler(Exception? throwOnGetResponse = null)
+        {
+            return new TestTmdbCrawlerBuilder(Fixture)
+                .ApplyIf(throwOnGetResponse is not null, x => x.WithThrowOnGetResponse(throwOnGetResponse!))
+                .Build();
+        }
+
+        private ICrawler CreateOmdbCrawler()
+        {
+            return TestOmdbCrawlerBuilder.CreateWithoutSetup(Fixture);
+        }
+
+        #endregion
     }
 }
