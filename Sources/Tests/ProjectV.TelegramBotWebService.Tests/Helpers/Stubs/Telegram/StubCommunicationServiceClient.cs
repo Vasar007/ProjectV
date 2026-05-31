@@ -16,9 +16,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
     /// NSubstitute.
     /// </summary>
     /// <remarks>
-    /// Per the <c>create-tests</c> scenario rules, scenario tests must use
-    /// concrete stubs (named <c>Stub{DependencyName}</c>) rather than
-    /// NSubstitute mocks or <c>Test*Builder</c> helpers for types they own.
+    /// Scenario tests compose a real dependency graph using concrete stubs
+    /// instead of interface mocks, so external/leaf dependencies are replaced
+    /// with deterministic stub implementations rather than NSubstitute mocks
+    /// or <c>Test*Builder</c> helpers.
     /// </remarks>
     public sealed class StubCommunicationServiceClient : ICommunicationServiceClient
     {
@@ -39,8 +40,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             LoginRequest login,
             CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(
-                new Result<TokenResponse, ErrorResponse>(new ErrorResponse()));
+            Result<TokenResponse, ErrorResponse> result = Result.Error<ErrorResponse>(new ErrorResponse());
+            return Task.FromResult(result);
         }
 
         /// <inheritdoc />
@@ -52,8 +53,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             StartJobParamsRequest jobParams,
             CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(
-                new Result<ProcessingResponse, ErrorResponse>(new ErrorResponse()));
+            Result<ProcessingResponse, ErrorResponse> result = Result.Error<ErrorResponse>(new ErrorResponse());
+            return Task.FromResult(result);
         }
 
         /// <inheritdoc />

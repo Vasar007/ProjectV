@@ -35,9 +35,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
     /// and are never invoked during the scenario flows exercised by the tests.
     /// </para>
     /// <para>
-    /// Per the <c>create-tests</c> scenario rules, scenario tests must use
-    /// concrete stubs (named <c>Stub{DependencyName}</c>) rather than
-    /// NSubstitute mocks or <c>Test*Builder</c> helpers for types they own.
+    /// Scenario tests compose a real dependency graph using concrete stubs
+    /// instead of interface mocks, so external/leaf dependencies are replaced
+    /// with deterministic stub implementations rather than NSubstitute mocks
+    /// or <c>Test*Builder</c> helpers.
     /// </para>
     /// </remarks>
     public sealed class StubTelegramBotClient : ITelegramBotClient
@@ -118,7 +119,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
             var batch = new Update[updates.Count];
             for (int i = 0; i < updates.Count; i++)
             {
-                updates[i].ThrowIfNull(nameof(updates));
+                updates[i].ThrowIfNull($"{nameof(updates)}[{i}]");
                 batch[i] = updates[i];
             }
 

@@ -14,9 +14,9 @@ namespace ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram
     /// Scenario-test stub for <see cref="IBotService" />. Owns a real (or
     /// fake) <see cref="ITelegramBotClient" /> and returns deterministic
     /// no-op completions for the API surface exercised by scenario tests.
-    /// Per the <c>create-tests</c> scenario rules, scenario tests must use
-    /// stubs (named <c>Stub{DependencyName}</c>) rather than NSubstitute
-    /// mocks for types they own.
+    /// Scenario tests compose a real dependency graph using concrete stubs
+    /// instead of interface mocks, so external/leaf dependencies are replaced
+    /// with deterministic stub implementations.
     /// </summary>
     /// <remarks>
     /// This stub records the name of every <see cref="IBotService" /> method
