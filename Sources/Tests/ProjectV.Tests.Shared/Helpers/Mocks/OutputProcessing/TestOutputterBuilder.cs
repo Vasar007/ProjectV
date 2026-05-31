@@ -15,8 +15,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.OutputProcessing
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="TestOutputterBuilder" /> class. No behavior is configured
-        /// until one of the <c>With*</c> methods is called.
+        /// <see cref="TestOutputterBuilder" /> class. Produces a bare
+        /// NSubstitute substitute with no configured behavior — sufficient
+        /// for tests that only need a placeholder <see cref="IOutputter" />
+        /// in the dependency graph.
         /// </summary>
         /// <param name="fixture">AutoFixture instance to create the substitute.</param>
         public TestOutputterBuilder(IFixture fixture)

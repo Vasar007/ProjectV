@@ -8,8 +8,6 @@ using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.Tests.Shared.ForTests;
-using ProjectV.Tests.Shared.Helpers.Mocks.Core;
-using ProjectV.Tests.Shared.Helpers.Mocks.Telegram;
 using Telegram.Bot;
 
 namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
@@ -49,13 +47,12 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     ///   NSubstitute.</description></item>
     ///   <item><description>Removes the production
     ///   <see cref="ICommunicationServiceClient" /> transient and re-registers a
-    ///   no-setup
-    ///   <see cref="TestCommunicationServiceClientBuilder.CreateWithoutSetup" />
-    ///   substitute. The polling path's
-    ///   <c>BotMessageHandler</c> branch for non-<c>/request</c> commands does
-    ///   not reach the comm-client, but the DI graph wires it transitively so
-    ///   the production <c>CommunicationServiceClient</c> ctor (which
-    ///   validates a strict options chain) must be kept out of the test path.</description></item>
+    ///   <see cref="StubCommunicationServiceClient" /> concrete stub. The
+    ///   polling path's <c>BotMessageHandler</c> branch for non-<c>/request</c>
+    ///   commands does not reach the comm-client, but the DI graph wires it
+    ///   transitively so the production <c>CommunicationServiceClient</c> ctor
+    ///   (which validates a strict options chain) must be kept out of the test
+    ///   path.</description></item>
     ///   <item><description>Sets the host's
     ///   <c>TelegramBotWebServiceOptions:WorkingMode</c> to
     ///   <see cref="TelegramBotWebServiceWorkingMode.PollingViaHostedService" />
@@ -75,9 +72,9 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     /// </list>
     /// <para>
     /// The bot-client stub is exposed as <see cref="BotClientStub" /> so
-    /// derived scenarios can build it via
-    /// <see cref="TestTelegramBotClientBuilder.WithUpdateSequence(System.Collections.Generic.IEnumerable{global::Telegram.Bot.Types.Update})" />
-    /// and assert on outgoing <c>SendRequest</c> calls if needed. The
+    /// derived scenarios can interact with it if needed. Concrete scenarios
+    /// pass a pre-configured <see cref="StubTelegramBotClient" /> directly to
+    /// the constructor to supply the update sequence. The
     /// <see cref="StubBotService" /> is exposed as <see cref="BotServiceStub" />
     /// so scenarios can assert on the production handler chain's downstream
     /// calls via <c>BotServiceStub.CalledMethodNames</c>.
@@ -88,9 +85,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         /// <summary>
         /// Gets the <see cref="ITelegramBotClient" /> stub the host's
         /// <see cref="IBotService" /> exposes via its <c>BotClient</c>
-        /// property. Typically built via
-        /// <see cref="TestTelegramBotClientBuilder.WithUpdateSequence(System.Collections.Generic.IEnumerable{global::Telegram.Bot.Types.Update})" />
-        /// in the derived ctor.
+        /// property. Concrete scenarios supply a pre-configured
+        /// <see cref="StubTelegramBotClient" /> to the constructor.
         /// </summary>
         protected ITelegramBotClient BotClientStub { get; }
 
@@ -110,12 +106,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         /// <see cref="TelegramPollingScenarioBaseTest" /> class.
         /// </summary>
         /// <param name="botClientStub">
-        /// Optional pre-built <see cref="ITelegramBotClient" /> substitute.
-        /// When <c>null</c>, a bare
-        /// <see cref="TestTelegramBotClientBuilder.CreateWithoutSetup" /> stub
-        /// is used (the polling loop will fetch an empty batch on the first
-        /// call and keep looping until cancellation — useful only for tests
-        /// that do not assert on update consumption).
+        /// Optional pre-built <see cref="ITelegramBotClient" /> stub. When
+        /// <c>null</c>, a bare <see cref="StubTelegramBotClient" /> (no
+        /// updates configured) is used — the polling loop will fetch an empty
+        /// batch on every call and keep looping until cancellation, which is
+        /// useful only for tests that do not assert on update consumption.
         /// </param>
         /// <param name="extraConfiguration">
         /// Optional in-memory configuration overrides layered on top of the
@@ -128,7 +123,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             IReadOnlyDictionary<string, string?>? extraConfiguration = null)
             : this(
                 resolvedBotClientStub: new ResolvedBotStubs(
-                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture())),
+                    botClientStub ?? new StubTelegramBotClient()),
                 extraConfiguration: extraConfiguration)
         {
         }
@@ -192,7 +187,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             // BotMessageHandler resolves it eagerly when the singleton
             // graph is built.
             services.RemoveAll<ICommunicationServiceClient>();
-            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture()));
+            services.AddSingleton<ICommunicationServiceClient>(new StubCommunicationServiceClient());
         }
 
         private static IReadOnlyDictionary<string, string?> BuildConfiguration(

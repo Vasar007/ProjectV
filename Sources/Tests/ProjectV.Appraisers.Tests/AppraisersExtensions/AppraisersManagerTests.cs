@@ -193,13 +193,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
 
         private AppraisersManager CreateAppraisersManager(params IAppraiser[] appraisers)
         {
-            var builder = new TestAppraisersManagerBuilder();
-            foreach (IAppraiser appraiser in appraisers)
-            {
-                builder.WithAppraiser(appraiser);
-            }
-
-            return builder.Build();
+            return new TestAppraisersManagerBuilder().WithAppraisers(appraisers).Build();
         }
 
         private IAppraiser CreateAppraiser(Type typeId, string tag, RatingDataContainer? rating = null)

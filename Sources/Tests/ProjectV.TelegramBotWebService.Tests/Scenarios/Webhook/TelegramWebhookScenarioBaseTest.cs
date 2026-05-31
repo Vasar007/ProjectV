@@ -7,8 +7,6 @@ using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.Tests.Shared.ForTests;
-using ProjectV.Tests.Shared.Helpers.Mocks.Core;
-using ProjectV.Tests.Shared.Helpers.Mocks.Telegram;
 using ProjectV.Tests.Shared.Helpers.WebApi;
 using Telegram.Bot;
 
@@ -31,9 +29,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     ///   <item><description>Removes the production
     ///   <see cref="IBotService" /> singleton from DI inside
     ///   <c>ConfigureTestServices</c>.</description></item>
-    ///   <item><description>Re-registers <see cref="IBotService" /> as an
-    ///   NSubstitute substitute whose <c>BotClient</c> property returns the
-    ///   supplied <see cref="ITelegramBotClient" /> stub.</description></item>
+    ///   <item><description>Re-registers <see cref="IBotService" /> as a
+    ///   <see cref="StubBotService" /> concrete stub whose <c>BotClient</c>
+    ///   property returns the supplied <see cref="ITelegramBotClient" />
+    ///   stub.</description></item>
     ///   <item><description>Sets
     ///   <c>TelegramBotWebServiceOptions:WorkingMode</c> to
     ///   <see cref="TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup" />
@@ -56,11 +55,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     public abstract class TelegramWebhookScenarioBaseTest : WebApiBaseTest<Startup>
     {
         /// <summary>
-        /// Gets the <see cref="ITelegramBotClient" /> NSubstitute substitute
-        /// the host's <see cref="IBotService" /> exposes via its
-        /// <c>BotClient</c> property. Derived scenarios can assert on
-        /// <c>BotClientStub.Received().SendRequest(...)</c> if they need to
-        /// verify outgoing bot calls.
+        /// Gets the <see cref="ITelegramBotClient" /> stub the host's
+        /// <see cref="IBotService" /> exposes via its <c>BotClient</c>
+        /// property. Derived scenarios can cast to the concrete stub type
+        /// and inspect its state if they need to verify outgoing bot calls.
         /// </summary>
         protected ITelegramBotClient BotClientStub { get; }
 
@@ -80,10 +78,9 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
         /// <see cref="TelegramWebhookScenarioBaseTest" /> class.
         /// </summary>
         /// <param name="botClientStub">
-        /// Optional pre-built <see cref="ITelegramBotClient" /> substitute.
-        /// When <c>null</c>, a bare
-        /// <see cref="TestTelegramBotClientBuilder.CreateWithoutSetup" /> stub
-        /// is used.
+        /// Optional pre-built <see cref="ITelegramBotClient" /> stub. When
+        /// <c>null</c>, a bare <see cref="StubTelegramBotClient" /> (no
+        /// updates configured) is used.
         /// </param>
         /// <param name="extraConfiguration">
         /// Optional in-memory configuration overrides layered on top of the
@@ -97,7 +94,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             IReadOnlyDictionary<string, string?>? extraConfiguration)
             : this(
                 resolvedBotClientStub: new ResolvedStub(
-                    botClientStub ?? TestTelegramBotClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture())),
+                    botClientStub ?? new StubTelegramBotClient()),
                 extraConfiguration: extraConfiguration)
         {
         }
@@ -141,13 +138,12 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             // The production CommunicationServiceClient's ctor instantiates
             // an HttpClient and validates RestApi/UserService options chain
             // — its inputs are not stable enough to construct during a
-            // webhook integration test. Replace it with a no-setup
-            // NSubstitute stub so any handler that resolves the client
-            // does not blow up. Webhook scenarios do not assert on the
-            // outgoing comm-client calls; polling scenarios will
-            // pass a configured stub via the same factory knob.
+            // webhook integration test. Replace it with a concrete stub so
+            // any handler that resolves the client does not blow up. Webhook
+            // scenarios do not assert on the outgoing comm-client calls;
+            // polling scenarios use the same pattern.
             services.RemoveAll<ICommunicationServiceClient>();
-            services.AddSingleton(TestCommunicationServiceClientBuilder.CreateWithoutSetup(BaseMockTest.CreateFixture()));
+            services.AddSingleton<ICommunicationServiceClient>(new StubCommunicationServiceClient());
         }
 
         private static IReadOnlyDictionary<string, string?> BuildConfiguration(

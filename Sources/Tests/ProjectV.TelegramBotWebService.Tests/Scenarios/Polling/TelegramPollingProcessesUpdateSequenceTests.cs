@@ -3,9 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
+using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
-using ProjectV.Tests.Shared.ForTests;
-using ProjectV.Tests.Shared.Helpers.Mocks.Telegram;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Xunit;
@@ -21,15 +20,14 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     /// <c>IBotService.SendMessageAsync</c>).
     /// </summary>
     /// <remarks>
-    /// The bot-client substitute is built via
-    /// <see cref="TestTelegramBotClientBuilder.WithUpdateSequence(System.Collections.Generic.IEnumerable{Update})" />
-    /// — the first poll yields the configured updates, every subsequent poll
-    /// yields an empty array, and the long-polling loop exits when the host's
-    /// cancellation token signals (the test stops the host explicitly inside
-    /// the act-phase polling loop). The assertion proves the polling half
-    /// of the Telegram coverage: the <c>WithUpdateSequence(...)</c> builder
-    /// is consumed end-to-end by the polling hosted service and every
-    /// update reaches <c>IBotService.SendMessageAsync</c>.
+    /// The bot-client stub is a <see cref="StubTelegramBotClient" /> pre-loaded
+    /// with the scripted update sequence — the first poll yields the configured
+    /// updates, every subsequent poll yields an empty array, and the long-polling
+    /// loop exits when the host's cancellation token signals (the test stops the
+    /// host explicitly inside the act-phase polling loop). The assertion proves
+    /// the polling half of the Telegram coverage: the stub is consumed end-to-end
+    /// by the polling hosted service and every update reaches
+    /// <c>IBotService.SendMessageAsync</c>.
     /// </remarks>
     [Trait("Category", "Integration")]
     public sealed class TelegramPollingProcessesUpdateSequenceTests
@@ -49,9 +47,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         /// </summary>
         public TelegramPollingProcessesUpdateSequenceTests()
             : base(
-                botClientStub: new TestTelegramBotClientBuilder(BaseMockTest.CreateFixture())
-                    .WithUpdateSequence(BuildUpdateSequence())
-                    .Build())
+                botClientStub: new StubTelegramBotClient(BuildUpdateSequence()))
         {
         }
 
@@ -77,7 +73,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
             //  2. Calls IBotService.BotClient.ReceiveAsync(handler, opts, ct).
             //  3. ReceiveAsync internally calls
             //     BotClient.SendRequest<Update[]>(new GetUpdatesRequest{...}, ct).
-            //     The substitute (configured via WithUpdateSequence) yields
+            //     The stub (StubTelegramBotClient pre-loaded in the ctor) yields
             //     the three updates on the first call and empty arrays
             //     thereafter.
             //  4. For each update, the receiver invokes
