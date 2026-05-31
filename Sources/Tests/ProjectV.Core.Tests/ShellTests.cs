@@ -50,10 +50,10 @@ namespace ProjectV.Core.Tests
         public void Constructor_WithValidManagers_PopulatesAllProperties()
         {
             // Arrange.
-            var inputManager = TestInputManagerBuilder.CreateWithoutSetup();
-            var crawlersManager = TestCrawlersManagerBuilder.CreateWithoutSetup();
-            var appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
-            var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
+            var inputManager = CreateInputManager();
+            var crawlersManager = CreateCrawlersManager();
+            var appraisersManager = CreateAppraisersManager();
+            var outputManager = CreateOutputManager();
 
             // Act.
             using var shell = new Shell(
@@ -72,9 +72,9 @@ namespace ProjectV.Core.Tests
         public void Constructor_WithNullInputManager_ThrowsArgumentNullException()
         {
             // Arrange.
-            var crawlersManager = TestCrawlersManagerBuilder.CreateWithoutSetup();
-            var appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
-            var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
+            var crawlersManager = CreateCrawlersManager();
+            var appraisersManager = CreateAppraisersManager();
+            var outputManager = CreateOutputManager();
 
             // Act. / Assert.
             var act = () => new Shell(
@@ -91,9 +91,9 @@ namespace ProjectV.Core.Tests
         public void Constructor_WithNullCrawlersManager_ThrowsArgumentNullException()
         {
             // Arrange.
-            var inputManager = TestInputManagerBuilder.CreateWithoutSetup();
-            var appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
-            var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
+            var inputManager = CreateInputManager();
+            var appraisersManager = CreateAppraisersManager();
+            var outputManager = CreateOutputManager();
 
             // Act. / Assert.
             var act = () => new Shell(
@@ -111,9 +111,9 @@ namespace ProjectV.Core.Tests
         public void Constructor_WithNullAppraisersManager_ThrowsArgumentNullException()
         {
             // Arrange.
-            var inputManager = TestInputManagerBuilder.CreateWithoutSetup();
-            var crawlersManager = TestCrawlersManagerBuilder.CreateWithoutSetup();
-            var outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
+            var inputManager = CreateInputManager();
+            var crawlersManager = CreateCrawlersManager();
+            var outputManager = CreateOutputManager();
 
             // Act. / Assert.
             var act = () => new Shell(
@@ -131,9 +131,9 @@ namespace ProjectV.Core.Tests
         public void Constructor_WithNullOutputManager_ThrowsArgumentNullException()
         {
             // Arrange.
-            var inputManager = TestInputManagerBuilder.CreateWithoutSetup();
-            var crawlersManager = TestCrawlersManagerBuilder.CreateWithoutSetup();
-            var appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var inputManager = CreateInputManager();
+            var crawlersManager = CreateCrawlersManager();
+            var appraisersManager = CreateAppraisersManager();
 
             // Act. / Assert.
             var act = () => new Shell(
@@ -150,7 +150,7 @@ namespace ProjectV.Core.Tests
         public void Dispose_CalledTwice_IsIdempotent()
         {
             // Arrange.
-            var shell = TestShellBuilder.CreateWithoutSetup();
+            var shell = CreateShell();
 
             // Act.
             shell.Dispose();
@@ -171,6 +171,56 @@ namespace ProjectV.Core.Tests
 
             // Assert.
             director.Should().NotBeNull();
+        }
+
+        /// <summary>
+        /// Creates a default-configured <see cref="InputManager" /> via
+        /// <see cref="TestInputManagerBuilder" />. Per-class helper so test
+        /// bodies do not call builders directly.
+        /// </summary>
+        private static InputManager CreateInputManager()
+        {
+            return TestInputManagerBuilder.CreateWithoutSetup();
+        }
+
+        /// <summary>
+        /// Creates a default-configured <see cref="CrawlersManager" /> via
+        /// <see cref="TestCrawlersManagerBuilder" />. Per-class helper so test
+        /// bodies do not call builders directly.
+        /// </summary>
+        private static CrawlersManager CreateCrawlersManager()
+        {
+            return TestCrawlersManagerBuilder.CreateWithoutSetup();
+        }
+
+        /// <summary>
+        /// Creates a default-configured <see cref="AppraisersManager" /> via
+        /// <see cref="TestAppraisersManagerBuilder" />. Per-class helper so test
+        /// bodies do not call builders directly.
+        /// </summary>
+        private static AppraisersManager CreateAppraisersManager()
+        {
+            return TestAppraisersManagerBuilder.CreateWithoutSetup();
+        }
+
+        /// <summary>
+        /// Creates a default-configured <see cref="OutputManager" /> via
+        /// <see cref="TestOutputManagerBuilder" />. Per-class helper so test
+        /// bodies do not call builders directly.
+        /// </summary>
+        private static OutputManager CreateOutputManager()
+        {
+            return TestOutputManagerBuilder.CreateWithoutSetup();
+        }
+
+        /// <summary>
+        /// Creates a fully-composed <see cref="Shell" /> backed by empty
+        /// default managers via <see cref="TestShellBuilder" />. Per-class
+        /// helper so test bodies do not call builders directly.
+        /// </summary>
+        private static Shell CreateShell()
+        {
+            return TestShellBuilder.CreateWithoutSetup();
         }
 
         /// <summary>

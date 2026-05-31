@@ -1,9 +1,10 @@
 ﻿using System;
-using AutoFixture;
+using Acolyte.Common.Monads;
 using AwesomeAssertions;
 using NSubstitute;
 using ProjectV.Core.ShellBuilders;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Mocks.Core;
 using ProjectV.Tests.Shared.Helpers.Stubs.Core;
 using Xunit;
 
@@ -138,20 +139,17 @@ namespace ProjectV.Core.Tests.ShellBuilders
         }
 
         /// <summary>
-        /// Creates an <see cref="IShellBuilder" /> substitute via the shared
-        /// <see cref="BaseMockTest.Fixture" />. When <paramref name="expectedResult" />
-        /// is provided, <see cref="IShellBuilder.GetResult" /> is stubbed to
-        /// return it; otherwise the substitute is returned bare.
+        /// Creates an <see cref="IShellBuilder" /> substitute via
+        /// <see cref="TestShellBuilderBuilder" />. When
+        /// <paramref name="expectedResult" /> is provided,
+        /// <see cref="IShellBuilder.GetResult" /> is stubbed to return it
+        /// inside the builder; otherwise the substitute is returned bare.
         /// </summary>
         private IShellBuilder CreateShellBuilder(Shell? expectedResult = null)
         {
-            var builder = Fixture.Create<IShellBuilder>();
-            if (expectedResult is not null)
-            {
-                builder.GetResult().Returns(expectedResult);
-            }
-
-            return builder;
+            return new TestShellBuilderBuilder(Fixture)
+                .ApplyIf(expectedResult is not null, x => x.WithGetResult(expectedResult!))
+                .Build();
         }
 
         /// <summary>

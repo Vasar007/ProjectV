@@ -1,9 +1,9 @@
 ﻿using System;
-using AutoFixture;
 using AwesomeAssertions;
 using ProjectV.DataPipeline;
 using ProjectV.IO.Output;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Mocks.OutputProcessing;
 using Xunit;
 
 namespace ProjectV.OutputProcessing.Tests
@@ -149,13 +149,13 @@ namespace ProjectV.OutputProcessing.Tests
         }
 
         /// <summary>
-        /// Creates a bare <see cref="IOutputter" /> substitute via the shared
-        /// <see cref="BaseMockTest.Fixture" />. Centralises substitute creation
+        /// Creates a bare <see cref="IOutputter" /> substitute via
+        /// <see cref="TestOutputterBuilder" />. Centralises substitute creation
         /// so test bodies do not call <c>Fixture.Create</c> directly.
         /// </summary>
         private IOutputter CreateOutputter()
         {
-            return Fixture.Create<IOutputter>();
+            return TestOutputterBuilder.CreateWithoutSetup(Fixture);
         }
 
         /// <summary>

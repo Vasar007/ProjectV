@@ -30,7 +30,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void CreateWithoutSetupReturnsEmptyManager()
         {
             // Arrange. / Act.
-            var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var sut = CreateAppraisersManager();
 
             // Assert. An empty manager produces a non-null but childless flow.
             sut.Should().NotBeNull();
@@ -43,7 +43,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void AddThrowsForNullAppraiser()
         {
             // Arrange.
-            var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var sut = CreateAppraisersManager();
 
             // Act.
             var act = () =>
@@ -60,7 +60,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void RemoveThrowsForNullAppraiser()
         {
             // Arrange.
-            var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var sut = CreateAppraisersManager();
 
             // Act.
             var act = () =>
@@ -78,9 +78,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
-            var sut = new TestAppraisersManagerBuilder()
-                .WithAppraiser(appraiser)
-                .Build();
+            var sut = CreateAppraisersManager(appraiser);
 
             // Act.
             var flow = sut.CreateFlow();
@@ -95,7 +93,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
-            var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var sut = CreateAppraisersManager();
 
             // Act.
             sut.Add(appraiser);
@@ -115,10 +113,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Arrange.
             var first = CreateAppraiser(typeof(BasicInfo), "first");
             var second = CreateAppraiser(typeof(BasicInfo), "second");
-            var sut = new TestAppraisersManagerBuilder()
-                .WithAppraiser(first)
-                .WithAppraiser(second)
-                .Build();
+            var sut = CreateAppraisersManager(first, second);
 
             // Act.
             var flow = sut.CreateFlow();
@@ -133,9 +128,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
-            var sut = new TestAppraisersManagerBuilder()
-                .WithAppraiser(appraiser)
-                .Build();
+            var sut = CreateAppraisersManager(appraiser);
 
             // Act.
             var removed = sut.Remove(appraiser);
@@ -148,7 +141,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public void RemoveMissingReturnsFalse()
         {
             // Arrange.
-            var sut = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            var sut = CreateAppraisersManager();
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
 
             // Act.
@@ -169,10 +162,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
                 ratingId: Guid.Empty);
 
             var basicAppraiser = CreateAppraiser(typeof(BasicInfo), "tag", expectedRating);
-
-            var sut = new TestAppraisersManagerBuilder()
-                .WithAppraiser(basicAppraiser)
-                .Build();
+            var sut = CreateAppraisersManager(basicAppraiser);
 
             // Act.
             var flow = sut.CreateFlow();
@@ -189,9 +179,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
-            var sut = new TestAppraisersManagerBuilder()
-                .WithAppraiser(appraiser)
-                .Build();
+            var sut = CreateAppraisersManager(appraiser);
 
             // Act.
             var firstFlow = sut.CreateFlow();
@@ -202,6 +190,17 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         }
 
         #region Helper Methods
+
+        private AppraisersManager CreateAppraisersManager(params IAppraiser[] appraisers)
+        {
+            var builder = new TestAppraisersManagerBuilder();
+            foreach (IAppraiser appraiser in appraisers)
+            {
+                builder.WithAppraiser(appraiser);
+            }
+
+            return builder.Build();
+        }
 
         private IAppraiser CreateAppraiser(Type typeId, string tag, RatingDataContainer? rating = null)
         {

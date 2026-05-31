@@ -1,9 +1,9 @@
 ﻿using System;
-using AutoFixture;
 using AwesomeAssertions;
 using ProjectV.DataPipeline;
 using ProjectV.IO.Input;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Mocks.InputProcessing;
 using Xunit;
 
 namespace ProjectV.InputProcessing.Tests
@@ -146,13 +146,13 @@ namespace ProjectV.InputProcessing.Tests
         }
 
         /// <summary>
-        /// Creates a bare <see cref="IInputter" /> substitute via the shared
-        /// <see cref="BaseMockTest.Fixture" />. Centralises substitute creation
+        /// Creates a bare <see cref="IInputter" /> substitute via
+        /// <see cref="TestInputterBuilder" />. Centralises substitute creation
         /// so test bodies do not call <c>Fixture.Create</c> directly.
         /// </summary>
         private IInputter CreateInputter()
         {
-            return Fixture.Create<IInputter>();
+            return TestInputterBuilder.CreateWithoutSetup(Fixture);
         }
 
         /// <summary>
