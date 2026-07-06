@@ -76,25 +76,14 @@ namespace ProjectV.DataPipeline.Tests
             };
             var sut = new InputtersFlow(inputters);
 
-            MethodInfo filterPredicate = typeof(InputtersFlow).GetMethod(
-                "FilterInputData",
-                BindingFlags.NonPublic | BindingFlags.Instance
-            )!;
-            filterPredicate.Should().NotBeNull(
-                "InputtersFlow.FilterInputData must remain a private instance " +
-                "method for this reflection probe to find it");
-
-            bool Filter(string value)
-                => (bool) filterPredicate.Invoke(sut, new object[] { value })!;
-
             // Act.
             // First-seen unique items pass; duplicates fail.
-            bool firstAlpha = Filter("alpha");
-            bool secondAlpha = Filter("alpha");      // duplicate
-            bool firstBeta = Filter("beta");
-            bool thirdAlpha = Filter("alpha");       // another duplicate
-            bool firstGamma = Filter("gamma");
-            bool secondBeta = Filter("beta");        // duplicate
+            bool firstAlpha = InvokeFilterInputData(sut, "alpha");
+            bool secondAlpha = InvokeFilterInputData(sut, "alpha");      // duplicate
+            bool firstBeta = InvokeFilterInputData(sut, "beta");
+            bool thirdAlpha = InvokeFilterInputData(sut, "alpha");       // another duplicate
+            bool firstGamma = InvokeFilterInputData(sut, "gamma");
+            bool secondBeta = InvokeFilterInputData(sut, "beta");        // duplicate
 
             // Assert.
             firstAlpha.Should().BeTrue(
@@ -124,24 +113,16 @@ namespace ProjectV.DataPipeline.Tests
             };
             var sut = new InputtersFlow(inputters);
 
-            MethodInfo filterPredicate = typeof(InputtersFlow).GetMethod(
-                "FilterInputData",
-                BindingFlags.NonPublic | BindingFlags.Instance
-            )!;
-
-            bool Filter(string value)
-                => (bool) filterPredicate.Invoke(sut, new object[] { value })!;
-
             // Act / Assert.
-            Filter("").Should().BeFalse(
+            InvokeFilterInputData(sut, "").Should().BeFalse(
                 "empty string has Length 0 ≤ MinWordLength (2) — must be filtered");
-            Filter("a").Should().BeFalse(
+            InvokeFilterInputData(sut, "a").Should().BeFalse(
                 "single-character string has Length 1 ≤ MinWordLength (2) — must be filtered");
-            Filter("ab").Should().BeFalse(
+            InvokeFilterInputData(sut, "ab").Should().BeFalse(
                 "two-character string has Length 2 ≤ MinWordLength (2) — must be filtered");
-            Filter("abc").Should().BeTrue(
+            InvokeFilterInputData(sut, "abc").Should().BeTrue(
                 "three-character string has Length 3 > MinWordLength (2) — must pass");
-            Filter("defg").Should().BeTrue(
+            InvokeFilterInputData(sut, "defg").Should().BeTrue(
                 "four-character string has Length 4 > MinWordLength (2) — must pass");
         }
 
@@ -200,5 +181,29 @@ namespace ProjectV.DataPipeline.Tests
                 "InputtersFlow's documented MinWordLength contract is 2 " +
                 "(the length-filter predicate FilterInputData checks `> MinWordLength`)");
         }
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Invokes the private <c>InputtersFlow.FilterInputData(string)</c>
+        /// predicate via reflection — the single probe shared by the dedup
+        /// and length-filter tests (see the class remarks for why the
+        /// predicate is interrogated directly instead of driving the flow
+        /// end-to-end).
+        /// </summary>
+        private static bool InvokeFilterInputData(InputtersFlow sut, string value)
+        {
+            MethodInfo filterPredicate = typeof(InputtersFlow).GetMethod(
+                "FilterInputData",
+                BindingFlags.NonPublic | BindingFlags.Instance
+            )!;
+            filterPredicate.Should().NotBeNull(
+                "InputtersFlow.FilterInputData must remain a private instance " +
+                "method for this reflection probe to find it");
+
+            return (bool) filterPredicate.Invoke(sut, new object[] { value })!;
+        }
+
+        #endregion
     }
 }
