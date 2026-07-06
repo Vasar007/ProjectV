@@ -50,11 +50,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithMinimalValidConfiguration_DoesNotThrow()
         {
             // Arrange.
-            var configuration = new XDocument(
-                new XElement("Root",
-                    new XElement("ShellConfig")
-                )
-            );
+            XDocument configuration = CreateMinimalConfiguration();
 
             // Act.
             var act = () => new ShellBuilderFromXDocument(configuration);
@@ -67,11 +63,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void GetResult_BeforeAnyBuildStep_ThrowsInvalidOperationException()
         {
             // Arrange.
-            var configuration = new XDocument(
-                new XElement("Root",
-                    new XElement("ShellConfig")
-                )
-            );
+            XDocument configuration = CreateMinimalConfiguration();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act. / Assert.
@@ -88,11 +80,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Reset_AfterCtor_DoesNotThrow()
         {
             // Arrange.
-            var configuration = new XDocument(
-                new XElement("Root",
-                    new XElement("ShellConfig")
-                )
-            );
+            XDocument configuration = CreateMinimalConfiguration();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act.
@@ -106,11 +94,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void BuildMessageHandler_WithMissingElement_ThrowsInvalidOperationException()
         {
             // Arrange.
-            var configuration = new XDocument(
-                new XElement("Root",
-                    new XElement("ShellConfig")
-                )
-            );
+            XDocument configuration = CreateMinimalConfiguration();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act. / Assert.
@@ -121,5 +105,18 @@ namespace ProjectV.Core.Tests.ShellBuilders
                 .Throw<InvalidOperationException>()
                 .WithMessage("*MessageHandler*");
         }
+
+        #region Helper Methods
+
+        private static XDocument CreateMinimalConfiguration()
+        {
+            return new XDocument(
+                new XElement("Root",
+                    new XElement("ShellConfig")
+                )
+            );
+        }
+
+        #endregion
     }
 }
