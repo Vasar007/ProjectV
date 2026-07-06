@@ -14,11 +14,10 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
     /// <see cref="IAsyncEnumerable{T}" />, not <see cref="Task{T}" />).
     /// </summary>
     /// <remarks>
-    /// Sibling to <see cref="TestOmdbCrawlerBuilder" /> /
-    /// <see cref="TestSteamCrawlerBuilder" />. Each ships its own builder so
-    /// downstream test plans can wire crawler-specific
-    /// <see cref="ICrawler.Tag" /> / <see cref="ICrawler.TypeId" /> defaults
-    /// without re-writing the same boilerplate.
+    /// Crawler-specific defaults (<see cref="ICrawler.Tag" /> /
+    /// <see cref="ICrawler.TypeId" />) are configurable via
+    /// <see cref="WithTag(string)" /> and <see cref="WithTypeId(Type)" />, so a
+    /// single builder covers other crawler providers as well.
     /// </remarks>
     public sealed class TestTmdbCrawlerBuilder
     {
