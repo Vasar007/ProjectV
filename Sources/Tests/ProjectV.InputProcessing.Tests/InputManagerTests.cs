@@ -78,8 +78,8 @@ namespace ProjectV.InputProcessing.Tests
         // on the empty-storage-name path here would either (a) require the test
         // to mutate global static state (leaking across the xUnit assembly's
         // parallel test runs) or (b) capture an ArgumentNullException out of
-        // the messaging seam, neither of which reflects the plan's
-        // CreateFlow-non-null contract. The non-empty-storage path is the
+        // the messaging seam, neither of which reflects the
+        // CreateFlow-non-null contract under test. The non-empty-storage path is the
         // contract Shell exercises in production; we test that path only here.
         // The empty-storage-name code path is exercised through the higher-
         // level Shell.Run integration coverage (currently "tested around"

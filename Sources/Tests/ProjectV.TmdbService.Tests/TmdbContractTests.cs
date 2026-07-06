@@ -30,9 +30,9 @@ namespace ProjectV.TmdbService.Tests
     /// pinned in-repo fixtures.
     ///
     /// The production <see cref="ProjectV.TmdbService.TmdbClient" /> wrapper
-    /// exposes <c>TrySearchMovieAsync</c> and <c>GetConfigAsync</c> (no
-    /// <c>GetMovieAsync(int)</c> exists despite the plan wording — the SUT
-    /// surface is verified against the actual public API).
+    /// exposes <c>TrySearchMovieAsync</c> and <c>GetConfigAsync</c> only (there
+    /// is no <c>GetMovieAsync(int)</c> — the SUT surface is verified against
+    /// the actual public API).
     /// </remarks>
     [Trait("Category", "Contract")]
     public sealed class TmdbContractTests : BaseMockTest, IAsyncLifetime

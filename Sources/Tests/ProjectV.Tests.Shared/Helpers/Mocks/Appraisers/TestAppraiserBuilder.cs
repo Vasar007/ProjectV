@@ -9,7 +9,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
     /// <summary>
     /// Builder for <see cref="IAppraiser" /> test doubles backed by
     /// AutoFixture + NSubstitute. One file per interface;
-    /// downstream test plans add sibling builders following the same shape.
+    /// sibling builders follow the same shape.
     /// </summary>
     public sealed class TestAppraiserBuilder
     {

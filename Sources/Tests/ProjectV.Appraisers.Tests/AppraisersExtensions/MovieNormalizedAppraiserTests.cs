@@ -16,10 +16,10 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     /// vote-count and vote-average onto a min-max normalised scale.
     /// </summary>
     /// <remarks>
-    /// The plan named this file <c>MovieNormalizedAppraiserTests</c>;
     /// ProjectV does NOT declare a <c>MovieNormalizedAppraiser</c> type —
     /// the production shape is
-    /// <c>Appraiser&lt;BasicInfo&gt;(new BasicAppraisalNormalized())</c>. The
+    /// <c>Appraiser&lt;BasicInfo&gt;(new BasicAppraisalNormalized())</c>,
+    /// and this file covers that composition. The
     /// appraisal MUST be prepared via
     /// <see cref="BasicAppraisalNormalized.PrepareCalculation" /> with a
     /// <see cref="RawDataContainer" /> that carries

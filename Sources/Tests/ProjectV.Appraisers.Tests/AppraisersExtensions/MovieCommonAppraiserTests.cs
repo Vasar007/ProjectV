@@ -14,9 +14,10 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     /// movie's TMDb popularity as its rating value.
     /// </summary>
     /// <remarks>
-    /// The plan named this file <c>MovieCommonAppraiserTests</c>; ProjectV
-    /// does NOT declare a <c>MovieCommonAppraiser</c> type — the production
-    /// shape is <c>Appraiser&lt;TmdbMovieInfo&gt;(new TmdbCommonAppraisal())</c>.
+    /// ProjectV does NOT declare a <c>MovieCommonAppraiser</c> type — the
+    /// production shape is
+    /// <c>Appraiser&lt;TmdbMovieInfo&gt;(new TmdbCommonAppraisal())</c>,
+    /// and this file covers that composition.
     /// The unit boundary is the appraiser class composed with its strategy;
     /// the strategy is exercised directly (not mocked) because the strategy
     /// is the source of the rating value.

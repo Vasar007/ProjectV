@@ -40,8 +40,7 @@ namespace ProjectV.Crawlers.Tests
     /// <c>ProjectV.Tests.Shared.ForTests.TestModuleInitializer</c> +
     /// production code review to cover the <c>_logger.Error(...)</c> call.
     /// The <c>logger.Received(1).Error(...)</c> assertion pattern is an
-    /// aspirational target that this unit suite intentionally does not chase
-    /// — the deviation is recorded in the PR that introduced this test class.
+    /// aspirational target that this unit suite intentionally does not chase.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

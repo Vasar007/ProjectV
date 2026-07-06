@@ -30,11 +30,11 @@ namespace ProjectV.Core.Tests.Net
     /// <c>SendAsync</c> method.
     /// </para>
     /// <para>
-    /// The original intent was a "throws AuthFailureException on 401" test;
-    /// the production code instead returns
-    /// <c>Result.Error&lt;ErrorResponse&gt;</c> on non-success status codes
-    /// via <see cref="ProjectV.Core.Net.Http.HttpResponseMessageExtensions" />
-    /// — it does NOT throw. The test was adjusted to match observed behaviour.
+    /// <see cref="CommunicationServiceClient.LoginAsync" /> does NOT throw on
+    /// non-success status codes; the production code returns
+    /// <c>Result.Error&lt;ErrorResponse&gt;</c> via
+    /// <see cref="ProjectV.Core.Net.Http.HttpResponseMessageExtensions" />,
+    /// so the 401 test asserts on the error result rather than an exception.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]

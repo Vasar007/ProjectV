@@ -28,8 +28,8 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
     /// <see cref="TestOutputManagerBuilder" /> classes.
     /// </para>
     /// <para>
-    /// The plan does not refactor <see cref="Shell" /> — the manager-typed
-    /// constructor parameters stay as production declares them.
+    /// The builder does not abstract <see cref="Shell" /> away — the
+    /// manager-typed constructor parameters stay as production declares them.
     /// </para>
     /// </remarks>
     public sealed class TestShellBuilder
