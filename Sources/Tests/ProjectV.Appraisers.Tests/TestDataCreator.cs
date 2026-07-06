@@ -9,13 +9,6 @@ namespace ProjectV.Appraisers.Tests
 {
     internal static class TestDataCreator
     {
-        // Seeded with 42 for run-to-run determinism.
-        // Note: `new Random(seed: 42)` lowercase parameter name does not compile
-        // under .NET 10 (CS1739) — the constructor parameter is `Seed` (capital S).
-        // The seed value (42) is preserved.
-        private static Random RandomInstance { get; } = new Random(Seed: 42);
-
-
         internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
             Guid ratingId, params BasicInfo[] items)
         {
@@ -55,14 +48,14 @@ namespace ProjectV.Appraisers.Tests
                 .Range(1, count)
                 .Select(i => new BasicInfo(
                     thingId: i,
-                    title: $"Title-{i.ToString()}-{CreateRandomString(count, RandomInstance)}",
-                    voteCount: i * RandomInstance.Next(),
-                    voteAverage: i * RandomInstance.NextDouble()
+                    title: $"Title-{i.ToString()}-{CreateRandomString(count)}",
+                    voteCount: i * Random.Shared.Next(),
+                    voteAverage: i * Random.Shared.NextDouble()
                 ))
                 .ToList();
         }
 
-        private static string CreateRandomString(int length, Random? random = null)
+        private static string CreateRandomString(int length)
         {
             if (length <= 0)
             {
@@ -70,12 +63,10 @@ namespace ProjectV.Appraisers.Tests
                                                       "Length must be positive.");
             }
 
-            random ??= new Random();
-
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(
                 Enumerable.Repeat(chars, length)
-                    .Select(str => str[random.Next(str.Length)])
+                    .Select(str => str[Random.Shared.Next(str.Length)])
                     .ToArray()
             );
         }

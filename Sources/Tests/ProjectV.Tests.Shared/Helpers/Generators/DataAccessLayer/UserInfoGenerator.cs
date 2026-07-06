@@ -17,15 +17,13 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     ///     </item>
     ///     <item>
     ///         <description><c>Generate*</c> — every argument is optional;
-    ///         unspecified values come from deterministic helpers (seeded
-    ///         <see cref="Random" /> seed 42 for deterministic runs + GUIDs).</description>
+    ///         unspecified values are filled with random valid values,
+    ///         unique per call.</description>
     ///     </item>
     /// </list>
     /// </summary>
     public sealed class UserInfoGenerator
     {
-        private static readonly Random _random = new Random(Seed: 42);
-
         private readonly UserIdGenerator _userIdGenerator;
 
 
@@ -84,7 +82,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
 
         /// <summary>
         /// Generates a <see cref="UserInfo" /> filling any unspecified field
-        /// with a deterministic value.
+        /// with a random valid value.
         /// </summary>
         /// <param name="id">Optional user identifier.</param>
         /// <param name="userName">Optional user name.</param>
@@ -124,7 +122,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic <see cref="UserName" /> with a
+        /// Generates a unique <see cref="UserName" /> with a
         /// GUID-derived suffix.
         /// </summary>
         public UserName GenerateUserName()
@@ -133,7 +131,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic <see cref="Password" /> with a
+        /// Generates a unique <see cref="Password" /> with a
         /// GUID-derived suffix.
         /// </summary>
         public Password GeneratePassword()
@@ -142,7 +140,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic password salt with a GUID-derived suffix.
+        /// Generates a unique password salt with a GUID-derived suffix.
         /// </summary>
         public string GeneratePasswordSalt()
         {
@@ -150,13 +148,12 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic UTC creation timestamp. Anchored at the
-        /// epoch + a seeded number of seconds to keep value ranges stable
-        /// across test runs.
+        /// Generates a random UTC creation timestamp anchored at 2020-01-01
+        /// plus a random number of seconds within one year.
         /// </summary>
         public DateTime GenerateCreationTimeUtc()
         {
-            int offsetSeconds = _random.Next(0, 365 * 24 * 60 * 60);
+            int offsetSeconds = Random.Shared.Next(0, 365 * 24 * 60 * 60);
             return new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 .AddSeconds(offsetSeconds);
         }

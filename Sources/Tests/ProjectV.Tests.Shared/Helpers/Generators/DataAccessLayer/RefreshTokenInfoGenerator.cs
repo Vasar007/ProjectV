@@ -15,15 +15,13 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     ///     </item>
     ///     <item>
     ///         <description><c>Generate*</c> — every argument is optional;
-    ///         unspecified values come from deterministic helpers (seeded
-    ///         <see cref="Random" /> seed 42 for deterministic runs + GUIDs).</description>
+    ///         unspecified values are filled with random valid values,
+    ///         unique per call.</description>
     ///     </item>
     /// </list>
     /// </summary>
     public sealed class RefreshTokenInfoGenerator
     {
-        private static readonly Random _random = new Random(Seed: 42);
-
         private readonly UserIdGenerator _userIdGenerator;
 
 
@@ -82,7 +80,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
 
         /// <summary>
         /// Generates a <see cref="RefreshTokenInfo" /> filling any unspecified
-        /// field with a deterministic value.
+        /// field with a random valid value.
         /// </summary>
         /// <param name="id">Optional token identifier.</param>
         /// <param name="userId">Optional owning user identifier.</param>
@@ -119,7 +117,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic <see cref="Password" /> for use as a
+        /// Generates a unique <see cref="Password" /> for use as a
         /// token hash, with a GUID-derived suffix.
         /// </summary>
         public Password GenerateTokenHash()
@@ -128,7 +126,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic token salt with a GUID-derived suffix.
+        /// Generates a unique token salt with a GUID-derived suffix.
         /// </summary>
         public string GenerateTokenSalt()
         {
@@ -136,12 +134,12 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic UTC creation timestamp anchored at
-        /// 2020-01-01 + a seeded number of seconds.
+        /// Generates a random UTC creation timestamp anchored at
+        /// 2020-01-01 plus a random number of seconds within one year.
         /// </summary>
         public DateTime GenerateCreationTimeUtc()
         {
-            int offsetSeconds = _random.Next(0, 365 * 24 * 60 * 60);
+            int offsetSeconds = Random.Shared.Next(0, 365 * 24 * 60 * 60);
             return new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
                 .AddSeconds(offsetSeconds);
         }

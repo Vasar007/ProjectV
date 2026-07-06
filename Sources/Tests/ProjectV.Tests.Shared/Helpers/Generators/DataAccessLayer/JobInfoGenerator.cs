@@ -15,15 +15,13 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     ///     </item>
     ///     <item>
     ///         <description><c>Generate*</c> — every argument is optional;
-    ///         unspecified values come from a deterministic seeded
-    ///         <see cref="Random" /> (seed 42 for deterministic runs).</description>
+    ///         unspecified values are filled with random valid values,
+    ///         unique per call.</description>
     ///     </item>
     /// </list>
     /// </summary>
     public sealed class JobInfoGenerator
     {
-        private static readonly Random _random = new Random(Seed: 42);
-
         private readonly JobIdGenerator _jobIdGenerator;
 
 
@@ -74,7 +72,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
 
         /// <summary>
         /// Generates a <see cref="JobInfo" /> filling any unspecified field
-        /// with a deterministic value derived from the seeded random source.
+        /// with a random valid value.
         /// </summary>
         /// <param name="id">Optional job identifier.</param>
         /// <param name="name">Optional job name.</param>
@@ -116,23 +114,23 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
         }
 
         /// <summary>
-        /// Generates a deterministic job state code in the range [0, 100).
+        /// Generates a random job state code in the range [0, 100).
         /// </summary>
         public int GenerateState()
         {
-            return _random.Next(0, 100);
+            return Random.Shared.Next(0, 100);
         }
 
         /// <summary>
-        /// Generates a deterministic job result code in the range [0, 100).
+        /// Generates a random job result code in the range [0, 100).
         /// </summary>
         public int GenerateResult()
         {
-            return _random.Next(0, 100);
+            return Random.Shared.Next(0, 100);
         }
 
         /// <summary>
-        /// Generates a deterministic non-empty configuration payload using a
+        /// Generates a unique non-empty configuration payload using a
         /// GUID-derived suffix; ProjectV stores the raw XML/JSON config as a
         /// string in the <c>config</c> column.
         /// </summary>

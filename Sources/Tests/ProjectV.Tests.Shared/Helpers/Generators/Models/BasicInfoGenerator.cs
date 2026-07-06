@@ -14,15 +14,13 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
     ///     </item>
     ///     <item>
     ///         <description><c>Generate*</c> — every argument is optional;
-    ///         unspecified values come from a deterministic seeded
-    ///         <see cref="Random" /> (seed 42 for deterministic runs).</description>
+    ///         unspecified values are filled with random valid values,
+    ///         unique per call.</description>
     ///     </item>
     /// </list>
     /// </summary>
     public sealed class BasicInfoGenerator
     {
-        private static readonly Random _random = new Random(Seed: 42);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicInfoGenerator" />
         /// class.
@@ -55,7 +53,7 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
 
         /// <summary>
         /// Generates a <see cref="BasicInfo" /> filling any unspecified field
-        /// with a deterministic value derived from the seeded random source.
+        /// with a random valid value.
         /// </summary>
         /// <param name="thingId">Optional unique identifier.</param>
         /// <param name="title">Optional title.</param>
@@ -77,18 +75,17 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
         }
 
         /// <summary>
-        /// Generates a deterministic <see cref="BasicInfo.ThingId" /> in the
+        /// Generates a random <see cref="BasicInfo.ThingId" /> in the
         /// range [1, 1_000_000).
         /// </summary>
         public int GenerateThingId()
         {
-            return _random.Next(1, 1_000_000);
+            return Random.Shared.Next(1, 1_000_000);
         }
 
         /// <summary>
-        /// Generates a unique title using a random GUID suffix. Not seeded
-        /// (GUIDs are global) — use <see cref="CreateBasicInfo" /> when an
-        /// exact title is needed.
+        /// Generates a unique title using a random GUID suffix — use
+        /// <see cref="CreateBasicInfo" /> when an exact title is needed.
         /// </summary>
         public string GenerateTitle()
         {
@@ -96,20 +93,20 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
         }
 
         /// <summary>
-        /// Generates a deterministic vote count in the range [10, 10_000).
+        /// Generates a random vote count in the range [10, 10_000).
         /// </summary>
         public int GenerateVoteCount()
         {
-            return _random.Next(10, 10_000);
+            return Random.Shared.Next(10, 10_000);
         }
 
         /// <summary>
-        /// Generates a deterministic vote average in the range [0.0, 10.0]
+        /// Generates a random vote average in the range [0.0, 10.0]
         /// rounded to one decimal place.
         /// </summary>
         public double GenerateVoteAverage()
         {
-            return Math.Round(_random.NextDouble() * 10.0, 1);
+            return Math.Round(Random.Shared.NextDouble() * 10.0, 1);
         }
     }
 }
