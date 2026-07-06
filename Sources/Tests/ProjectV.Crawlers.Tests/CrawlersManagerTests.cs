@@ -60,7 +60,7 @@ namespace ProjectV.Crawlers.Tests
             );
             ICrawler throwingCrawler = CreateTmdbCrawler(throwOnGetResponse: expectedException);
 
-            using var sut = new CrawlersManager(outputResults: false);
+            using CrawlersManager sut = BuildSut();
             sut.Add(throwingCrawler);
 
             MethodInfo tryGetResponse = typeof(CrawlersManager).GetMethod(
@@ -90,7 +90,7 @@ namespace ProjectV.Crawlers.Tests
         public void Constructor_DoesNotRequireAnyCrawlers()
         {
             // Arrange. / Act.
-            using var sut = new CrawlersManager(outputResults: false);
+            using CrawlersManager sut = BuildSut();
 
             // Assert.
             sut.Should().NotBeNull(
@@ -104,7 +104,7 @@ namespace ProjectV.Crawlers.Tests
         public void Add_WithNullCrawler_ThrowsArgumentNullException()
         {
             // Arrange.
-            using var sut = new CrawlersManager(outputResults: false);
+            using CrawlersManager sut = BuildSut();
 
             // Act.
             var act = () => sut.Add(
@@ -122,7 +122,7 @@ namespace ProjectV.Crawlers.Tests
         {
             // Arrange.
             ICrawler crawler = CreateTmdbCrawler();
-            using var sut = new CrawlersManager(outputResults: false);
+            using CrawlersManager sut = BuildSut();
             sut.Add(crawler);
 
             // Act.
@@ -135,6 +135,11 @@ namespace ProjectV.Crawlers.Tests
         }
 
         #region Helper Methods
+
+        private static CrawlersManager BuildSut()
+        {
+            return new CrawlersManager(outputResults: false);
+        }
 
         private ICrawler CreateTmdbCrawler(Exception? throwOnGetResponse = null)
         {
