@@ -47,10 +47,11 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     ///   not blow up.</description></item>
     /// </list>
     /// <para>
-    /// The bot client substitute is exposed as the protected
-    /// <see cref="BotClientStub" /> so derived scenarios can assert on
-    /// outgoing bot calls (e.g.
-    /// <c>BotClientStub.Received().SendRequest(...)</c>) when relevant.
+    /// The bot-client stub is exposed as the protected
+    /// <see cref="BotClientStub" />, and the <see cref="StubBotService" />
+    /// the host resolves is exposed as <see cref="BotServiceStub" /> so
+    /// derived scenarios can assert on the production handler chain's
+    /// downstream calls via <c>BotServiceStub.CalledMethodNames</c>.
     /// </para>
     /// </remarks>
     public abstract class TelegramWebhookScenarioBaseTest : WebApiBaseTest<Startup>
@@ -62,6 +63,16 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
         /// and inspect its state if they need to verify outgoing bot calls.
         /// </summary>
         protected ITelegramBotClient BotClientStub { get; }
+
+        /// <summary>
+        /// Gets the <see cref="StubBotService" /> the host resolves in place
+        /// of the production singleton. Derived scenarios can assert on
+        /// <c>BotServiceStub.CalledMethodNames</c> to verify which
+        /// <see cref="IBotService" /> methods the production handler chain
+        /// invoked (e.g., that a webhook update produced a
+        /// <c>SendMessageAsync</c> reply).
+        /// </summary>
+        protected StubBotService BotServiceStub { get; }
 
         /// <summary>
         /// Initializes a new instance of the
@@ -94,32 +105,49 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
             ITelegramBotClient? botClientStub,
             IReadOnlyDictionary<string, string?>? extraConfiguration)
             : this(
-                resolvedBotClientStub: new ResolvedStub(
+                resolvedBotClientStub: new ResolvedBotStubs(
                     botClientStub ?? new StubTelegramBotClient()),
                 extraConfiguration: extraConfiguration)
         {
         }
 
         // The private ctor takes a wrapper type so the overload resolution
-        // is unambiguous and the bot-client stub is captured once + reused
-        // both for the BotService substitute (passed through the
+        // is unambiguous and the bot-client + bot-service stubs are captured
+        // once + reused both for the DI override (passed through the
         // ConfigureTestServices delegate) and as the protected
-        // BotClientStub property exposed to derived scenarios.
+        // BotClientStub / BotServiceStub properties exposed to derived
+        // scenarios.
         private TelegramWebhookScenarioBaseTest(
-            ResolvedStub resolvedBotClientStub,
+            ResolvedBotStubs resolvedBotClientStub,
             IReadOnlyDictionary<string, string?>? extraConfiguration)
             : base(
                 jwtConfig: null,
                 extraConfiguration: BuildConfiguration(extraConfiguration),
-                configureTestServices: services => ConfigureBotServiceSwap(services, resolvedBotClientStub.Client))
+                configureTestServices: services =>
+                    ConfigureBotServiceSwap(services, resolvedBotClientStub))
         {
             BotClientStub = resolvedBotClientStub.Client;
+            BotServiceStub = resolvedBotClientStub.Service;
         }
 
-        // Tiny holder so the private ctor's signature does NOT collide with
-        // the protected overload (which also accepts an ITelegramBotClient?
-        // + extra-configuration pair).
-        private readonly record struct ResolvedStub(ITelegramBotClient Client);
+        // Holder so the resolved bot-client + bot-service stubs can be
+        // captured before the base ctor runs and re-used by both the
+        // configureTestServices delegate and the protected properties.
+        private readonly record struct ResolvedBotStubs(
+            ITelegramBotClient Client,
+            StubBotService Service)
+        {
+            public ResolvedBotStubs(ITelegramBotClient client)
+                : this(client, BuildBotServiceStub(client))
+            {
+            }
+
+            private static StubBotService BuildBotServiceStub(
+                ITelegramBotClient client)
+            {
+                return new StubBotService(client);
+            }
+        }
 
         /// <inheritdoc />
         public override Task InitializeAsync()
@@ -131,10 +159,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
 
         private static void ConfigureBotServiceSwap(
             IServiceCollection services,
-            ITelegramBotClient botClientStub)
+            ResolvedBotStubs resolved)
         {
             services.RemoveAll<IBotService>();
-            services.AddSingleton<IBotService>(new StubBotService(botClientStub));
+            services.AddSingleton<IBotService>(resolved.Service);
 
             // The production CommunicationServiceClient's ctor instantiates
             // an HttpClient and validates RestApi/UserService options chain
