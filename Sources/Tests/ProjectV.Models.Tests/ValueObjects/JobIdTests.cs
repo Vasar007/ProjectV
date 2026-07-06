@@ -99,7 +99,7 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void ParseRoundTripsThroughGenerator()
         {
             // Arrange.
-            JobId expected = _generator.GenerateJobId();
+            JobId expected = GenerateJobId();
             string raw = expected.Value.ToString();
 
             // Act.
@@ -139,7 +139,7 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void TryParseValidGuidReturnsTrueAndPopulatesResult()
         {
             // Arrange.
-            string raw = _generator.GenerateRawId();
+            string raw = GenerateRawId();
 
             // Act.
             bool success = JobId.TryParse(raw, out JobId result);
@@ -177,14 +177,33 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void GeneratorCreateJobIdRoundTripsExplicitRaw()
         {
             // Arrange.
-            string raw = _generator.GenerateRawId();
+            string raw = GenerateRawId();
 
             // Act.
-            JobId jobId = _generator.CreateJobId(raw);
+            JobId jobId = CreateJobId(raw);
 
             // Assert.
             jobId.IsSpecified.Should().BeTrue();
             jobId.Value.Should().Be(Guid.Parse(raw));
         }
+
+        #region Helper Methods
+
+        private JobId GenerateJobId()
+        {
+            return _generator.GenerateJobId();
+        }
+
+        private JobId CreateJobId(string rawId)
+        {
+            return _generator.CreateJobId(rawId);
+        }
+
+        private string GenerateRawId()
+        {
+            return _generator.GenerateRawId();
+        }
+
+        #endregion
     }
 }

@@ -67,7 +67,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
         public async Task AddAsyncWithValidTokenPersistsRow()
         {
             // Arrange.
-            RefreshTokenInfo tokenInfo = _generator.GenerateRefreshTokenInfo();
+            RefreshTokenInfo tokenInfo = GenerateRefreshTokenInfo();
 
             // Act.
             int actualValue = await _sut.AddAsync(tokenInfo);
@@ -84,10 +84,9 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             // Arrange.
             var creation = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime expiry = creation.AddDays(7);
-            RefreshTokenInfo expected = _generator.GenerateRefreshTokenInfo(
+            RefreshTokenInfo expected = GenerateRefreshTokenInfo(
                 creationTimeUtc: creation,
-                expiryDateUtc: expiry
-            );
+                expiryDateUtc: expiry);
             await _sut.AddAsync(expected);
 
             // Act.
@@ -123,10 +122,9 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             // Arrange.
             var creation = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime expiry = creation.AddDays(14);
-            RefreshTokenInfo expected = _generator.GenerateRefreshTokenInfo(
+            RefreshTokenInfo expected = GenerateRefreshTokenInfo(
                 creationTimeUtc: creation,
-                expiryDateUtc: expiry
-            );
+                expiryDateUtc: expiry);
             await _sut.AddAsync(expected);
 
             // Act.
@@ -160,7 +158,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             // is effectively zero (the `TruncateAllTablesAsync` step in
             // InitializeAsync also rules out leftover rows from earlier
             // tests within this collection).
-            UserId unknownUserId = UserIdGenerator.Instance.GenerateUserId();
+            UserId unknownUserId = GenerateUserId();
 
             // Act.
             RefreshTokenInfo? actualValue = await _sut.FindByUserIdAsync(unknownUserId);
@@ -195,8 +193,8 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             // RefreshTokenInfoGenerator emits a fresh Guid.NewGuid()-backed
             // UserId on each call, so tokenA.UserId != tokenB.UserId with
             // overwhelming probability.
-            RefreshTokenInfo tokenA = _generator.GenerateRefreshTokenInfo();
-            RefreshTokenInfo tokenB = _generator.GenerateRefreshTokenInfo();
+            RefreshTokenInfo tokenA = GenerateRefreshTokenInfo();
+            RefreshTokenInfo tokenB = GenerateRefreshTokenInfo();
             tokenA.UserId.Should().NotBe(tokenB.UserId,
                 "the multi-row test requires two distinct user ids to be " +
                 "meaningful — generator-level guarantee, asserted defensively");
@@ -214,5 +212,23 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
                 "the predicate must filter — returning tokenB here would " +
                 "indicate a broken WHERE clause");
         }
+
+        #region Helper Methods
+
+        private RefreshTokenInfo GenerateRefreshTokenInfo(
+            DateTime? creationTimeUtc = null,
+            DateTime? expiryDateUtc = null)
+        {
+            return _generator.GenerateRefreshTokenInfo(
+                creationTimeUtc: creationTimeUtc,
+                expiryDateUtc: expiryDateUtc);
+        }
+
+        private static UserId GenerateUserId()
+        {
+            return UserIdGenerator.Instance.GenerateUserId();
+        }
+
+        #endregion
     }
 }

@@ -53,7 +53,7 @@ namespace ProjectV.Models.Tests.Data
         public void KindDefaultsToTypeName()
         {
             // Arrange. / Act.
-            var info = _generator.GenerateBasicInfo();
+            var info = GenerateBasicInfo();
 
             // Assert.
             info.Kind.Should().Be(nameof(BasicInfo));
@@ -63,7 +63,7 @@ namespace ProjectV.Models.Tests.Data
         public void ConstructorAssignsAllPropertiesFromArguments()
         {
             // Arrange.
-            var info = _generator.CreateBasicInfo(
+            var info = CreateBasicInfo(
                 thingId: 42, title: "Title", voteCount: 100, voteAverage: 9.5);
 
             // Assert.
@@ -77,9 +77,9 @@ namespace ProjectV.Models.Tests.Data
         public void EqualsReturnsTrueForMemberwiseIdenticalInstances()
         {
             // Arrange.
-            var left = _generator.CreateBasicInfo(
+            var left = CreateBasicInfo(
                 thingId: 1, title: "Same", voteCount: 5, voteAverage: 7.7);
-            var right = _generator.CreateBasicInfo(
+            var right = CreateBasicInfo(
                 thingId: 1, title: "Same", voteCount: 5, voteAverage: 7.7);
 
             // Act. / Assert.
@@ -93,9 +93,9 @@ namespace ProjectV.Models.Tests.Data
         public void EqualsAppliesToleranceOnVoteAverage()
         {
             // Arrange. BasicInfo.IsEqual uses Math.Abs(diff) < 1e-6.
-            var left = _generator.CreateBasicInfo(
+            var left = CreateBasicInfo(
                 thingId: 1, title: "Same", voteCount: 5, voteAverage: 7.7);
-            var right = _generator.CreateBasicInfo(
+            var right = CreateBasicInfo(
                 thingId: 1, title: "Same", voteCount: 5,
                 voteAverage: 7.7 + 1e-9);
 
@@ -107,17 +107,17 @@ namespace ProjectV.Models.Tests.Data
         public void EqualsReturnsFalseWhenAnyFieldDiffers()
         {
             // Arrange.
-            var baseline = _generator.CreateBasicInfo(
+            var baseline = CreateBasicInfo(
                 thingId: 1, title: "T", voteCount: 5, voteAverage: 7.7);
 
             // Act.
-            var differentId = _generator.CreateBasicInfo(
+            var differentId = CreateBasicInfo(
                 thingId: 2, title: "T", voteCount: 5, voteAverage: 7.7);
-            var differentTitle = _generator.CreateBasicInfo(
+            var differentTitle = CreateBasicInfo(
                 thingId: 1, title: "U", voteCount: 5, voteAverage: 7.7);
-            var differentVoteCount = _generator.CreateBasicInfo(
+            var differentVoteCount = CreateBasicInfo(
                 thingId: 1, title: "T", voteCount: 6, voteAverage: 7.7);
-            var differentVoteAverage = _generator.CreateBasicInfo(
+            var differentVoteAverage = CreateBasicInfo(
                 thingId: 1, title: "T", voteCount: 5, voteAverage: 7.8);
 
             // Assert.
@@ -131,7 +131,7 @@ namespace ProjectV.Models.Tests.Data
         public void EqualsHandlesNullAndSelfReference()
         {
             // Arrange.
-            var info = _generator.GenerateBasicInfo();
+            var info = GenerateBasicInfo();
 
             // Act. / Assert.
             info.Equals(info).Should().BeTrue();
@@ -142,7 +142,7 @@ namespace ProjectV.Models.Tests.Data
         public void NewtonsoftJsonRoundTripsCompact()
         {
             // Arrange.
-            var expected = _generator.CreateBasicInfo(
+            var expected = CreateBasicInfo(
                 thingId: 7, title: "Round-Trip", voteCount: 42, voteAverage: 8.4);
 
             // Act.
@@ -158,7 +158,7 @@ namespace ProjectV.Models.Tests.Data
         public void NewtonsoftJsonRoundTripsPrettyPrinted()
         {
             // Arrange.
-            var expected = _generator.CreateBasicInfo(
+            var expected = CreateBasicInfo(
                 thingId: 7, title: "Round-Trip", voteCount: 42, voteAverage: 8.4);
 
             // Act.
@@ -174,7 +174,7 @@ namespace ProjectV.Models.Tests.Data
         public void NewtonsoftJsonPreservesKindDiscriminator()
         {
             // Arrange.
-            var info = _generator.GenerateBasicInfo();
+            var info = GenerateBasicInfo();
 
             // Act.
             string json = JsonConvert.SerializeObject(info);
@@ -182,5 +182,24 @@ namespace ProjectV.Models.Tests.Data
             // Assert.
             json.Should().Contain($"\"Kind\":\"{nameof(BasicInfo)}\"");
         }
+
+        #region Helper Methods
+
+        private BasicInfo GenerateBasicInfo()
+        {
+            return _generator.GenerateBasicInfo();
+        }
+
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        #endregion
     }
 }

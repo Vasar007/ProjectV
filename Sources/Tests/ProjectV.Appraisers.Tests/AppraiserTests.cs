@@ -19,7 +19,7 @@ namespace ProjectV.Appraisers.Tests
         public void CheckTagPropertyDefaultValue()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             string expectedValue = $"Appraiser<{nameof(BasicInfo)}>";
 
             // Act.
@@ -35,7 +35,7 @@ namespace ProjectV.Appraisers.Tests
         public void CheckTypeIdPropertyDefaultValue()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             Type expectedValue = typeof(BasicInfo);
 
             // Act.
@@ -50,7 +50,7 @@ namespace ProjectV.Appraisers.Tests
         public void CheckRatingNamePropertyDefaultValue()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             const string expectedValue = "Common rating";
 
             // Act.
@@ -66,7 +66,7 @@ namespace ProjectV.Appraisers.Tests
         public void GetRatingsThrowsExceptionBecauseOfNullParameter()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
 
             // Act. / Assert.
             var actWithoutOutput = () => appraiser.GetRatings(entityInfo: null!, outputResults: false);
@@ -84,14 +84,12 @@ namespace ProjectV.Appraisers.Tests
         public void CallGetRatingsWithConteinerWithOneItem()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
             var item = new BasicInfo(
                 thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
             );
-            var expectedValue = TestDataCreator
-                .CreateExpectedValueForBasicInfo(ratingId, item)
-                .Single();
+            var expectedValue = CreateExpectedRatings(ratingId, new[] { item }).Single();
 
             // Act.
             var actualValue = appraiser.GetRatings(item, outputResults: false);
@@ -105,7 +103,7 @@ namespace ProjectV.Appraisers.Tests
         public void CallGetRatingsWithConteinerWithThreeItems()
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
             var item1 = new BasicInfo(
                 thingId: 1, title: "Title-1", voteCount: 11, voteAverage: 9.7
@@ -117,9 +115,7 @@ namespace ProjectV.Appraisers.Tests
                 thingId: 3, title: "Title-3", voteCount: 13, voteAverage: 9.9
             );
             var items = new[] { item1, item2, item3 };
-            var expectedValue = TestDataCreator.CreateExpectedValueForBasicInfo(
-                ratingId, item1, item2, item3
-            );
+            var expectedValue = CreateExpectedRatings(ratingId, items);
 
             // Act.
             var actualValue = new List<RatingDataContainer>();
@@ -147,10 +143,10 @@ namespace ProjectV.Appraisers.Tests
         public void CallGetRatingsWithConteinerWithRandomData(int itemsCount)
         {
             // Arrange.
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
-            var items = TestDataCreator.CreateBasicInfoListRandomly(itemsCount);
-            var expectedValue = TestDataCreator.CreateExpectedValueForBasicInfo(ratingId, items);
+            var items = GenerateBasicInfoList(itemsCount);
+            var expectedValue = CreateExpectedRatings(ratingId, items);
 
             // Act.
             var actualValue = new List<RatingDataContainer>();
@@ -165,5 +161,25 @@ namespace ProjectV.Appraisers.Tests
             actualValue.Should().NotBeEmpty();
             actualValue.Should().BeEquivalentTo(expectedValue);
         }
+
+        #region Helper Methods
+
+        private static IAppraiser CreateBasicAppraiser()
+        {
+            return TestAppraisersCreator.CreateBasicAppraiser();
+        }
+
+        private static IReadOnlyList<RatingDataContainer> CreateExpectedRatings(
+            Guid ratingId, IReadOnlyList<BasicInfo> items)
+        {
+            return TestDataCreator.CreateExpectedValueForBasicInfo(ratingId, items);
+        }
+
+        private static IReadOnlyList<BasicInfo> GenerateBasicInfoList(int count)
+        {
+            return TestDataCreator.CreateBasicInfoListRandomly(count);
+        }
+
+        #endregion
     }
 }

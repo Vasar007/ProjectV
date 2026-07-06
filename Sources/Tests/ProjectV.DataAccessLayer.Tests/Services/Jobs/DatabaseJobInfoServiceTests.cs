@@ -66,7 +66,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
         public async Task AddAsyncWithValidJobInfoReturnsSavedRow()
         {
             // Arrange.
-            JobInfo jobInfo = _generator.GenerateJobInfo();
+            JobInfo jobInfo = GenerateJobInfo();
 
             // Act.
             int actualValue = await _sut.AddAsync(jobInfo);
@@ -81,7 +81,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
         public async Task FindByIdAsyncAfterAddReturnsEquivalentJob()
         {
             // Arrange.
-            JobInfo expected = _generator.GenerateJobInfo();
+            JobInfo expected = GenerateJobInfo();
             await _sut.AddAsync(expected);
 
             // Act.
@@ -100,7 +100,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
         public async Task UpdateAsyncWithExistingJobPersistsChanges()
         {
             // Arrange.
-            JobInfo original = _generator.GenerateJobInfo();
+            JobInfo original = GenerateJobInfo();
             await _sut.AddAsync(original);
 
             var mutated = new JobInfo(
@@ -124,5 +124,14 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
             reread!.State.Should().Be(mutated.State);
             reread.Result.Should().Be(mutated.Result);
         }
+
+        #region Helper Methods
+
+        private JobInfo GenerateJobInfo()
+        {
+            return _generator.GenerateJobInfo();
+        }
+
+        #endregion
     }
 }

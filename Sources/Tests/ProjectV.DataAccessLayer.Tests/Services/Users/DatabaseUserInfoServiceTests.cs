@@ -63,7 +63,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
         public async Task AddAsyncWithValidUserReturnsSavedRow()
         {
             // Arrange.
-            UserInfo userInfo = _generator.GenerateUserInfo();
+            UserInfo userInfo = GenerateUserInfo();
 
             // Act.
             int actualValue = await _sut.AddAsync(userInfo);
@@ -78,7 +78,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
         public async Task FindByIdAsyncAfterAddReturnsEquivalentUser()
         {
             // Arrange.
-            UserInfo expected = _generator.GenerateUserInfo();
+            UserInfo expected = GenerateUserInfo();
             await _sut.AddAsync(expected);
 
             // Act.
@@ -96,7 +96,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
         public async Task FindByUserNameAsyncAfterAddReturnsUser()
         {
             // Arrange.
-            UserInfo expected = _generator.GenerateUserInfo();
+            UserInfo expected = GenerateUserInfo();
             await _sut.AddAsync(expected);
 
             // Act.
@@ -107,5 +107,14 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
             actualValue!.Id.Should().Be(expected.Id);
             actualValue.UserName.Should().Be(expected.UserName);
         }
+
+        #region Helper Methods
+
+        private UserInfo GenerateUserInfo()
+        {
+            return _generator.GenerateUserInfo();
+        }
+
+        #endregion
     }
 }

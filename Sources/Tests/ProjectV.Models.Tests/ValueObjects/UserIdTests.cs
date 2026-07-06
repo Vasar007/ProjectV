@@ -99,7 +99,7 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void ParseRoundTripsThroughGenerator()
         {
             // Arrange.
-            UserId expected = _generator.GenerateUserId();
+            UserId expected = GenerateUserId();
             string raw = expected.Value.ToString();
 
             // Act.
@@ -139,7 +139,7 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void TryParseValidGuidReturnsTrueAndPopulatesResult()
         {
             // Arrange.
-            string raw = _generator.GenerateRawId();
+            string raw = GenerateRawId();
 
             // Act.
             bool success = UserId.TryParse(raw, out UserId result);
@@ -177,14 +177,33 @@ namespace ProjectV.Models.Tests.ValueObjects
         public void GeneratorCreateUserIdRoundTripsExplicitRaw()
         {
             // Arrange.
-            string raw = _generator.GenerateRawId();
+            string raw = GenerateRawId();
 
             // Act.
-            UserId userId = _generator.CreateUserId(raw);
+            UserId userId = CreateUserId(raw);
 
             // Assert.
             userId.IsSpecified.Should().BeTrue();
             userId.Value.Should().Be(Guid.Parse(raw));
         }
+
+        #region Helper Methods
+
+        private UserId GenerateUserId()
+        {
+            return _generator.GenerateUserId();
+        }
+
+        private UserId CreateUserId(string rawId)
+        {
+            return _generator.CreateUserId(rawId);
+        }
+
+        private string GenerateRawId()
+        {
+            return _generator.GenerateRawId();
+        }
+
+        #endregion
     }
 }
