@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ProjectV.Core.Services.Clients;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
+using ProjectV.TelegramBotWebService.Tests.Scenarios.Helpers;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.WebApi;

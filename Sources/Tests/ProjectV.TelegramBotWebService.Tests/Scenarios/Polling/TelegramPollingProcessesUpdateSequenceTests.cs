@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
+using ProjectV.TelegramBotWebService.Tests.Scenarios.Helpers;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -97,7 +98,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 .NotBeEmpty(
                     "the polling loop must have forwarded at least one " +
                     "update through the production handler chain. " +
-                    $"NLog captured: {string.Join(Environment.NewLine, Webhook.CapturedException.LogLines)}");
+                    $"NLog captured: {string.Join(Environment.NewLine, CapturedException.LogLines)}");
 
             int sendMessageCallCount = CountSendMessageCalls();
             sendMessageCallCount.Should().BeGreaterThanOrEqualTo(
@@ -105,7 +106,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 $"the polling loop must drain all {ExpectedUpdateCount} scripted " +
                 "updates and the production handler chain must call " +
                 "IBotService.SendMessageAsync at least once per update. " +
-                $"NLog captured: {string.Join(Environment.NewLine, Webhook.CapturedException.LogLines)}");
+                $"NLog captured: {string.Join(Environment.NewLine, CapturedException.LogLines)}");
         }
 
         // The Update sequence the scripted-bot-client yields on the first
