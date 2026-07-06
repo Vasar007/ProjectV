@@ -22,29 +22,21 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     /// </summary>
     public sealed class RefreshTokenInfoGenerator
     {
+        /// <summary>
+        /// Singleton instance for convenient access.
+        /// </summary>
+        public static RefreshTokenInfoGenerator Instance { get; } = new();
+
         private readonly UserIdGenerator _userIdGenerator;
 
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="RefreshTokenInfoGenerator" /> class with a default
-        /// <see cref="UserIdGenerator" />.
+        /// <see cref="RefreshTokenInfoGenerator" /> class.
         /// </summary>
         public RefreshTokenInfoGenerator()
-            : this(new UserIdGenerator())
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="RefreshTokenInfoGenerator" /> class with a caller-supplied
-        /// <see cref="UserIdGenerator" /> — useful when a test needs to link
-        /// the token to a specific user.
-        /// </summary>
-        /// <param name="userIdGenerator">Generator for the <c>userId</c> field.</param>
-        public RefreshTokenInfoGenerator(UserIdGenerator userIdGenerator)
-        {
-            _userIdGenerator = userIdGenerator.ThrowIfNull(nameof(userIdGenerator));
+            _userIdGenerator = UserIdGenerator.Instance;
         }
 
         /// <summary>

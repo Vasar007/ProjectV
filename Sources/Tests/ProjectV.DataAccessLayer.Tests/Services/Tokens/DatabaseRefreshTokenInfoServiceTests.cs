@@ -39,7 +39,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
         public DatabaseRefreshTokenInfoServiceTests(DbCollectionFixture db)
         {
             _db = db.ThrowIfNull(nameof(db));
-            _generator = new RefreshTokenInfoGenerator(new UserIdGenerator());
+            _generator = RefreshTokenInfoGenerator.Instance;
         }
 
 
@@ -160,7 +160,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Tokens
             // is effectively zero (the `TruncateAllTablesAsync` step in
             // InitializeAsync also rules out leftover rows from earlier
             // tests within this collection).
-            UserId unknownUserId = new UserIdGenerator().GenerateUserId();
+            UserId unknownUserId = UserIdGenerator.Instance.GenerateUserId();
 
             // Act.
             RefreshTokenInfo? actualValue = await _sut.FindByUserIdAsync(unknownUserId);

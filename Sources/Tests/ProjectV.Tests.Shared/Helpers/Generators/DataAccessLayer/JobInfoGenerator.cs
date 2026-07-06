@@ -22,27 +22,21 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     /// </summary>
     public sealed class JobInfoGenerator
     {
+        /// <summary>
+        /// Singleton instance for convenient access.
+        /// </summary>
+        public static JobInfoGenerator Instance { get; } = new();
+
         private readonly JobIdGenerator _jobIdGenerator;
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JobInfoGenerator" />
-        /// class with a default <see cref="JobIdGenerator" />.
+        /// class.
         /// </summary>
         public JobInfoGenerator()
-            : this(new JobIdGenerator())
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JobInfoGenerator" />
-        /// class with a caller-supplied <see cref="JobIdGenerator" /> — useful
-        /// when a test needs a specific <see cref="JobId" /> series.
-        /// </summary>
-        /// <param name="jobIdGenerator">Generator for the <c>id</c> field.</param>
-        public JobInfoGenerator(JobIdGenerator jobIdGenerator)
-        {
-            _jobIdGenerator = jobIdGenerator.ThrowIfNull(nameof(jobIdGenerator));
+            _jobIdGenerator = JobIdGenerator.Instance;
         }
 
         /// <summary>

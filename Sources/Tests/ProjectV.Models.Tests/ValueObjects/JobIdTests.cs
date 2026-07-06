@@ -20,7 +20,7 @@ namespace ProjectV.Models.Tests.ValueObjects
 
         public JobIdTests()
         {
-            _generator = new JobIdGenerator();
+            _generator = JobIdGenerator.Instance;
         }
 
         [Fact]

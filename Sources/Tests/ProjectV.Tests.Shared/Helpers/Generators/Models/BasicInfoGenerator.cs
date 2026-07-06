@@ -22,6 +22,11 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
     public sealed class BasicInfoGenerator
     {
         /// <summary>
+        /// Singleton instance for convenient access.
+        /// </summary>
+        public static BasicInfoGenerator Instance { get; } = new();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BasicInfoGenerator" />
         /// class.
         /// </summary>

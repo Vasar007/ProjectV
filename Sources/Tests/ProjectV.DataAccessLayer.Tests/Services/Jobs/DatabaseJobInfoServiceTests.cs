@@ -38,7 +38,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
         public DatabaseJobInfoServiceTests(DbCollectionFixture db)
         {
             _db = db.ThrowIfNull(nameof(db));
-            _generator = new JobInfoGenerator();
+            _generator = JobInfoGenerator.Instance;
         }
 
 

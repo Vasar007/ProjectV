@@ -20,7 +20,7 @@ namespace ProjectV.Models.Tests.ValueObjects
 
         public UserIdTests()
         {
-            _generator = new UserIdGenerator();
+            _generator = UserIdGenerator.Instance;
         }
 
         [Fact]

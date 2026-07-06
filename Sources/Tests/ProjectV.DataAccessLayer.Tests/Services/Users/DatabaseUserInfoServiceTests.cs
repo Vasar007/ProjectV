@@ -35,7 +35,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Users
         public DatabaseUserInfoServiceTests(DbCollectionFixture db)
         {
             _db = db.ThrowIfNull(nameof(db));
-            _generator = new UserInfoGenerator();
+            _generator = UserInfoGenerator.Instance;
         }
 
 

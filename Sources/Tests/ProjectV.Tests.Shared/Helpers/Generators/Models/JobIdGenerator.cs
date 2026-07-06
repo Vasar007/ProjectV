@@ -24,6 +24,11 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.Models
     public sealed class JobIdGenerator
     {
         /// <summary>
+        /// Singleton instance for convenient access.
+        /// </summary>
+        public static JobIdGenerator Instance { get; } = new();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="JobIdGenerator" />
         /// class.
         /// </summary>

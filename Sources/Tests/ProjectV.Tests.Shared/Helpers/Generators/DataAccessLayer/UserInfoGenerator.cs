@@ -24,26 +24,21 @@ namespace ProjectV.Tests.Shared.Helpers.Generators.DataAccessLayer
     /// </summary>
     public sealed class UserInfoGenerator
     {
+        /// <summary>
+        /// Singleton instance for convenient access.
+        /// </summary>
+        public static UserInfoGenerator Instance { get; } = new();
+
         private readonly UserIdGenerator _userIdGenerator;
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInfoGenerator" />
-        /// class with a default <see cref="UserIdGenerator" />.
+        /// class.
         /// </summary>
         public UserInfoGenerator()
-            : this(new UserIdGenerator())
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserInfoGenerator" />
-        /// class with a caller-supplied <see cref="UserIdGenerator" />.
-        /// </summary>
-        /// <param name="userIdGenerator">Generator for the <c>id</c> field.</param>
-        public UserInfoGenerator(UserIdGenerator userIdGenerator)
-        {
-            _userIdGenerator = userIdGenerator.ThrowIfNull(nameof(userIdGenerator));
+            _userIdGenerator = UserIdGenerator.Instance;
         }
 
         /// <summary>

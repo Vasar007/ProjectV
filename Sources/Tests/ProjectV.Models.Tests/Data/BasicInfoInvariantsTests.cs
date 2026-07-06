@@ -29,7 +29,7 @@ namespace ProjectV.Models.Tests.Data
 
         public BasicInfoInvariantsTests()
         {
-            _generator = new BasicInfoGenerator();
+            _generator = BasicInfoGenerator.Instance;
         }
 
         [Fact]
