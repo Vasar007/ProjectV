@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AwesomeAssertions;
 using ProjectV.Models.Internal.Jobs;
 using ProjectV.Tests.Shared.ForTests;
@@ -40,13 +41,10 @@ namespace ProjectV.Executors.Tests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task ExecuteAsync_Parameterless_ThrowsNotImplementedException()
+        public async Task ExecuteAsync_Parameterless_ThrowsNotImplementedException()
         {
             // Arrange.
-            var jobInfo = JobInfo.Create(
-                name: "ProjectV.Executors.Tests.SimpleExecutorTests",
-                config: "<config />"
-            );
+            JobInfo jobInfo = CreateJobInfo();
             var sut = new SimpleExecutor(
                 jobInfo: jobInfo,
                 executionsNumber: 1,
@@ -84,10 +82,7 @@ namespace ProjectV.Executors.Tests
         public void Constructor_WithZeroExecutionsNumber_ThrowsArgumentOutOfRangeException()
         {
             // Arrange.
-            var jobInfo = JobInfo.Create(
-                name: "ProjectV.Executors.Tests.SimpleExecutorTests",
-                config: "<config />"
-            );
+            JobInfo jobInfo = CreateJobInfo();
 
             // Act.
             var act = () => new SimpleExecutor(
@@ -106,10 +101,7 @@ namespace ProjectV.Executors.Tests
         public void Constructor_HappyPath_ExposesIdAndExecutionPropertiesFromArguments()
         {
             // Arrange.
-            var jobInfo = JobInfo.Create(
-                name: "ProjectV.Executors.Tests.SimpleExecutorTests",
-                config: "<config />"
-            );
+            JobInfo jobInfo = CreateJobInfo();
             var delayTime = TimeSpan.FromMilliseconds(123);
             const int executionsNumber = 2;
 
@@ -126,5 +118,17 @@ namespace ProjectV.Executors.Tests
             sut.DelayTime.Should().Be(delayTime);
             sut.RestartPoint.Should().Be(RestartPointKind.None);
         }
+
+        #region Helper Methods
+
+        private static JobInfo CreateJobInfo()
+        {
+            return JobInfo.Create(
+                name: "ProjectV.Executors.Tests.SimpleExecutorTests",
+                config: "<config />"
+            );
+        }
+
+        #endregion
     }
 }
