@@ -15,7 +15,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
     /// <summary>
     /// Scenario TG-POLL-1: the production <c>PoolingProcessor</c> hosted
     /// service drains a fixed sequence of <see cref="Update" /> objects from
-    /// the substituted <c>ITelegramBotClient</c> and forwards each one
+    /// the stubbed <c>ITelegramBotClient</c> and forwards each one
     /// through the full handler chain (<c>BotPollingUpdateHandler</c> →
     /// <c>UpdateService.HandleUpdateAsync</c> → <c>BotMessageHandler</c> →
     /// <c>IBotService.SendMessageAsync</c>).
@@ -61,9 +61,9 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         public async Task PoolingProcessor_ProcessesFixedUpdateSequence_ForwardsToBotServiceSendMessage()
         {
             // Arrange.
-            // The base ctor has already supplied the bot-client substitute
+            // The base ctor has already supplied the bot-client stub
             // (pre-loaded with three Updates via WithUpdateSequence) and
-            // the bot-service substitute. WebApiBaseTest.InitializeAsync
+            // the bot-service stub. WebApiBaseTest.InitializeAsync
             // built the TestWebApplicationFactory and called CreateClient(),
             // which triggers IHost.StartAsync() — at this point the host has
             // resolved PoolingProcessor (BackgroundService) and is running
@@ -151,7 +151,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         private async Task WaitForExpectedSendMessageCountAsync(
             int target, CancellationToken cancellationToken)
         {
-            // Poll the substitute's call count until it reaches the target
+            // Poll the stub's call count until it reaches the target
             // or the cancellation token signals. The polling delay is small
             // because the receive loop runs in-process and is fast; the
             // bounded timeout (15 s) absorbs CI slowness without making the

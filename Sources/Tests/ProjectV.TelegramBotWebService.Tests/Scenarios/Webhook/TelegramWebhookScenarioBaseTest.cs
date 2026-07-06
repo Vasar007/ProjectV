@@ -77,7 +77,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="TelegramWebhookScenarioBaseTest" /> class with default
-        /// (bare, no-setup) bot-client substitute and no extra configuration
+        /// (bare, no-setup) bot-client stub and no extra configuration
         /// overrides.
         /// </summary>
         protected TelegramWebhookScenarioBaseTest()

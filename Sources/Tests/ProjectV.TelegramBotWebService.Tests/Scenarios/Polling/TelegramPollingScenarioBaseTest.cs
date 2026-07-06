@@ -130,7 +130,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
 
         // Tiny wrapper so the protected ctor's signature does not collide with
         // a hypothetical future overload and so we can capture the supplied
-        // (or default) bot-client + freshly-built bot-service substitutes
+        // (or default) bot-client + freshly-built bot-service stubs
         // exactly once for both the DI override AND the protected properties.
         private TelegramPollingScenarioBaseTest(
             ResolvedBotStubs resolvedBotClientStub,
