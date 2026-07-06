@@ -144,10 +144,6 @@ namespace ProjectV.DataPipeline.Tests
             // the only "test-flavoured" deviation from the production
             // Execute method — the pipeline plumbing under test is
             // identical.
-            _ = sut; // suppress "unused" notice; we deliberately
-                     // construct DataflowPipeline to verify ctor + property
-                     // wiring stays correct even though we drive the flow
-                     // through its public InputtersFlow seam.
             await sut.InputtersFlow.ProcessAsync(
                 new[] { "any-storage-name" },
                 completeFlowOnFinish: true
