@@ -14,7 +14,7 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
     /// production manager types (<see cref="InputManager" />,
     /// <see cref="CrawlersManager" />, <see cref="AppraisersManager" />,
     /// <see cref="OutputManager" />) populated with
-    /// <see cref="NSubstitute" /> child doubles.
+    /// <c>NSubstitute</c> child doubles.
     /// </summary>
     /// <remarks>
     /// <para>

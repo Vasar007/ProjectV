@@ -8,7 +8,7 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <see cref="IFixture" /> wired with the
     /// <see cref="AutoNSubstituteCustomization" /> so that
     /// <c>Fixture.Freeze&lt;T&gt;()</c> and <c>Fixture.Create&lt;T&gt;()</c>
-    /// return <see cref="NSubstitute" /> proxies for any interface or
+    /// return <c>NSubstitute</c> proxies for any interface or
     /// virtual class without per-test boilerplate.
     /// </summary>
     /// <remarks>

@@ -5,7 +5,7 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Managers
 {
     /// <summary>
     /// Builder for real <see cref="CrawlersManager" /> instances populated
-    /// with <see cref="NSubstitute" /> child <see cref="ICrawler" /> doubles.
+    /// with <c>NSubstitute</c> child <see cref="ICrawler" /> doubles.
     /// <see cref="CrawlersManager" /> is <c>sealed</c> without a
     /// substitution-friendly interface seam, so this
     /// builder returns a real manager populated through its public

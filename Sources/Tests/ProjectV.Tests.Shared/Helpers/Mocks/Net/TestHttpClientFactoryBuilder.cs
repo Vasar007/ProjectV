@@ -6,7 +6,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Net
 {
     /// <summary>
     /// Builder for <see cref="IHttpClientFactory" /> test doubles backed by
-    /// an AutoFixture-supplied <see cref="NSubstitute" /> substitute.
+    /// an AutoFixture-supplied <c>NSubstitute</c> substitute.
     /// Configures <c>CreateClient(Any)</c> to return a caller-supplied
     /// <see cref="HttpClient" /> — usually one backed by a fake message
     /// handler so the production code's outbound requests can be observed.
