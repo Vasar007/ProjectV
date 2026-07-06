@@ -81,7 +81,7 @@ namespace ProjectV.Appraisers.Tests
         }
 
         [Fact]
-        public void CallGetRatingsWithConteinerWithOneItem()
+        public void GetRatings_WithOneItem_ReturnsExpectedRatingContainer()
         {
             // Arrange.
             var appraiser = CreateBasicAppraiser();
@@ -100,7 +100,7 @@ namespace ProjectV.Appraisers.Tests
         }
 
         [Fact]
-        public void CallGetRatingsWithConteinerWithThreeItems()
+        public void GetRatings_WithThreeItems_ReturnsExpectedRatingContainers()
         {
             // Arrange.
             var appraiser = CreateBasicAppraiser();
@@ -140,7 +140,7 @@ namespace ProjectV.Appraisers.Tests
         [InlineData(25)]
         [InlineData(50)]
         [InlineData(100)]
-        public void CallGetRatingsWithConteinerWithRandomData(int itemsCount)
+        public void GetRatings_WithRandomData_ReturnsExpectedRatingContainers(int itemsCount)
         {
             // Arrange.
             var appraiser = CreateBasicAppraiser();
