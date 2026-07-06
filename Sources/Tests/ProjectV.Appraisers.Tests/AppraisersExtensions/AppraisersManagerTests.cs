@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Acolyte.Common.Monads;
 using AwesomeAssertions;
 using NSubstitute;
@@ -74,7 +76,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         }
 
         [Fact]
-        public void AddOnceRegistersAppraiserUnderItsTypeId()
+        public void AddThenCreateFlowReadsRegisteredAppraiserTypeId()
         {
             // Arrange.
             var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
@@ -83,27 +85,40 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var flow = sut.CreateFlow();
 
-            // Assert. The flow construction reads TypeId from every child.
+            // Assert. The flow construction reads TypeId from every child;
+            // end-to-end dispatch through the flow is covered by
+            // CreateFlowDispatchesEntitiesToMatchingChildAppraiser.
             _ = appraiser.Received().TypeId;
             flow.Should().NotBeNull();
         }
 
         [Fact]
-        public void AddSameInstanceTwiceIsIdempotentWithinSameTypeId()
+        public async Task AddSameInstanceTwiceIsIdempotentWithinSameTypeId()
         {
             // Arrange.
-            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag");
+            var entity = new BasicInfo(
+                thingId: 7, title: "Idempotent", voteCount: 1, voteAverage: 1.0);
+            var rating = new RatingDataContainer(
+                dataHandler: entity,
+                ratingValue: 4.2,
+                ratingId: Guid.Empty);
+            var appraiser = CreateAppraiser(typeof(BasicInfo), "tag", rating);
             var sut = CreateAppraisersManager();
 
-            // Act.
+            // Act. Production AppraisersManager.Add skips a duplicate
+            // reference in the same TypeId bucket, so the flow must contain
+            // exactly one child appraiser.
             sut.Add(appraiser);
             sut.Add(appraiser);
+            var flow = sut.CreateFlow();
 
-            // Assert. Production AppraisersManager.Add (see Sources/Libraries/
-            // ProjectV.Appraisers/AppraisersManager.cs) skips a duplicate
-            // reference in the same TypeId bucket — the flow must still
-            // build, and Remove(item) returning true confirms the bucket
-            // exists with the registered child.
+            RatingDataContainer emitted = await DriveFlowWithSingleEntityAsync(flow, entity);
+
+            // Assert. A duplicate registration would produce a second child
+            // flow and therefore a second GetRatings call for the same
+            // entity — exactly one call proves the Add was idempotent.
+            emitted.Should().BeSameAs(rating);
+            appraiser.Received(1).GetRatings(Arg.Any<BasicInfo>(), Arg.Any<bool>());
             sut.Remove(appraiser).Should().BeTrue();
         }
 
@@ -152,26 +167,28 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         }
 
         [Fact]
-        public void CreateFlowDispatchesEntitiesToMatchingChildAppraiser()
+        public async Task CreateFlowDispatchesEntitiesToMatchingChildAppraiser()
         {
             // Arrange.
+            var entity = new BasicInfo(
+                thingId: 99, title: "Dispatch", voteCount: 1, voteAverage: 1.0);
             var expectedRating = new RatingDataContainer(
-                dataHandler: new BasicInfo(
-                    thingId: 99, title: "Dispatch", voteCount: 1, voteAverage: 1.0),
+                dataHandler: entity,
                 ratingValue: 7.5,
                 ratingId: Guid.Empty);
 
             var basicAppraiser = CreateAppraiser(typeof(BasicInfo), "tag", expectedRating);
             var sut = CreateAppraisersManager(basicAppraiser);
-
-            // Act.
             var flow = sut.CreateFlow();
 
-            // Assert. The flow is constructed from a single bucket; the
-            // SUT's wiring exercises TypeId on every child during the
-            // CreateFlow walk (see AppraisersManager.CreateFlow).
-            flow.Should().NotBeNull();
-            _ = basicAppraiser.Received().TypeId;
+            // Act. Push one entity through the constructed flow and capture
+            // what the appraiser stage emits.
+            RatingDataContainer emitted = await DriveFlowWithSingleEntityAsync(flow, entity);
+
+            // Assert. The entity reached the matching child appraiser and its
+            // rating flowed out of the appraisers stage unchanged.
+            emitted.Should().BeSameAs(expectedRating);
+            basicAppraiser.Received(1).GetRatings(Arg.Any<BasicInfo>(), Arg.Any<bool>());
         }
 
         [Fact]
@@ -190,6 +207,42 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Posts <paramref name="entity" /> into the flow's input block,
+        /// waits (with a bounded timeout) for the first emitted rating, and
+        /// returns it. The flow is deliberately NOT completed — Gridsum's
+        /// completion semantics deadlock when a predicated link rejects an
+        /// item, so the helper observes the emission directly instead of
+        /// awaiting CompletionTask. A short grace delay after the first
+        /// emission lets an (unexpected) duplicate child appraiser fire so
+        /// call-count assertions in the caller stay reliable.
+        /// </summary>
+        private static async Task<RatingDataContainer> DriveFlowWithSingleEntityAsync(
+            AppraisersFlow flow, BasicInfo entity)
+        {
+            var firstEmission = new TaskCompletionSource<RatingDataContainer>(
+                TaskCreationOptions.RunContinuationsAsynchronously);
+            var sink = new ActionBlock<RatingDataContainer>(
+                rating => firstEmission.TrySetResult(rating));
+            flow.OutputBlock.LinkTo(sink);
+
+            bool accepted = flow.InputBlock.Post(entity);
+            accepted.Should().BeTrue(
+                "the appraisers flow input block must accept a matching entity");
+
+            Task completed = await Task.WhenAny(
+                firstEmission.Task, Task.Delay(TimeSpan.FromSeconds(15)));
+            completed.Should().BeSameAs(
+                firstEmission.Task,
+                "the flow must emit a rating for a matching entity within the timeout");
+
+            // Grace period so a duplicate child (if one were wired) would
+            // also have invoked GetRatings before the caller asserts counts.
+            await Task.Delay(TimeSpan.FromMilliseconds(250));
+
+            return await firstEmission.Task;
+        }
 
         private AppraisersManager CreateAppraisersManager(params IAppraiser[] appraisers)
         {
