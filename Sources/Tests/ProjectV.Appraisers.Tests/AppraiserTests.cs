@@ -81,6 +81,29 @@ namespace ProjectV.Appraisers.Tests
         }
 
         [Fact]
+        public void GetRatings_WithKnownVotes_ReturnsVoteAverageAsRatingValue()
+        {
+            // Arrange. Hand-computed expectation: the common appraisal's
+            // rating for a BasicInfo is its VoteAverage. Unlike the tests
+            // that compare against CreateExpectedRatings (which re-runs the
+            // production formula and therefore verifies wiring only), this
+            // literal expectation fails if the rating formula regresses.
+            var appraiser = CreateBasicAppraiser();
+            const double voteAverage = 8.25;
+            var item = new BasicInfo(
+                thingId: 5, title: "Known", voteCount: 100, voteAverage: voteAverage
+            );
+
+            // Act.
+            var actualValue = appraiser.GetRatings(item, outputResults: false);
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.RatingValue.Should().Be(voteAverage);
+            actualValue.DataHandler.Should().BeSameAs(item);
+        }
+
+        [Fact]
         public void GetRatings_WithOneItem_ReturnsExpectedRatingContainer()
         {
             // Arrange.

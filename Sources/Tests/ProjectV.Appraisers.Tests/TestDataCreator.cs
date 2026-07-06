@@ -7,6 +7,18 @@ using ProjectV.Models.Internal;
 
 namespace ProjectV.Appraisers.Tests
 {
+    /// <summary>
+    /// Legacy static creators for appraiser test data.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="CreateExpectedValueForBasicInfo(Guid, BasicInfo[])" />
+    /// computes the expected rating by running the same production
+    /// <c>BasicAppraisalCommon.CalculateRating</c> the SUT delegates to, so
+    /// tests comparing against it verify delegation/wiring only — a wrong
+    /// rating formula cannot fail them. Formula regressions are covered
+    /// separately by a test with a hand-computed expected value
+    /// (see <c>AppraiserTests.GetRatings_WithKnownVotes_ReturnsVoteAverageAsRatingValue</c>).
+    /// </remarks>
     internal static class TestDataCreator
     {
         internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
