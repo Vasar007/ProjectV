@@ -98,14 +98,15 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var sut = CreateSut();
-            var movie = CreateMovie(popularity: 12.34);
+            const double expectedPopularity = 12.34;
+            var movie = CreateMovie(popularity: expectedPopularity);
 
             // Act.
             var actual = sut.GetRatings(movie, outputResults: false);
 
             // Assert.
             actual.Should().NotBeNull();
-            actual.RatingValue.Should().Be(12.34);
+            actual.RatingValue.Should().Be(expectedPopularity);
             actual.DataHandler.Should().BeSameAs(movie);
             actual.RatingId.Should().Be(Guid.Empty);
         }

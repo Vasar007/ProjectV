@@ -77,7 +77,7 @@ namespace ProjectV.Core.Tests.Net
             actualValue.IsSuccess.Should().BeTrue();
             actualValue.Ok.Should().NotBeNull();
             actualValue.Ok!.AccessToken.Should().NotBeNull();
-            actualValue.Ok!.AccessToken.Token.Should().Be("access-token-jwt");
+            actualValue.Ok!.AccessToken.Token.Should().Be(token.AccessToken.Token);
             handler.CallCount.Should().Be(1);
         }
 
@@ -105,7 +105,7 @@ namespace ProjectV.Core.Tests.Net
             // Assert.
             actualValue.IsSuccess.Should().BeFalse();
             actualValue.Error.Should().NotBeNull();
-            actualValue.Error!.ErrorCode.Should().Be("401");
+            actualValue.Error!.ErrorCode.Should().Be(errorPayload.ErrorCode);
             handler.CallCount.Should().Be(1);
         }
 
