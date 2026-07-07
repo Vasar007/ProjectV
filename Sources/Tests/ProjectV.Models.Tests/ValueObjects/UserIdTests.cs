@@ -1,5 +1,4 @@
 ﻿using System;
-using AwesomeAssertions;
 using ProjectV.Models.Users;
 using ProjectV.Tests.Shared.ForTests;
 using ProjectV.Tests.Shared.Helpers.Generators.Models;
@@ -8,13 +7,16 @@ using Xunit;
 namespace ProjectV.Models.Tests.ValueObjects
 {
     /// <summary>
-    /// Unit tests for the <see cref="UserId" /> value-object — exercises
-    /// <c>Create</c>, <c>Wrap</c>, <c>Parse</c>, <c>TryParse</c>, <c>None</c>,
-    /// and <c>IsSpecified</c>. Uses <see cref="UserIdGenerator" /> for raw
-    /// inputs.
+    /// Unit tests for the <see cref="UserId" /> value-object. All test cases
+    /// are inherited from <see cref="BaseGuidWrapperTests{TId}" /> —
+    /// <c>Create</c>, <c>Wrap</c>, <c>Parse</c>, <c>TryParse</c>,
+    /// <c>None</c>, and <c>IsSpecified</c> coverage lives on the base
+    /// class; this class only bridges the <see cref="UserId" /> static
+    /// surface and <see cref="UserIdGenerator" /> through the base-class
+    /// hooks.
     /// </summary>
     [Trait("Category", "Unit")]
-    public sealed class UserIdTests : BaseMockTest
+    public sealed class UserIdTests : BaseGuidWrapperTests<UserId>
     {
         private readonly UserIdGenerator _generator;
 
@@ -23,187 +25,61 @@ namespace ProjectV.Models.Tests.ValueObjects
             _generator = UserIdGenerator.Instance;
         }
 
-        [Fact]
-        public void NoneIsEqualToDefault()
+        /// <inheritdoc />
+        protected override UserId None => UserId.None;
+
+        /// <inheritdoc />
+        protected override UserId Create()
         {
-            // Arrange.
-            UserId @default = default;
-
-            // Act.
-            UserId none = UserId.None;
-
-            // Assert.
-            none.Should().Be(@default);
-            none.Value.Should().Be(Guid.Empty);
+            return UserId.Create();
         }
 
-        [Fact]
-        public void NoneIsSpecifiedReturnsFalse()
+        /// <inheritdoc />
+        protected override UserId Wrap(Guid id)
         {
-            // Arrange. / Act.
-            bool isSpecified = UserId.None.IsSpecified;
-
-            // Assert.
-            isSpecified.Should().BeFalse();
+            return UserId.Wrap(id);
         }
 
-        [Fact]
-        public void CreateReturnsSpecifiedNonEmptyId()
+        /// <inheritdoc />
+        protected override UserId Parse(string rawId)
         {
-            // Arrange. / Act.
-            var userId = UserId.Create();
-
-            // Assert.
-            userId.IsSpecified.Should().BeTrue();
-            userId.Value.Should().NotBe(Guid.Empty);
-            userId.Should().NotBe(UserId.None);
+            return UserId.Parse(rawId);
         }
 
-        [Fact]
-        public void CreateReturnsDistinctIdsOnEachCall()
+        /// <inheritdoc />
+        protected override bool TryParse(string? rawId, out UserId result)
         {
-            // Arrange. / Act.
-            var first = UserId.Create();
-            var second = UserId.Create();
-
-            // Assert.
-            first.Should().NotBe(second);
+            return UserId.TryParse(rawId, out result);
         }
 
-        [Fact]
-        public void WrapWithNonEmptyGuidReturnsSpecifiedId()
+        /// <inheritdoc />
+        protected override Guid GetValue(UserId id)
         {
-            // Arrange.
-            var raw = Guid.NewGuid();
-
-            // Act.
-            var userId = UserId.Wrap(raw);
-
-            // Assert.
-            userId.Value.Should().Be(raw);
-            userId.IsSpecified.Should().BeTrue();
+            return id.Value;
         }
 
-        [Fact]
-        public void WrapWithEmptyGuidThrowsArgumentException()
+        /// <inheritdoc />
+        protected override bool GetIsSpecified(UserId id)
         {
-            // Arrange.
-            var act = () => UserId.Wrap(Guid.Empty);
-
-            // Act. / Assert.
-            act.Should().Throw<ArgumentException>()
-               .WithParameterName("id");
+            return id.IsSpecified;
         }
 
-        [Fact]
-        public void ParseRoundTripsThroughGenerator()
-        {
-            // Arrange.
-            UserId expected = GenerateUserId();
-            string raw = expected.Value.ToString();
-
-            // Act.
-            var actual = UserId.Parse(raw);
-
-            // Assert.
-            actual.Should().Be(expected);
-            actual.IsSpecified.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ParseThrowsOnEmptyString()
-        {
-            // Arrange.
-            var act = () => UserId.Parse(string.Empty);
-
-            // Act. / Assert.
-            act.Should().Throw<ArgumentException>()
-               .WithParameterName("rawId");
-        }
-
-        [Fact]
-        public void ParseThrowsOnNullString()
-        {
-            // Arrange.
-            var act = () =>
-            {
-                _ = UserId.Parse(null!);
-            };
-
-            // Act. / Assert.
-            act.Should().Throw<ArgumentException>()
-               .WithParameterName("rawId");
-        }
-
-        [Fact]
-        public void TryParseValidGuidReturnsTrueAndPopulatesResult()
-        {
-            // Arrange.
-            string raw = GenerateRawId();
-
-            // Act.
-            bool success = UserId.TryParse(raw, out UserId result);
-
-            // Assert.
-            success.Should().BeTrue();
-            result.IsSpecified.Should().BeTrue();
-            result.Value.Should().Be(Guid.Parse(raw));
-        }
-
-        [Fact]
-        public void TryParseInvalidStringReturnsFalseAndDefault()
-        {
-            // Arrange. / Act.
-            bool success = UserId.TryParse("not-a-guid", out UserId result);
-
-            // Assert.
-            success.Should().BeFalse();
-            result.Should().Be(default(UserId));
-            result.IsSpecified.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TryParseNullReturnsFalseAndDefault()
-        {
-            // Arrange. / Act.
-            bool success = UserId.TryParse(null, out UserId result);
-
-            // Assert.
-            success.Should().BeFalse();
-            result.Should().Be(default(UserId));
-        }
-
-        [Fact]
-        public void GeneratorCreateUserIdRoundTripsExplicitRaw()
-        {
-            // Arrange.
-            string raw = GenerateRawId();
-
-            // Act.
-            UserId userId = CreateUserId(raw);
-
-            // Assert.
-            userId.IsSpecified.Should().BeTrue();
-            userId.Value.Should().Be(Guid.Parse(raw));
-        }
-
-        #region Helper Methods
-
-        private UserId GenerateUserId()
+        /// <inheritdoc />
+        protected override UserId GenerateId()
         {
             return _generator.GenerateUserId();
         }
 
-        private UserId CreateUserId(string rawId)
+        /// <inheritdoc />
+        protected override UserId CreateId(string rawId)
         {
             return _generator.CreateUserId(rawId);
         }
 
-        private string GenerateRawId()
+        /// <inheritdoc />
+        protected override string GenerateRawId()
         {
             return _generator.GenerateRawId();
         }
-
-        #endregion
     }
 }
