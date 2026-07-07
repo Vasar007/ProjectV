@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using AwesomeAssertions;
 using ProjectV.Appraisers;
@@ -69,81 +70,55 @@ namespace ProjectV.Core.Tests
         }
 
         [Fact]
-        public void Constructor_WithNullInputManager_ThrowsArgumentNullException()
-        {
-            // Arrange.
-            var crawlersManager = CreateCrawlersManager();
-            var appraisersManager = CreateAppraisersManager();
-            var outputManager = CreateOutputManager();
-
-            // Act. / Assert.
-            var act = () => new Shell(
-                inputManager: null!,
-                crawlersManager, appraisersManager, outputManager,
-                boundedCapacity: 10
-            );
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .WithParameterName("inputManager");
-        }
-
-        [Fact]
-        public void Constructor_WithNullCrawlersManager_ThrowsArgumentNullException()
-        {
-            // Arrange.
-            var inputManager = CreateInputManager();
-            var appraisersManager = CreateAppraisersManager();
-            var outputManager = CreateOutputManager();
-
-            // Act. / Assert.
-            var act = () => new Shell(
-                inputManager,
-                crawlersManager: null!,
-                appraisersManager, outputManager,
-                boundedCapacity: 10
-            );
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .WithParameterName("crawlersManager");
-        }
-
-        [Fact]
-        public void Constructor_WithNullAppraisersManager_ThrowsArgumentNullException()
-        {
-            // Arrange.
-            var inputManager = CreateInputManager();
-            var crawlersManager = CreateCrawlersManager();
-            var outputManager = CreateOutputManager();
-
-            // Act. / Assert.
-            var act = () => new Shell(
-                inputManager, crawlersManager,
-                appraisersManager: null!,
-                outputManager,
-                boundedCapacity: 10
-            );
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .WithParameterName("appraisersManager");
-        }
-
-        [Fact]
-        public void Constructor_WithNullOutputManager_ThrowsArgumentNullException()
+        public void Constructor_OnAllArgumentsProvided_CreatesInstance()
         {
             // Arrange.
             var inputManager = CreateInputManager();
             var crawlersManager = CreateCrawlersManager();
             var appraisersManager = CreateAppraisersManager();
+            var outputManager = CreateOutputManager();
+
+            // Act.
+            var act = () => CreateShellWithAllArguments(
+                inputManager, crawlersManager, appraisersManager, outputManager
+            );
+
+            // Assert.
+            act.Should().NotThrow().Which.Dispose();
+        }
+
+        [Fact]
+        public void Constructor_ThrowsArgumentNullException_WhenNullValueProvided()
+        {
+            // Arrange.
+            var inputManager = CreateInputManager();
+            var crawlersManager = CreateCrawlersManager();
+            var appraisersManager = CreateAppraisersManager();
+            var outputManager = CreateOutputManager();
+
+            var actions = new List<(Action act, string paramName)>
+            {
+                (() => CreateShellWithAllArguments(
+                    null!, crawlersManager, appraisersManager, outputManager),
+                    "inputManager"),
+                (() => CreateShellWithAllArguments(
+                    inputManager, null!, appraisersManager, outputManager),
+                    "crawlersManager"),
+                (() => CreateShellWithAllArguments(
+                    inputManager, crawlersManager, null!, outputManager),
+                    "appraisersManager"),
+                (() => CreateShellWithAllArguments(
+                    inputManager, crawlersManager, appraisersManager, null!),
+                    "outputManager"),
+            };
 
             // Act. / Assert.
-            var act = () => new Shell(
-                inputManager, crawlersManager, appraisersManager,
-                outputManager: null!,
-                boundedCapacity: 10
-            );
-            act.Should()
-                .Throw<ArgumentNullException>()
-                .WithParameterName("outputManager");
+            foreach ((Action act, string paramName) in actions)
+            {
+                act.Should()
+                    .Throw<ArgumentNullException>()
+                    .WithParameterName(paramName);
+            }
         }
 
         [Fact]
@@ -171,6 +146,27 @@ namespace ProjectV.Core.Tests
 
             // Assert.
             director.Should().NotBeNull();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Shell" /> from every constructor dependency
+        /// explicitly. Constructor tests arrange valid managers via the
+        /// per-dependency <c>Create*</c> helpers and pass exactly one
+        /// dependency as <c>null!</c> to exercise the matching null-guard.
+        /// </summary>
+        private static Shell CreateShellWithAllArguments(
+            InputManager inputManager,
+            CrawlersManager crawlersManager,
+            AppraisersManager appraisersManager,
+            OutputManager outputManager)
+        {
+            return new Shell(
+                inputManager: inputManager,
+                crawlersManager: crawlersManager,
+                appraisersManager: appraisersManager,
+                outputManager: outputManager,
+                boundedCapacity: 10
+            );
         }
 
         /// <summary>

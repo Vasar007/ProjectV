@@ -185,46 +185,85 @@ namespace ProjectV.DataPipeline.Tests
         }
 
         [Fact]
-        public void Constructor_WithNullInputtersFlow_ThrowsArgumentNullException()
+        public void Constructor_OnAllArgumentsProvided_CreatesInstance()
         {
             // Arrange.
-            var outputtersFlow = new OutputtersFlow(
-                Array.Empty<Action<RatingDataContainer>>()
-            );
+            var inputtersFlow = CreateInputtersFlow();
+            var outputtersFlow = CreateOutputtersFlow();
 
             // Act.
-            var act = () => new DataflowPipeline(
-                inputtersFlow: null!,
-                outputtersFlow: outputtersFlow
+            var act = () => CreateDataflowPipelineWithAllArguments(
+                inputtersFlow, outputtersFlow
             );
 
             // Assert.
-            act.Should()
-               .Throw<ArgumentNullException>()
-               .WithParameterName("inputtersFlow");
+            act.Should().NotThrow();
         }
 
         [Fact]
-        public void Constructor_WithNullOutputtersFlow_ThrowsArgumentNullException()
+        public void Constructor_ThrowsArgumentNullException_WhenNullValueProvided()
         {
             // Arrange.
-            var inputtersFlow = new InputtersFlow(
-                Array.Empty<Func<string, IEnumerable<string>>>()
-            );
+            var inputtersFlow = CreateInputtersFlow();
+            var outputtersFlow = CreateOutputtersFlow();
 
-            // Act.
-            var act = () => new DataflowPipeline(
-                inputtersFlow: inputtersFlow,
-                outputtersFlow: null!
-            );
+            var actions = new List<(Action act, string paramName)>
+            {
+                (() => CreateDataflowPipelineWithAllArguments(null!, outputtersFlow),
+                    "inputtersFlow"),
+                (() => CreateDataflowPipelineWithAllArguments(inputtersFlow, null!),
+                    "outputtersFlow"),
+            };
 
-            // Assert.
-            act.Should()
-               .Throw<ArgumentNullException>()
-               .WithParameterName("outputtersFlow");
+            // Act. / Assert.
+            foreach ((Action act, string paramName) in actions)
+            {
+                act.Should()
+                   .Throw<ArgumentNullException>()
+                   .WithParameterName(paramName);
+            }
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Creates a <see cref="DataflowPipeline" /> from every constructor
+        /// dependency explicitly. Constructor tests arrange valid (empty)
+        /// flows via the per-dependency <c>Create*</c> helpers and pass
+        /// exactly one dependency as <c>null!</c> to exercise the matching
+        /// null-guard.
+        /// </summary>
+        private static DataflowPipeline CreateDataflowPipelineWithAllArguments(
+            InputtersFlow inputtersFlow,
+            OutputtersFlow outputtersFlow)
+        {
+            return new DataflowPipeline(
+                inputtersFlow: inputtersFlow,
+                outputtersFlow: outputtersFlow
+            );
+        }
+
+        /// <summary>
+        /// Creates an <see cref="InputtersFlow" /> with no inputters —
+        /// sufficient for constructor-guard tests that never run the flow.
+        /// </summary>
+        private static InputtersFlow CreateInputtersFlow()
+        {
+            return new InputtersFlow(
+                Array.Empty<Func<string, IEnumerable<string>>>()
+            );
+        }
+
+        /// <summary>
+        /// Creates an <see cref="OutputtersFlow" /> with no outputters —
+        /// sufficient for constructor-guard tests that never run the flow.
+        /// </summary>
+        private static OutputtersFlow CreateOutputtersFlow()
+        {
+            return new OutputtersFlow(
+                Array.Empty<Action<RatingDataContainer>>()
+            );
+        }
 
         private ICrawler CreateCrawler(BasicInfo response)
         {

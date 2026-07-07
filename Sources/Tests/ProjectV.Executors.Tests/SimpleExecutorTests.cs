@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AwesomeAssertions;
 using ProjectV.Models.Internal.Jobs;
@@ -63,19 +64,34 @@ namespace ProjectV.Executors.Tests
         }
 
         [Fact]
-        public void Constructor_WithNullJobInfo_ThrowsArgumentNullException()
+        public void Constructor_OnAllArgumentsProvided_CreatesInstance()
         {
-            // Arrange. / Act.
-            var act = () => new SimpleExecutor(
-                jobInfo: null!,
-                executionsNumber: 1,
-                delayTime: TimeSpan.Zero
-            );
+            // Arrange.
+            JobInfo jobInfo = CreateJobInfo();
+
+            // Act.
+            var act = () => CreateSimpleExecutorWithAllArguments(jobInfo);
 
             // Assert.
-            act.Should()
-               .Throw<ArgumentNullException>()
-               .WithParameterName("jobInfo");
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Constructor_ThrowsArgumentNullException_WhenNullValueProvided()
+        {
+            // Arrange.
+            var actions = new List<(Action act, string paramName)>
+            {
+                (() => CreateSimpleExecutorWithAllArguments(null!), "jobInfo"),
+            };
+
+            // Act. / Assert.
+            foreach ((Action act, string paramName) in actions)
+            {
+                act.Should()
+                   .Throw<ArgumentNullException>()
+                   .WithParameterName(paramName);
+            }
         }
 
         [Fact]
@@ -120,6 +136,23 @@ namespace ProjectV.Executors.Tests
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Creates a <see cref="SimpleExecutor" /> from its constructor
+        /// dependencies (only <c>jobInfo</c> is a null-guarded reference
+        /// dependency; the numeric arguments use fixed valid values).
+        /// Constructor tests pass <c>jobInfo</c> as <c>null!</c> to exercise
+        /// the null-guard.
+        /// </summary>
+        private static SimpleExecutor CreateSimpleExecutorWithAllArguments(
+            JobInfo jobInfo)
+        {
+            return new SimpleExecutor(
+                jobInfo: jobInfo,
+                executionsNumber: 1,
+                delayTime: TimeSpan.Zero
+            );
+        }
 
         private static JobInfo CreateJobInfo()
         {
