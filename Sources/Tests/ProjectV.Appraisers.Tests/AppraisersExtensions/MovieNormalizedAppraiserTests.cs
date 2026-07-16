@@ -133,7 +133,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         }
 
         [Fact]
-        public void GetRatingsAfterPrepareReturnsBoundedValueForMiddleItem()
+        public void GetRatingsAfterPrepareReturnsExactNormalizedValueForMiddleItem()
         {
             // Arrange.
             var items = CreateMovieBatch();
@@ -144,10 +144,12 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // Act.
             var middle = sut.GetRatings(items[1], outputResults: false);
 
-            // Assert. Middle item lies inside the [0, 2] envelope produced
-            // by the min-max normalisation.
-            middle.RatingValue.Should().BeGreaterThanOrEqualTo(0.0);
-            middle.RatingValue.Should().BeLessThanOrEqualTo(2.0);
+            // Assert.
+            middle.RatingValue.Should().Be(
+                1.0,
+                "the middle item's min-max normalisation is hand-computable: " +
+                "(50 - 10) / (90 - 10) + (7 - 5) / (9 - 5) = 0.5 + 0.5 = 1.0 " +
+                "— an in-envelope regression of the formula must fail here");
         }
 
         [Fact]
