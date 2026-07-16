@@ -25,12 +25,11 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Appraisers
     public sealed class TestAppraisersManagerBuilder
     {
         private readonly List<IAppraiser> _appraisers = new List<IAppraiser>();
-        private bool _outputResults;
 
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="TestAppraisersManagerBuilder" /> class. No appraisers
-        /// are registered until one of the <c>With*</c> methods is called.
+        /// are registered until <see cref="WithAppraisers" /> is called.
         /// </summary>
         public TestAppraisersManagerBuilder()
         {
@@ -44,37 +43,6 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Appraisers
         public static AppraisersManager CreateWithoutSetup()
         {
             return new TestAppraisersManagerBuilder().Build();
-        }
-
-        /// <summary>
-        /// Sets the <c>outputResults</c> flag on the resulting
-        /// <see cref="AppraisersManager" />.
-        /// </summary>
-        /// <param name="outputResults">
-        /// Whether the manager should print appraiser results to
-        /// <c>GlobalMessageHandler</c>. Defaults to <c>false</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestAppraisersManagerBuilder WithOutputResults(bool outputResults)
-        {
-            _outputResults = outputResults;
-            return this;
-        }
-
-        /// <summary>
-        /// Registers an <see cref="IAppraiser" /> child to be added to the
-        /// resulting <see cref="AppraisersManager" />.
-        /// </summary>
-        /// <param name="appraiser">
-        /// Appraiser substitute to register. Must not be <c>null</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestAppraisersManagerBuilder WithAppraiser(IAppraiser appraiser)
-        {
-            appraiser.ThrowIfNull(nameof(appraiser));
-
-            _appraisers.Add(appraiser);
-            return this;
         }
 
         /// <summary>
@@ -107,7 +75,7 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Appraisers
         /// </summary>
         public AppraisersManager Build()
         {
-            var manager = new AppraisersManager(_outputResults);
+            var manager = new AppraisersManager(outputResults: false);
             foreach (IAppraiser appraiser in _appraisers)
             {
                 manager.Add(appraiser);

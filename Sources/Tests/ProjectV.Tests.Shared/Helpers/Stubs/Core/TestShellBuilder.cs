@@ -1,5 +1,4 @@
-﻿using Acolyte.Assertions;
-using ProjectV.Appraisers;
+﻿using ProjectV.Appraisers;
 using ProjectV.Core;
 using ProjectV.Crawlers;
 using ProjectV.IO.Input;
@@ -39,17 +38,11 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
         /// </summary>
         public const int DefaultBoundedCapacity = 10;
 
-        private InputManager? _inputManager;
-        private CrawlersManager? _crawlersManager;
-        private AppraisersManager? _appraisersManager;
-        private OutputManager? _outputManager;
-        private int _boundedCapacity = DefaultBoundedCapacity;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TestShellBuilder" />
-        /// class. The four manager slots are initially unset; the
-        /// <see cref="Build" /> method fills any unset slot with the empty
-        /// builder default (<c>CreateWithoutSetup()</c>).
+        /// class. The <see cref="Build" /> method composes the
+        /// <see cref="Shell" /> from the four sibling builders' empty
+        /// defaults (<c>CreateWithoutSetup()</c>).
         /// </summary>
         public TestShellBuilder()
         {
@@ -66,92 +59,23 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
         }
 
         /// <summary>
-        /// Overrides the <see cref="InputManager" /> slot.
-        /// </summary>
-        /// <param name="inputManager">
-        /// Pre-built manager to plug into the resulting <see cref="Shell" />.
-        /// Must not be <c>null</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestShellBuilder WithInputManager(InputManager inputManager)
-        {
-            _inputManager = inputManager.ThrowIfNull(nameof(inputManager));
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the <see cref="CrawlersManager" /> slot.
-        /// </summary>
-        /// <param name="crawlersManager">
-        /// Pre-built manager to plug into the resulting <see cref="Shell" />.
-        /// Must not be <c>null</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestShellBuilder WithCrawlersManager(CrawlersManager crawlersManager)
-        {
-            _crawlersManager = crawlersManager.ThrowIfNull(nameof(crawlersManager));
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the <see cref="AppraisersManager" /> slot.
-        /// </summary>
-        /// <param name="appraisersManager">
-        /// Pre-built manager to plug into the resulting <see cref="Shell" />.
-        /// Must not be <c>null</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestShellBuilder WithAppraisersManager(AppraisersManager appraisersManager)
-        {
-            _appraisersManager = appraisersManager.ThrowIfNull(nameof(appraisersManager));
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the <see cref="OutputManager" /> slot.
-        /// </summary>
-        /// <param name="outputManager">
-        /// Pre-built manager to plug into the resulting <see cref="Shell" />.
-        /// Must not be <c>null</c>.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestShellBuilder WithOutputManager(OutputManager outputManager)
-        {
-            _outputManager = outputManager.ThrowIfNull(nameof(outputManager));
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the bounded capacity passed to the
-        /// <see cref="Shell" /> constructor.
-        /// </summary>
-        /// <param name="boundedCapacity">Bounded capacity value.</param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestShellBuilder WithBoundedCapacity(int boundedCapacity)
-        {
-            _boundedCapacity = boundedCapacity;
-            return this;
-        }
-
-        /// <summary>
-        /// Builds the <see cref="Shell" /> instance. Any manager slot that
-        /// has not been explicitly set is filled with the corresponding
-        /// builder's <c>CreateWithoutSetup()</c> default.
+        /// Builds the <see cref="Shell" /> instance. Every manager is the
+        /// corresponding sibling builder's <c>CreateWithoutSetup()</c>
+        /// default.
         /// </summary>
         public Shell Build()
         {
-            var inputManager = _inputManager ?? TestInputManagerBuilder.CreateWithoutSetup();
-            var crawlersManager = _crawlersManager ?? TestCrawlersManagerBuilder.CreateWithoutSetup();
-            var appraisersManager =
-                _appraisersManager ?? TestAppraisersManagerBuilder.CreateWithoutSetup();
-            var outputManager = _outputManager ?? TestOutputManagerBuilder.CreateWithoutSetup();
+            InputManager inputManager = TestInputManagerBuilder.CreateWithoutSetup();
+            CrawlersManager crawlersManager = TestCrawlersManagerBuilder.CreateWithoutSetup();
+            AppraisersManager appraisersManager = TestAppraisersManagerBuilder.CreateWithoutSetup();
+            OutputManager outputManager = TestOutputManagerBuilder.CreateWithoutSetup();
 
             return new Shell(
                 inputManager,
                 crawlersManager,
                 appraisersManager,
                 outputManager,
-                _boundedCapacity
+                DefaultBoundedCapacity
             );
         }
     }

@@ -85,22 +85,6 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Appraisers
         }
 
         /// <summary>
-        /// Configures the appraiser to compute a rating from the supplied
-        /// <paramref name="handler" /> delegate. Useful for tests that need
-        /// per-<see cref="BasicInfo" /> rating logic.
-        /// </summary>
-        /// <param name="handler">Delegate that produces a rating container.</param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestAppraiserBuilder WithRatingFactory(
-            Func<BasicInfo, RatingDataContainer> handler)
-        {
-            handler.ThrowIfNull(nameof(handler));
-
-            _getRatingsHandler = handler;
-            return this;
-        }
-
-        /// <summary>
         /// Builds the <see cref="IAppraiser" /> substitute. If no
         /// <c>With*</c> method has been called, the substitute returns
         /// whatever AutoFixture / NSubstitute would by default.

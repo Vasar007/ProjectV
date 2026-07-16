@@ -37,8 +37,7 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="TestTmdbCrawlerBuilder" /> class. No responses are
-        /// configured until <see cref="WithResponse" /> /
-        /// <see cref="WithResponses" /> is called.
+        /// configured until <see cref="WithResponse" /> is called.
         /// </summary>
         /// <param name="fixture">AutoFixture instance to create the substitute.</param>
         public TestTmdbCrawlerBuilder(IFixture fixture)
@@ -69,27 +68,6 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
             response.ThrowIfNull(nameof(response));
 
             _responses.Add(response);
-            return this;
-        }
-
-        /// <summary>
-        /// Registers a batch of <see cref="BasicInfo" /> responses at once.
-        /// </summary>
-        /// <param name="responses">
-        /// Responses to yield. Must not be <c>null</c>; null elements are
-        /// rejected.
-        /// </param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestTmdbCrawlerBuilder WithResponses(IReadOnlyList<BasicInfo> responses)
-        {
-            responses.ThrowIfNull(nameof(responses));
-
-            foreach (BasicInfo response in responses)
-            {
-                response.ThrowIfNull(nameof(responses));
-                _responses.Add(response);
-            }
-
             return this;
         }
 
