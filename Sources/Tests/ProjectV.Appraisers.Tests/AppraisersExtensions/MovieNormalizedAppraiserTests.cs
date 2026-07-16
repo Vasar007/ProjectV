@@ -5,6 +5,7 @@ using ProjectV.Appraisers.Appraisals;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests.AppraisersExtensions
@@ -31,8 +32,11 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     [Trait("Category", "Unit")]
     public sealed class MovieNormalizedAppraiserTests : BaseMockTest
     {
+        private readonly BasicInfoGenerator _generator;
+
         public MovieNormalizedAppraiserTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         private static BasicAppraisalNormalized CreateAppraisal()
@@ -45,13 +49,28 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             return new Appraiser<BasicInfo>(appraisal);
         }
 
-        private static IReadOnlyList<BasicInfo> CreateMovieBatch()
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        private IReadOnlyList<BasicInfo> CreateMovieBatch()
         {
             return new[]
             {
-                new BasicInfo(thingId: 1, title: "A", voteCount: 10, voteAverage: 5.0),
-                new BasicInfo(thingId: 2, title: "B", voteCount: 50, voteAverage: 7.0),
-                new BasicInfo(thingId: 3, title: "C", voteCount: 90, voteAverage: 9.0),
+                CreateBasicInfo(thingId: 1, title: "A", voteCount: 10, voteAverage: 5.0),
+                CreateBasicInfo(thingId: 2, title: "B", voteCount: 50, voteAverage: 7.0),
+                CreateBasicInfo(thingId: 3, title: "C", voteCount: 90, voteAverage: 9.0),
             };
         }
 
@@ -136,7 +155,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var sut = CreateSut(CreateAppraisal());
-            var entity = new BasicInfo(
+            BasicInfo entity = CreateBasicInfo(
                 thingId: 1, title: "X", voteCount: 10, voteAverage: 5.0);
 
             // Act.

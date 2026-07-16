@@ -4,6 +4,7 @@ using System.Linq;
 using AwesomeAssertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests
@@ -11,8 +12,11 @@ namespace ProjectV.Appraisers.Tests
     [Trait("Category", "Unit")]
     public sealed class AppraiserTests
     {
+        private readonly BasicInfoGenerator _generator;
+
         public AppraiserTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         [Fact]
@@ -90,7 +94,7 @@ namespace ProjectV.Appraisers.Tests
             // literal expectation fails if the rating formula regresses.
             var appraiser = CreateBasicAppraiser();
             const double voteAverage = 8.25;
-            var item = new BasicInfo(
+            BasicInfo item = CreateBasicInfo(
                 thingId: 5, title: "Known", voteCount: 100, voteAverage: voteAverage
             );
 
@@ -109,7 +113,7 @@ namespace ProjectV.Appraisers.Tests
             // Arrange.
             var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
-            var item = new BasicInfo(
+            BasicInfo item = CreateBasicInfo(
                 thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
             );
             var expectedValue = CreateExpectedRatings(ratingId, new[] { item }).Single();
@@ -128,13 +132,13 @@ namespace ProjectV.Appraisers.Tests
             // Arrange.
             var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
-            var item1 = new BasicInfo(
+            BasicInfo item1 = CreateBasicInfo(
                 thingId: 1, title: "Title-1", voteCount: 11, voteAverage: 9.7
             );
-            var item2 = new BasicInfo(
+            BasicInfo item2 = CreateBasicInfo(
                 thingId: 2, title: "Title-2", voteCount: 12, voteAverage: 9.8
             );
-            var item3 = new BasicInfo(
+            BasicInfo item3 = CreateBasicInfo(
                 thingId: 3, title: "Title-3", voteCount: 13, voteAverage: 9.9
             );
             var items = new[] { item1, item2, item3 };
@@ -190,6 +194,21 @@ namespace ProjectV.Appraisers.Tests
         private static IAppraiser CreateBasicAppraiser()
         {
             return TestAppraisersCreator.CreateBasicAppraiser();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
         }
 
         private static IReadOnlyList<RatingDataContainer> CreateExpectedRatings(

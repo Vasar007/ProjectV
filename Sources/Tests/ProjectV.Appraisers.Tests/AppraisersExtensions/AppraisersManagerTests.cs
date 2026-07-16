@@ -8,6 +8,7 @@ using ProjectV.DataPipeline;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
 using ProjectV.Tests.Shared.Helpers.Stubs.Appraisers;
 using Xunit;
@@ -24,8 +25,11 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     [Trait("Category", "Unit")]
     public sealed class AppraisersManagerTests : BaseMockTest
     {
+        private readonly BasicInfoGenerator _generator;
+
         public AppraisersManagerTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         [Fact]
@@ -96,9 +100,9 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public async Task AddSameInstanceTwiceIsIdempotentWithinSameTypeId()
         {
             // Arrange.
-            var entity = new BasicInfo(
+            BasicInfo entity = CreateBasicInfo(
                 thingId: 7, title: "Idempotent", voteCount: 1, voteAverage: 1.0);
-            var rating = new RatingDataContainer(
+            RatingDataContainer rating = CreateRating(
                 dataHandler: entity,
                 ratingValue: 4.2,
                 ratingId: Guid.Empty);
@@ -170,9 +174,9 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         public async Task CreateFlowDispatchesEntitiesToMatchingChildAppraiser()
         {
             // Arrange.
-            var entity = new BasicInfo(
+            BasicInfo entity = CreateBasicInfo(
                 thingId: 99, title: "Dispatch", voteCount: 1, voteAverage: 1.0);
-            var expectedRating = new RatingDataContainer(
+            RatingDataContainer expectedRating = CreateRating(
                 dataHandler: entity,
                 ratingValue: 7.5,
                 ratingId: Guid.Empty);
@@ -242,6 +246,35 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             await Task.Delay(TimeSpan.FromMilliseconds(250));
 
             return await firstEmission.Task;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="RatingDataContainer" /> with explicit values.
+        /// No generator exists for the type yet, so the helper wraps the
+        /// constructor to keep test bodies free of inline model creation.
+        /// </summary>
+        private static RatingDataContainer CreateRating(
+            BasicInfo dataHandler, double ratingValue, Guid ratingId)
+        {
+            return new RatingDataContainer(
+                dataHandler: dataHandler,
+                ratingValue: ratingValue,
+                ratingId: ratingId);
         }
 
         private AppraisersManager CreateAppraisersManager(params IAppraiser[] appraisers)

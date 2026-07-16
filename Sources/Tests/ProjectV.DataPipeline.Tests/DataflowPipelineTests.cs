@@ -10,6 +10,7 @@ using ProjectV.Crawlers;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using ProjectV.Tests.Shared.Helpers.Mocks.Appraisers;
 using ProjectV.Tests.Shared.Helpers.Mocks.Crawlers;
 using Xunit;
@@ -52,8 +53,11 @@ namespace ProjectV.DataPipeline.Tests
     [Trait("Category", "Integration")]
     public sealed class DataflowPipelineTests : BaseMockTest
     {
+        private readonly BasicInfoGenerator _generator;
+
         public DataflowPipelineTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         [Fact]
@@ -73,7 +77,7 @@ namespace ProjectV.DataPipeline.Tests
             var inputtersFlow = new InputtersFlow(inputters);
 
             // 3. NSubstitute ICrawler that yields one BasicInfo for any input.
-            var expectedBasicInfo = new BasicInfo(
+            BasicInfo expectedBasicInfo = CreateBasicInfo(
                 thingId: 42,
                 title: entityName,
                 voteCount: 10_000,
@@ -93,7 +97,7 @@ namespace ProjectV.DataPipeline.Tests
             //    BasicInfo. The AppraisersFlow Funcotype uses DataType =
             //    typeof(BasicInfo) so all BasicInfo inputs match the
             //    IsAssignableFrom(...) filter.
-            var expectedRating = new RatingDataContainer(
+            RatingDataContainer expectedRating = CreateRating(
                 dataHandler: expectedBasicInfo,
                 ratingValue: 9.1,
                 ratingId: Guid.NewGuid()
@@ -263,6 +267,35 @@ namespace ProjectV.DataPipeline.Tests
             return new OutputtersFlow(
                 Array.Empty<Action<RatingDataContainer>>()
             );
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="RatingDataContainer" /> with explicit values.
+        /// No generator exists for the type yet, so the helper wraps the
+        /// constructor to keep test bodies free of inline model creation.
+        /// </summary>
+        private static RatingDataContainer CreateRating(
+            BasicInfo dataHandler, double ratingValue, Guid ratingId)
+        {
+            return new RatingDataContainer(
+                dataHandler: dataHandler,
+                ratingValue: ratingValue,
+                ratingId: ratingId);
         }
 
         private ICrawler CreateCrawler(BasicInfo response)
