@@ -36,8 +36,8 @@ namespace ProjectV.Core.Tests
     /// branches are NOT exercised here because the Gridsum.DataflowEx
     /// pipeline that <c>Run</c> drives requires a fully-composed pipeline
     /// (at least one inputter, crawler, and appraiser per stage) to
-    /// terminate deterministically — that scenario belongs in an
-    /// a future end-to-end or JWT integration test plan.
+    /// terminate deterministically — that scenario belongs in a future
+    /// end-to-end integration suite.
     /// </para>
     /// </remarks>
     [Trait("Category", "Unit")]
