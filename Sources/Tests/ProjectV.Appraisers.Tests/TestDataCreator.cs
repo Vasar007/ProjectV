@@ -4,6 +4,7 @@ using System.Linq;
 using Acolyte.Assertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 
 namespace ProjectV.Appraisers.Tests
 {
@@ -56,31 +57,14 @@ namespace ProjectV.Appraisers.Tests
                                                       "Count parameter must be positive.");
             }
 
+            // Sequential thing ids keep the elements addressable; the
+            // generator fills the remaining fields with random values that
+            // respect the BasicInfo domain (unique GUID-suffixed titles,
+            // vote counts in [10, 10_000), vote averages in [0.0, 10.0]).
             return Enumerable
                 .Range(1, count)
-                .Select(i => new BasicInfo(
-                    thingId: i,
-                    title: $"Title-{i.ToString()}-{CreateRandomString(count)}",
-                    voteCount: i * Random.Shared.Next(),
-                    voteAverage: i * Random.Shared.NextDouble()
-                ))
+                .Select(i => BasicInfoGenerator.Instance.GenerateBasicInfo(thingId: i))
                 .ToList();
-        }
-
-        private static string CreateRandomString(int length)
-        {
-            if (length <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length,
-                                                      "Length must be positive.");
-            }
-
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(
-                Enumerable.Repeat(chars, length)
-                    .Select(str => str[Random.Shared.Next(str.Length)])
-                    .ToArray()
-            );
         }
     }
 }
