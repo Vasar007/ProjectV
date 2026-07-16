@@ -50,7 +50,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Constructor_WithMinimalValidConfiguration_DoesNotThrow()
         {
             // Arrange.
-            XDocument configuration = CreateMinimalConfiguration();
+            XDocument configuration = CreateMinimalShellConfigXml();
 
             // Act.
             var act = () => new ShellBuilderFromXDocument(configuration);
@@ -63,7 +63,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void GetResult_BeforeAnyBuildStep_ThrowsInvalidOperationException()
         {
             // Arrange.
-            XDocument configuration = CreateMinimalConfiguration();
+            XDocument configuration = CreateMinimalShellConfigXml();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act. / Assert.
@@ -80,7 +80,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void Reset_AfterCtor_DoesNotThrow()
         {
             // Arrange.
-            XDocument configuration = CreateMinimalConfiguration();
+            XDocument configuration = CreateMinimalShellConfigXml();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act.
@@ -94,7 +94,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
         public void BuildMessageHandler_WithMissingElement_ThrowsInvalidOperationException()
         {
             // Arrange.
-            XDocument configuration = CreateMinimalConfiguration();
+            XDocument configuration = CreateMinimalShellConfigXml();
             var builder = new ShellBuilderFromXDocument(configuration);
 
             // Act. / Assert.
@@ -108,7 +108,7 @@ namespace ProjectV.Core.Tests.ShellBuilders
 
         #region Helper Methods
 
-        private static XDocument CreateMinimalConfiguration()
+        private static XDocument CreateMinimalShellConfigXml()
         {
             return new XDocument(
                 new XElement("Root",
