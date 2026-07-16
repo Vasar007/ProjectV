@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Acolyte.Assertions;
@@ -87,7 +88,7 @@ namespace ProjectV.DataAccessLayer.Tests
             // connection actually opens against the container.
             await using DbConnection connection = _context.Database.GetDbConnection();
             await connection.OpenAsync();
-            connection.State.Should().Be(System.Data.ConnectionState.Open);
+            connection.State.Should().Be(ConnectionState.Open);
         }
 
         private async Task<HashSet<string>> QueryPublicSchemaTableNamesAsync()

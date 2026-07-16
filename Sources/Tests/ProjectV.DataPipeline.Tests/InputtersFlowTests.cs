@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -142,7 +143,7 @@ namespace ProjectV.DataPipeline.Tests
             };
             var sut = new InputtersFlow(inputters);
 
-            var collected = new System.Collections.Concurrent.ConcurrentBag<string>();
+            var collected = new ConcurrentBag<string>();
             var sink = new ActionBlock<string>(collected.Add);
             sut.OutputBlock.LinkTo(
                 sink,

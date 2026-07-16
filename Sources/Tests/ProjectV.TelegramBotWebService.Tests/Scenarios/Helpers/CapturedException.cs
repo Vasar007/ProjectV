@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NLog.Config;
@@ -35,7 +36,7 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Helpers
         /// code did not log on the request path; this includes NLog
         /// formatting plus exception stacks per the layout below.
         /// </summary>
-        public static System.Collections.Generic.IReadOnlyList<string> LogLines
+        public static IReadOnlyList<string> LogLines
         {
             get
             {
