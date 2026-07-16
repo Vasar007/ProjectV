@@ -34,14 +34,15 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             return new Appraiser<TmdbMovieInfo>(new TmdbCommonAppraisal());
         }
 
-        private static TmdbMovieInfo CreateMovie(double popularity = 7.5,
-            double voteAverage = 8.1, int voteCount = 1234)
+        private static TmdbMovieInfo CreateMovie(double popularity)
         {
+            // Only popularity feeds the TmdbCommonAppraisal rating; the
+            // remaining fields are fixed valid values.
             return new TmdbMovieInfo(
                 thingId: 42,
                 title: "Inception",
-                voteCount: voteCount,
-                voteAverage: voteAverage,
+                voteCount: 1234,
+                voteAverage: 8.1,
                 overview: "A heist inside dreams.",
                 releaseDate: new DateTime(2010, 7, 16),
                 popularity: popularity,
