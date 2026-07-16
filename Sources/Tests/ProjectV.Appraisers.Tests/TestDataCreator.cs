@@ -12,7 +12,7 @@ namespace ProjectV.Appraisers.Tests
     /// Legacy static creators for appraiser test data.
     /// </summary>
     /// <remarks>
-    /// <see cref="CreateExpectedValueForBasicInfo(Guid, BasicInfo[])" />
+    /// <see cref="CreateExpectedValueForBasicInfo(Guid, IEnumerable{BasicInfo})" />
     /// computes the expected rating by running the same production
     /// <c>BasicAppraisalCommon.CalculateRating</c> the SUT delegates to, so
     /// tests comparing against it verify delegation/wiring only — a wrong
@@ -22,14 +22,6 @@ namespace ProjectV.Appraisers.Tests
     /// </remarks>
     internal static class TestDataCreator
     {
-        internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
-            Guid ratingId, params BasicInfo[] items)
-        {
-            items.ThrowIfNull(nameof(items));
-
-            return CreateExpectedValueForBasicInfo(ratingId, items.AsEnumerable());
-        }
-
         internal static IReadOnlyList<RatingDataContainer> CreateExpectedValueForBasicInfo(
             Guid ratingId, IEnumerable<BasicInfo> items)
         {
