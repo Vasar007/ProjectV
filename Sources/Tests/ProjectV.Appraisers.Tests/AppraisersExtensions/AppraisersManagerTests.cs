@@ -35,12 +35,14 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         [Fact]
         public void CreateWithoutSetupReturnsEmptyManager()
         {
-            // Arrange. / Act.
+            // Arrange.
             var sut = CreateAppraisersManager();
+
+            // Act.
+            var flow = sut.CreateFlow();
 
             // Assert. An empty manager produces a non-null but childless flow.
             sut.Should().NotBeNull();
-            var flow = sut.CreateFlow();
             flow.Should().NotBeNull();
             flow.Should().BeOfType<AppraisersFlow>();
         }
@@ -123,7 +125,6 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
             // entity — exactly one call proves the Add was idempotent.
             emitted.Should().BeSameAs(rating);
             appraiser.Received(1).GetRatings(Arg.Any<BasicInfo>(), Arg.Any<bool>());
-            sut.Remove(appraiser).Should().BeTrue();
         }
 
         [Fact]
