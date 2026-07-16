@@ -154,8 +154,9 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
                 yield return item;
             }
 
-            // Force the method to be truly asynchronous so callers cannot
-            // accidentally treat the substitute as a synchronous source.
+            // Satisfies the compiler's requirement that an async iterator
+            // contains an await; the already-completed task continues
+            // synchronously, so iteration itself remains synchronous.
             await Task.CompletedTask;
         }
     }
