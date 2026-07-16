@@ -7,7 +7,6 @@ using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.Tests.Scenarios.Helpers;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using Xunit;
 
 namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
@@ -110,9 +109,10 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
         }
 
         // The Update sequence the scripted-bot-client yields on the first
-        // poll. Three text-message updates with sequential Ids. Every
-        // command lands on a BotMessageHandler branch that calls
-        // IBotService.SendMessageAsync exactly once.
+        // poll. Three text-message updates with sequential Ids built via the
+        // shared base-class helper. Every command lands on a
+        // BotMessageHandler branch that calls IBotService.SendMessageAsync
+        // exactly once.
         private static Update[] BuildUpdateSequence()
         {
             return new[]
@@ -120,31 +120,6 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Polling
                 BuildTextMessageUpdate(updateId: 100, messageId: 1, chatId: 999L, text: "/start"),
                 BuildTextMessageUpdate(updateId: 101, messageId: 2, chatId: 999L, text: "/help"),
                 BuildTextMessageUpdate(updateId: 102, messageId: 3, chatId: 999L, text: "Hello there"),
-            };
-        }
-
-        private static Update BuildTextMessageUpdate(
-            int updateId, int messageId, long chatId, string text)
-        {
-            return new Update
-            {
-                Id = updateId,
-                Message = new Message
-                {
-                    Id = messageId,
-                    Text = text,
-                    Chat = new Chat
-                    {
-                        Id = chatId,
-                        Type = ChatType.Private
-                    },
-                    From = new User
-                    {
-                        Id = chatId,
-                        FirstName = "Test",
-                        IsBot = false
-                    }
-                }
             };
         }
 

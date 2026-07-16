@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using ProjectV.TelegramBotWebService.Tests.Helpers.Stubs.Telegram;
 using ProjectV.TelegramBotWebService.v1.Domain.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 using Xunit;
 
 namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
@@ -54,26 +53,8 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
         public async Task PostUpdate_WithValidTextMessage_Returns200AndSendsReply()
         {
             // Arrange.
-            var update = new Update
-            {
-                Id = 1,
-                Message = new Message
-                {
-                    Id = 100,
-                    Text = "/start",
-                    Chat = new Chat
-                    {
-                        Id = 999L,
-                        Type = ChatType.Private
-                    },
-                    From = new User
-                    {
-                        Id = 999L,
-                        FirstName = "Test",
-                        IsBot = false
-                    }
-                }
-            };
+            Update update = BuildTextMessageUpdate(
+                updateId: 1, messageId: 100, chatId: 999L, text: "/start");
             string body = JsonConvert.SerializeObject(update);
             using var content = new StringContent(body, Encoding.UTF8, "application/json");
 
