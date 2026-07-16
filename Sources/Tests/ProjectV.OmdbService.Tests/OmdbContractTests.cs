@@ -131,7 +131,7 @@ namespace ProjectV.OmdbService.Tests
             // Assert.
             actualValue.Should().NotBeNull();
             actualValue!.ThingId.Should().Be(expectedThingId);
-            actualValue.Title.Should().Be("Synthetic Movie");
+            actualValue.Title.Should().Be(title);
             actualValue.VoteCount.Should().Be(9876);
             _server.LogEntries.Should().HaveCount(1,
                 "OmdbClient should make exactly one HTTP request for a successful by-title fetch " +
