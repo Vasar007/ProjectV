@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ProjectV.TelegramBotWebService.Options;
 using ProjectV.TelegramBotWebService.Tests.Scenarios.Helpers;
 using Telegram.Bot;
