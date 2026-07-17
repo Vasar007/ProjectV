@@ -16,12 +16,14 @@ namespace ProjectV.TelegramBotWebService.Tests.Scenarios.Webhook
     /// The working mode is
     /// <see cref="TelegramBotWebServiceWorkingMode.WebhookViaServiceSetup" />
     /// so the host does NOT register the <c>PoolingProcessor</c> /
-    /// <c>ConfigureWebhook</c> hosted services (both of which would resolve
-    /// <c>IBotService</c> during host startup, before the DI override in
-    /// <c>ConfigureTestServices</c> has a chance to win). Webhook scenarios
-    /// then POST synthetic updates to the production endpoint and assert on
-    /// the HTTP response plus the calls the handler chain recorded in
-    /// <c>BotServiceStub.CalledMethodNames</c>.
+    /// <c>ConfigureWebhook</c> hosted services. Keeping them out of the
+    /// webhook host means their stub calls (<c>SetWebhookAsync</c> /
+    /// <c>DeleteWebhookAsync</c>, polling <c>SendMessageAsync</c>s) never
+    /// pollute <c>BotServiceStub.CalledMethodNames</c>, and each scenario
+    /// family's host runs only the machinery its scenarios exercise. Webhook
+    /// scenarios then POST synthetic updates to the production endpoint and
+    /// assert on the HTTP response plus the calls the handler chain recorded
+    /// in <c>BotServiceStub.CalledMethodNames</c>.
     /// </remarks>
     public abstract class TelegramWebhookScenarioBaseTest : TelegramScenarioBaseTest
     {
