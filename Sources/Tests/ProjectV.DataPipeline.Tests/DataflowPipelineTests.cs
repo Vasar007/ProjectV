@@ -197,7 +197,7 @@ namespace ProjectV.DataPipeline.Tests
 
             // Act.
             var act = () => CreateDataflowPipelineWithAllArguments(
-                inputtersFlow, outputtersFlow
+                inputtersFlow: inputtersFlow, outputtersFlow: outputtersFlow
             );
 
             // Assert.
@@ -213,9 +213,11 @@ namespace ProjectV.DataPipeline.Tests
 
             var actions = new List<(Action act, string paramName)>
             {
-                (() => CreateDataflowPipelineWithAllArguments(null!, outputtersFlow),
+                (() => CreateDataflowPipelineWithAllArguments(
+                    inputtersFlow: null!, outputtersFlow: outputtersFlow),
                     "inputtersFlow"),
-                (() => CreateDataflowPipelineWithAllArguments(inputtersFlow, null!),
+                (() => CreateDataflowPipelineWithAllArguments(
+                    inputtersFlow: inputtersFlow, outputtersFlow: null!),
                     "outputtersFlow"),
             };
 

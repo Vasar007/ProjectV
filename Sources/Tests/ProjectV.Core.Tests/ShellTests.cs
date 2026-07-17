@@ -80,7 +80,10 @@ namespace ProjectV.Core.Tests
 
             // Act.
             var act = () => CreateShellWithAllArguments(
-                inputManager, crawlersManager, appraisersManager, outputManager
+                inputManager: inputManager,
+                crawlersManager: crawlersManager,
+                appraisersManager: appraisersManager,
+                outputManager: outputManager
             );
 
             // Assert.
@@ -99,16 +102,28 @@ namespace ProjectV.Core.Tests
             var actions = new List<(Action act, string paramName)>
             {
                 (() => CreateShellWithAllArguments(
-                    null!, crawlersManager, appraisersManager, outputManager),
+                    inputManager: null!,
+                    crawlersManager: crawlersManager,
+                    appraisersManager: appraisersManager,
+                    outputManager: outputManager),
                     "inputManager"),
                 (() => CreateShellWithAllArguments(
-                    inputManager, null!, appraisersManager, outputManager),
+                    inputManager: inputManager,
+                    crawlersManager: null!,
+                    appraisersManager: appraisersManager,
+                    outputManager: outputManager),
                     "crawlersManager"),
                 (() => CreateShellWithAllArguments(
-                    inputManager, crawlersManager, null!, outputManager),
+                    inputManager: inputManager,
+                    crawlersManager: crawlersManager,
+                    appraisersManager: null!,
+                    outputManager: outputManager),
                     "appraisersManager"),
                 (() => CreateShellWithAllArguments(
-                    inputManager, crawlersManager, appraisersManager, null!),
+                    inputManager: inputManager,
+                    crawlersManager: crawlersManager,
+                    appraisersManager: appraisersManager,
+                    outputManager: null!),
                     "outputManager"),
             };
 

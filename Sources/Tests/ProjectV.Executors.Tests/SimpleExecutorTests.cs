@@ -70,7 +70,7 @@ namespace ProjectV.Executors.Tests
             JobInfo jobInfo = CreateJobInfo();
 
             // Act.
-            var act = () => CreateSimpleExecutorWithAllArguments(jobInfo);
+            var act = () => CreateSimpleExecutorWithAllArguments(jobInfo: jobInfo);
 
             // Assert.
             act.Should().NotThrow();
@@ -82,7 +82,7 @@ namespace ProjectV.Executors.Tests
             // Arrange.
             var actions = new List<(Action act, string paramName)>
             {
-                (() => CreateSimpleExecutorWithAllArguments(null!), "jobInfo"),
+                (() => CreateSimpleExecutorWithAllArguments(jobInfo: null!), "jobInfo"),
             };
 
             // Act. / Assert.
