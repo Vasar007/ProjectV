@@ -68,8 +68,8 @@ namespace ProjectV.DataPipeline.Tests
             //    (Length > MinWordLength = 2 + dedup).
             const string entityName = "Inception";
 
-            // 2. The single inputter echoes the storage-name input back as
-            //    the entity name so the crawler stage gets a known string.
+            // 2. The single inputter maps any storage-name input to a fixed
+            //    known entity name so the crawler stage gets a known string.
             var inputters = new[]
             {
                 new Func<string, IEnumerable<string>>(_ => new[] { entityName }),
