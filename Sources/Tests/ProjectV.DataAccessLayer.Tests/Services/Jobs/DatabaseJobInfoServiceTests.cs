@@ -103,13 +103,7 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
             JobInfo original = GenerateJobInfo();
             await _sut.AddAsync(original);
 
-            var mutated = new JobInfo(
-                id: original.Id,
-                name: original.Name,
-                state: original.State + 1,
-                result: original.Result + 1,
-                config: original.Config
-            );
+            JobInfo mutated = CreateMutatedJobInfo(original);
 
             // Detach the tracked entity so Update does not fight an in-memory copy.
             _context.ChangeTracker.Clear();
@@ -130,6 +124,22 @@ namespace ProjectV.DataAccessLayer.Tests.Services.Jobs
         private JobInfo GenerateJobInfo()
         {
             return _generator.GenerateJobInfo();
+        }
+
+        /// <summary>
+        /// Creates a copy of <paramref name="original" /> (same id, name and
+        /// config) with the state and result codes incremented, via
+        /// <see cref="JobInfoGenerator" /> — the update test asserts that
+        /// exactly these two mutated fields are persisted.
+        /// </summary>
+        private JobInfo CreateMutatedJobInfo(JobInfo original)
+        {
+            return _generator.CreateJobInfo(
+                id: original.Id,
+                name: original.Name,
+                state: original.State + 1,
+                result: original.Result + 1,
+                config: original.Config);
         }
 
         #endregion
