@@ -24,9 +24,9 @@ namespace ProjectV.Core.Tests
     /// (<see cref="InputManager" />, <see cref="CrawlersManager" />,
     /// <see cref="AppraisersManager" />, <see cref="OutputManager" />) —
     /// a known architectural anti-pattern in this codebase. Tests work
-    /// AROUND that coupling via real manager instances populated with
-    /// NSubstitute children (<see cref="TestShellBuilder" /> + the manager
-    /// builders); they do NOT refactor <see cref="Shell" />.
+    /// AROUND that coupling via real (empty) manager instances
+    /// (<see cref="TestShellBuilder" /> + the manager builders); they do
+    /// NOT refactor <see cref="Shell" />.
     /// </para>
     /// <para>
     /// Coverage scope for this Unit suite is intentionally narrow:

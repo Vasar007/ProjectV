@@ -12,19 +12,20 @@ namespace ProjectV.Tests.Shared.Helpers.Stubs.Core
     /// Builder for real <see cref="Shell" /> instances composed from the four
     /// production manager types (<see cref="InputManager" />,
     /// <see cref="CrawlersManager" />, <see cref="AppraisersManager" />,
-    /// <see cref="OutputManager" />) populated with
-    /// <c>NSubstitute</c> child doubles.
+    /// <see cref="OutputManager" />) in their empty default shape (no
+    /// inputters, crawlers, appraisers, or outputters registered).
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="Shell" /> takes concrete-typed managers, not interfaces
     /// (a known architectural anti-pattern in this codebase); this builder
-    /// works around the coupling by composing real managers populated with
-    /// substituted children via the sibling
+    /// works around the coupling by composing real (empty) production
+    /// managers via the sibling
     /// <see cref="TestInputManagerBuilder" />,
     /// <see cref="TestCrawlersManagerBuilder" />,
     /// <see cref="TestAppraisersManagerBuilder" />, and
-    /// <see cref="TestOutputManagerBuilder" /> classes.
+    /// <see cref="TestOutputManagerBuilder" /> classes'
+    /// <c>CreateWithoutSetup()</c> defaults.
     /// </para>
     /// <para>
     /// The builder does not abstract <see cref="Shell" /> away — the
