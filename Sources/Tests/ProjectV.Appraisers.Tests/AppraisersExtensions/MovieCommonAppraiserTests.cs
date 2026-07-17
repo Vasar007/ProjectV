@@ -3,6 +3,7 @@ using AwesomeAssertions;
 using ProjectV.Appraisers.Appraisals.Movie.Tmdb;
 using ProjectV.Models.Data;
 using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests.AppraisersExtensions
@@ -25,8 +26,11 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
     [Trait("Category", "Unit")]
     public sealed class MovieCommonAppraiserTests : BaseMockTest
     {
+        private readonly BasicInfoGenerator _generator;
+
         public MovieCommonAppraiserTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         private static Appraiser<TmdbMovieInfo> CreateSut()
@@ -50,6 +54,21 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
                 genreIds: new[] { 28, 878 },
                 posterPath: "/inception.jpg"
             );
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
         }
 
         [Fact]
@@ -151,7 +170,7 @@ namespace ProjectV.Appraisers.Tests.AppraisersExtensions
         {
             // Arrange.
             var sut = CreateSut();
-            var basicInfo = new BasicInfo(
+            var basicInfo = CreateBasicInfo(
                 thingId: 1, title: "Generic", voteCount: 10, voteAverage: 7.0);
 
             // Act.
