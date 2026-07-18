@@ -19,9 +19,11 @@ namespace ProjectV.Tests.Shared.ForTests
     /// per-scenario base classes can hand a configured
     /// <see cref="TestJwtConfig" />, extra in-memory configuration overrides,
     /// or a DI override action to the base ctor and have the host pick them
-    /// up. xUnit calls <see cref="InitializeAsync" /> before the first test
-    /// runs and <see cref="DisposeAsync" /> after the last one — that is the
-    /// public <see cref="IAsyncLifetime" /> contract.
+    /// up. xUnit creates a fresh test-class instance per test method and, on
+    /// each instance, calls <see cref="InitializeAsync" /> before the test
+    /// and <see cref="DisposeAsync" /> after it — that is the
+    /// <see cref="IAsyncLifetime" /> contract for a test class, so every test
+    /// gets its own host and client.
     /// </para>
     /// <para>
     /// This base class deliberately does NOT depend on <c>DbCollectionFixture</c>;
@@ -102,7 +104,7 @@ namespace ProjectV.Tests.Shared.ForTests
         /// <summary>
         /// Builds the <see cref="TestWebApplicationFactory{TStartup}" /> and
         /// the shared anonymous <see cref="Client" />. Called by xUnit before
-        /// the first test method.
+        /// each test method on that test's fresh class instance.
         /// </summary>
         public virtual Task InitializeAsync()
         {
@@ -120,7 +122,7 @@ namespace ProjectV.Tests.Shared.ForTests
 
         /// <summary>
         /// Disposes the factory and the shared client. Called by xUnit after
-        /// the last test method runs.
+        /// each test method runs on that test's class instance.
         /// </summary>
         public virtual async Task DisposeAsync()
         {
