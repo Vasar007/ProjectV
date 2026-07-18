@@ -14,10 +14,9 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
     /// <see cref="IAsyncEnumerable{T}" />, not <see cref="Task{T}" />).
     /// </summary>
     /// <remarks>
-    /// Crawler-specific defaults (<see cref="ICrawler.Tag" /> /
-    /// <see cref="ICrawler.TypeId" />) are configurable via
-    /// <see cref="WithTag(string)" /> and <see cref="WithTypeId(Type)" />, so a
-    /// single builder covers other crawler providers as well.
+    /// The substitute reports fixed crawler metadata:
+    /// <see cref="ICrawler.Tag" /> returns <see cref="DefaultTag" /> and
+    /// <see cref="ICrawler.TypeId" /> returns <c>typeof(BasicInfo)</c>.
     /// </remarks>
     public sealed class TestTmdbCrawlerBuilder
     {
@@ -30,8 +29,6 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         private readonly IFixture _fixture;
 
         private readonly List<BasicInfo> _responses = new List<BasicInfo>();
-        private string _tag = DefaultTag;
-        private Type _typeId = typeof(BasicInfo);
         private Exception? _throwOnGetResponse;
 
         /// <summary>
@@ -72,34 +69,6 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         }
 
         /// <summary>
-        /// Overrides the <see cref="ICrawler.Tag" /> value returned by the
-        /// substitute. Defaults to <see cref="DefaultTag" />.
-        /// </summary>
-        /// <param name="tag">Tag value. Must not be <c>null</c>/whitespace.</param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestTmdbCrawlerBuilder WithTag(string tag)
-        {
-            tag.ThrowIfNullOrWhiteSpace(nameof(tag));
-
-            _tag = tag;
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the <see cref="ICrawler.TypeId" /> value returned by the
-        /// substitute. Defaults to <c>typeof(BasicInfo)</c>.
-        /// </summary>
-        /// <param name="typeId">Type id. Must not be <c>null</c>.</param>
-        /// <returns>This builder, for fluent chaining.</returns>
-        public TestTmdbCrawlerBuilder WithTypeId(Type typeId)
-        {
-            typeId.ThrowIfNull(nameof(typeId));
-
-            _typeId = typeId;
-            return this;
-        }
-
-        /// <summary>
         /// Configures the substitute to throw the supplied exception
         /// synchronously from <see cref="ICrawler.GetResponse(string, bool)" />
         /// (i.e. before the async enumerable iteration starts). Useful for
@@ -125,8 +94,8 @@ namespace ProjectV.Tests.Shared.Helpers.Mocks.Crawlers
         {
             var substitute = _fixture.Create<ICrawler>();
 
-            substitute.Tag.Returns(_tag);
-            substitute.TypeId.Returns(_typeId);
+            substitute.Tag.Returns(DefaultTag);
+            substitute.TypeId.Returns(typeof(BasicInfo));
 
             if (_throwOnGetResponse is not null)
             {
