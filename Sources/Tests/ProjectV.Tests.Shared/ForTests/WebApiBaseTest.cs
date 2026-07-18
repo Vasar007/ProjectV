@@ -26,10 +26,12 @@ namespace ProjectV.Tests.Shared.ForTests
     /// <para>
     /// This base class deliberately does NOT depend on <c>DbCollectionFixture</c>;
     /// the JWT path in <c>CommunicationWebService</c> uses an in-memory user
-    /// store. The Telegram webhook / polling families that DO need
-    /// Testcontainers Postgres add the <c>[Collection(DbCollection.Name)]</c>
-    /// attribute on their concrete subclass and pass the fixture through a
-    /// derived base class — they do not extend this one.
+    /// store, and the Telegram webhook / polling families (which extend this
+    /// class via <c>TelegramScenarioBaseTest</c>) replace their external
+    /// dependencies with concrete stubs, so no scenario family needs
+    /// Testcontainers Postgres. Suites that DO need Postgres (the
+    /// <c>ProjectV.DataAccessLayer.Tests</c> integration suites) use
+    /// <c>[Collection(DbCollection.Name)]</c> and do not extend this class.
     /// </para>
     /// </remarks>
     /// <typeparam name="TStartup">
