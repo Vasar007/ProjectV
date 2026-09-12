@@ -1,0 +1,29 @@
+{
+  "Title": "Synthetic Movie",
+  "Year": "2020",
+  "Rated": "PG-13",
+  "Released": "15 Jan 2020",
+  "Runtime": "120 min",
+  "Genre": "Action, Adventure",
+  "Director": "Synthetic Director",
+  "Writer": "Synthetic Writer",
+  "Actors": "Actor A, Actor B, Actor C",
+  "Plot": "A synthetic movie plot used for ProjectV contract tests. No real production data.",
+  "Language": "English",
+  "Country": "USA",
+  "Awards": "N/A",
+  "Poster": "https://example.test/poster.jpg",
+  "Ratings": [
+    { "Source": "Internet Movie Database", "Value": "7.5/10" }
+  ],
+  "Metascore": "75",
+  "ImdbRating": "7.5",
+  "ImdbVotes": "9,876",
+  "ImdbId": "tt0012345",
+  "Type": "movie",
+  "Dvd": "N/A",
+  "BoxOffice": "N/A",
+  "Production": "N/A",
+  "Website": "N/A",
+  "Response": "True"
+}

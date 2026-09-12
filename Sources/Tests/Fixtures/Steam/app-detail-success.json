@@ -1,0 +1,30 @@
+{
+  "730": {
+    "success": true,
+    "data": {
+      "type": "game",
+      "name": "Synthetic Game Alpha",
+      "steam_appid": 730,
+      "required_age": 0,
+      "is_free": true,
+      "short_description": "A synthetic game description used for ProjectV contract tests. No real production data.",
+      "header_image": "https://example.test/header.jpg",
+      "price_overview": {
+        "currency": "USD",
+        "initial": 0,
+        "final": 0,
+        "discount_percent": 0,
+        "initial_formatted": "",
+        "final_formatted": "Free"
+      },
+      "genres": [
+        { "id": "1", "description": "Action" },
+        { "id": "2", "description": "Adventure" }
+      ],
+      "release_date": {
+        "coming_soon": false,
+        "date": "21 Aug 2012"
+      }
+    }
+  }
+}

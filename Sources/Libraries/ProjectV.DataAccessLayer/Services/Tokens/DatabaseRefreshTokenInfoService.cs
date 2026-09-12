@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Acolyte.Assertions;
 using Microsoft.EntityFrameworkCore;
 using ProjectV.DataAccessLayer.Services.Basic;
@@ -56,9 +57,15 @@ namespace ProjectV.DataAccessLayer.Services.Tokens
 
         public async Task<RefreshTokenInfo?> FindByUserIdAsync(UserId userId)
         {
+            // EF Core cannot translate `token.WrappedUserId == userId` — even
+            // though WrappedUserId is now a computed property, EF cannot lift
+            // a static-method call (`Users.UserId.Wrap`) or a record-struct
+            // comparison into SQL. Compare against the raw Guid scalar column
+            // directly.
+            Guid rawUserId = userId.Value;
             RefreshTokenDbInfo? tokenDbModel = await _context.ExecuteIfCanUseDb(
                 () => _context.GetTokenDbSet(),
-                dbSet => dbSet.FirstOrDefaultAsync(token => token.WrappedUserId == userId)
+                dbSet => dbSet.FirstOrDefaultAsync(token => token.UserId == rawUserId)
             );
 
             return tokenDbModel is null ? null : _mapper.MapToRefreshTokenInfo(tokenDbModel);

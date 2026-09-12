@@ -32,6 +32,18 @@ You can install all dependencies using NuGet package manager.
 
 You can read full instruction in project [Wiki](https://github.com/Vasar007/ProjectV/wiki/Set-up-project).
 
+### EF Core migrations (development)
+
+Before running `dotnet ef migrations add` (or any other EF Core CLI command), set the
+`DatabaseOptions__ConnectionString` environment variable to a valid Npgsql connection string:
+
+```bash
+export DatabaseOptions__ConnectionString="Host=localhost;Port=5432;Database=ProjectV;Username=postgres;Password=postgres"
+```
+
+The design-time factory (`ProjectVDbContextDesignTimeFactory`) throws `InvalidOperationException`
+when this variable is unset — there is no hardcoded fallback.
+
 ## License information
 
 This project is licensed under the terms of the [Apache License 2.0](LICENSE).

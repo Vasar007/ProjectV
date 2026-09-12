@@ -1,0 +1,195 @@
+﻿using System;
+using AwesomeAssertions;
+using ProjectV.Appraisers.Appraisals.Movie.Tmdb;
+using ProjectV.Models.Data;
+using ProjectV.Tests.Shared.ForTests;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
+using Xunit;
+
+namespace ProjectV.Appraisers.Tests.AppraisersExtensions
+{
+    /// <summary>
+    /// Rating-computation accuracy for the canonical movie-common appraiser
+    /// path: <see cref="Appraiser{T}" /> of <see cref="TmdbMovieInfo" />
+    /// composed with <see cref="TmdbCommonAppraisal" />, which returns the
+    /// movie's TMDb popularity as its rating value.
+    /// </summary>
+    /// <remarks>
+    /// ProjectV does NOT declare a <c>MovieCommonAppraiser</c> type — the
+    /// production shape is
+    /// <c>Appraiser&lt;TmdbMovieInfo&gt;(new TmdbCommonAppraisal())</c>,
+    /// and this file covers that composition.
+    /// The unit boundary is the appraiser class composed with its strategy;
+    /// the strategy is exercised directly (not mocked) because the strategy
+    /// is the source of the rating value.
+    /// </remarks>
+    [Trait("Category", "Unit")]
+    public sealed class MovieCommonAppraiserTests : BaseMockTest
+    {
+        private readonly BasicInfoGenerator _generator;
+
+        public MovieCommonAppraiserTests()
+        {
+            _generator = BasicInfoGenerator.Instance;
+        }
+
+        private static Appraiser<TmdbMovieInfo> CreateSut()
+        {
+            return new Appraiser<TmdbMovieInfo>(new TmdbCommonAppraisal());
+        }
+
+        private static TmdbMovieInfo CreateMovie(double popularity)
+        {
+            // Only popularity feeds the TmdbCommonAppraisal rating; the
+            // remaining fields are fixed valid values.
+            return new TmdbMovieInfo(
+                thingId: 42,
+                title: "Inception",
+                voteCount: 1234,
+                voteAverage: 8.1,
+                overview: "A heist inside dreams.",
+                releaseDate: new DateTime(2010, 7, 16),
+                popularity: popularity,
+                adult: false,
+                genreIds: new[] { 28, 878 },
+                posterPath: "/inception.jpg"
+            );
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        [Fact]
+        public void TagPropertyMatchesGenericTypeName()
+        {
+            // Arrange.
+            var sut = CreateSut();
+            var expected = $"Appraiser<{nameof(TmdbMovieInfo)}>";
+
+            // Act.
+            var actual = sut.Tag;
+
+            // Assert.
+            actual.Should().NotBeNull();
+            actual.Should().NotBeEmpty();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void TypeIdMatchesGenericArgument()
+        {
+            // Arrange.
+            var sut = CreateSut();
+
+            // Act.
+            var actual = sut.TypeId;
+
+            // Assert.
+            actual.Should().Be(typeof(TmdbMovieInfo));
+        }
+
+        [Fact]
+        public void RatingNameMatchesAppraisalRatingName()
+        {
+            // Arrange.
+            var sut = CreateSut();
+            const string expected = "Rating based on popularity";
+
+            // Act.
+            var actual = sut.RatingName;
+
+            // Assert.
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void GetRatingsReturnsPopularityFromAppraisal()
+        {
+            // Arrange.
+            var sut = CreateSut();
+            const double expectedPopularity = 12.34;
+            var movie = CreateMovie(popularity: expectedPopularity);
+
+            // Act.
+            var actual = sut.GetRatings(movie, outputResults: false);
+
+            // Assert.
+            actual.Should().NotBeNull();
+            actual.RatingValue.Should().Be(expectedPopularity);
+            actual.DataHandler.Should().BeSameAs(movie);
+            actual.RatingId.Should().Be(Guid.Empty);
+        }
+
+        [Fact]
+        public void GetRatingsAssignsEmptyRatingIdToAllResults()
+        {
+            // Arrange.
+            var sut = CreateSut();
+            var first = CreateMovie(popularity: 1.0);
+            var second = CreateMovie(popularity: 9.9);
+
+            // Act.
+            var firstRating = sut.GetRatings(first, outputResults: false);
+            var secondRating = sut.GetRatings(second, outputResults: false);
+
+            // Assert.
+            firstRating.RatingId.Should().Be(Guid.Empty);
+            secondRating.RatingId.Should().Be(Guid.Empty);
+            firstRating.RatingValue.Should().NotBe(secondRating.RatingValue);
+        }
+
+        [Fact]
+        public void GetRatingsThrowsForNullEntity()
+        {
+            // Arrange.
+            var sut = CreateSut();
+
+            // Act. / Assert.
+            var act = () =>
+            {
+                sut.GetRatings(entityInfo: null!, outputResults: false);
+            };
+            act.Should().Throw<ArgumentNullException>()
+               .WithParameterName("entityInfo");
+        }
+
+        [Fact]
+        public void GetRatingsThrowsForBaseBasicInfoBecauseAppraiserExpectsTmdb()
+        {
+            // Arrange.
+            var sut = CreateSut();
+            var basicInfo = CreateBasicInfo(
+                thingId: 1, title: "Generic", voteCount: 10, voteAverage: 7.0);
+
+            // Act.
+            var act = () => sut.GetRatings(basicInfo, outputResults: false);
+
+            // Assert.
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void ConstructorThrowsForNullAppraisal()
+        {
+            // Arrange. / Act. / Assert.
+            var act = () =>
+            {
+                _ = new Appraiser<TmdbMovieInfo>(appraisal: null!);
+            };
+            act.Should().Throw<ArgumentNullException>()
+               .WithParameterName("appraisal");
+        }
+    }
+}

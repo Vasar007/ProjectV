@@ -1,116 +1,150 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AwesomeAssertions;
 using ProjectV.Models.Data;
 using ProjectV.Models.Internal;
+using ProjectV.Tests.Shared.Helpers.Generators.Models;
 using Xunit;
 
 namespace ProjectV.Appraisers.Tests
 {
+    [Trait("Category", "Unit")]
     public sealed class AppraiserTests
     {
+        private readonly BasicInfoGenerator _generator;
+
         public AppraiserTests()
         {
+            _generator = BasicInfoGenerator.Instance;
         }
 
         [Fact]
         public void CheckTagPropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            string actualValue = appraiser.Tag;
-
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
             string expectedValue = $"Appraiser<{nameof(BasicInfo)}>";
 
-            Assert.NotNull(actualValue);
-            Assert.NotEmpty(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Act.
+            string actualValue = appraiser.Tag;
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().NotBeEmpty();
+            actualValue.Should().Be(expectedValue);
         }
 
         [Fact]
         public void CheckTypeIdPropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            Type actualValue = appraiser.TypeId;
-
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
             Type expectedValue = typeof(BasicInfo);
 
-            Assert.NotNull(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Act.
+            Type actualValue = appraiser.TypeId;
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().Be(expectedValue);
         }
 
         [Fact]
         public void CheckRatingNamePropertyDefaultValue()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            string actualValue = appraiser.RatingName;
-
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
             const string expectedValue = "Common rating";
 
-            Assert.NotNull(actualValue);
-            Assert.NotEmpty(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Act.
+            string actualValue = appraiser.RatingName;
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().NotBeEmpty();
+            actualValue.Should().Be(expectedValue);
         }
 
         [Fact]
         public void GetRatingsThrowsExceptionBecauseOfNullParameter()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
 
-            Assert.Throws<ArgumentNullException>(
-                "entityInfo",
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                () => appraiser.GetRatings(entityInfo: null, outputResults: false)
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-            );
-            Assert.Throws<ArgumentNullException>(
-                "entityInfo",
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-                () => appraiser.GetRatings(entityInfo: null, outputResults: true)
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-            );
+            // Act. / Assert.
+            var actWithoutOutput = () => appraiser.GetRatings(entityInfo: null!, outputResults: false);
+            actWithoutOutput.Should()
+                .Throw<ArgumentNullException>()
+                .WithParameterName("entityInfo");
+
+            var actWithOutput = () => appraiser.GetRatings(entityInfo: null!, outputResults: true);
+            actWithOutput.Should()
+                .Throw<ArgumentNullException>()
+                .WithParameterName("entityInfo");
         }
 
         [Fact]
-        public void CallGetRatingsWithConteinerWithOneItem()
+        public void GetRatings_WithKnownVotes_ReturnsVoteAverageAsRatingValue()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
-            Guid ratingId = Guid.Empty;
-
-            var item = new BasicInfo(
-                thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
+            // Arrange. Hand-computed expectation: the common appraisal's
+            // rating for a BasicInfo is its VoteAverage. Unlike the tests
+            // that compare against CreateExpectedRatings (which re-runs the
+            // production formula and therefore verifies wiring only), this
+            // literal expectation fails if the rating formula regresses.
+            var appraiser = CreateBasicAppraiser();
+            const double voteAverage = 8.25;
+            BasicInfo item = CreateBasicInfo(
+                thingId: 5, title: "Known", voteCount: 100, voteAverage: voteAverage
             );
 
+            // Act.
             var actualValue = appraiser.GetRatings(item, outputResults: false);
 
-            var expectedValue = TestDataCreator.CreateExpectedValueForBasicInfo(ratingId, item)
-                .Single();
-
-            Assert.NotNull(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.RatingValue.Should().Be(voteAverage);
+            actualValue.DataHandler.Should().BeSameAs(item);
         }
 
         [Fact]
-        public void CallGetRatingsWithConteinerWithThreeItems()
+        public void GetRatings_WithOneItem_ReturnsExpectedRatingContainer()
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
+            BasicInfo item = CreateBasicInfo(
+                thingId: 1, title: "Title", voteCount: 10, voteAverage: 9.9
+            );
+            var expectedValue = CreateExpectedRatings(ratingId, new[] { item }).Single();
 
-            var item1 = new BasicInfo(
+            // Act.
+            var actualValue = appraiser.GetRatings(item, outputResults: false);
+
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void GetRatings_WithThreeItems_ReturnsExpectedRatingContainers()
+        {
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
+            Guid ratingId = Guid.Empty;
+            BasicInfo item1 = CreateBasicInfo(
                 thingId: 1, title: "Title-1", voteCount: 11, voteAverage: 9.7
             );
-            var item2 = new BasicInfo(
-               thingId: 2, title: "Title-2", voteCount: 12, voteAverage: 9.8
-           );
-            var item3 = new BasicInfo(
-               thingId: 3, title: "Title-3", voteCount: 13, voteAverage: 9.9
-           );
+            BasicInfo item2 = CreateBasicInfo(
+                thingId: 2, title: "Title-2", voteCount: 12, voteAverage: 9.8
+            );
+            BasicInfo item3 = CreateBasicInfo(
+                thingId: 3, title: "Title-3", voteCount: 13, voteAverage: 9.9
+            );
             var items = new[] { item1, item2, item3 };
+            var expectedValue = CreateExpectedRatings(ratingId, items);
 
+            // Act.
             var actualValue = new List<RatingDataContainer>();
             for (int index = 0; index < items.Length; ++index)
             {
@@ -118,13 +152,10 @@ namespace ProjectV.Appraisers.Tests
                 actualValue.Add(actualRating);
             }
 
-            var expectedValue = TestDataCreator.CreateExpectedValueForBasicInfo(
-                ratingId, item1, item2, item3
-            );
-
-            Assert.NotNull(actualValue);
-            Assert.NotEmpty(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().NotBeEmpty();
+            actualValue.Should().BeEquivalentTo(expectedValue);
         }
 
         [Theory]
@@ -136,14 +167,15 @@ namespace ProjectV.Appraisers.Tests
         [InlineData(25)]
         [InlineData(50)]
         [InlineData(100)]
-        public void CallGetRatingsWithConteinerWithRandomData(int itemsCount)
+        public void GetRatings_WithRandomData_ReturnsExpectedRatingContainers(int itemsCount)
         {
-            var appraiser = TestAppraisersCreator.CreateBasicAppraiser();
-
+            // Arrange.
+            var appraiser = CreateBasicAppraiser();
             Guid ratingId = Guid.Empty;
+            var items = GenerateBasicInfoList(itemsCount);
+            var expectedValue = CreateExpectedRatings(ratingId, items);
 
-            var items = TestDataCreator.CreateBasicInfoListRandomly(itemsCount);
-
+            // Act.
             var actualValue = new List<RatingDataContainer>();
             for (int index = 0; index < items.Count; ++index)
             {
@@ -151,11 +183,45 @@ namespace ProjectV.Appraisers.Tests
                 actualValue.Add(actualRating);
             }
 
-            var expectedValue = TestDataCreator.CreateExpectedValueForBasicInfo(ratingId, items);
-
-            Assert.NotNull(actualValue);
-            Assert.NotEmpty(actualValue);
-            Assert.Equal(expectedValue, actualValue);
+            // Assert.
+            actualValue.Should().NotBeNull();
+            actualValue.Should().NotBeEmpty();
+            actualValue.Should().BeEquivalentTo(expectedValue);
         }
+
+        #region Helper Methods
+
+        private static IAppraiser CreateBasicAppraiser()
+        {
+            return TestAppraisersCreator.CreateBasicAppraiser();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BasicInfo" /> with explicit values via
+        /// <see cref="BasicInfoGenerator" />. Per-class helper so test bodies
+        /// do not create test data inline or call generators directly.
+        /// </summary>
+        private BasicInfo CreateBasicInfo(
+            int thingId, string title, int voteCount, double voteAverage)
+        {
+            return _generator.CreateBasicInfo(
+                thingId: thingId,
+                title: title,
+                voteCount: voteCount,
+                voteAverage: voteAverage);
+        }
+
+        private static IReadOnlyList<RatingDataContainer> CreateExpectedRatings(
+            Guid ratingId, IReadOnlyList<BasicInfo> items)
+        {
+            return TestDataCreator.CreateExpectedValueForBasicInfo(ratingId, items);
+        }
+
+        private static IReadOnlyList<BasicInfo> GenerateBasicInfoList(int count)
+        {
+            return TestDataCreator.CreateBasicInfoListRandomly(count);
+        }
+
+        #endregion
     }
 }
