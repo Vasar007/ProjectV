@@ -115,7 +115,7 @@ Every Issue and PR **must** have the following fields set (mandatory, not recomm
 | Field | Purpose | Example |
 |-------|---------|---------|
 | **Assignee** | Owner of the work. | `Vasar007` (default and required). |
-| **Labels** | Categorization. Always include one `type:` and one `area:` label minimum. Add `status:` labels as work progresses. | `type: Code Maintenance` + `area: Dependencies` + `area: Tests`. |
+| **Labels** | Categorization. Every issue must have exactly one `type:` label, one or two `area:` labels, and exactly one `priority:` label. The `priority:` label is one of `priority: Blocker`, `priority: Critical`, `priority: High`, `priority: Medium` or `priority: Low`. A `status:` label is optional. A closed issue that was done must have `status: Resolved`. | `type: Code Maintenance` + `area: Dependencies` + `area: Tests` + `priority: Medium`. |
 | **Milestone** | Release scope. Use the next open milestone (e.g., `v0.9.8`) for in-flight work; closed milestones for already-released work (assigned via API where `gh` CLI refuses closed milestones). | `v0.9.8`. |
 | **Project** | Long-running project board for cross-milestone tracking. | `ProjectV v1.0.0` (number 2). |
 | **Reviewers** | Required on every feature-branch-to-master PR (i.e., the `/gsd-ship` PR at phase end). | `Vasar007`. Not needed for per-plan commits into the feature branch (those are not PRs). |
@@ -139,7 +139,8 @@ gh issue edit <#> \
   --add-assignee Vasar007 \
   --milestone <vX.Y.Z> \
   --add-label "type: <type>" \
-  --add-label "area: <area>"
+  --add-label "area: <area>" \
+  --add-label "priority: <priority>"
 gh project item-add 2 --owner Vasar007 --url <issue-url>
 ```
 
