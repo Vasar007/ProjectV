@@ -139,7 +139,7 @@ gh issue edit <#> \
   --add-assignee Vasar007 \
   --milestone <vX.Y.Z> \
   --add-label "type: <type>" \
-  --add-label "area: <area>" \r
+  --add-label "area: <area>" \
   --add-label "priority: <priority>"
 gh project item-add 2 --owner Vasar007 --url <issue-url>
 ```
