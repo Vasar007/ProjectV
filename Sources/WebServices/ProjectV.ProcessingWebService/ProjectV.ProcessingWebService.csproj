@@ -21,6 +21,17 @@
     <None Include="credentials.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!--
+    EF Core Design package is referenced ONLY when generating migrations via
+    `dotnet ef migrations add` against this startup project. The tool requires
+    the package in the startup project to resolve the IDesignTimeServices
+    contract. The package is marked PrivateAssets="All" so it does NOT flow
+    transitively to consumers and DOES NOT ship in the runtime binaries.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)WebServices\ProjectV.CommonWebApi\ProjectV.CommonWebApi.csproj" />
     <ProjectReference Include="$(SolutionDir)Libraries\ExternalServices\ProjectV.TmdbService\ProjectV.TmdbService.csproj" />

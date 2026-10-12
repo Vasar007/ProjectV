@@ -1,0 +1,23 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/synthetic-backdrop.jpg",
+      "genre_ids": [28, 12],
+      "id": 12345,
+      "original_language": "en",
+      "original_title": "Synthetic Movie",
+      "overview": "A synthetic movie overview used for ProjectV contract tests. No real production data.",
+      "popularity": 12.345,
+      "poster_path": "/synthetic-poster.jpg",
+      "release_date": "2020-01-15",
+      "title": "Synthetic Movie",
+      "video": false,
+      "vote_average": 7.5,
+      "vote_count": 9876
+    }
+  ],
+  "total_pages": 1,
+  "total_results": 1
+}

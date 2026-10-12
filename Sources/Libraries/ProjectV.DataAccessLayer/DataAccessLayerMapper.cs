@@ -11,7 +11,7 @@ namespace ProjectV.DataAccessLayer
 {
     /// <summary>
     /// Compile-time source-generated mapper (Riok.Mapperly) for the data-access layer.
-    /// Replaces the AutoMapper <c>DataAccessLayerMapperProfile</c> that was removed in Plan 01-12.
+    /// Replaces the AutoMapper <c>DataAccessLayerMapperProfile</c> that was removed when AutoMapper was dropped.
     /// All mapping methods are generated at compile time — zero runtime reflection.
     /// </summary>
     [Mapper]

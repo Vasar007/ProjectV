@@ -1,0 +1,9 @@
+{
+  "applist": {
+    "apps": [
+      { "appid": 730, "name": "Synthetic Game Alpha" },
+      { "appid": 570, "name": "Synthetic Game Beta" },
+      { "appid": 440, "name": "Synthetic Game Gamma" }
+    ]
+  }
+}
