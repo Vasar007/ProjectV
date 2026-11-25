@@ -70,5 +70,5 @@ This is a C# repo, so the personal-marketplace `dotnet-backend-dev` skills apply
 - Don't add `Version="..."` to `<PackageReference>` in `.csproj` — it breaks CPM.
 - Don't add `AnyCPU` to project/solution configurations.
 - Don't include `ProjectV.DesktopApp` in `Linux x64` builds.
-- Don't commit anything under `.planning/`, `.claude/settings.local.json`, `CLAUDE.local.md`, `settings.local.json`, `Notes/`, `binary-tools/`, or `tasks/` — they are gitignored on purpose.
+- Don't commit anything under `.claude/settings.local.json`, `CLAUDE.local.md`, `settings.local.json`, `binary-tools/`, or `tasks/` — they are gitignored on purpose.
 
