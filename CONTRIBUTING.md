@@ -159,9 +159,9 @@ Starting with Phase 2, one long-lived feature branch per phase is the **default 
 1. At phase start, branch from `master`: `git checkout -b phase-NN/<short-name>`.
 2. All plan work commits to that branch. Per-plan can be one commit or several; the executor decides.
 3. If a plan needs an isolated worktree (e.g., a sweeping rename), the worktree branch is created from the **phase feature branch**, not from `master`. After the plan's commits land back on the phase branch (merge or rebase), the worktree branch is deleted; the phase branch continues.
-4. When all plans of the phase are done and the builds are green, open the PR from the feature branch to `master`. Steps 4 to 7 of the standard workflow above apply to this PR. The repository owner reviews the full cumulative diff, and then squash-merges the PR or requests changes.
+4. When all plans of the phase are done and the builds are green, open the PR from the feature branch to `master`. The PR, field convention, review, and squash-merge steps of the standard workflow above apply to this PR. The repository owner reviews the full cumulative diff, and then squash-merges the PR or requests changes.
 5. Do **not** open per-plan PRs into `master` mid-phase. Do **not** squash-merge per-plan worktree branches into `master` before the phase is complete.
-6. Review bypass (`gh pr merge --admin`) is **off by default**. Use only for genuine pre-existing CI hiccups that the user has explicitly acknowledged.
+6. Review bypass (`gh pr merge --admin`) is **off by default**. Use only for genuine pre-existing CI hiccups that the repository owner has explicitly acknowledged.
 
 ### Issue Comment Lifecycle
 
