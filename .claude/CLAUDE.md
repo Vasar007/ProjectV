@@ -51,9 +51,10 @@ dotnet test    Sources/Tests/ProjectV.ContentDirectories.Tests/ProjectV.ContentD
 
 ## Branch & PR Model
 
-- `master` — the only long-lived branch. All PRs target `master` directly.
+- `master` — the only permanent branch. Each phase also has a long-lived `phase-NN/<short-name>` branch until it merges.
+- Phase work (Phase 2 onward) goes into its phase branch. At phase end, the phase branch reaches `master` through a normal pull request. Single PRs outside a phase (docs, fixes, dependency bumps) target `master`. See `CONTRIBUTING.md`.
 - `develop` was retired with Phase 1 (`v0.9.7`).
-- For new work, branch from `master` and follow the PR template at `.github/pull_request_template.md` — it requires linking an issue and a test plan.
+- For a single PR, branch from `master`. Every PR follows the PR template at `.github/pull_request_template.md` — it requires linking an issue and a test plan.
 
 ## CI
 

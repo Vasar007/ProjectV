@@ -9,9 +9,9 @@ ProjectV follows a **GitHub-Milestone-driven** development process:
 - **Phases and milestones:** Each development phase corresponds to one GitHub Milestone (e.g., `v0.9.8`). Milestones have no fixed deadlines — they ship when ready.
 - **Task tracking:** Each task is one GitHub Issue linked to the active milestone. The implementing developer/agent posts notes on the Issue summarising decisions, nuances, and progress as work proceeds.
 - **Pull requests:** Every PR must link at least one Issue using `closes #XXXX` (or `Part of #XXXX` for partial work) in the PR body. Opening a PR without a corresponding Issue is not allowed — create or find the Issue first.
-- **Target branch:** From Phase 2 onward, all plan work targets a long-lived feature branch per phase (see below). At phase end, a pull request merges the feature branch into `master`. Phase 1 used per-plan PRs directly to `master` — that exception is closed.
+- **Target branch:** From Phase 2 onward, all task work targets a long-lived feature branch per phase (see below). At phase end, a pull request merges the feature branch into `master`. Phase 1 used one PR per task directly to `master` — that exception is closed. A single PR that is not part of a phase (for example docs, a fix, or a dependency bump) targets `master` directly.
 - **Branch naming (public contract — CI depends on these prefixes):** Use exactly these patterns:
-  - `phase-NN/<short-name>` — for the work of a numbered phase (e.g., `phase-02/refactor-pipeline`). Short-lived per-plan worktree branches extend this: `phase-NN/<short-name>/<plan-short>`. Delete worktree branches after they merge back to the phase branch.
+  - `phase-NN/<short-name>` — for the work of a numbered phase (e.g., `phase-02/refactor-pipeline`). Short-lived per-task worktree branches extend this: `phase-NN/<short-name>/<task-short>`. Delete worktree branches after they merge back to the phase branch.
   - `feature/<short-name>` — for standalone feature work outside a numbered phase (e.g., `feature/admin-portal`, `feature/oauth-flow`).
   - `master` — the only long-lived non-feature branch.
   - Branches that do not match `phase-**` or `feature/**` (e.g., `wip/something`, `tmp/scratch`) will **not** trigger CI. That is intentional.
@@ -101,11 +101,11 @@ ProjectV uses a structured issue→branch→work→pr→review→merge workflow 
    - `bug_report.md` for defects.
    - `feature_request.md` for new functionality.
    - `custom.md` for governance/process/tooling work.
-2. **Branch from `master` (phase start).** At the start of each phase, cut a long-lived feature branch: `git checkout -b phase-NN/<short-name>`. All plan work for that phase commits to this branch.
-3. **Work in commits.** Atomic commits per logical change. Conventional-commit prefixes preferred (`fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `ci:`, `phase(NN-MM):` for phase plans).
+2. **Branch from `master` (phase start).** At the start of each phase, cut a long-lived feature branch: `git checkout -b phase-NN/<short-name>`. All task work for that phase commits to this branch.
+3. **Work in commits.** Atomic commits per logical change. Conventional-commit prefixes preferred (`fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `ci:`, `test:`). Add the issue number to the subject where it helps, for example `fix: handle empty rating (#123)`.
 4. **Open the PR (at phase end).** PR body must include `closes #<issue-number>` (or `refs #<n>` for related-but-not-closing). Fill in the PR template's test plan. Open the PR from the feature branch to `master`, for example with `gh pr create --base master`.
 5. **Apply the field convention** (see below) on every PR and Issue.
-6. **Review.** The reviewer on a feature-branch-to-master PR must be `Vasar007` — this is required (see field convention below). Per-plan commits into the feature branch are not PRs, so no reviewer is needed there.
+6. **Review.** The reviewer on a feature-branch-to-master PR must be `Vasar007` — this is required (see field convention below). Task commits into the feature branch are not PRs, so no reviewer is needed there.
 7. **Squash-merge.** Default: `gh pr merge <PR#> --squash --delete-branch=false` (preserves remote branches for post-mortem).
 
 ### GitHub field convention
@@ -118,7 +118,7 @@ Every Issue and PR **must** have the following fields set (mandatory, not recomm
 | **Labels** | Categorization. Every issue must have exactly one `type:` label, one or two `area:` labels, and exactly one `priority:` label. The `priority:` label is one of `priority: Blocker`, `priority: Critical`, `priority: High`, `priority: Medium` or `priority: Low`. A `status:` label is optional. A closed issue that was done must have `status: Resolved`. | `type: Code Maintenance` + `area: Dependencies` + `area: Tests` + `priority: Medium`. |
 | **Milestone** | Release scope. Use the next open milestone (e.g., `v0.9.8`) for in-flight work; closed milestones for already-released work (assigned via API where `gh` CLI refuses closed milestones). | `v0.9.8`. |
 | **Project** | Long-running project board for cross-milestone tracking. | `ProjectV v1.0.0` (number 2). |
-| **Reviewers** | Required on every feature-branch-to-master PR (the PR at phase end). | `Vasar007`. Not needed for per-plan commits into the feature branch (those are not PRs). |
+| **Reviewers** | Required on every feature-branch-to-master PR (the PR at phase end). | `Vasar007`. Not needed for task commits into the feature branch (those are not PRs). |
 | **Development** | GitHub auto-links via `closes #<n>` / `fixes #<n>` keywords in PR body. No manual action needed when keywords are used correctly. | Implicit via `closes #330` in PR body. |
 | **Relationships (optional)** | Use parent/sub-issue links when an issue is decomposed into multiple sub-issues. | Sub-issue under a phase tracking issue. |
 
@@ -152,22 +152,22 @@ gh api -X PATCH repos/Vasar007/ProjectV/issues/<#> -F milestone=<numeric-milesto
 
 ### Long-lived feature branch per phase (default from Phase 2 onward)
 
-Starting with Phase 2, one long-lived feature branch per phase is the **default model**. Per-plan PRs directly to `master` are reserved for exceptional cases explicitly approved by the repository owner (Phase 1 used that exception because .NET 10 SDK availability was uncertain and each upgrade needed independent validation before continuing — that risk is now resolved).
+Starting with Phase 2, one long-lived feature branch per phase is the **default model**. One PR per task directly to `master` is reserved for exceptional cases explicitly approved by the repository owner (Phase 1 used that exception because .NET 10 SDK availability was uncertain and each upgrade needed independent validation before continuing — that risk is now resolved).
 
 **Mechanics:**
 
 1. At phase start, branch from `master`: `git checkout -b phase-NN/<short-name>`.
-2. All plan work commits to that branch. Per-plan can be one commit or several; the executor decides.
-3. If a plan needs an isolated worktree (e.g., a sweeping rename), the worktree branch is created from the **phase feature branch**, not from `master`. After the plan's commits land back on the phase branch (merge or rebase), the worktree branch is deleted; the phase branch continues.
-4. When all plans of the phase are done and the builds are green, open the PR from the feature branch to `master`. The PR, field convention, review, and squash-merge steps of the standard workflow above apply to this PR. The repository owner reviews the full cumulative diff, and then squash-merges the PR or requests changes.
-5. Do **not** open per-plan PRs into `master` mid-phase. Do **not** squash-merge per-plan worktree branches into `master` before the phase is complete.
+2. All task work commits to that branch. A task can be one commit or several; the person or the agent who does the task decides.
+3. If a task needs an isolated worktree (e.g., a sweeping rename), the worktree branch is created from the **phase feature branch**, not from `master`. After the commits of the task land back on the phase branch (merge or rebase), the worktree branch is deleted; the phase branch continues.
+4. When all tasks of the phase are done and the builds are green, open the PR from the feature branch to `master`. The PR, field convention, review, and squash-merge steps of the standard workflow above apply to this PR. The repository owner reviews the full cumulative diff, and then squash-merges the PR or requests changes.
+5. Do **not** open per-task PRs into `master` mid-phase. Do **not** squash-merge per-task worktree branches into `master` before the phase is complete.
 6. Review bypass (`gh pr merge --admin`) is **off by default**. Use only for genuine pre-existing CI hiccups that the repository owner has explicitly acknowledged.
 
 ### Issue Comment Lifecycle
 
-Every Issue created for a phase plan gets three categories of comments. This mirrors the two-comment protocol in `dev-essentials:feature-pipeline` (Task Comment #1 + Task Comment #2) and adds a closing summary, so that the issue tracker stands on its own as a record.
+Every Issue created for a phase task gets three categories of comments. This mirrors the two-comment protocol in `dev-essentials:feature-pipeline` (Task Comment #1 + Task Comment #2) and adds a closing summary, so that the issue tracker stands on its own as a record.
 
-1. **Initial plan comment** — posted _when work begins on the issue_ (immediately before the executor starts writing code). Contents: one-line restatement of the objective, 2–4 bullets on the planned approach, key constraints/risks, PR or branch name where the work will land, "implementation starts now", footer `(comment posted by Claude Code at <UTC timestamp>)`.
+1. **Initial plan comment** — posted _when work begins on the issue_ (immediately before the work on the code starts). Contents: one-line restatement of the objective, 2–4 bullets on the planned approach, key constraints/risks, PR or branch name where the work will land, "implementation starts now", footer `(comment posted by Claude Code at <UTC timestamp>)`.
 
 2. **Follow-up comment(s)** — posted _only when the plan changes mid-execution_ (scope expansion, new sub-tasks discovered, blocker, approach pivot). Contents: what changed, why, new approach, updated PR/branch info, footer.
 
